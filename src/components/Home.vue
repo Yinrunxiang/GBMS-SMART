@@ -55,6 +55,7 @@
 	position: absolute;
 	top: 0px;
 	bottom: 0px;
+	padding: 0;
 	width: 100%;
 }
 
