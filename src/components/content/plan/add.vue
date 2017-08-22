@@ -19,11 +19,14 @@
             <el-form-item label="Channel">
                 <el-input v-model.trim="form.channel" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item label="Address">
-                <el-select v-model="form.address" filterable placeholder="Select Address" class="h-40 w-200">
+            <el-form-item label="Country">
+                <el-select v-model="form.country" filterable placeholder="Select Address" class="h-40 w-200">
                     <el-option v-for="item in addressOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="Address">
+                <el-input v-model="form.address" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="IP Address">
                 <el-input v-model="form.ip" class="h-40 w-200"></el-input>
@@ -56,6 +59,7 @@ export default {
                 subnetid: '',
                 deviceid: '',
                 channel: '',
+                country: '',
                 address: '',
                 ip: '',
                 port: '',

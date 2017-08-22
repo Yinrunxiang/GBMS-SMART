@@ -28,10 +28,10 @@ export default {
         }
     },
     methods: {
-        //悬乎提示数据
+        //悬浮提示数据
         itCounteyTooltip(params) {
             // var itCounteyTooltip = 'Country : ' + params.name + '<br/>'
-            // for(var item of this.addressList){
+            // for(var item of this.countryList){
             //     if(item.name == params.name){
             //         itCounteyTooltip += 'Device : ' + item.device + ' Type : ' + item.devicetype + '<br/>'
             //     }
@@ -104,7 +104,7 @@ export default {
 
                     data: this.mapIportCountryArr
                     // data: [
-                    //     { name: this.address, selected: true }//福建为选中状态
+                    //     { name: this.country, selected: true }//福建为选中状态
                     // ]
                 }],
             };
@@ -206,6 +206,14 @@ export default {
         }
     },
     mounted() {
+        const data = {
+			params: {
+				action: "getrecord"
+			}
+		}
+		this.apiGet("php/index.php", data).then(res => {
+			this.$store.dispatch('setDevices', res)
+		});
         this.createmap(this)
         this.createChart()
     },
@@ -225,33 +233,33 @@ export default {
         //计算该国家的设备类型，各种设备类型的数量，生成国家数组让地图调用
         mapIportCountryArr() {
             var mapIportCountryArr = []
-            var addressList = []
+            var countryList = []
             //this.devices原始设备数据
             for (var item of this.devices) {
                 //筛选重复国家
-                if (addressList.indexOf(item.address) == -1) {
-                    addressList.push(item.address);
+                if (countryList.indexOf(item.country) == -1) {
+                    countryList.push(item.country);
                     var mapIportCountryObject = {}
-                    mapIportCountryObject.name = item.address
+                    mapIportCountryObject.name = item.country
                     mapIportCountryObject.selected = true
                     mapIportCountryObject.deviceType = []
                     mapIportCountryObject.deviceTypeNumber = {}
                     mapIportCountryObject.deviceList = {}
                     mapIportCountryArr.push(mapIportCountryObject)
                 }
-                for (var address of mapIportCountryArr) {
+                for (var country of mapIportCountryArr) {
                     //筛选重复类型
-                    if (item.address == address.name) {
-                        if (address.deviceType.indexOf(item.devicetype) == -1) {
-                            address.deviceType.push(item.devicetype)
+                    if (item.country == country.name) {
+                        if (country.deviceType.indexOf(item.devicetype) == -1) {
+                            country.deviceType.push(item.devicetype)
                         }
                         //计算各种设备类型的数量
-                        address.deviceTypeNumber[item.devicetype] ? address.deviceTypeNumber[item.devicetype] += 1 : address.deviceTypeNumber[item.devicetype] = 1
+                        country.deviceTypeNumber[item.devicetype] ? country.deviceTypeNumber[item.devicetype] += 1 : country.deviceTypeNumber[item.devicetype] = 1
                         //获取各种类型的设备名称
-                        if (!address.deviceList[item.devicetype]) {
-                            address.deviceList[item.devicetype] = [item.device]
+                        if (!country.deviceList[item.devicetype]) {
+                            country.deviceList[item.devicetype] = [item.device]
                         } else {
-                            address.deviceList[item.devicetype].push(item.device)
+                            country.deviceList[item.devicetype].push(item.device)
                         }
                     }
                 }

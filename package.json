@@ -1,7 +1,7 @@
 {
-  "name": "my-project",
+  "name": "SMART-GBMS",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "SMART-GBMS",
   "author": "jensen",
   "private": true,
   "scripts": {
