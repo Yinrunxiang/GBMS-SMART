@@ -173,7 +173,7 @@ export default {
 					action: "search"
 				}
 			}
-			this.apiGet("php/ac_mode.php", data).then(res => {
+			this.apiGet("device/ac_mode.php", data).then(res => {
 				this.$store.dispatch('setAcMode', res)
 			});
 		},
@@ -183,7 +183,7 @@ export default {
 					action: "search"
 				}
 			}
-			this.apiGet("php/light_mode.php", data).then(res => {
+			this.apiGet("device/light_mode.php", data).then(res => {
 				this.$store.dispatch('setLightMode', res)
 			});
 		},
@@ -193,7 +193,7 @@ export default {
 					action: "search"
 				}
 			}
-			this.apiGet("php/led_mode.php", data).then(res => {
+			this.apiGet("device/led_mode.php", data).then(res => {
 				this.$store.dispatch('setLedMode', res)
 			});
 		},
@@ -204,7 +204,7 @@ export default {
 				action: "search"
 			}
 		}
-		this.apiGet("php/index.php", data).then(res => {
+		this.apiGet("device/index.php", data).then(res => {
 			this.$store.dispatch('setDevices', res)
 		});
 		this.getAcMode()

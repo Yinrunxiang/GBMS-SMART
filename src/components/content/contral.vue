@@ -203,7 +203,7 @@ export default {
         //         action: 'search'
         //     }
         // }
-        // this.apiGet('php/index.php', data).then((res) => {
+        // this.apiGet('device/index.php', data).then((res) => {
         //     // console.log(res)
         //     for (var item of res) {
         //         if (this.addresslist.indexOf(item.address) == -1) {

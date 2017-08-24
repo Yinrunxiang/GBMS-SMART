@@ -9,11 +9,11 @@ import ac from "./components/content/devices/ac.vue";
 import music from "./components/content/devices/music.vue";
 import led from "./components/content/devices/led.vue";
 import planAdd from "./components/content/plan/add.vue";
-import settingTypeAc from "./components/content/setting/type/ac.vue";
+import settingTypeAc from "./components/content/setting/type/ac/ac.vue";
 import settingTypeAcAdd from "./components/content/setting/type/ac/add.vue";
-import settingTypeLight from "./components/content/setting/type/light.vue";
+import settingTypeLight from "./components/content/setting/type/light/light.vue";
 import settingTypeLightAdd from "./components/content/setting/type/light/add.vue";
-import settingTypeLed from "./components/content/setting/type/led.vue";
+import settingTypeLed from "./components/content/setting/type/led/led.vue";
 import settingTypeLedAdd from "./components/content/setting/type/led/add.vue";
 /**
  * meta参数解析

@@ -61,7 +61,7 @@ export default {
             const data = {
                 params: this.form
             }
-            this.apiGet('php/ac_mode.php?action=insert', data).then((res) => {
+            this.apiGet('device/ac_mode.php?action=insert', data).then((res) => {
                 // _g.clearVuex('setRules')
                 if (res[0]) {
                     var ac_mode = this.$store.state.ac_mode

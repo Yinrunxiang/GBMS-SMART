@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import http from '../../../../assets/js/http'
+import http from '../../../../../assets/js/http'
 
 export default {
     //  currentPage        页码

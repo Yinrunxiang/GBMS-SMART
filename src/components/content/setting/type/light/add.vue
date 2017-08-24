@@ -37,7 +37,7 @@ export default {
             const data = {
                 params: this.form
             }
-            this.apiGet('php/light_mode.php?action=insert', data).then((res) => {
+            this.apiGet('device/light_mode.php?action=insert', data).then((res) => {
                 // _g.clearVuex('setRules')
                 if (res[0]) {
                     var light_mode = this.$store.state.light_mode

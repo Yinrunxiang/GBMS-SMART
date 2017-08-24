@@ -206,14 +206,14 @@ export default {
         }
     },
     mounted() {
-        const data = {
-			params: {
-				action: "getrecord"
-			}
-		}
-		this.apiGet("php/index.php", data).then(res => {
-			this.$store.dispatch('setDevices', res)
-		});
+        // const data = {
+		// 	params: {
+		// 		action: "getrecord"
+		// 	}
+		// }
+		// this.apiGet("device/index.php", data).then(res => {
+		// 	this.$store.dispatch('setDevices', res)
+		// });
         this.createmap(this)
         this.createChart()
     },

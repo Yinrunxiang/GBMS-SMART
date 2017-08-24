@@ -85,7 +85,7 @@ export default {
             const data = {
                 params: this.form
             }
-            this.apiGet('php/index.php?action=insert', data).then((res) => {
+            this.apiGet('device/index.php?action=insert', data).then((res) => {
                 // _g.clearVuex('setRules')
                 if (res[0]) {
                     var devices = this.$store.state.devices

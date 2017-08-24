@@ -109,7 +109,7 @@ export default {
                 }
             }
             console.log(row)
-            this.apiGet('php/index.php?action=setTime', data).then((res) => {
+            this.apiGet('device/index.php?action=setTime', data).then((res) => {
                 if (res[0]) {
                     _g.toastMsg('success', res[1])
                 } else {
@@ -128,7 +128,7 @@ export default {
                 }
             }
             console.log(row)
-            this.apiGet('php/index.php?action=setTime', data).then((res) => {
+            this.apiGet('device/index.php?action=setTime', data).then((res) => {
                 if (res[0]) {
                     _g.toastMsg('success', res[1])
                 } else {
@@ -145,7 +145,7 @@ export default {
                     status: status
                 }
             }
-            this.apiGet('php/index.php?action=setStatus', data).then((res) => {
+            this.apiGet('device/index.php?action=setStatus', data).then((res) => {
                 if (res[0]) {
                     for (var selection of this.multipleSelection) {
                         selection.status = status
@@ -169,7 +169,7 @@ export default {
                         selections: this.multipleSelection
                     }
                 }
-                this.apiGet('php/index.php?action=delete', data).then((res) => {
+                this.apiGet('device/index.php?action=delete', data).then((res) => {
                     if (res[0]) {
 
                         var devices = this.$store.state.devices

@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import http from '../../../../assets/js/http'
+import http from '../../../../../assets/js/http'
 
 export default {
     //  currentPage        页码
@@ -77,7 +77,7 @@ export default {
                     c_status: c_status
                 }
             }
-            this.apiGet('php/light_mode.php?action=setStatus', data).then((res) => {
+            this.apiGet('device/light_mode.php?action=setStatus', data).then((res) => {
                 if (res[0]) {
                     for (var selection of this.multipleSelection) {
                         selection.c_status = c_status
@@ -101,7 +101,7 @@ export default {
                         selections: this.multipleSelection
                     }
                 }
-                this.apiGet('php/light_mode.php?action=delete', data).then((res) => {
+                this.apiGet('device/light_mode.php?action=delete', data).then((res) => {
                     if (res[0]) {
 
                         var light_mode = this.$store.state.light_mode

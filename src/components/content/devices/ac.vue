@@ -115,8 +115,8 @@ export default {
                         targetDeviceID: this.device.deviceid,
                         additionalContentData: ("03,01").split(","),
                         macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                        dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                        dest_port: this.device.port ? this.device.port.split(".") : "",
+                        dest_address: this.device.ip ? this.device.ip : "",
+                        dest_port: this.device.port ? this.device.port : "",
                     }
                 }
                 this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -132,8 +132,8 @@ export default {
                         targetDeviceID: this.device.deviceid,
                         additionalContentData: ("03,00").split(","),
                         macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                        dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                        dest_port: this.device.port ? this.device.port.split(".") : "",
+                        dest_address: this.device.ip ? this.device.ip : "",
+                        dest_port: this.device.port ? this.device.port : "",
                     }
                 }
                 this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -153,8 +153,8 @@ export default {
                     targetDeviceID: this.device.deviceid,
                     additionalContentData: ("08," + _g.toHex(val)).split(","),
                     macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                    dest_port: this.device.port ? this.device.port.split(".") : "",
+                    dest_address: this.device.ip ? this.device.ip : "",
+                    dest_port: this.device.port ? this.device.port : "",
                 }
             }
             this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -173,8 +173,8 @@ export default {
                     targetDeviceID: this.device.deviceid,
                     additionalContentData: ("04," + _g.toHex(val)).split(","),
                     macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                    dest_port: this.device.port ? this.device.port.split(".") : "",
+                    dest_address: this.device.ip ? this.device.ip : "",
+                    dest_port: this.device.port ? this.device.port : "",
                 }
             }
             this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -193,8 +193,8 @@ export default {
                     targetDeviceID: this.device.deviceid,
                     additionalContentData: ("07," + _g.toHex(val)).split(","),
                     macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                    dest_port: this.device.port ? this.device.port.split(".") : "",
+                    dest_address: this.device.ip ? this.device.ip : "",
+                    dest_port: this.device.port ? this.device.port : "",
                 }
             }
             this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -213,8 +213,8 @@ export default {
                     targetDeviceID: this.device.deviceid,
                     additionalContentData: ("05," + _g.toHex(val)).split(","),
                     macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                    dest_port: this.device.port ? this.device.port.split(".") : "",
+                    dest_address: this.device.ip ? this.device.ip : "",
+                    dest_port: this.device.port ? this.device.port : "",
                 }
             }
             this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -246,8 +246,8 @@ export default {
                     targetDeviceID: this.device.deviceid,
                     additionalContentData: ("06,03").split(","),
                     macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                    dest_port: this.device.port ? this.device.port.split(".") : "",
+                    dest_address: this.device.ip ? this.device.ip : "",
+                    dest_port: this.device.port ? this.device.port : "",
                 }
             }
             this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -263,8 +263,8 @@ export default {
                     targetDeviceID: this.device.deviceid,
                     additionalContentData: ("06,02").split(","),
                     macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                    dest_port: this.device.port ? this.device.port.split(".") : "",
+                    dest_address: this.device.ip ? this.device.ip : "",
+                    dest_port: this.device.port ? this.device.port : "",
                 }
             }
             this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -280,8 +280,8 @@ export default {
                     targetDeviceID: this.device.deviceid,
                     additionalContentData: ("06,00").split(","),
                     macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                    dest_port: this.device.port ? this.device.port.split(".") : "",
+                    dest_address: this.device.ip ? this.device.ip : "",
+                    dest_port: this.device.port ? this.device.port : "",
                 }
             }
             this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -297,8 +297,8 @@ export default {
                     targetDeviceID: this.device.deviceid,
                     additionalContentData: ("06,01").split(","),
                     macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                    dest_port: this.device.port ? this.device.port.split(".") : "",
+                    dest_address: this.device.ip ? this.device.ip : "",
+                    dest_port: this.device.port ? this.device.port : "",
                 }
             }
             this.apiGet('udp/sendUdp.php', data).then((res) => {
@@ -314,8 +314,8 @@ export default {
                     targetDeviceID: this.device.deviceid,
                     additionalContentData: ("00").split(","),
                     macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip.split(".") : "",
-                    dest_port: this.device.port ? this.device.port.split(".") : "",
+                    dest_address: this.device.ip ? this.device.ip : "",
+                    dest_port: this.device.port ? this.device.port : "",
                 }
             }
             console.log(this.device)
