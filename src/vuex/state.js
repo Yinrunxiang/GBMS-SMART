@@ -8,7 +8,7 @@ const state = {
   organizes: [],
   device: {},
   devices:[],
-  ac_mode:[],
+  ac_breed:[],
   light_mode:[],
   led_mode:[],
 }

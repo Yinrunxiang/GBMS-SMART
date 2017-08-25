@@ -15,23 +15,25 @@
         <el-table :data="tableData" style="width: 100%" @selection-change="selectItem">
             <el-table-column type="selection" width="50">
             </el-table-column>
-            <el-table-column label="Mode(W)" prop="c_mode" width="150">
+            <el-table-column label="Mode(W)" prop="breed" width="150">
             </el-table-column>
-            <el-table-column label="Auto(W)" prop="c_auto" width="150">
+            <el-table-column label="Auto(W)" prop="mode_auto" width="150">
             </el-table-column>
-            <el-table-column label="Cool(W)" prop="c_cool" width="150">
+            <el-table-column label="Fan(W)" prop="fan" width="150">
             </el-table-column>
-            <el-table-column label="Heat(W)" prop="c_heat" width="150">
+            <el-table-column label="Cool(W)" prop="cool" width="150">
             </el-table-column>
-            <el-table-column label="Fan(W)" prop="c_fan" width="150">
+            <el-table-column label="Heat(W)" prop="heat" width="150">
             </el-table-column>
-            <el-table-column label="Low Wind(W)" prop="c_wind_low" width="150">
+            <el-table-column label="Auto Wind(W)" prop="wind_auto" width="150">
             </el-table-column>
-            <el-table-column label="Medium Wind(W)" prop="c_wind_medium" width="150">
+            <el-table-column label="Low Wind(W)" prop="low" width="150">
             </el-table-column>
-            <el-table-column label="High Wind(W)" prop="c_wind_high" width="150">
+            <el-table-column label="Medium Wind(W)" prop="medium" width="150">
             </el-table-column>
-            <el-table-column label="Status" prop="c_status">
+            <el-table-column label="High Wind(W)" prop="high" width="150">
+            </el-table-column>
+            <el-table-column label="Status" prop="status">
             </el-table-column>
         </el-table>
         <div class="pos-rel p-t-20">
@@ -82,17 +84,17 @@ export default {
         },
 
         //保存状态点击事件
-        setStatusBtn(c_status) {
+        setStatusBtn(status) {
             const data = {
                 params: {
                     selections: this.multipleSelection,
-                    c_status: c_status
+                    status: status
                 }
             }
-            this.apiGet('php/ac_mode.php?action=setStatus', data).then((res) => {
+            this.apiGet('device/ac_breed.php?action=setStatus', data).then((res) => {
                 if (res[0]) {
                     for (var selection of this.multipleSelection) {
-                        selection.c_status = c_status
+                        selection.status = status
                     }
                     _g.toastMsg('success', res[1])
                 } else {
@@ -113,18 +115,18 @@ export default {
                         selections: this.multipleSelection
                     }
                 }
-                this.apiGet('php/ac_mode.php?action=delete', data).then((res) => {
+                this.apiGet('device/ac_breed.php?action=delete', data).then((res) => {
                     if (res[0]) {
 
-                        var ac_mode = this.$store.state.ac_mode
-                        for (var i = 0; i < ac_mode.length; i++) {
+                        var ac_breed = this.$store.state.ac_breed
+                        for (var i = 0; i < ac_breed.length; i++) {
                             for (var selection of this.multipleSelection) {
-                                if (ac_mode[i].c_mode == selection.c_mode) {
-                                    ac_mode.splice(i, 1)
+                                if (ac_breed[i].breed == selection.breed) {
+                                    ac_breed.splice(i, 1)
                                 }
                             }
                         }
-                        this.$store.dispatch('setDevices', ac_mode)
+                        this.$store.dispatch('setAcBreed', ac_breed)
                         _g.toastMsg('success', res[1])
                     } else {
                         _g.toastMsg('error', res[1])
@@ -174,12 +176,12 @@ export default {
     computed: {
         //从vuex中获取设备数据
         tableData() {
-            console.log(this.$store.state.ac_mode)
-            return this.$store.state.ac_mode
+            console.log(this.$store.state.ac_breed)
+            return this.$store.state.ac_breed
         },
         //从vuex中获取设备数据条数
         dataCount() {
-            return this.$store.state.ac_mode.length
+            return this.$store.state.ac_breed.length
         }
     },
     mixins: [http]

@@ -26,8 +26,8 @@ const mutations = {
   setDevices(state, devices) {
     state.devices = devices
   },
-  setAcMode(state, ac_mode) {
-    state.ac_mode = ac_mode
+  setAcBreed(state, ac_breed) {
+    state.ac_breed = ac_breed
   },
   setLightMode(state, light_mode) {
     state.light_mode = light_mode

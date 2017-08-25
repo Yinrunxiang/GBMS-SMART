@@ -167,14 +167,14 @@ export default {
 					break
 			}
 		},
-		getAcMode() {
+		getAcBreed() {
 			const data = {
 				params: {
 					action: "search"
 				}
 			}
-			this.apiGet("device/ac_mode.php", data).then(res => {
-				this.$store.dispatch('setAcMode', res)
+			this.apiGet("device/ac_breed.php", data).then(res => {
+				this.$store.dispatch('setAcBreed', res)
 			});
 		},
 		getLightMode() {
@@ -197,6 +197,17 @@ export default {
 				this.$store.dispatch('setLedMode', res)
 			});
 		},
+		getRecord() {
+			const data = {
+				params: {
+					action: "getrecord"
+				}
+			}
+			this.apiGet("device/index.php", data).then(res => {
+				console.log(res)
+				// this.$store.dispatch('setLedMode', res)
+			});
+		},
 	},
 	created() {
 		const data = {
@@ -207,9 +218,10 @@ export default {
 		this.apiGet("device/index.php", data).then(res => {
 			this.$store.dispatch('setDevices', res)
 		});
-		this.getAcMode()
+		this.getAcBreed()
 		this.getLightMode()
 		this.getLedMode()
+		this.getRecord()
 	},
 	mounted() {
 

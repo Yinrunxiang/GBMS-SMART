@@ -79,6 +79,7 @@ $sender_io->on('connection', function($socket){
 $sender_io->on('workerStart', function(){
     // 监听一个UDP端口
     $inner_udp_worker = new Worker('udp://0.0.0.0:6000');
+    // $inner_udp_worker = new Worker('udp://0.0.0.0:8888');
     // $inner_udp_worker = new Worker('udp://0.0.0.0:59263');
     // 当UDP客户端发来数据时触发
     $inner_udp_worker->onMessage = function($udp_connection, $data){

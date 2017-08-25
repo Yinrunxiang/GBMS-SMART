@@ -2,28 +2,31 @@
     <div class="m-l-50 m-t-30 w-500">
         <el-form ref="form" :model="form" label-width="150px">
             <el-form-item label="Mode Name">
-                <el-input v-model.trim="form.c_mode" class="h-40 w-200"></el-input>
+                <el-input v-model.trim="form.breed" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Auto Watts">
-                <el-input v-model.trim="form.c_auto" class="h-40 w-200"></el-input>
+                <el-input v-model.trim="form.mode_auto" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Fan Watts">
-                <el-input v-model.trim="form.c_fan" class="h-40 w-200"></el-input>
+                <el-input v-model.trim="form.fan" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Cool Watts">
-                <el-input v-model.trim="form.c_cool" class="h-40 w-200"></el-input>
+                <el-input v-model.trim="form.cool" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Heat Watts">
-                <el-input v-model.trim="form.c_heat" class="h-40 w-200"></el-input>
+                <el-input v-model.trim="form.heat" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <el-form-item label="Auto Wind Watts">
+                <el-input v-model.trim="form.wind_auto" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Low Wind Watts">
-                <el-input v-model.trim="form.c_wind_low" class="h-40 w-200"></el-input>
+                <el-input v-model.trim="form.low" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Medium Wind Watts">
-                <el-input v-model="form.c_wind_medium" class="h-40 w-200"></el-input>
+                <el-input v-model="form.medium" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="High Wind Watts">
-                <el-input v-model="form.c_wind_high" class="h-40 w-200"></el-input>
+                <el-input v-model="form.high" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="add('form')" :loading="isLoading">Commit</el-button>
@@ -42,15 +45,16 @@ export default {
         return {
             isLoading: false,
             form: {
-                c_mode: '',
-                c_atuo: '',
-                c_fan: '',
-                c_cool: '',
-                c_heat: '',
-                c_wind_low: '',
-                c_wind_medium: '',
-                c_wind_high: '',
-                c_status: 'enabled',
+                breed: '',
+                mode_atuo: '',
+                fan: '',
+                cool: '',
+                heat: '',
+                wind_auto: '',
+                low: '',
+                medium: '',
+                high: '',
+                status: 'enabled',
             },
         }
     },
@@ -61,12 +65,12 @@ export default {
             const data = {
                 params: this.form
             }
-            this.apiGet('device/ac_mode.php?action=insert', data).then((res) => {
+            this.apiGet('device/ac_breed.php?action=insert', data).then((res) => {
                 // _g.clearVuex('setRules')
-                if (res[0]) {
-                    var ac_mode = this.$store.state.ac_mode
-                    ac_mode.push(this.form)
-                    this.$store.dispatch('setAcMode', ac_mode)
+                if (res[0] == true) {
+                    var ac_breed = this.$store.state.ac_breed
+                    ac_breed.push(this.form)
+                    this.$store.dispatch('setAcBreed', ac_breed)
                     _g.toastMsg('success', res[1])
                     setTimeout(() => {
                         this.goback()
@@ -79,7 +83,7 @@ export default {
         },
     },
     created() {
-        
+        console.log('ac_breed add')
     },
     mounted() {
     },

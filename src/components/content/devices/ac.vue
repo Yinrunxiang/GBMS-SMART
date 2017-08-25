@@ -12,8 +12,8 @@
         <el-col :span="12" class="m-b-20 p-l-20 p-r-20 ovf-hd" style="margin-top:80px">
             <el-switch v-model="on_off" @change="switch_change">
             </el-switch>
-            <div v-show="on_off" class="m-t-20">
-                <el-row v-show="mode=='auto'">
+            <div v-if="on_off" class="m-t-20">
+                <el-row v-if="mode=='auto'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
@@ -29,7 +29,7 @@
                         <span class="fl" style="line-height:36px">{{autotmp}} ℃</span>
                     </el-col>
                 </el-row>
-                <el-row v-show="mode=='cool' || mode=='fan'">
+                <el-row v-if="mode=='cool' || mode=='fan'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
@@ -45,7 +45,7 @@
                         <span class="fl" style="line-height:36px">{{cooltmp}} ℃</span>
                     </el-col>
                 </el-row>
-                <el-row v-show="mode=='heat'">
+                <el-row v-if="mode=='heat'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
@@ -93,13 +93,13 @@ import http from '../../../assets/js/http'
 export default {
     data() {
         return {
-            on_off: false,
-            cooltmp: 0,
+            on_off: true,
+            cooltmp: 26,
             autotmp: 0,
             heattmp: 0,
-            tmp: 0,
-            wind: 0,
-            mode: "",
+            tmp: 26,
+            wind: 2,
+            mode: "cool",
             device:this.$store.state.device,
         }
     },

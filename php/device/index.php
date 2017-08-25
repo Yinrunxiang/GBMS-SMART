@@ -157,21 +157,43 @@ switch ($action)
         echo $json_results;
     break;  
     case "getrecord":
-        $sql="SELECT * FROM record as a left join ac_mode as b on breed = c_mode where devicetype = 'ac'";
-        $result = mysqli_query($con,$sql);
-        $results = array();
+        $ac_breed="SELECT * FROM ac_breed";
+        $result = mysqli_query($con,$ac_breed);
+        $ac_breed = array();
         while ($row = mysqli_fetch_assoc($result)) {
-            $results[] = $row;
-            switch($row["devicetype"]){
-                case "light":
-                    $sql="SELECT * FROM device";
-                break;
-                case "ac":
-                    
-                break;
-            }
+            $ac_breed[] = $row;
         }
-        $json_results = str_replace("\/","/",json_encode($results)); 
+        $light_breed="SELECT * FROM light_breed";
+        $result = mysqli_query($con,$light_breed);
+        $light_breed = array();
+        while ($row = mysqli_fetch_assoc($result)) {
+            $light_breed[] = $row;
+        }
+        $record = "SELECT * FROM record where devicetype = 'ac'";
+        $result = mysqli_query($con,$record);
+        $record = array();
+        while ($row = mysqli_fetch_assoc($result)) {
+            // switch($row["devicetype"]){
+            //     case "ac" :
+            //     foreach ($ac_breed as $key => $value) { 
+            //        if($value["breed"] ==  $row["breed"]){
+            //         $row["watts"] = intval($value[$row["mode"]])+intval($value[$row["grade"]]);
+            //        }
+            //     }
+                   
+            //     break;
+            //     case "light" :
+            //     foreach ($light_breed as $key => $value) { 
+            //         if($value["breed"] ==  $row["breed"]){
+            //          $row["watts"] = intval($value["watts"]);
+            //         }
+            //      }
+            //     break;
+            // }
+            $record[] = $row;
+        }
+        $data = [$ac_breed,$record];
+        $json_results = str_replace("\/","/",json_encode($data)); 
         echo $json_results;
     break;     
 };

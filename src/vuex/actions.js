@@ -26,8 +26,8 @@ const actions = {
   setDevices({ commit }, devices) {
     commit("setDevices", devices);
   },
-  setAcMode({ commit }, ac_mode) {
-    commit("setAcMode", ac_mode);
+  setAcBreed({ commit }, ac_breed) {
+    commit("setAcBreed", ac_breed);
   },
   setLightMode({ commit }, light_mode) {
     commit("setLightMode", light_mode);
