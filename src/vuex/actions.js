@@ -29,11 +29,14 @@ const actions = {
   setAcBreed({ commit }, ac_breed) {
     commit("setAcBreed", ac_breed);
   },
-  setLightMode({ commit }, light_mode) {
-    commit("setLightMode", light_mode);
+  setLightBreed({ commit }, light_breed) {
+    commit("setLightBreed", light_breed);
   },
-  setLedMode({ commit }, led_mode) {
-    commit("setLedMode", led_mode);
+  setLedBreed({ commit }, led_breed) {
+    commit("setLedBreed", led_breed);
+  },
+  setRecord({ commit }, record) {
+    commit("setRecord", record);
   }
 };
 

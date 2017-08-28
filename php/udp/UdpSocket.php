@@ -8,12 +8,15 @@ class UdpSocket
         //设置广播属性
         socket_set_option($socket,65535,SO_BROADCAST,1);
         // socket_bind( $socket, $address, $port );
+        // echo $dest_address.' ';
+        // echo $dest_port;
         //发送广播
         while(socket_sendto($socket, $msg, strlen($msg), 0, $dest_address, $dest_port))
         {
             return $hear = '发送成功';
         }
         return $hear = '发送失败';
+        
         //接收广播
 
         // $socket = stream_socket_client("udp://{$dest_address}:{$dest_port}", $errno, $errstr);  

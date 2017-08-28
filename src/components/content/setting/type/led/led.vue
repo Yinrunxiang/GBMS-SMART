@@ -15,11 +15,11 @@
         <el-table :data="tableData" style="width: 100%" @selection-change="selectItem">
             <el-table-column type="selection" width="50">
             </el-table-column>
-            <el-table-column label="Mode(W)" prop="c_mode" width="150">
+            <el-table-column label="Breed(W)" prop="breed" width="150">
             </el-table-column>
-            <el-table-column label="Watts" prop="c_watts" width="150">
+            <el-table-column label="Watts" prop="watts" width="150">
             </el-table-column>
-            <el-table-column label="Status" prop="c_status">
+            <el-table-column label="Status" prop="status">
             </el-table-column>
         </el-table>
         <div class="pos-rel p-t-20">
@@ -70,17 +70,17 @@ export default {
         },
 
         //保存状态点击事件
-        setStatusBtn(c_status) {
+        setStatusBtn(status) {
             const data = {
                 params: {
                     selections: this.multipleSelection,
-                    c_status: c_status
+                    status: status
                 }
             }
-            this.apiGet('device/led_mode.php?action=setStatus', data).then((res) => {
+            this.apiGet('device/led_breed.php?action=setStatus', data).then((res) => {
                 if (res[0]) {
                     for (var selection of this.multipleSelection) {
-                        selection.c_status = c_status
+                        selection.status = status
                     }
                     _g.toastMsg('success', res[1])
                 } else {
@@ -101,18 +101,18 @@ export default {
                         selections: this.multipleSelection
                     }
                 }
-                this.apiGet('device/led_mode.php?action=delete', data).then((res) => {
+                this.apiGet('device/led_breed.php?action=delete', data).then((res) => {
                     if (res[0]) {
 
-                        var led_mode = this.$store.state.led_mode
-                        for (var i = 0; i < led_mode.length; i++) {
+                        var led_breed = this.$store.state.led_breed
+                        for (var i = 0; i < led_breed.length; i++) {
                             for (var selection of this.multipleSelection) {
-                                if (led_mode[i].c_mode == selection.c_mode) {
-                                    led_mode.splice(i, 1)
+                                if (led_breed[i].breed == selection.breed) {
+                                    led_breed.splice(i, 1)
                                 }
                             }
                         }
-                        this.$store.dispatch('setLedMode', led_mode)
+                        this.$store.dispatch('setLedBreed', led_breed)
                         _g.toastMsg('success', res[1])
                     } else {
                         _g.toastMsg('error', res[1])
@@ -162,12 +162,12 @@ export default {
     computed: {
         //从vuex中获取设备数据
         tableData() {
-            console.log(this.$store.state.led_mode)
-            return this.$store.state.led_mode
+            console.log(this.$store.state.led_breed)
+            return this.$store.state.led_breed
         },
         //从vuex中获取设备数据条数
         dataCount() {
-            return this.$store.state.led_mode.length
+            return this.$store.state.led_breed.length
         }
     },
     mixins: [http]

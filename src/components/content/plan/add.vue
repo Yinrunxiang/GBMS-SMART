@@ -10,6 +10,12 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="Breed Type">
+                <el-select v-model="form.breed" filterable placeholder="Select Breed" class="h-40 w-200">
+                    <el-option v-for="item in breedData" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="Subnet ID">
                 <el-input v-model.trim="form.subnetid" class="h-40 w-200"></el-input>
             </el-form-item>
@@ -19,15 +25,6 @@
             <el-form-item label="Channel">
                 <el-input v-model.trim="form.channel" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item label="Country">
-                <el-select v-model="form.country" filterable placeholder="Select Address" class="h-40 w-200">
-                    <el-option v-for="item in addressOptions" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="Address">
-                <el-input v-model="form.address" class="h-40 w-200"></el-input>
-            </el-form-item>
             <el-form-item label="IP Address">
                 <el-input v-model="form.ip" class="h-40 w-200"></el-input>
             </el-form-item>
@@ -36,6 +33,15 @@
             </el-form-item>
             <el-form-item label="Mac Address">
                 <el-input v-model="form.mac" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <el-form-item label="Country">
+                <el-select v-model="form.country" filterable placeholder="Select Address" class="h-40 w-200">
+                    <el-option v-for="item in addressOptions" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="Address">
+                <el-input v-model="form.address" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="add('form')" :loading="isLoading">Commit</el-button>
@@ -55,12 +61,13 @@ export default {
             isLoading: false,
             form: {
                 device: '',
-                devicetype: '',
+                devicetype: 'ac',
                 subnetid: '',
                 deviceid: '',
                 channel: '',
                 country: '',
                 address: '',
+                breed:'',
                 ip: '',
                 port: '',
                 mac: '',
@@ -70,6 +77,7 @@ export default {
                 endtime: '',
 
             },
+            
             deviceTypeOptions: [
                 { label: 'AC', value: 'ac' },
                 { label: 'Light', value: 'light' },
@@ -293,15 +301,61 @@ export default {
                 address.push(addressObj)
             }
             return address
-        }
+        },
+        getBreedList(breeds) {
+            var breedArr = []
+            for (var item of breeds) {
+                var breedObj = {}
+                breedObj.label = item.breed
+                breedObj.value = item.breed
+                breedArr.push(breedObj)
+            }
+            return breedArr
+        },
+        // breedChange(value){
+        //     switch (value) {
+        //         case "ac":
+        //             breedData = getBreedList(this.$store.state.ac_breed)
+        //             break
+        //         case "light":
+        //             // return this.$store.state.light_breed
+        //             breedData = getBreedList(this.$store.state.light_breed)
+        //             break
+        //         case "led":
+        //             // return this.$store.state.led_breed
+        //             breedData = getBreedList(this.$store.state.led_breed)
+        //             break
+        //     }
+        // }
     },
     created() {
-        
+        console.log("plan add")
     },
     mounted() {
         this.addressOptions = this.getAddressOptions()
     },
     components: {
+    },
+    computed: {
+        breedData() {
+            switch (this.form.devicetype) {
+                case "ac":
+                    var breeds = this.getBreedList(this.$store.state.ac_breed)
+                    return breeds
+                    break
+                case "light":
+                    // return this.$store.state.light_breed
+                    var breeds = this.getBreedList(this.$store.state.light_breed)
+                    return breeds
+                    break
+                case "led":
+                    // return this.$store.state.led_breed
+                    var breeds = this.getBreedList(this.$store.state.led_breed)
+                    return breeds
+                    break
+            }
+
+        },
     },
     mixins: [http, fomrMixin]
 }

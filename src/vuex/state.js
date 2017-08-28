@@ -9,8 +9,9 @@ const state = {
   device: {},
   devices:[],
   ac_breed:[],
-  light_mode:[],
-  led_mode:[],
+  light_breed:[],
+  led_breed:[],
+  record:[],
 }
 
 export default state

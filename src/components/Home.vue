@@ -10,16 +10,16 @@
 				</template>
 			</el-col>
 			<!-- <el-col :span="4" :offset="16" class="pos-rel">
-																<el-dropdown @command="handleMenu" class="user-menu">
-														      <span class="el-dropdown-link c-gra" style="cursor: default">
-														        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
-														      </span>
-														      <el-dropdown-menu slot="dropdown">
-														        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
-														        <el-dropdown-item command="logout">退出</el-dropdown-item>
-														      </el-dropdown-menu>
-														    </el-dropdown>
-															</el-col> -->
+																		<el-dropdown @command="handleMenu" class="user-menu">
+																      <span class="el-dropdown-link c-gra" style="cursor: default">
+																        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
+																      </span>
+																      <el-dropdown-menu slot="dropdown">
+																        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
+																        <el-dropdown-item command="logout">退出</el-dropdown-item>
+																      </el-dropdown-menu>
+																    </el-dropdown>
+																	</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -37,7 +37,7 @@
 			</section>
 		</el-col>
 		<!-- <changePwd ref="changePwd"></changePwd> -->
-	
+
 	</el-row>
 </template>
 <style>
@@ -153,7 +153,8 @@ export default {
 			module: null,
 			img: '',
 			title: '',
-			logo_type: null
+			logo_type: null,
+			records: [],
 		}
 	},
 	methods: {
@@ -177,24 +178,24 @@ export default {
 				this.$store.dispatch('setAcBreed', res)
 			});
 		},
-		getLightMode() {
+		getLightBreed() {
 			const data = {
 				params: {
 					action: "search"
 				}
 			}
-			this.apiGet("device/light_mode.php", data).then(res => {
-				this.$store.dispatch('setLightMode', res)
+			this.apiGet("device/light_breed.php", data).then(res => {
+				this.$store.dispatch('setLightBreed', res)
 			});
 		},
-		getLedMode() {
+		getLedBreed() {
 			const data = {
 				params: {
 					action: "search"
 				}
 			}
-			this.apiGet("device/led_mode.php", data).then(res => {
-				this.$store.dispatch('setLedMode', res)
+			this.apiGet("device/led_breed.php", data).then(res => {
+				this.$store.dispatch('setLedBreed', res)
 			});
 		},
 		getRecord() {
@@ -204,12 +205,51 @@ export default {
 				}
 			}
 			this.apiGet("device/index.php", data).then(res => {
-				console.log(res)
-				// this.$store.dispatch('setLedMode', res)
+				var records = res
+				var ac_breeds = this.$store.state.ac_breed
+				var light_breeds = this.$store.state.light_breed
+				var led_breeds = this.$store.state.led_breed
+				for (var record of records) {
+					if (record.on_off) {
+						switch (record.devicetype) {
+							case "ac":
+								for (var ac_breed of ac_breeds) {
+									if (record.breed == ac_breed.breed) {
+										record.watts = parseInt(ac_breed[record.mode]) + parseInt(ac_breed[record.grade])
+									}
+								}
+								break
+							case "light":
+								for (var light_breed of light_breeds) {
+									if (record.breed == light_breed.breed) {
+										record.watts = parseInt(light_breed.watts)
+									}
+								}
+								break
+							case "led":
+								for (var led_breed of led_breeds) {
+									if (record.breed == led_breed.breed) {
+										record.watts = parseInt(led_breed.watts)
+									}
+								}
+								break
+						}
+					}
+
+				}
+				console.log(records)
+				this.records = records
+				//记录数据处理完成
+				//以下是记录数据的使用
+				
+				this.$store.dispatch('setRecord', records)
 			});
 		},
 	},
 	created() {
+		
+	},
+	mounted() {
 		const data = {
 			params: {
 				action: "search"
@@ -219,12 +259,9 @@ export default {
 			this.$store.dispatch('setDevices', res)
 		});
 		this.getAcBreed()
-		this.getLightMode()
-		this.getLedMode()
+		this.getLightBreed()
+		this.getLedBreed()
 		this.getRecord()
-	},
-	mounted() {
-
 	},
 	components: {
 		leftMenu

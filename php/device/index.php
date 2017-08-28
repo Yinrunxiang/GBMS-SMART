@@ -37,7 +37,8 @@ switch ($action)
         $country = isset($_REQUEST["country"]) ? $_REQUEST["country"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
         $devicetype = isset($_REQUEST["devicetype"]) ? $_REQUEST["devicetype"] : '';
-        $sql="insert into device (device,subnetid,deviceid,channel,mac,ip,port,country,address,devicetype,status) values ('".$device."','".$subnetid."','".$deviceid."','".$channel."','".$mac."','".$ip."','".$port."','".$country."','".$address."','".$devicetype."','enabled')";
+        $breed = isset($_REQUEST["breed"]) ? $_REQUEST["breed"] : '';
+        $sql="insert into device (device,subnetid,deviceid,channel,mac,ip,port,country,address,devicetype,breed,status) values ('".$device."','".$subnetid."','".$deviceid."','".$channel."','".$mac."','".$ip."','".$port."','".$country."','".$address."','".$devicetype."','".$breed."','enabled')";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -157,43 +158,14 @@ switch ($action)
         echo $json_results;
     break;  
     case "getrecord":
-        $ac_breed="SELECT * FROM ac_breed";
-        $result = mysqli_query($con,$ac_breed);
-        $ac_breed = array();
-        while ($row = mysqli_fetch_assoc($result)) {
-            $ac_breed[] = $row;
-        }
-        $light_breed="SELECT * FROM light_breed";
-        $result = mysqli_query($con,$light_breed);
-        $light_breed = array();
-        while ($row = mysqli_fetch_assoc($result)) {
-            $light_breed[] = $row;
-        }
-        $record = "SELECT * FROM record where devicetype = 'ac'";
+        $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light'";
         $result = mysqli_query($con,$record);
         $record = array();
         while ($row = mysqli_fetch_assoc($result)) {
-            // switch($row["devicetype"]){
-            //     case "ac" :
-            //     foreach ($ac_breed as $key => $value) { 
-            //        if($value["breed"] ==  $row["breed"]){
-            //         $row["watts"] = intval($value[$row["mode"]])+intval($value[$row["grade"]]);
-            //        }
-            //     }
-                   
-            //     break;
-            //     case "light" :
-            //     foreach ($light_breed as $key => $value) { 
-            //         if($value["breed"] ==  $row["breed"]){
-            //          $row["watts"] = intval($value["watts"]);
-            //         }
-            //      }
-            //     break;
-            // }
             $record[] = $row;
         }
-        $data = [$ac_breed,$record];
-        $json_results = str_replace("\/","/",json_encode($data)); 
+        // $data = [$ac_breed,$record];
+        $json_results = str_replace("\/","/",json_encode($record)); 
         echo $json_results;
     break;     
 };

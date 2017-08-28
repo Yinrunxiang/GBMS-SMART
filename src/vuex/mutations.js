@@ -29,11 +29,15 @@ const mutations = {
   setAcBreed(state, ac_breed) {
     state.ac_breed = ac_breed
   },
-  setLightMode(state, light_mode) {
-    state.light_mode = light_mode
+  setLightBreed(state, light_breed) {
+    state.light_breed = light_breed
   },
-  setLedMode(state, led_mode) {
-    state.led_mode = led_mode
+  setLedBreed(state, led_breed) {
+    state.led_breed = led_breed
+  }
+  ,
+  setRecord(state, record) {
+    state.record = record
   }
 }
 
