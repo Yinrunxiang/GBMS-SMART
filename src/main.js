@@ -21,7 +21,6 @@ import 'nprogress/nprogress.css'
 import './assets/css/global.css'
 import './assets/css/base.css'
 
-
 axios.defaults.baseURL = HOST
 axios.defaults.timeout = 1000 * 15
 // axios.defaults.headers.authKey = Lockr.get('authKey')

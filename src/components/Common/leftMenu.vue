@@ -5,6 +5,19 @@
         <i class="el-icon-menu"></i>Global</el-menu-item>
       <el-menu-item index="contral">
         <i class="el-icon-menu"></i>Contral</el-menu-item>
+      <!-- <el-submenu index="11">
+        <template slot="title">
+          <i class="el-icon-menu"></i>Contral</template>
+        <el-submenu :index="country.name" v-for="country in countryArr">
+          <template slot="title">
+            <i class="el-icon-menu"></i>{{country.name}}</template>
+          <el-submenu :index="devicetype.name" v-for="devicetype in country.typeList">
+            <template slot="title">
+              <i class="el-icon-menu"></i>{{devicetype.name}}</template>
+            <el-menu-item :index="device.device" v-for="device in devicetype.deviceList"><i class="el-icon-menu"></i>{{device.device}}</el-menu-item>
+          </el-submenu>
+        </el-submenu>
+      </el-submenu> -->
       <el-menu-item index="plan">
         <i class="el-icon-menu"></i>Plan</el-menu-item>
       <el-menu-item index="report">
@@ -63,18 +76,18 @@ export default {
           url: '/home/setting/type/led',
           name: 'settingTypeLed'
         }
-        
+
       ],
     }
   },
   props: ['menuData'],
   methods: {
     handleOpen(key, keyPath) {
-        // console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        // console.log(key, keyPath);
-      },
+      // console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      // console.log(key, keyPath);
+    },
     routerChange(key, keyPath) {
       for (var item of this.menuDatas) {
         if (key == item.name) {
@@ -88,8 +101,13 @@ export default {
 
     }
   },
-  created(){
-      console.log('leftmeun')
+  created() {
+    console.log('leftmeun')
   },
+  computed: {
+    countryArr() {
+      return this.$store.state.countryArr
+    }
+  }
 }
 </script>

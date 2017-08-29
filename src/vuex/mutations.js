@@ -38,6 +38,9 @@ const mutations = {
   ,
   setRecord(state, record) {
     state.record = record
+  }  ,
+  setCountryArr(state, countryArr) {
+    state.countryArr = countryArr
   }
 }
 

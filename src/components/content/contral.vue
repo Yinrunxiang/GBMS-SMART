@@ -3,7 +3,7 @@
         <el-col :span="24" class="contral-panel-center">
             <!--<el-col :span="4">-->
             <div class="nav" :class='"w-"+addresswidth'>
-                <aside class="ovf-hd fl address" :class='"w-"+addresswidth' @mouseenter="enteraddress" @mouseleave="leaveaddress">
+                <aside class="ovf-hd fl address h-100p" :class='"w-"+addresswidth' @mouseenter="enteraddress" @mouseleave="leaveaddress">
                     <div v-for="item in addresslist" @mouseenter="addressChange(item)">
                         <div class="c-light-gray m-t-10">
                             <div class="w-100p h-40 p-l-20 left-menu pointer c-blue">{{item}}
@@ -18,7 +18,7 @@
                                     {{item}}</div>
                             </div>
                         </div>
-                        <aside class="w-100 ovf-hd fl device h-100p" v-show="ondevice">
+                        <aside class="w-150 ovf-hd fl device h-100p" v-show="ondevice">
                             <div v-for="item in list">
                                 <div class="c-light-gray m-t-10">
                                     <div class="w-100p h-40 p-l-20 left-menu pointer c-blue" @click="deviceChange(item)">
@@ -127,25 +127,25 @@ export default {
         //鼠标进入地址列表事件
         enteraddress() {
             this.ontype = true
-            this.addresswidth = 250
+            this.addresswidth = 300
         },
         //鼠标离开地址列表事件
         leaveaddress() {
             this.ontype = false
-            this.addresswidth = 150
+            this.addresswidth = 200
 
         },
         //鼠标进入类型列表事件
         entertype() {
             this.ondevice = true
-            this.addresswidth = 350
-            this.typewidth = 200
+            this.addresswidth = 400
+            this.typewidth = 250
         },
         //鼠标离开类型列表事件
         leavetype() {
             this.ondevice = false
-            this.addresswidth = 250
-            this.typewidth = 100
+            this.addresswidth = 300
+            this.typewidth = 150
         },
         //地址选择事件
         addressChange(address) {

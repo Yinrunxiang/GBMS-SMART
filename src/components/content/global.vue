@@ -1,7 +1,7 @@
 <template>
     <div>
         <div ref="worldmap" id="world-map"></div>
-         <div ref="chart" id="chart"></div>
+        <div ref="chart" id="chart"></div>
     </div>
 </template>
 
@@ -29,11 +29,11 @@ export default {
         }
     },
     methods: {
-        
+
         createChart(record) {
             var myChart = echarts.init(this.$refs.chart);
-            var base = +new Date(1968, 9, 3);
-            var oneDay = 24 * 3600 * 1000;
+            // var base = +new Date(1968, 9, 3);
+            // var oneDay = 24 * 3600 * 1000;
             var date = record.dateArr
             var data = record.recordArr
             // var date = [];
@@ -49,7 +49,7 @@ export default {
             var option = {
                 tooltip: {
                     trigger: 'axis',
-                    position: function (pt) {
+                    position: function(pt) {
                         return [pt[0], '10%'];
                     }
                 },
@@ -121,17 +121,17 @@ export default {
             };
             myChart.setOption(option);
         },
-        countryChange(country){
+        countryChange(country) {
             var records = {}
             records.dateArr = []
             records.recordArr = []
-            for(var record of this.$store.state.record){
-                    if(record.country == country){
-                        if(records.dateArr.indexOf(record.record_date) == -1){
+            for (var record of this.$store.state.record) {
+                if (record.country == country) {
+                    if (records.dateArr.indexOf(record.record_date) == -1) {
                         records.dateArr.push(record.record_date)
                         records.recordArr.push(record.watts)
-                    }else{
-                        var index  = records.dateArr.indexOf(record.record_date)
+                    } else {
+                        var index = records.dateArr.indexOf(record.record_date)
                         records.recordArr[index] += record.watts
                     }
                 }
@@ -148,10 +148,10 @@ export default {
             // }
             // return itCounteyTooltip
             var itCounteyTooltip = 'Country : ' + params.name + '<br/>'
-            for (var item of this.mapIportCountryArr) {
+            for (var item of this.countryArr) {
                 if (item.name == params.name) {
-                    for (var type of item.deviceType) {
-                        itCounteyTooltip += type + ' : ' + item.deviceTypeNumber[type] + '<br/>'
+                    for (var type of item.typeList) {
+                        itCounteyTooltip += type.name + ' : ' + item.deviceTypeNumber[type.name] + '<br/>'
                     }
                 }
             }
@@ -164,7 +164,7 @@ export default {
                 tooltip: {
                     show: true, //显示提示标签
                     //提示标签格式
-                    formatter: function (params) {
+                    formatter: function(params) {
                         var str = e.itCounteyTooltip(params)
                         return str
                         // var value = (params.value + '').split('.');
@@ -212,7 +212,7 @@ export default {
                         }
                     },
 
-                    data: this.mapIportCountryArr
+                    data: this.countryArr
                     // data: [
                     //     { name: this.country, selected: true }//福建为选中状态
                     // ]
@@ -220,7 +220,7 @@ export default {
             };
 
             myChart.setOption(option);
-            myChart.on('click', function (params) {
+            myChart.on('click', function(params) {
                 var dataIndex = params.dataIndex;
                 console.log(params);
                 e.countryChange(params.data.name)
@@ -230,13 +230,13 @@ export default {
     mounted() {
         console.log('global')
         // const data = {
-		// 	params: {
-		// 		action: "getrecord"
-		// 	}
-		// }
-		// this.apiGet("device/index.php", data).then(res => {
-		// 	this.$store.dispatch('setDevices', res)
-		// });
+        // 	params: {
+        // 		action: "getrecord"
+        // 	}
+        // }
+        // this.apiGet("device/index.php", data).then(res => {
+        // 	this.$store.dispatch('setDevices', res)
+        // });
         this.createmap(this)
         this.createChart(this.allRecord)
     },
@@ -244,71 +244,38 @@ export default {
 
     },
     computed: {
-        devices() {
-            var devices = []
-            for(var device of this.$store.state.devices){
-                if(device.status == 'enabled'){
-                    devices.push(device)
-                }
-            }
-            return devices
-        },
+        // devices() {
+        //     var devices = []
+        //     for (var device of this.$store.state.devices) {
+        //         if (device.status == 'enabled') {
+        //             devices.push(device)
+        //         }
+        //     }
+        //     return devices
+        // },
         //计算该国家的设备类型，各种设备类型的数量，生成国家数组让地图调用
-        mapIportCountryArr() {
-            var mapIportCountryArr = []
-            var countryList = []
-            //this.devices原始设备数据
-            for (var item of this.devices) {
-                //筛选重复国家
-                if (countryList.indexOf(item.country) == -1) {
-                    countryList.push(item.country);
-                    var mapIportCountryObject = {}
-                    mapIportCountryObject.name = item.country
-                    mapIportCountryObject.selected = true
-                    mapIportCountryObject.deviceType = []
-                    mapIportCountryObject.deviceTypeNumber = {}
-                    mapIportCountryObject.deviceList = {}
-                    mapIportCountryArr.push(mapIportCountryObject)
-                }
-                for (var country of mapIportCountryArr) {
-                    //筛选重复类型
-                    if (item.country == country.name) {
-                        if (country.deviceType.indexOf(item.devicetype) == -1) {
-                            country.deviceType.push(item.devicetype)
-                        }
-                        //计算各种设备类型的数量
-                        country.deviceTypeNumber[item.devicetype] ? country.deviceTypeNumber[item.devicetype] += 1 : country.deviceTypeNumber[item.devicetype] = 1
-                        //获取各种类型的设备名称
-                        if (!country.deviceList[item.devicetype]) {
-                            country.deviceList[item.devicetype] = [item.device]
-                        } else {
-                            country.deviceList[item.devicetype].push(item.device)
-                        }
-                    }
-                }
-            }
-            // console.log(mapIportCountryArr)
-            return mapIportCountryArr
+        countryArr() {
+            return this.$store.state.countryArr
         },
-        record(){
+        record() {
             return this.$store.state.record
         },
-        allRecord(){
+        allRecord() {
             var records = {}
             records.dateArr = []
             records.recordArr = []
-            for(var record of this.$store.state.record){
-                if(records.dateArr.indexOf(record.record_date) == -1){
+            for (var record of this.$store.state.record) {
+                if (records.dateArr.indexOf(record.record_date) == -1) {
                     records.dateArr.push(record.record_date)
                     records.recordArr.push(record.watts)
-                }else{
-                    var index  = records.dateArr.indexOf(record.record_date)
+                } else {
+                    var index = records.dateArr.indexOf(record.record_date)
                     records.recordArr[index] += record.watts
                 }
             }
             return records
         }
-        
+
     },
     mixins: [http]
 }

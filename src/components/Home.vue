@@ -245,6 +245,52 @@ export default {
 				this.$store.dispatch('setRecord', records)
 			});
 		},
+		countryArr(devices) {
+            var countryArr = []
+            var countryList = []
+            //this.devices原始设备数据
+            for (var item of devices) {
+                //筛选重复国家
+                if (countryList.indexOf(item.country) == -1) {
+                    countryList.push(item.country);
+                    var mapIportCountryObject = {}
+                    mapIportCountryObject.name = item.country
+                    mapIportCountryObject.selected = true
+					mapIportCountryObject.typeList = []
+					mapIportCountryObject.typeArr = []
+                    mapIportCountryObject.deviceTypeNumber = {}
+                    // mapIportCountryObject.deviceList = {}
+                    countryArr.push(mapIportCountryObject)
+				}
+                for (var country of countryArr) {
+					//筛选重复类型
+					
+                    if (item.country == country.name) {
+                        if (country.typeArr.indexOf(item.devicetype) == -1) {
+                            country.typeArr.push(item.devicetype)
+                            var typeObject = {}
+                            typeObject.name = item.devicetype
+                            typeObject.deviceList = []
+                            country.typeList.push(typeObject)
+						}
+                        //计算各种设备类型的数量
+                        country.deviceTypeNumber[item.devicetype] ? country.deviceTypeNumber[item.devicetype] += 1 : country.deviceTypeNumber[item.devicetype] = 1
+                        for (var type of country.typeList) {
+                            //筛选重复类型
+                            if (item.devicetype == type.name) {
+                                type.deviceList.push(item)
+                            }
+                        }
+
+
+                    }
+                }
+			}
+			 console.log(countryArr)
+			this.$store.dispatch('setCountryArr', countryArr)
+           
+            // return countryArr
+        },
 	},
 	created() {
 		
@@ -257,11 +303,21 @@ export default {
 		}
 		this.apiGet("device/index.php", data).then(res => {
 			this.$store.dispatch('setDevices', res)
+			var devices = []
+			for (var device of res) {
+				if (device.status == 'enabled') {
+					devices.push(device)
+				}
+			}
+			// this.devices = devices
+			this.countryArr(devices)
+			
 		});
 		this.getAcBreed()
 		this.getLightBreed()
 		this.getLedBreed()
 		this.getRecord()
+		
 	},
 	components: {
 		leftMenu

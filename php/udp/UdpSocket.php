@@ -7,7 +7,8 @@ class UdpSocket
         $socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
         //设置广播属性
         socket_set_option($socket,65535,SO_BROADCAST,1);
-        // socket_bind( $socket, $address, $port );
+        // socket_bind( $socket, '192.168.1.8', '8888' );
+        // socket_bind( $socket, '172.18.88.223', '8888' );
         // echo $dest_address.' ';
         // echo $dest_port;
         //发送广播

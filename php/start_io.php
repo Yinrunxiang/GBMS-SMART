@@ -89,6 +89,7 @@ $sender_io->on('workerStart', function(){
         $sender_io->emit('new_msg', bin2hex($data));
 
         $msg = bin2hex($data);
+        // echo $msg;
         $operatorCode = substr($msg,42, 4);
         // echo $operatorCode.'                      ';
         $subnetid = substr($msg,34, 2);
