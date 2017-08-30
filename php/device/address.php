@@ -109,7 +109,7 @@ switch ($action)
     }
     break;
     case "search":
-        $sql="SELECT * FROM address";
+        $sql="SELECT * FROM address ";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {
