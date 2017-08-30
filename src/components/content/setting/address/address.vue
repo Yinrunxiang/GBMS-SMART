@@ -2,7 +2,7 @@
     <div class="p-20">
         <div class="m-b-20 ovf-hd">
             <div class="fl">
-                <router-link class="btn-link-large add-btn" to="light/add">
+                <router-link class="btn-link-large add-btn" to="address/add">
                     <i class="el-icon-plus"></i>&nbsp;&nbsp;Add Mode
                 </router-link>
             </div>
@@ -15,9 +15,15 @@
         <el-table :data="tableData" style="width: 100%" @selection-change="selectItem">
             <el-table-column type="selection" width="50">
             </el-table-column>
-            <el-table-column label="Breed(W)" prop="breed" width="150">
+            <el-table-column label="Country" prop="country" width="150">
             </el-table-column>
-            <el-table-column label="Watts" prop="watts" width="150">
+            <el-table-column label="Address" prop="address" width="150">
+            </el-table-column>
+            <el-table-column label="IP" prop="ip" width="150">
+            </el-table-column>
+            <el-table-column label="Port" prop="port" width="150">
+            </el-table-column>
+            <el-table-column label="MAC" prop="mac" width="200">
             </el-table-column>
             <el-table-column label="Status" prop="status">
             </el-table-column>
@@ -77,7 +83,7 @@ export default {
                     status: status
                 }
             }
-            this.apiGet('device/light_breed.php?action=setStatus', data).then((res) => {
+            this.apiGet('device/address.php?action=setStatus', data).then((res) => {
                 if (res[0]) {
                     for (var selection of this.multipleSelection) {
                         selection.status = status
@@ -101,18 +107,18 @@ export default {
                         selections: this.multipleSelection
                     }
                 }
-                this.apiGet('device/light_breed.php?action=delete', data).then((res) => {
+                this.apiGet('device/address.php?action=delete', data).then((res) => {
                     if (res[0]) {
 
-                        var light_breed = this.$store.state.light_breed
-                        for (var i = 0; i < light_breed.length; i++) {
+                        var address = this.$store.state.address
+                        for (var i = 0; i < address.length; i++) {
                             for (var selection of this.multipleSelection) {
-                                if (light_breed[i].breed == selection.breed) {
-                                    light_breed.splice(i, 1)
+                                if (address[i].address == selection.address) {
+                                    address.splice(i, 1)
                                 }
                             }
                         }
-                        this.$store.dispatch('setLightBreed', light_breed)
+                        this.$store.dispatch('setAddress', address)
                         _g.toastMsg('success', res[1])
                     } else {
                         _g.toastMsg('error', res[1])
@@ -162,12 +168,12 @@ export default {
     computed: {
         //从vuex中获取设备数据
         tableData() {
-            console.log(this.$store.state.light_breed)
-            return this.$store.state.light_breed
+            console.log(this.$store.state.address)
+            return this.$store.state.address
         },
         //从vuex中获取设备数据条数
         dataCount() {
-            return this.$store.state.light_breed.length
+            return this.$store.state.address.length
         }
     },
     mixins: [http]

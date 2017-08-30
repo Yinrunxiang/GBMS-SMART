@@ -13,6 +13,7 @@ const state = {
   led_breed:[],
   record:[],
   countryArr:[],
+  address:[],
 }
 
 export default state

@@ -25,6 +25,7 @@
       <el-submenu index="111">
         <template slot="title">
           <i class="el-icon-setting"></i>Setting</template>
+          <el-menu-item index="address">Address</el-menu-item>
         <el-submenu index="222">
           <template slot="title">Device Type</template>
           <el-menu-item index="settingTypeAc">AC</el-menu-item>
@@ -75,6 +76,11 @@ export default {
           title: 'led',
           url: '/home/setting/type/led',
           name: 'settingTypeLed'
+        },
+        {
+          title: 'address',
+          url: '/home/setting/address',
+          name: 'address'
         }
 
       ],

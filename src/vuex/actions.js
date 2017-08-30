@@ -40,6 +40,9 @@ const actions = {
   },
   setCountryArr({ commit }, countryArr) {
     commit("setCountryArr", countryArr);
+  },
+  setAddress({ commit }, address) {
+    commit("setAddress", address);
   }
 };
 

@@ -31,13 +31,22 @@ switch ($action)
         $subnetid = isset($_REQUEST["subnetid"]) ? $_REQUEST["subnetid"] : '';
         $deviceid = isset($_REQUEST["deviceid"]) ? $_REQUEST["deviceid"] : '';
         $channel = isset($_REQUEST["channel"]) ? $_REQUEST["channel"] : '';
-        $mac = isset($_REQUEST["mac"]) ? $_REQUEST["mac"] : '';
-        $ip = isset($_REQUEST["ip"]) ? $_REQUEST["ip"] : '';
-        $port = isset($_REQUEST["port"]) ? $_REQUEST["port"] : '';
-        $country = isset($_REQUEST["country"]) ? $_REQUEST["country"] : '';
-        $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
         $devicetype = isset($_REQUEST["devicetype"]) ? $_REQUEST["devicetype"] : '';
         $breed = isset($_REQUEST["breed"]) ? $_REQUEST["breed"] : '';
+
+        $mac = '';
+        $ip = '';
+        $port ='';
+        $country = '';
+        $address = '';
+        if(json_decode($_REQUEST["address"])){
+            $address = json_decode($_REQUEST["address"]);
+            $mac = $address->mac;
+            $ip = $address->ip;
+            $port = $address->port;
+            $country = $address->country;
+            $address = $address->address;
+        }
         $sql="insert into device (device,subnetid,deviceid,channel,mac,ip,port,country,address,devicetype,breed,status) values ('".$device."','".$subnetid."','".$deviceid."','".$channel."','".$mac."','".$ip."','".$port."','".$country."','".$address."','".$devicetype."','".$breed."','enabled')";
         if (!mysqli_query($con,$sql))
         {

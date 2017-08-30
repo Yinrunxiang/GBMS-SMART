@@ -198,6 +198,16 @@ export default {
 				this.$store.dispatch('setLedBreed', res)
 			});
 		},
+		getAddress() {
+			const data = {
+				params: {
+					action: "search"
+				}
+			}
+			this.apiGet("device/address.php", data).then(res => {
+				this.$store.dispatch('setAddress', res)
+			});
+		},
 		getRecord() {
 			const data = {
 				params: {
@@ -316,6 +326,7 @@ export default {
 		this.getAcBreed()
 		this.getLightBreed()
 		this.getLedBreed()
+		this.getAddress()
 		this.getRecord()
 		
 	},

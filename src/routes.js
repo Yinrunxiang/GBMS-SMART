@@ -15,6 +15,8 @@ import settingTypeLight from "./components/content/setting/type/light/light.vue"
 import settingTypeLightAdd from "./components/content/setting/type/light/add.vue";
 import settingTypeLed from "./components/content/setting/type/led/led.vue";
 import settingTypeLedAdd from "./components/content/setting/type/led/add.vue";
+import address from "./components/content/setting/address/address.vue";
+import addressAdd from "./components/content/setting/address/add.vue";
 /**
  * meta参数解析
  * hideLeft: 是否隐藏左侧菜单，单页菜单为true
@@ -75,6 +77,8 @@ const routes = [
       { path: "setting/type/light/add", component: settingTypeLightAdd, name: "settingTypeLightAdd" },
       { path: "setting/type/led", component: settingTypeLed, name: "settingTypeLed" },
       { path: "setting/type/led/add", component: settingTypeLedAdd, name: "settingTypeLedAdd" },
+      { path: "setting/address", component: address, name: "address" },
+      { path: "setting/address/add", component: addressAdd, name: "addressAdd" },
     ]
   },
   { path: "/", redirect: { name: "global" } }

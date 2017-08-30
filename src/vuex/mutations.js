@@ -34,13 +34,15 @@ const mutations = {
   },
   setLedBreed(state, led_breed) {
     state.led_breed = led_breed
-  }
-  ,
+  },
   setRecord(state, record) {
     state.record = record
-  }  ,
+  },
   setCountryArr(state, countryArr) {
     state.countryArr = countryArr
+  },
+  setAddress(state, address) {
+    state.address = address
   }
 }
 
