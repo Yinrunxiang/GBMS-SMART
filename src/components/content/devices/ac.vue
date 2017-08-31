@@ -137,7 +137,7 @@ export default {
             acApi.autotmp_change(val,this.device)
         },
         cooltmp_change(val) {
-            this.device.cooltmp= val
+            acApi.cooltmp_change(val,this.device)
         },
         heattmp_change(val) {
             acApi.heattmp_change(val,this.device)
