@@ -5,6 +5,9 @@ const mutations = {
   showLoading(state, status) {
     state.globalLoading = status
   },
+  showContral(state, status) {
+    state.showContral = status
+  },
   setMenus(state, menus) {
     state.menus = menus
   },

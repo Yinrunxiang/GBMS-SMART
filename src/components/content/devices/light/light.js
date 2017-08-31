@@ -1,9 +1,8 @@
 import api from "../../../../assets/js/api";
 const lightApi = {
-  switch_change(val,brightness,device) {
+  switch_change(val,device) {
     if (val) {
-      if (brightness == 0) brightness = 100;
-      loading = true;
+      if (device.brightness == 0) device.brightness = 100;
       const data = {
         params: {
           operatorCodefst: "00",
@@ -11,7 +10,7 @@ const lightApi = {
           targetDeviceID: device.deviceid,
           additionalContentData: (device.channel +
             "," +
-            _g.toHex(brightness) +
+            _g.toHex(device.brightness) +
             ",00,00").split(","),
           macAddress: device.mac ? device.mac.split(".") : "",
           dest_address: device.ip ? device.ip : "",
@@ -23,7 +22,7 @@ const lightApi = {
         // _g.closeGlobalLoading()
       });
     } else {
-      brightness == 0;
+      device.brightness == 0;
       const data = {
         params: {
           operatorCodefst: "00",
@@ -41,8 +40,8 @@ const lightApi = {
       });
     }
   },
-  slider_change(val,brightness,device) {
-    brightness = val;
+  slider_change(val,device) {
+    device.brightness = val;
     const data = {
       params: {
         operatorCodefst: "00",
@@ -62,7 +61,7 @@ const lightApi = {
       // _g.closeGlobalLoading()
     });
   },
-  readStatus(on_off,brightness,device) {
+  readStatus(device) {
     let data = {
       params: {
         operatorCodefst: "00",
@@ -79,7 +78,7 @@ const lightApi = {
       // _g.closeGlobalLoading()
     });
     // var socket = window.socket("http://" + document.domain + ":2120");
-    window.socketio.removeAllListeners("new_msg");
+    // window.socketio.removeAllListeners("new_msg");
     window.socketio.on("new_msg", function(msg) {
       var subnetid = msg.substr(34, 2);
       var deviceid = msg.substr(36, 2);
@@ -94,10 +93,10 @@ const lightApi = {
           if (channel.toLowerCase() == device.channel.toLowerCase()) {
             var msg2 = msg.substr(54, 2);
             if (msg2 != "00") {
-              on_off = true;
+              device.on_off = true;
             } else {
-              on_off = false;
-              brightness = 0;
+              device.on_off = false;
+              device.brightness = 0;
             }
           }
         } else if (msg1 == "0034") {
@@ -105,17 +104,17 @@ const lightApi = {
           var msg2 = msg.substr(len, 2);
           var msg3 = parseInt("0x" + msg2);
           if (msg2 != "00") {
-            on_off = true;
-            brightness = msg3;
+            device.on_off = true;
+            device.brightness = msg3;
           } else {
-            on_off = false;
-            brightness = msg3;
+            device.on_off = false;
+            device.brightness = msg3;
           }
         }
       }
     })
   },
-  readOpen(on_off,device) {
+  readOpen(device) {
     let data = {
       params: {
         operatorCodefst: "00",
@@ -132,7 +131,7 @@ const lightApi = {
       // _g.closeGlobalLoading()
     });
     // var socket = window.socket("http://" + document.domain + ":2120");
-    window.socketio.removeAllListeners("new_msg");
+    // window.socketio.removeAllListeners("new_msg");
     window.socketio.on("new_msg", function(msg) {
       var subnetid = msg.substr(34, 2);
       var deviceid = msg.substr(36, 2);
@@ -147,18 +146,18 @@ const lightApi = {
           if (channel.toLowerCase() == device.channel.toLowerCase()) {
             var msg2 = msg.substr(54, 2);
             if (msg2 != "00") {
-              on_off = true;
+              device.on_off = true;
             } else {
-              on_off = false;
+              device.on_off = false;
             }
           }
         } else if (msg1 == "0034") {
           var len = 50 + parseInt("0x" + device.channel) * 2;
           var msg2 = msg.substr(len, 2);
           if (msg2 != "00") {
-            on_off = true;
+            device.on_off = true;
           } else {
-            on_off = false;
+            device.on_off = false;
           }
         }
       }

@@ -1,3 +1,4 @@
+import api from "./api"
 const commonFn = {
   j2s(obj) {
     return JSON.stringify(obj);
@@ -29,7 +30,7 @@ const commonFn = {
       msg = msg.substr((50+num*2), 2 * (len + 1))
       return msg
   },
-  sendUdp(e,operatorCodefst,operatorCodesec,targetDeviceID,additionalContentData,macAddress,dest_address,dest_port) {
+  sendUdp(operatorCodefst,operatorCodesec,targetDeviceID,additionalContentData,macAddress,dest_address,dest_port) {
     let data = {
       params: {
         operatorCodefst: operatorCodefst,
@@ -41,8 +42,7 @@ const commonFn = {
         dest_port: dest_port ? dest_port.split(".") : ""
       }
     };
-    console.log(e.device);
-    e.apiGet("udp/sendUdp.php", data).then(res => {
+    api.apiGet("udp/sendUdp.php", data).then(res => {
       console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });

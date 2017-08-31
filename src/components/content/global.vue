@@ -150,8 +150,10 @@ export default {
             var itCounteyTooltip = 'Country : ' + params.name + '<br/>'
             for (var item of this.countryArr) {
                 if (item.name == params.name) {
-                    for (var type of item.typeList) {
-                        itCounteyTooltip += type.name + ' : ' + item.deviceTypeNumber[type.name] + '<br/>'
+                    for (var address of item.addressList) {
+                        for (var type of address.typeList) {
+                            itCounteyTooltip += type.name + ' : ' + item.deviceTypeNumber[type.name] + '<br/>'
+                        }
                     }
                 }
             }

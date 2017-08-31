@@ -5,6 +5,9 @@ const actions = {
   showLoading({ commit }, status) {
     commit("showLoading", status);
   },
+  showContral({ commit }, status) {
+    commit("showContral", status);
+  },
   setMenus({ commit }, menus) {
     commit("setMenus", menus);
   },

@@ -1,18 +1,33 @@
 <template>
     <el-row class="panel m-w-1100">
         <el-col :span="24" class="contral-panel-center h-100p ">
-            <aside class="w-180 h-100p ovf-hd" style="background: #324057;">
-                <el-menu default-active="1" theme="dark" class="el-menu-vertical-demo" @select="selectCountry">
-                    <el-menu-item :index="country.name" v-for="country in countryArr">
-                        <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
+            <aside class="w-180 h-100p ovf-hd" style="background: #eef1f6;">
+                <el-menu default-active="1"  class="el-menu-vertical-demo" @select="selectCountry">
+                    <div v-for="country in countryArr">
+                        <el-submenu :index="country.name">
+                            <template slot="title"><i class="el-icon-menu"></i>{{country.name}}</template>
+                            <div v-for="address in country.addressList">
+                                <el-menu-item :index="address.name" @click="menuClick">
+                                    {{address.name}}</el-menu-item>
+                            </div>
+                        </el-submenu>
+                    </div>
+
+                    <!-- <div v-for="country in countryArr">
+                                    <el-menu-item :index="country.name" @click="menuClick">
+                                        <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
+                                </div> -->
                 </el-menu>
             </aside>
             <section class="panel-c-c">
                 <div class="grid-content bg-purple-light">
                     <el-col :span="24">
                         <transition name="fade" mode="out-in" appear>
-                            <div class="p-20">
-                                <deviceList :devicetype="devicetype" v-for="devicetype in typeList"></deviceList>
+                            <div v-if="showContral">
+                                <router-view></router-view>
+                            </div>
+                            <div v-if="!showContral">
+                                <deviceList :typeList="typeList"></deviceList>
                             </div>
                         </transition>
                     </el-col>
@@ -37,13 +52,18 @@ export default {
     },
     methods: {
         selectCountry(key, keyPath) {
-            for (var item of this.countryArr) {
-                if (key == item.name) {
-                    this.typeList = item.typeList
+            for (var country of this.countryArr) {
+                for (var address of country.addressList) {
+                    if (key == address.name) {
+                        this.typeList = address.typeList
+                    }
                 }
             }
         },
-        
+        menuClick() {
+            this.$store.dispatch('showContral', false)
+        }
+
     },
     created() {
         console.log('contral')
@@ -76,6 +96,9 @@ export default {
                     return 'fa-thermometer'
                     break
             }
+        },
+        showContral() {
+            return this.$store.state.showContral
         }
     },
     mixins: [http]

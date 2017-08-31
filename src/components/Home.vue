@@ -10,16 +10,16 @@
 				</template>
 			</el-col>
 			<!-- <el-col :span="4" :offset="16" class="pos-rel">
-																		<el-dropdown @command="handleMenu" class="user-menu">
-																      <span class="el-dropdown-link c-gra" style="cursor: default">
-																        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
-																      </span>
-																      <el-dropdown-menu slot="dropdown">
-																        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
-																        <el-dropdown-item command="logout">退出</el-dropdown-item>
-																      </el-dropdown-menu>
-																    </el-dropdown>
-																	</el-col> -->
+																			<el-dropdown @command="handleMenu" class="user-menu">
+																	      <span class="el-dropdown-link c-gra" style="cursor: default">
+																	        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
+																	      </span>
+																	      <el-dropdown-menu slot="dropdown">
+																	        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
+																	        <el-dropdown-item command="logout">退出</el-dropdown-item>
+																	      </el-dropdown-menu>
+																	    </el-dropdown>
+																		</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -251,59 +251,69 @@ export default {
 				this.records = records
 				//记录数据处理完成
 				//以下是记录数据的使用
-				
+
 				this.$store.dispatch('setRecord', records)
 			});
 		},
 		countryArr(devices) {
-            var countryArr = []
-            var countryList = []
-            //this.devices原始设备数据
-            for (var item of devices) {
-                //筛选重复国家
-                if (countryList.indexOf(item.country) == -1) {
-                    countryList.push(item.country);
-                    var mapIportCountryObject = {}
-                    mapIportCountryObject.name = item.country
-                    mapIportCountryObject.selected = true
-					mapIportCountryObject.typeList = []
-					mapIportCountryObject.typeArr = []
-                    mapIportCountryObject.deviceTypeNumber = {}
-                    // mapIportCountryObject.deviceList = {}
-                    countryArr.push(mapIportCountryObject)
+			var countryArr = []
+			var countryList = []
+			//this.devices原始设备数据
+			for (var item of devices) {
+				//筛选重复国家
+				if (countryList.indexOf(item.country) == -1) {
+					countryList.push(item.country);
+					var mapIportCountryObject = {}
+					mapIportCountryObject.name = item.country
+					mapIportCountryObject.selected = true
+					mapIportCountryObject.addressList = []
+					mapIportCountryObject.addressArr = []
+					mapIportCountryObject.deviceTypeNumber = {}
+					// mapIportCountryObject.deviceList = {}
+					countryArr.push(mapIportCountryObject)
 				}
-                for (var country of countryArr) {
+				for (var country of countryArr) {
 					//筛选重复类型
-					
-                    if (item.country == country.name) {
-                        if (country.typeArr.indexOf(item.devicetype) == -1) {
-                            country.typeArr.push(item.devicetype)
-                            var typeObject = {}
-                            typeObject.name = item.devicetype
-                            typeObject.deviceList = []
-                            country.typeList.push(typeObject)
+					if (item.country == country.name) {
+						if (country.addressArr.indexOf(item.address) == -1) {
+							country.addressArr.push(item.address)
+							var addressObject = {}
+							addressObject.name = item.address
+							addressObject.typeList = []
+							addressObject.typeArr = []
+							country.addressList.push(addressObject)
 						}
-                        //计算各种设备类型的数量
-                        country.deviceTypeNumber[item.devicetype] ? country.deviceTypeNumber[item.devicetype] += 1 : country.deviceTypeNumber[item.devicetype] = 1
-                        for (var type of country.typeList) {
-                            //筛选重复类型
-                            if (item.devicetype == type.name) {
-                                type.deviceList.push(item)
-                            }
-                        }
-
-
-                    }
-                }
+						//计算各种设备类型的数量
+						country.deviceTypeNumber[item.devicetype] ? country.deviceTypeNumber[item.devicetype] += 1 : country.deviceTypeNumber[item.devicetype] = 1
+						for (var address of country.addressList) {
+							//筛选重复类型
+							if (item.address == address.name) {
+								if (address.typeArr.indexOf(item.devicetype) == -1) {
+									address.typeArr.push(item.devicetype)
+									var typeObject = {}
+									typeObject.name = item.devicetype
+									typeObject.deviceList = []
+									address.typeList.push(typeObject)
+								}
+								for (var type of address.typeList) {
+									//筛选重复类型
+									if (item.devicetype == type.name) {
+										type.deviceList.push(item)
+									}
+								}
+							}
+						}
+					}
+				}
 			}
-			 console.log(countryArr)
+			console.log(countryArr)
 			this.$store.dispatch('setCountryArr', countryArr)
-           
-            // return countryArr
-        },
+
+			// return countryArr
+		},
 	},
 	created() {
-		
+
 	},
 	mounted() {
 		const data = {
@@ -321,14 +331,14 @@ export default {
 			}
 			// this.devices = devices
 			this.countryArr(devices)
-			
+
 		});
 		this.getAcBreed()
 		this.getLightBreed()
 		this.getLedBreed()
 		this.getAddress()
 		this.getRecord()
-		
+
 	},
 	components: {
 		leftMenu

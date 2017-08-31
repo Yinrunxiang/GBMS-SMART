@@ -3,62 +3,62 @@
         <el-col :span="8">
             <div>
                 <el-row class="m-t-30" style="font-size:30px;text-align:center">
-                    <i class="fa" :class="modestyle(mode)"></i>
-                    <span> {{tmp}} ℃</span>
+                    <i class="fa" :class="modestyle(device.mode)"></i>
+                    <span> {{device.tmp}} ℃</span>
                 </el-row>
                 <i class="fa fa-thermometer big-font-icon"></i>
             </div>
         </el-col>
         <el-col :span="12" class="m-b-20 p-l-20 p-r-20 ovf-hd" style="margin-top:80px">
-            <el-switch v-model="on_off" @change="switch_change">
+            <el-switch v-model="device.on_off" @change="switch_change">
             </el-switch>
-            <div v-if="on_off" class="m-t-20">
-                <el-row v-if="mode=='auto'">
+            <div v-if="device.on_off" class="m-t-20">
+                <el-row v-if="device.mode=='auto'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="autotmp" :min='0' :max='32' :step="1" @change="autotmp_change">
+                                <el-slider v-model="device.autotmp" :min='0' :max='32' :step="1" @change="autotmp_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4"  :offset="1">
-                        <span class="fl" style="line-height:36px">{{autotmp}} ℃</span>
+                        <span class="fl" style="line-height:36px">{{device.autotmp}} ℃</span>
                     </el-col>
                 </el-row>
-                <el-row v-if="mode=='cool' || mode=='fan'">
+                <el-row v-if="device.mode=='cool' || device.mode=='fan'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="cooltmp" :min='0' :max='32' :step="1" @change="cooltmp_change">
+                                <el-slider v-model="device.cooltmp" :min='0' :max='32' :step="1" @change="cooltmp_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4"  :offset="1">
-                        <span class="fl" style="line-height:36px">{{cooltmp}} ℃</span>
+                        <span class="fl" style="line-height:36px">{{device.cooltmp}} ℃</span>
                     </el-col>
                 </el-row>
-                <el-row v-if="mode=='heat'">
+                <el-row v-if="device.mode=='heat'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="heattmp" :min='0' :max='32' :step="1" @change="heattmp_change">
+                                <el-slider v-model="device.heattmp" :min='0' :max='32' :step="1" @change="heattmp_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4"  :offset="1">
-                        <span class="fl" style="line-height:36px">{{heattmp}} ℃</span>
+                        <span class="fl" style="line-height:36px">{{device.heattmp}} ℃</span>
                     </el-col>
                 </el-row>
                 <el-row class="m-t-20">
@@ -68,13 +68,13 @@
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="wind" :min='0' :max='3' :step="1" :format-tooltip="formatwind(wind)" @change="wind_change">
+                                <el-slider v-model="device.wind" :min='0' :max='3' :step="1" :format-tooltip="formatTooltip" @change="wind_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4"  :offset="1">
-                        <span class="fl" style="line-height:36px">{{formatwind(wind)}}</span>
+                        <span class="fl" style="line-height:36px">{{formatTooltip(device.wind)}}</span>
                     </el-col>
                 </el-row>
                 <el-col :span="20" :offset="4" class="m-t-20">
@@ -89,141 +89,17 @@
 </template>
 
 <script>
-import http from '../../../assets/js/http'
+import acApi from './ac/ac.js'
 export default {
     data() {
         return {
-            on_off: true,
-            cooltmp: 26,
-            autotmp: 0,
-            heattmp: 0,
-            tmp: 26,
-            wind: 2,
-            mode: "cool",
-            device:this.$store.state.device,
+            
         }
     },
     // props: ['device'],
     methods: {
-        switch_change(val) {
-            if (val) {
-                this.loading = true
-                const data = {
-                    params: {
-                        operatorCodefst: "E3",
-                        operatorCodesec: "D8",
-                        targetDeviceID: this.device.deviceid,
-                        additionalContentData: ("03,01").split(","),
-                        macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                        dest_address: this.device.ip ? this.device.ip : "",
-                        dest_port: this.device.port ? this.device.port : "",
-                    }
-                }
-                this.apiGet('udp/sendUdp.php', data).then((res) => {
-                    console.log('res = ', _g.j2s(res))
-                    // _g.closeGlobalLoading()
-                })
-            } else {
-                this.loading = true
-                const data = {
-                    params: {
-                        operatorCodefst: "E3",
-                        operatorCodesec: "D8",
-                        targetDeviceID: this.device.deviceid,
-                        additionalContentData: ("03,00").split(","),
-                        macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                        dest_address: this.device.ip ? this.device.ip : "",
-                        dest_port: this.device.port ? this.device.port : "",
-                    }
-                }
-                this.apiGet('udp/sendUdp.php', data).then((res) => {
-                    console.log('res = ', _g.j2s(res))
-                    // _g.closeGlobalLoading()
-                })
-            }
-        },
-        autotmp_change(val) {
-
-            this.autotmp = val;
-            this.loading = true
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetDeviceID: this.device.deviceid,
-                    additionalContentData: ("08," + _g.toHex(val)).split(","),
-                    macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip : "",
-                    dest_port: this.device.port ? this.device.port : "",
-                }
-            }
-            this.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
-        },
-        cooltmp_change(val) {
-
-            this.cooltmp = val;
-            this.loading = true
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetDeviceID: this.device.deviceid,
-                    additionalContentData: ("04," + _g.toHex(val)).split(","),
-                    macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip : "",
-                    dest_port: this.device.port ? this.device.port : "",
-                }
-            }
-            this.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
-        },
-        heattmp_change(val) {
-
-            this.heattmp = val;
-            this.loading = true
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetDeviceID: this.device.deviceid,
-                    additionalContentData: ("07," + _g.toHex(val)).split(","),
-                    macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip : "",
-                    dest_port: this.device.port ? this.device.port : "",
-                }
-            }
-            this.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
-        },
-        wind_change(val) {
-
-            this.wind = val;
-            this.loading = true
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetDeviceID: this.device.deviceid,
-                    additionalContentData: ("05," + _g.toHex(val)).split(","),
-                    macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip : "",
-                    dest_port: this.device.port ? this.device.port : "",
-                }
-            }
-            this.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
-        },
-        formatwind(wind) {
-            switch (wind) {
+        formatTooltip(val) {
+            switch (val) {
                 case 0:
                     return "Auto";
                     break;
@@ -237,230 +113,6 @@ export default {
                     return "Low";
                     break;
             }
-        },
-        autobtn() {
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetDeviceID: this.device.deviceid,
-                    additionalContentData: ("06,03").split(","),
-                    macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip : "",
-                    dest_port: this.device.port ? this.device.port : "",
-                }
-            }
-            this.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
-        },
-        fanbtn() {
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetDeviceID: this.device.deviceid,
-                    additionalContentData: ("06,02").split(","),
-                    macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip : "",
-                    dest_port: this.device.port ? this.device.port : "",
-                }
-            }
-            this.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
-        },
-        coolbtn() {
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetDeviceID: this.device.deviceid,
-                    additionalContentData: ("06,00").split(","),
-                    macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip : "",
-                    dest_port: this.device.port ? this.device.port : "",
-                }
-            }
-            this.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
-        },
-        heatbtn() {
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetDeviceID: this.device.deviceid,
-                    additionalContentData: ("06,01").split(","),
-                    macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip : "",
-                    dest_port: this.device.port ? this.device.port : "",
-                }
-            }
-            this.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
-        },
-        readStatus(e) {
-            let data = {
-                params: {
-                    operatorCodefst: "E0",
-                    operatorCodesec: "EC",
-                    targetDeviceID: this.device.deviceid,
-                    additionalContentData: ("00").split(","),
-                    macAddress: this.device.mac ? this.device.mac.split(".") : "",
-                    dest_address: this.device.ip ? this.device.ip : "",
-                    dest_port: this.device.port ? this.device.port : "",
-                }
-            }
-            console.log(this.device)
-            this.apiGet('udp/sendUdp.php', data).then((res) => {
-                console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
-            // var socket = window.socket("http://" + document.domain + ":2120");
-            window.socketio.removeAllListeners("new_msg");
-            window.socketio.on("new_msg", function (msg) {
-                var subnetid = msg.substr(34, 2);
-                var deviceid = msg.substr(36, 2);
-                // var channel = msg.substr(52, 2);
-                if (
-                    subnetid.toLowerCase() == e.device.subnetid.toLowerCase() &&
-                    deviceid.toLowerCase() == e.device.deviceid.toLowerCase()
-                ) {
-                    //操作码
-                    var msg1 = msg.substr(42, 4);
-                    if (msg1.toLowerCase() == "e0ed") {
-                        // var channel = msg.substr(50, 2);
-                        // if (channel.toLowerCase() == item.channel.toLowerCase()) {
-                        //空调开关
-                        var ac = msg.substr(50, 2);
-                        if (ac != "00") {
-                            e.on_off = true
-                            // brightnessSlider.slider("setValue", msg2);
-                        } else {
-                            e.on_off = false
-                        }
-                        //制冷温度
-                        var cooltempdata = msg.substr(52, 2);
-                        e.cooltmp = parseInt("0x" + cooltempdata);
-
-                        //制热温度
-                        var heattempdata = msg.substr(60, 2);
-                        e.heattmp = parseInt("0x" + heattempdata);
-
-                        //自动温度
-                        var autotempdata = msg.substr(64, 2);
-                        e.autotmp = parseInt("0x" + autotempdata);
-
-                        //模式
-                        var mode = msg.substr(54, 2);
-                        if (
-                            [
-                                "00",
-                                "01",
-                                "02",
-                                "03",
-                                "04",
-                                "05",
-                                "06",
-                                "07",
-                                "08",
-                                "09"
-                            ].indexOf(mode) != -1
-                        ) {
-                            e.mode = 'cool'
-                        } else if (
-                            [
-                                "10",
-                                "11",
-                                "12",
-                                "13",
-                                "14",
-                                "15",
-                                "16",
-                                "17",
-                                "18",
-                                "19"
-                            ].indexOf(mode) != -1
-                        ) {
-                            e.mode = 'heat'
-                        } else if (
-                            [
-                                "20",
-                                "21",
-                                "22",
-                                "23",
-                                "24",
-                                "25",
-                                "26",
-                                "27",
-                                "28",
-                                "29"
-                            ].indexOf(mode) != -1
-                        ) {
-                            e.mode = 'fan'
-                        } else {
-                            e.mode = 'auto'
-                        }
-
-                        //风量大小
-                        var fan = msg.substr(56, 2);
-                        e.wind = parseInt("0x" + fan);
-                        //local flag
-                        var flag = msg.substr(58, 2);
-                        //当前温度current
-                        var current = msg.substr(60, 2);
-                        e.tmp = parseInt("0x" + current)
-                    } else if (msg1.toLowerCase() == "e3d9") {
-                        var type = msg.substr(50, 2);
-                        var value = msg.substr(52, 2);
-                        switch (type) {
-                            case "03":
-                                if (value == "01") {
-                                    e.on_off = true
-                                } else {
-                                    e.on_off = false
-                                }
-                                break;
-                            case "04":
-                                e.cooltmp = parseInt("0x" + value);
-                                break;
-                            case "05":
-                                e.wind = parseInt("0x" + value);
-                                break;
-                            case "06":
-                                value = parseInt("0x" + value);
-                                switch (value) {
-                                    case 0:
-                                        e.mode = "cool"
-                                        break;
-                                    case 1:
-                                        e.mode = "heat"
-                                        break;
-                                    case 2:
-                                        e.mode = "fan"
-                                        break;
-                                    case 3:
-                                        e.mode = "auto"
-                                        break;
-                                }
-                                break;
-                            case "07":
-                                e.heattemp = parseInt("0x" + value);
-                                break;
-                            case "08":
-                                e.autotemp = parseInt("0x" + value);
-                                break;
-                        }
-                    }
-                }
-            });
         },
         modestyle(mode) {
             switch (mode) {
@@ -477,15 +129,57 @@ export default {
                     return "fa-superpowers"
                     break
             }
-        }
+        },
+        switch_change(val) {
+            acApi.switch_change(val,this.device)
+        },
+        autotmp_change(val) {
+            acApi.autotmp_change(val,this.device)
+        },
+        cooltmp_change(val) {
+            this.device.cooltmp= val
+        },
+        heattmp_change(val) {
+            acApi.heattmp_change(val,this.device)
+        },
+        wind_change(val) {
+            acApi.wind_change(val,this.device)
+        },
+        
+        autobtn() {
+            acApi.autobtn(this.device)
+        },
+        fanbtn() {
+            acApi.fanbtn(this.device)
+        },
+        coolbtn() {
+            acApi.coolbtn(this.device)
+        },
+        heatbtn() {
+            acApi.heatbtn(this.device)
+        },
+        
 
     },
     mounted() {
-        this.readStatus(this)
+        console.log("ac")
+        acApi.readStatus(this.device)
     },
     components: {
 
     },
-    mixins: [http]
+    computed:{
+        device(){
+            var device = this.$store.state.device
+            // device.on_off = false
+            // device.cooltmp= 26
+            // device.autotmp = 0
+            // device.heattmp = 0
+            // device.tmp = 26
+            // device.wind = 2
+            // device.mode = "cool"
+            return device
+        }  
+    },
 }
 </script>
