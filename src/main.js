@@ -49,7 +49,7 @@ router.afterEach(transition => {
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 // Vue.use(colorPicker)
-
+window.Vue = Vue
 window.router = router
 window.store = store
 window.HOST = HOST

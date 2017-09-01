@@ -1,8 +1,8 @@
 import api from "../../../../assets/js/api";
 const lightApi = {
-  switch_change(val,device) {
+  switch_change(val,device,deviceProperty) {
     if (val) {
-      if (device.brightness == 0) device.brightness = 100;
+      if (deviceProperty.brightness == 0) deviceProperty.brightness = 100;
       const data = {
         params: {
           operatorCodefst: "00",
@@ -10,7 +10,7 @@ const lightApi = {
           targetDeviceID: device.deviceid,
           additionalContentData: (device.channel +
             "," +
-            _g.toHex(device.brightness) +
+            _g.toHex(deviceProperty.brightness) +
             ",00,00").split(","),
           macAddress: device.mac ? device.mac.split(".") : "",
           dest_address: device.ip ? device.ip : "",
@@ -22,7 +22,7 @@ const lightApi = {
         // _g.closeGlobalLoading()
       });
     } else {
-      device.brightness == 0;
+      deviceProperty.brightness == 0;
       const data = {
         params: {
           operatorCodefst: "00",
@@ -40,8 +40,8 @@ const lightApi = {
       });
     }
   },
-  slider_change(val,device) {
-    device.brightness = val;
+  slider_change(val,device,deviceProperty) {
+    deviceProperty.brightness = val;
     const data = {
       params: {
         operatorCodefst: "00",
@@ -61,7 +61,7 @@ const lightApi = {
       // _g.closeGlobalLoading()
     });
   },
-  readStatus(device) {
+  readStatus(device,deviceProperty) {
     let data = {
       params: {
         operatorCodefst: "00",
@@ -93,10 +93,10 @@ const lightApi = {
           if (channel.toLowerCase() == device.channel.toLowerCase()) {
             var msg2 = msg.substr(54, 2);
             if (msg2 != "00") {
-              device.on_off = true;
+              deviceProperty.on_off = true;
             } else {
-              device.on_off = false;
-              device.brightness = 0;
+              deviceProperty.on_off = false;
+              deviceProperty.brightness = 0;
             }
           }
         } else if (msg1 == "0034") {
@@ -104,11 +104,11 @@ const lightApi = {
           var msg2 = msg.substr(len, 2);
           var msg3 = parseInt("0x" + msg2);
           if (msg2 != "00") {
-            device.on_off = true;
-            device.brightness = msg3;
+            deviceProperty.on_off = true;
+            deviceProperty.brightness = msg3;
           } else {
-            device.on_off = false;
-            device.brightness = msg3;
+            deviceProperty.on_off = false;
+            deviceProperty.brightness = msg3;
           }
         }
       }

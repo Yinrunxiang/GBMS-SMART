@@ -42,7 +42,7 @@ const musicApi = {
       // _g.closeGlobalLoading()
     });
   },
-  pre() {
+  pre(device) {
     const data = {
       params: {
         operatorCodefst: "02",
@@ -59,7 +59,7 @@ const musicApi = {
       // _g.closeGlobalLoading()
     });
   },
-  next() {
+  next(device) {
     const data = {
       params: {
         operatorCodefst: "02",
@@ -76,7 +76,7 @@ const musicApi = {
       // _g.closeGlobalLoading()
     });
   },
-  play() {
+  play(device) {
     device.on_off = true;
     const data = {
       params: {
@@ -94,7 +94,7 @@ const musicApi = {
       // _g.closeGlobalLoading()
     });
   },
-  pause() {
+  pause(device) {
     device.on_off = false;
     const data = {
       params: {
@@ -112,7 +112,7 @@ const musicApi = {
       // _g.closeGlobalLoading()
     });
   },
-  random() {
+  random(device) {
     const data = {
       params: {
         operatorCodefst: "02",
@@ -129,7 +129,7 @@ const musicApi = {
       // _g.closeGlobalLoading()
     });
   },
-  single() {
+  single(device) {
     const data = {
       params: {
         operatorCodefst: "02",
@@ -146,7 +146,7 @@ const musicApi = {
       // _g.closeGlobalLoading()
     });
   },
-  allmusic() {
+  allmusic(device) {
     const data = {
       params: {
         operatorCodefst: "02",

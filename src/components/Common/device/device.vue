@@ -51,21 +51,27 @@ export default {
         switch_change(val) {
             switch (this.device.devicetype) {
                 case "light":
-                    this.device.on_ff = false
-                    this.device.brightness = 0
-                    lightApi.switch_change(val, this.device)
+                    var deviceProperty = {
+                        on_off: false,
+                        brightness: 0,
+                    }
+                    lightApi.switch_change(val, this.device,deviceProperty)
                     break
                 case "ac":
+                    this.device.on_ff = false
                     acApi.switch_change(val, this.device)
                     break
                 case "led":
                     this.device.on_off = false
-                    this.device.brightness = 0
-                    this.device.color = '#c0ccda'
-                    this.device.red = "c0"
-                    this.device.green = "cc"
-                    this.device.blue = "da"
-                    ledApi.switch_change(val, this.device)
+                    var deviceProperty = {
+                        on_off: false,
+                        brightness: 0,
+                        color: '#c0ccda',
+                        red: "c0",
+                        green: "cc",
+                        blue: "da",
+                    }
+                    ledApi.switch_change(val, this.device,deviceProperty)
                     break
                 case "music":
                     // musicApi.switch_change(this.device)
@@ -76,16 +82,10 @@ export default {
             switch (this.device.devicetype) {
                 case "light":
                     this.device.on_ff = false
-                    this.device.brightness = 0
                     lightApi.readOpen(this.device)
                     break
                 case "ac":
-                    this.device.cooltmp = 26
-                    this.device.autotmp = 0
-                    this.device.heattmp = 0
-                    this.device.tmp = 26
-                    this.device.wind = 2
-                    this.device.mode = "cool"
+                    this.device.on_ff = false
                     acApi.readOpen(this.device)
                     break
                 case "led":
@@ -98,17 +98,8 @@ export default {
                     ledApi.readOpen(this.device)
                     break
                 case "music":
-                    this.device.vol = 0,
-                        this.device.on_off = false
-                    this.device.music_name = "any"
-                    this.device.music_autor = "any"
-                    this.device.time_now = 0
-                    this.device.time_over = 0
-                    this.device.albumno = 0
-                    this.device.albumlist = []
-                    this.device.songno = 0
-                    this.device.songlist = []
-                    musicApi.readOpen(this.device)
+                    // this.device.on_off = false
+                    // musicApi.readOpen(this.device)
                     break
             }
 

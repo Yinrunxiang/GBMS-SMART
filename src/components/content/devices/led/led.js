@@ -4,15 +4,14 @@ const ledApi = {
   //开关滑块
   //驱动颜色变化的数据为 255色的16位进制
   //UDP发送的颜色数据为  100色的16位进制
-  switch_change(val, device) {
+  switch_change(val, device,deviceProperty) {
     if (val) {
       //255色转100色
-      var red = _g.toHex(Math.round(parseInt("0x" + device.red) / 255 * 100));
+      var red = _g.toHex(Math.round(parseInt("0x" + deviceProperty.red) / 255 * 100));
       var green = _g.toHex(
-        Math.round(parseInt("0x" + device.green) / 255 * 100)
+        Math.round(parseInt("0x" + deviceProperty.green) / 255 * 100)
       );
-      var blue = _g.toHex(Math.round(parseInt("0x" + device.blue) / 255 * 100));
-      device.loading = true;
+      var blue = _g.toHex(Math.round(parseInt("0x" + deviceProperty.blue) / 255 * 100));
       const data = {
         params: {
           operatorCodefst: "F0",
@@ -34,7 +33,6 @@ const ledApi = {
         // _g.closeGlobalLoading()
       });
     } else {
-      device.loading = true;
       const data = {
         params: {
           operatorCodefst: "F0",
@@ -53,17 +51,17 @@ const ledApi = {
     }
   },
   //当颜色值发生改变时
-  headleChangeColor(val,device) {
+  headleChangeColor(val,device,deviceProperty) {
     // var color = val.hex
     // color = color.substring(1)
     // color = _g.strToarr(color)
-    console.log(device.color);
+    console.log(deviceProperty.color);
     var color = val.hex;
     $(".led-light").css("color", color);
     var red = _g.toHex(Math.round(val.rgb[0] / 255 * 100));
     var green = _g.toHex(Math.round(val.rgb[1] / 255 * 100));
     var blue = _g.toHex(Math.round(val.rgb[2] / 255 * 100));
-    if (device.on_off) {
+    if (deviceProperty.on_off) {
       const data = {
         params: {
           operatorCodefst: "F0",
@@ -87,7 +85,7 @@ const ledApi = {
       });
     }
   },
-  readStatus(device) {
+  readStatus(device,deviceProperty) {
     let data = {
       params: {
         operatorCodefst: "00",
@@ -125,14 +123,14 @@ const ledApi = {
           var color = "#" + red + green + blue;
 
           if (color != "#000000") {
-            device.on_off = true;
-            device.red = red;
-            device.green = green;
-            device.blue = blue;
-            device.color = color;
+            deviceProperty.on_off = true;
+            deviceProperty.red = red;
+            deviceProperty.green = green;
+            deviceProperty.blue = blue;
+            deviceProperty.color = color;
             $(".led-light").css("color", color);
           } else {
-            device.on_off = false;
+            deviceProperty.on_off = false;
           }
         } else if (msg1 == "0034") {
           var red = tocolor(msg.substr(52, 2));
@@ -141,14 +139,14 @@ const ledApi = {
           var color = "#" + red + green + blue;
 
           if (color != "#000000") {
-            device.on_off = true;
-            device.red = red;
-            device.green = green;
-            device.blue = blue;
-            device.color = color;
+            deviceProperty.on_off = true;
+            deviceProperty.red = red;
+            deviceProperty.green = green;
+            deviceProperty.blue = blue;
+            deviceProperty.color = color;
             $(".led-light").css("color", color);
           } else {
-            device.on_off = false;
+            deviceProperty.on_off = false;
           }
         }
       }

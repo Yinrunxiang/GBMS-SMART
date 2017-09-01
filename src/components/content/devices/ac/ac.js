@@ -1,6 +1,6 @@
 import api from "../../../../assets/js/api";
 const acApi = {
-    switch_change(val,device) {
+    switch_change(val,device,deviceProperty) {
         if (val) {
             const data = {
                 params: {
@@ -35,9 +35,9 @@ const acApi = {
             })
         }
     },
-    autotmp_change(val,device) {
+    autotmp_change(val,device,deviceProperty) {
 
-        device.autotmp = val;
+        deviceProperty.autotmp = val;
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -54,9 +54,9 @@ const acApi = {
             // _g.closeGlobalLoading()
         })
     },
-    cooltmp_change(val,device) {
+    cooltmp_change(val,device,deviceProperty) {
 
-        device.cooltmp = val;
+        deviceProperty.cooltmp = val;
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -73,9 +73,9 @@ const acApi = {
             // _g.closeGlobalLoading()
         })
     },
-    heattmp_change(val,device) {
+    heattmp_change(val,device,deviceProperty) {
 
-        device.heattmp = val;
+        deviceProperty.heattmp = val;
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -92,9 +92,9 @@ const acApi = {
             // _g.closeGlobalLoading()
         })
     },
-    wind_change(val,device) {
+    wind_change(val,device,deviceProperty) {
 
-        device.wind = val;
+        deviceProperty.wind = val;
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -127,7 +127,7 @@ const acApi = {
                 break;
         }
     },
-    autobtn(device) {
+    autobtn(device,deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -144,7 +144,7 @@ const acApi = {
             // _g.closeGlobalLoading()
         })
     },
-    fanbtn(device) {
+    fanbtn(device,deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -161,7 +161,7 @@ const acApi = {
             // _g.closeGlobalLoading()
         })
     },
-    coolbtn(device) {
+    coolbtn(device,deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -178,7 +178,7 @@ const acApi = {
             // _g.closeGlobalLoading()
         })
     },
-    heatbtn(device) {
+    heatbtn(device,deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -195,7 +195,7 @@ const acApi = {
             // _g.closeGlobalLoading()
         })
     },
-    readStatus(device) {
+    readStatus(device,deviceProperty) {
         let data = {
             params: {
                 operatorCodefst: "E0",
@@ -230,22 +230,22 @@ const acApi = {
                     //空调开关
                     var ac = msg.substr(50, 2);
                     if (ac != "00") {
-                        device.on_off = true
+                        deviceProperty.on_off = true
                         // brightnessSlider.slider("setValue", msg2);
                     } else {
-                        device.on_off = false
+                        deviceProperty.on_off = false
                     }
                     //制冷温度
                     var cooltempdata = msg.substr(52, 2);
-                    device.cooltmp = parseInt("0x" + cooltempdata);
+                    deviceProperty.cooltmp = parseInt("0x" + cooltempdata);
 
                     //制热温度
                     var heattempdata = msg.substr(60, 2);
-                    device.heattmp = parseInt("0x" + heattempdata);
+                    deviceProperty.heattmp = parseInt("0x" + heattempdata);
 
                     //自动温度
                     var autotempdata = msg.substr(64, 2);
-                    device.autotmp = parseInt("0x" + autotempdata);
+                    deviceProperty.autotmp = parseInt("0x" + autotempdata);
 
                     //模式
                     var mode = msg.substr(54, 2);
@@ -263,7 +263,7 @@ const acApi = {
                             "09"
                         ].indexOf(mode) != -1
                     ) {
-                        device.mode = 'cool'
+                        deviceProperty.mode = 'cool'
                     } else if (
                         [
                             "10",
@@ -278,7 +278,7 @@ const acApi = {
                             "19"
                         ].indexOf(mode) != -1
                     ) {
-                        device.mode = 'heat'
+                        deviceProperty.mode = 'heat'
                     } else if (
                         [
                             "20",
@@ -293,58 +293,58 @@ const acApi = {
                             "29"
                         ].indexOf(mode) != -1
                     ) {
-                        device.mode = 'fan'
+                        deviceProperty.mode = 'fan'
                     } else {
-                        device.mode = 'auto'
+                        deviceProperty.mode = 'auto'
                     }
 
                     //风量大小
                     var fan = msg.substr(56, 2);
-                    device.wind = parseInt("0x" + fan);
+                    deviceProperty.wind = parseInt("0x" + fan);
                     //local flag
                     var flag = msg.substr(58, 2);
                     //当前温度current
                     var current = msg.substr(60, 2);
-                    device.tmp = parseInt("0x" + current)
+                    deviceProperty.tmp = parseInt("0x" + current)
                 } else if (msg1.toLowerCase() == "e3d9") {
                     var type = msg.substr(50, 2);
                     var value = msg.substr(52, 2);
                     switch (type) {
                         case "03":
                             if (value == "01") {
-                                device.on_off = true
+                                deviceProperty.on_off = true
                             } else {
-                                device.on_off = false
+                                deviceProperty.on_off = false
                             }
                             break;
                         case "04":
-                            device.cooltmp = parseInt("0x" + value);
+                        deviceProperty.cooltmp = parseInt("0x" + value);
                             break;
                         case "05":
-                            device.wind = parseInt("0x" + value);
+                        deviceProperty.wind = parseInt("0x" + value);
                             break;
                         case "06":
                             value = parseInt("0x" + value);
                             switch (value) {
                                 case 0:
-                                    device.mode = "cool"
+                                deviceProperty.mode = "cool"
                                     break;
                                 case 1:
-                                    device.mode = "heat"
+                                deviceProperty.mode = "heat"
                                     break;
                                 case 2:
-                                    device.mode = "fan"
+                                deviceProperty.mode = "fan"
                                     break;
                                 case 3:
-                                    device.mode = "auto"
+                                deviceProperty.mode = "auto"
                                     break;
                             }
                             break;
                         case "07":
-                            device.heattemp = parseInt("0x" + value);
+                        deviceProperty.heattemp = parseInt("0x" + value);
                             break;
                         case "08":
-                            device.autotemp = parseInt("0x" + value);
+                        deviceProperty.autotemp = parseInt("0x" + value);
                             break;
                     }
                 }

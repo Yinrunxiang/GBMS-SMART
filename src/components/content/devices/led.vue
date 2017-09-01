@@ -1,9 +1,9 @@
 <template>
     <el-col :span="10" :offset="6">
         <el-row style="text-align:center;margin-top:50px;">
-            <el-switch v-model="device.on_off" @change="switch_change">
+            <el-switch v-model="deviceProperty.on_off" @change="switch_change">
             </el-switch>
-            <colorPicker v-model="device.color" v-on:change="headleChangeColor"></colorPicker>
+            <colorPicker v-model="deviceProperty.color" v-on:change="headleChangeColor"></colorPicker>
         </el-row>
         <el-row>
             <div style="text-align:center">
@@ -21,7 +21,14 @@ import $ from 'jquery'
 export default {
     data() {
         return {
-            
+            deviceProperty: {
+                on_off: false,
+                brightness: 0,
+                color: '#c0ccda',
+                red: "c0",
+                green: "cc",
+                blue: "da",
+            }
         }
     },
     methods: {
@@ -29,33 +36,28 @@ export default {
         //驱动颜色变化的数据为 255色的16位进制
         //UDP发送的颜色数据为  100色的16位进制
         switch_change(val) {
-            ledApi.switch_change(val,this.device)
+            ledApi.switch_change(val, this.device,this.deviceProperty)
         },
         //当颜色值发生改变时
         headleChangeColor(val) {
-            ledApi.headleChangeColor(val,this.device)
+            ledApi.headleChangeColor(val, this.device,this.deviceProperty)
 
         },
 
     },
     mounted() {
-        ledApi.readStatus(this.device)
+        ledApi.readStatus(this.device,this.deviceProperty)
         $('.vc-target').hide()
-        $('.led-light').click(function () {
+        $('.led-light').click(function() {
             $('.vc-target').trigger('click')
         })
         $('.vc-container').css('z-index', 999)
         $('.led-light').css('color', this.color)
     },
-    computed:{
-        device(){
+    computed: {
+        device() {
             var device = this.$store.state.device
-            device.on_off = false
-            device.brightness = 0
-            device.color = '#c0ccda'
-            device.red = "c0"
-            device.green = "cc"
-            device.blue = "da"
+
             return device
         }
     },
