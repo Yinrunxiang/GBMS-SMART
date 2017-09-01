@@ -1,5 +1,5 @@
 <template>
-    <el-card class="box-card" style="width:150px;padding:0;margin-right:30px;text-align: center;">
+    <el-card class="box-card" style="width:150px;padding:0;margin-right:30px;margin-bottom:16px;text-align: center;">
         <div class="device-box">
             <div @click="deviceContral(device)">
                 <i class="fa" :class="iconstyle(device.devicetype)" style="font-size:80px;color:#ccc"></i>
