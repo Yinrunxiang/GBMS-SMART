@@ -81,7 +81,7 @@
 	top: 0px;
 	bottom: 0px;
 	left: 180px;
-	overflow-y: scroll;
+	overflow-y: auto;
 	padding: 0px;
 }
 

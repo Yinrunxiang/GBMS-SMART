@@ -9,6 +9,7 @@ import ac from "./components/content/devices/ac.vue";
 import music from "./components/content/devices/music.vue";
 import led from "./components/content/devices/led.vue";
 import planAdd from "./components/content/plan/add.vue";
+import planUpdate from "./components/content/plan/update.vue";
 import settingTypeAc from "./components/content/setting/type/ac/ac.vue";
 import settingTypeAcAdd from "./components/content/setting/type/ac/add.vue";
 import settingTypeLight from "./components/content/setting/type/light/light.vue";
@@ -57,7 +58,8 @@ const routes = [
     component: Home,
     children: [
       { path: "plan", component: plan, name: "plan" },
-      { path: "plan/add", component: planAdd, name: "planAdd" }
+      { path: "plan/add", component: planAdd, name: "planAdd" },
+      { path: "plan/update", component: planUpdate, name: "planUpdate" },
     ]
   },
   {

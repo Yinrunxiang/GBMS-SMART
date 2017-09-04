@@ -61,22 +61,22 @@
         </div>
         <div v-show="showImage" class="mode">
             <div class="backGroundImga">
-                <div class="room1" @click="roomClick('China')"></div>
-                <div class="room2" @click="roomClick('China')"></div>
-                <div class="room3" @click="roomClick('China')"></div>
-                <div class="room4" @click="roomClick('China')"></div>
-                <div class="room5" @click="roomClick('China')"></div>
-                <div class="room6" @click="roomClick('China')"></div>
-                <div class="room7" @click="roomClick('China')"></div>
-                <div class="room8" @click="roomClick('China')"></div>
-                <div class="room9" @click="roomClick('China')"></div>
-                <div class="room10" @click="roomClick('China')"></div>
-                <div class="room11" @click="roomClick('China')"></div>
-                <div class="room12" @click="roomClick('China')"></div>
-                <div class="room13" @click="roomClick('China')"></div>
+                <div class="room1" @click="roomClick('Boss Office')"></div>
+                <div class="room2" @click="roomClick('Boss Office')"></div>
+                <div class="room3" @click="roomClick('Boss Office')"></div>
+                <div class="room4" @click="roomClick('Boss Office')"></div>
+                <div class="room5" @click="roomClick('Boss Office')"></div>
+                <div class="room6" @click="roomClick('Boss Office')"></div>
+                <div class="room7" @click="roomClick('Boss Office')"></div>
+                <div class="room8" @click="roomClick('Boss Office')"></div>
+                <div class="room9" @click="roomClick('Boss Office')"></div>
+                <div class="room10" @click="roomClick('Boss Office')"></div>
+                <div class="room11" @click="roomClick('Boss Office')"></div>
+                <div class="room12" @click="roomClick('Boss Office')"></div>
+                <div class="room13" @click="roomClick('Boss Office')"></div>
             </div>
         </div>
-        <div v-show="showTypeList">
+        <div v-show="showTypeList" style="background-color: #fff">
             <deviceList :typeList="typeList"></deviceList>
         </div>
     </div>
@@ -104,6 +104,7 @@ export default {
             this.showTypeList = false
         },
         roomClick(val) {
+            console.log(this.countryArr)
             this.showImage = false
             this.showHome = false
             this.showTypeList = true
@@ -148,8 +149,8 @@ export default {
     height: 550px;
     padding: 0;
     margin: 10px auto;
-    border: 1px solid #000;
-    border-radius: 10px;
+    /* border: 1px solid #000;
+    border-radius: 10px; */
 }
 
 .build {

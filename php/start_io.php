@@ -97,7 +97,7 @@ $sender_io->on('workerStart', function(){
         // echo $deviceid.'                      ';
         switch($operatorCode){
             case "0034":
-                $channel = substr($msg,52, 2);
+                // $channel = substr($msg,52, 2);
                 $brightness = substr($msg,54, 2);
                 // $devicetype = $channel != '00'? 'light' : 'led';
                 $devicetype = 'light';
@@ -111,6 +111,7 @@ $sender_io->on('workerStart', function(){
                         $mac  = $mac.'.'.substr($msg,$start, 2);
                     }
                 }
+                // echo $remote.' '.$mac.'     ';
                 for($i = 1 ; $i <= $channelnum; $i++){
                     $start = ($i *2)+50;
                     if(substr($msg,$start, 2) != "00"){
@@ -120,7 +121,7 @@ $sender_io->on('workerStart', function(){
                     }
                     $channel = toHex($i);
                     // echo  $channel;
-                    $sql = "update device set on_off = '".$on_off."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."' and  mac = '".$mac."'";
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."' and  mac = '".$mac."'";
                     mysqli_query($con,$sql);
                     // echo $sql;
                 }
@@ -173,7 +174,7 @@ $sender_io->on('workerStart', function(){
                         $mac  = $mac.'.'.substr($msg,$start, 2);
                     }
                 }
-                $sql = "update device set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  mac = '".$mac."'";
+                $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  mac = '".$mac."'";
                 // echo $sql;
                 // $sql="insert into record (deviceid,devicetype,on_off,record_date) values ('".$deviceid."','".$devicetype."','".$on_off."',now())";
                 // echo $sql;
@@ -194,7 +195,7 @@ $sender_io->on('workerStart', function(){
         global $devices;
         $address = '127.0.0.1';
         $port = 6000;
-        $sql="SELECT * FROM device";
+        $sql="SELECT a.id,device,subnetid,deviceid,channel,mac,ip,port,devicetype,a.status,starttime,endtime,a.address FROM device as a left join address as b on a.address = b.address order by address,devicetype ";
         $result = mysqli_query($con,$sql);
         //遍历设备表，发送读取指令
         while ($row = mysqli_fetch_assoc($result)) {
@@ -241,7 +242,7 @@ $sender_io->on('workerStart', function(){
         }
         //延迟3秒后，将设备运行状态记录到record表
         sleep(3);
-        $sql="insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,now() from device";
+        $sql="insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,now() from device left join address on device.address = address.address ";
         $result = mysqli_query($con,$sql);
         // global $uidConnectionMap, $sender_io, $last_online_count, $last_online_page_count;
         // $online_count_now = count($uidConnectionMap);

@@ -32,7 +32,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="add('form')" :loading="isLoading">Commit</el-button>
+                <el-button type="primary" @click="update('form')" :loading="isLoading">Commit</el-button>
                 <el-button @click="goback()">Back</el-button>
             </el-form-item>
         </el-form>
@@ -47,24 +47,24 @@ export default {
     data() {
         return {
             isLoading: false,
-            form: {
-                device: '',
-                devicetype: 'ac',
-                subnetid: '',
-                deviceid: '',
-                channel: '',
-                country: '',
-                address: '',
-                breed: '',
-                ip: '',
-                port: '',
-                mac: '',
-                status: 'enabled',
-                on_off: false,
-                starttime: '',
-                endtime: '',
+            // form: {
+            //     device: '',
+            //     devicetype: 'ac',
+            //     subnetid: '',
+            //     deviceid: '',
+            //     channel: '',
+            //     country: '',
+            //     address: '',
+            //     breed: '',
+            //     ip: '',
+            //     port: '',
+            //     mac: '',
+            //     status: 'enabled',
+            //     on_off: false,
+            //     starttime: '',
+            //     endtime: '',
 
-            },
+            // },
 
             deviceTypeOptions: [
                 { label: 'AC', value: 'ac' },
@@ -74,13 +74,13 @@ export default {
         }
     },
     methods: {
-        add(form) {
+        update(form) {
             console.log(this.form)
             this.isLoading = !this.isLoading
             const data = {
                 params: this.form
             }
-            this.apiGet('device/index.php?action=insert', data).then((res) => {
+            this.apiGet('device/index.php?action=update', data).then((res) => {
                 // _g.clearVuex('setRules')
                 if (res[0]) {
                     var devices = this.$store.state.devices
@@ -108,13 +108,17 @@ export default {
         },
     },
     created() {
-        console.log("plan add")
+        console.log("plan update")
     },
     mounted() {
     },
     components: {
     },
     computed: {
+        form(){
+            var device = this.$store.state.device
+            return device
+        },
         breedData() {
             switch (this.form.devicetype) {
                 case "ac":

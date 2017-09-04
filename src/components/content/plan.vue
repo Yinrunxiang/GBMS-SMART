@@ -95,7 +95,7 @@ export default {
             router.push({ path: this.$route.path, query: { keywords: this.keywords, page: page } })
         },
         rowDblclick(row){
-            let url = '/home/contral/' + row.devicetype
+            let url = '/home/plan/update'
             this.$store.dispatch('setDevice', row)
             router.push(url)
         },

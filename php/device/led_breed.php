@@ -50,7 +50,7 @@ switch ($action)
         $re_str = "";
         for ($i = 0; $i  < count($selections); $i++) {
             $selection = json_decode($selections[$i]);
-            $sql = " delete from led_breed where breed = '".$selection->breed."'";
+            $sql = " delete from led_breed where id = '".$selection->id."'";
             if (!mysqli_query($con,$sql))
             {
                 $re = false;
@@ -81,7 +81,7 @@ switch ($action)
     $re_str = "";
     for ($i = 0; $i  < count($selections); $i++) {
         $selection = json_decode($selections[$i]);
-        $sql = " update led_breed set status = '".$status."' where breed = '".$selection->breed."'";
+        $sql = " update led_breed set status = '".$status."' where id = '".$selection->id."'";
         if (!mysqli_query($con,$sql))
         {
             $re = false;
