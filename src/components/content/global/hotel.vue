@@ -2,70 +2,61 @@
     <div class="container-out" style="height:100%">
         <div class="setting-icon">
             <!-- <router-link to="setting/address/update" :form='address'> -->
-                <el-button size="small" type="info" @click="settingClick">
-                    <i class="el-icon-setting"></i>
-                </el-button>
+            <el-button size="small" type="info" @click="settingClick">
+                <i class="el-icon-setting"></i>
+            </el-button>
             <!-- </router-link> -->
         </div>
         <div v-show="showHome" class="container-in">
             <div class="container-home">
                 <div class="build">
                     <a class="build-img">
-                        <img src="../../assets/images/build.jpg"><img>
+                        <img src="../../../assets/images/build.jpg"><img>
                     </a>
                     <!-- <p class="p-title">Build</p> -->
                 </div>
                 <div class="float">
-                    <div class="float-centent" float="12" @click="floatClick">Floor 12</div>
-                    <div class="float-centent" float="11" @click="floatClick">Floor 11</div>
-                    <div class="float-centent" float="10" @click="floatClick">Floor 10</div>
-                    <div class="float-centent" float="9" @click="floatClick">Floor 9</div>
-                    <div class="float-centent" float="8" @click="floatClick">Floor 8</div>
-                    <div class="float-centent" float="7" @click="floatClick">Floor 7</div>
-                    <div class="float-centent" float="6" @click="floatClick">Floor 6</div>
-                    <div class="float-centent" float="5" @click="floatClick">Floor 5</div>
-                    <div class="float-centent" float="4" @click="floatClick">Floor 4</div>
-                    <div class="float-centent" float="3" @click="floatClick">Floor 3</div>
-                    <div class="float-centent" float="2" @click="floatClick">Floor 2</div>
-                    <div class="float-centent" float="1" @click="floatClick">Floor 1</div>
+                    <div v-for="num in address.floor" class="float-centent" @click="floatClick">Floor{{address.floor +1-num}}
+                    </div>
                     <!-- <p class="p-title">Floor</p> -->
                 </div>
             </div>
             <!-- <div class="container-float" :span="24">
-                        <div>
-                            <div class="float-row" :span="24">
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                            </div>
-                            <div class="float-row" :span="24">
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                            </div>
-                            <div class="float-aisle" :span="24">Aisle</div>
-                            <div class="float-row row">
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                            </div>
-                            <div class="float-row" :span="24">
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
+                            <div>
+                                <div class="float-row" :span="24">
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                </div>
+                                <div class="float-row" :span="24">
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                </div>
+                                <div class="float-aisle" :span="24">Aisle</div>
+                                <div class="float-row row">
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                </div>
+                                <div class="float-row" :span="24">
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                    <div class="float-room" :span="6">ROOM</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="container-room" :span="24">
-                        <div class="parlor  room" :span="24">Parlor</div>
-                        <div class="livingroom room" :span="16">Living room</div>
-                        <div class="bathroom room"  :span="8">Bathroom</div>
-                    </div> -->
+                        <div class="container-room" :span="24">
+                            <div class="parlor  room" :span="24">Parlor</div>
+                            <div class="livingroom room" :span="16">Living room</div>
+                            <div class="bathroom room"  :span="8">Bathroom</div>
+                        </div> -->
         </div>
+
         <div v-show="showImage" class="mode">
             <div class="backGroundImga">
                 <div class="room1" @click="roomClick('Boss Office')"></div>
@@ -87,6 +78,10 @@
             <deviceList :typeList="typeList"></deviceList>
         </div>
     </div>
+<!-- <update :address="address"></update> -->
+    <!-- <div v-show="showUpdate" style="background-color: #fff">
+        
+    </div> -->
 </template>
 
 
@@ -94,21 +89,24 @@
 
 
 <script>
-import deviceList from '../Common/device/deviceList'
+import deviceList from '../../Common/device/deviceList'
+import update from '../setting/address/update'
 export default {
     data() {
         return {
             showHome: true,
             showImage: false,
+            showUpdate:false,
             typeList: [],
             showTypeList: false
         }
     },
     // prop:[address],
     methods: {
-        settingClick(){
-            let url = 'setting/address/update'
-            router.push({ path: url, query: { address: this.address }})
+        settingClick() {
+            this.showUpdate = true
+            let url = '/home/setting/address/update'
+            router.push({ path: url, query: { address: this.address } })
         },
         floatClick() {
             this.showImage = true
@@ -132,13 +130,15 @@ export default {
     },
     created() {
         console.log("report")
-        
+
     },
     components: {
-        deviceList
+        deviceList,
+        update,
     },
     computed: {
         address() {
+            console.log(this.$route.query.address.floor)
             return this.$route.query.address
         },
     }
@@ -256,7 +256,7 @@ export default {
     width: 1031px;
     height: 609px;
     margin: 0px auto;
-    background-image: url("../../assets/images/hotal.jpg");
+    background-image: url("../../../assets/images/hotal.jpg");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     -moz-background-size: 100% 100%;

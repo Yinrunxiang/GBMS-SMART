@@ -1,6 +1,9 @@
 import refresh from "./components/refresh.vue";
 import Home from "./components/Home.vue";
 import global from "./components/content/global.vue";
+import hotel from "./components/content/global/hotel.vue";
+import floor from "./components/content/global/floor.vue";
+import room from "./components/content/global/room.vue";
 import plan from "./components/content/plan.vue";
 import report from "./components/content/report.vue";
 import contral from "./components/content/contral.vue";
@@ -18,6 +21,7 @@ import settingTypeLed from "./components/content/setting/type/led/led.vue";
 import settingTypeLedAdd from "./components/content/setting/type/led/add.vue";
 import address from "./components/content/setting/address/address.vue";
 import addressAdd from "./components/content/setting/address/add.vue";
+import addressUpdate from "./components/content/setting/address/update.vue";
 /**
  * meta参数解析
  * hideLeft: 是否隐藏左侧菜单，单页菜单为true
@@ -34,7 +38,11 @@ const routes = [
   {
     path: "/home",
     component: Home,
-    children: [{ path: "global", component: global, name: "global" }]
+    children: [{ path: "global", component: global, name: "global" },
+    { path: "global/hotel", component: hotel, name: "hotel" },
+    { path: "global/floor", component: floor, name: "floor" },
+    { path: "global/room", component: room, name: "room" },]
+
   },
   {
     path: "/home",
@@ -81,6 +89,7 @@ const routes = [
       { path: "setting/type/led/add", component: settingTypeLedAdd, name: "settingTypeLedAdd" },
       { path: "setting/address", component: address, name: "address" },
       { path: "setting/address/add", component: addressAdd, name: "addressAdd" },
+      { path: "setting/address/update", component: addressUpdate, name: "addressUpdate" },
     ]
   },
   { path: "/", redirect: { name: "global" } }

@@ -247,7 +247,7 @@ export default {
 					}
 
 				}
-				console.log(records)
+				// console.log(records)
 				this.records = records
 				//记录数据处理完成
 				//以下是记录数据的使用
@@ -278,9 +278,20 @@ export default {
 						if (country.addressArr.indexOf(item.address) == -1) {
 							country.addressArr.push(item.address)
 							var addressObject = {}
+
 							addressObject.name = item.address
+							addressObject.id = item.addressid
+							addressObject.country = item.country
+							addressObject.address = item.address
+							addressObject.lat = item.lat
+							addressObject.lng = item.lng
+							addressObject.floor = parseInt(item.floor)
+							addressObject.ip = item.ip
+							addressObject.port = item.port
+							addressObject.mac = item.mac
 							addressObject.typeList = []
 							addressObject.typeArr = []
+							addressObject.deviceTypeNumber = {}
 							country.addressList.push(addressObject)
 						}
 						//计算各种设备类型的数量
@@ -295,6 +306,7 @@ export default {
 									typeObject.deviceList = []
 									address.typeList.push(typeObject)
 								}
+								address.deviceTypeNumber[item.devicetype] ? address.deviceTypeNumber[item.devicetype] += 1 : address.deviceTypeNumber[item.devicetype] = 1
 								for (var type of address.typeList) {
 									//筛选重复类型
 									if (item.devicetype == type.name) {
@@ -306,7 +318,7 @@ export default {
 					}
 				}
 			}
-			console.log(countryArr)
+			// console.log(countryArr)
 			this.$store.dispatch('setCountryArr', countryArr)
 
 			// return countryArr

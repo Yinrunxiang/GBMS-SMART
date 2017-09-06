@@ -32,7 +32,10 @@ switch ($action)
         $ip = isset($_REQUEST["ip"]) ? $_REQUEST["ip"] : '';
         $port = isset($_REQUEST["port"]) ? $_REQUEST["port"] : '';
         $mac = isset($_REQUEST["mac"]) ? $_REQUEST["mac"] : '';
-        $sql="insert into address (country,address,ip,port,mac,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','enabled')";
+        $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
+        $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
+        $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
+        $sql="insert into address (country,address,ip,port,mac,lat,lng,floor,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','".$lat."','".$lng."','".$floor."','enabled')";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -46,13 +49,37 @@ switch ($action)
             echo(json_encode($message)); 
         }
         break;
+    case "update":
+        $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
+        $country = isset($_REQUEST["country"]) ? $_REQUEST["country"] : '';
+        $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
+        $ip = isset($_REQUEST["ip"]) ? $_REQUEST["ip"] : '';
+        $port = isset($_REQUEST["port"]) ? $_REQUEST["port"] : '';
+        $mac = isset($_REQUEST["mac"]) ? $_REQUEST["mac"] : '';
+        $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
+        $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
+        $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
+        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor = '".$floor."' where id = '".$id."')";
+        if (!mysqli_query($con,$sql))
+        {
+            $message = [];
+            $message[0] = false;
+            $message[1] = "update failed: " . mysqli_error($con);
+            echo(json_encode($message)); 
+        }else{
+            $message = [];
+            $message[0] = true;
+            $message[1] = "update successfully";
+            echo(json_encode($message)); 
+        }
+    break;
     case "delete":
         
         $selections = isset($_REQUEST["selections"]) ? $_REQUEST["selections"] : '';
         $re_str = "";
         for ($i = 0; $i  < count($selections); $i++) {
             $selection = json_decode($selections[$i]);
-            $sql = " delete from address where address = '".$selection->address."'";
+            $sql = " delete from address where id = '".$selection->id."'";
             if (!mysqli_query($con,$sql))
             {
                 $re = false;
@@ -83,7 +110,7 @@ switch ($action)
     $re_str = "";
     for ($i = 0; $i  < count($selections); $i++) {
         $selection = json_decode($selections[$i]);
-        $sql = " update address set status = '".$status."' where address = '".$selection->address."'";
+        $sql = " update address set status = '".$status."' where id = '".$selection->id."'";
         if (!mysqli_query($con,$sql))
         {
             $re = false;
