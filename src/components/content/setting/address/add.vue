@@ -19,6 +19,12 @@
             <el-form-item label="MAC">
                 <el-input v-model.trim="form.mac" class="h-40 w-200"></el-input>
             </el-form-item>
+            <el-form-item label="Latitude">
+                <el-input v-model.trim="form.lat" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <el-form-item label="Longitude">
+                <el-input v-model.trim="form.lng" class="h-40 w-200"></el-input>
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="add('form')" :loading="isLoading">Commit</el-button>
                 <el-button @click="goback()">Back</el-button>
@@ -41,6 +47,8 @@ export default {
                 ip: '',
                 port: '',
                 mac: '',
+                lat:'',
+                lng:'',
                 status: 'enabled',
             },
             addressOptions: [],

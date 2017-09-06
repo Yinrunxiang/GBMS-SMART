@@ -25,6 +25,10 @@
             </el-table-column>
             <el-table-column label="MAC" prop="mac" width="200">
             </el-table-column>
+            <el-table-column label="Latitude" prop="lat" width="200">
+            </el-table-column>
+            <el-table-column label="Longitude" prop="lng" width="200">
+            </el-table-column>
             <el-table-column label="Status" prop="status">
             </el-table-column>
         </el-table>
