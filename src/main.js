@@ -8,6 +8,7 @@ import Cookies from 'js-cookie'
 import _ from 'lodash'
 import moment from 'moment'
 import ElementUI from 'element-ui'
+import locale from 'element-ui/lib/locale/lang/en'
 import 'element-ui/lib/theme-default/index.css'
 import routes from './routes'
 import VueRouter from 'vue-router'
@@ -46,7 +47,8 @@ router.afterEach(transition => {
   NProgress.done()
 })
 
-Vue.use(ElementUI)
+// Vue.use(ElementUI)
+Vue.use(ElementUI, { locale })
 Vue.use(VueRouter)
 // Vue.use(colorPicker)
 window.Vue = Vue

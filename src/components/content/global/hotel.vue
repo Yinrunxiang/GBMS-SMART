@@ -1,13 +1,13 @@
 <template>
     <div class="container-out" style="height:100%">
-        <div class="setting-icon">
+        <div v-show="showHotel" class="setting-icon">
             <!-- <router-link to="setting/address/update" :form='address'> -->
             <el-button size="small" type="info" @click="settingClick">
                 <i class="el-icon-setting"></i>
             </el-button>
             <!-- </router-link> -->
         </div>
-        <div v-show="showHome" class="container-in">
+        <div v-show="showHotel" class="container-in">
             <div class="container-home">
                 <div class="build">
                     <a class="build-img">
@@ -22,43 +22,43 @@
                 </div>
             </div>
             <!-- <div class="container-float" :span="24">
-                            <div>
-                                <div class="float-row" :span="24">
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                </div>
-                                <div class="float-row" :span="24">
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                </div>
-                                <div class="float-aisle" :span="24">Aisle</div>
-                                <div class="float-row row">
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                </div>
-                                <div class="float-row" :span="24">
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                    <div class="float-room" :span="6">ROOM</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="container-room" :span="24">
-                            <div class="parlor  room" :span="24">Parlor</div>
-                            <div class="livingroom room" :span="16">Living room</div>
-                            <div class="bathroom room"  :span="8">Bathroom</div>
-                        </div> -->
+                                                                                                <div>
+                                                                                                    <div class="float-row" :span="24">
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                    </div>
+                                                                                                    <div class="float-row" :span="24">
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                    </div>
+                                                                                                    <div class="float-aisle" :span="24">Aisle</div>
+                                                                                                    <div class="float-row row">
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                    </div>
+                                                                                                    <div class="float-row" :span="24">
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="container-room" :span="24">
+                                                                                                <div class="parlor  room" :span="24">Parlor</div>
+                                                                                                <div class="livingroom room" :span="16">Living room</div>
+                                                                                                <div class="bathroom room"  :span="8">Bathroom</div>
+                                                                                            </div> -->
         </div>
 
-        <div v-show="showImage" class="mode">
-            <div class="backGroundImga">
+        <div v-show="showFloor" class="mode">
+            <div class="floorImga">
                 <div class="room1" @click="roomClick('Boss Office')"></div>
                 <div class="room2" @click="roomClick('Boss Office')"></div>
                 <div class="room3" @click="roomClick('Boss Office')"></div>
@@ -74,14 +74,29 @@
                 <div class="room13" @click="roomClick('Boss Office')"></div>
             </div>
         </div>
+        <div v-show="showRoom" id="parentConstrain" class="mode" style="position:absolute;width:100%;height:100%;background-color:#fff;">
+            <el-dropdown class="setting-icon" @command="handleCommand">
+                <el-button type="primary">
+                    Add Device
+                    <i class="el-icon-caret-bottom el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item style="width:100px;" v-for="devicetype in address.typeList" :command="devicetype.name">{{devicetype.name}}</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <div class="roomImga">
+                <div v-for="device in deviceList" ref="device" :style="{left:device.x_axis + 'px', top:device.y_axis + 'px'}">
+                    <deviceTap :device="device"></deviceTap>
+                </div>
+            </div>
+            <!-- <div class="device-list">
+                                        
+                                    </div> -->
+        </div>
         <div v-show="showTypeList" style="background-color: #fff">
             <deviceList :typeList="typeList"></deviceList>
         </div>
     </div>
-<!-- <update :address="address"></update> -->
-    <!-- <div v-show="showUpdate" style="background-color: #fff">
-        
-    </div> -->
 </template>
 
 
@@ -90,51 +105,157 @@
 
 <script>
 import deviceList from '../../Common/device/deviceList'
-import update from '../setting/address/update'
+import deviceTap from '../../Common/device/deviceTap'
+// import $ from 'jquery'
+// import '../../../assets/css/drag.css'
+import '../../../assets/js/jquery-1.9.1.min.js'
+import '../../../assets/js/drag.js'
 export default {
     data() {
         return {
-            showHome: true,
-            showImage: false,
-            showUpdate:false,
+            showHotel: true,
+            showFloor: false,
+            showRoom: false,
             typeList: [],
+            deviceList: [{
+                id: "",
+                device: "",
+                subnetid: "",
+                deviceid: "",
+                channel: "",
+                address: "Boss Office",
+                devicetype: 'light',
+                on_off: "",
+                status: "",
+                icon: "",
+                starttine: "",
+                endtime: "",
+                mode: "",
+                grade: "",
+                breed: "",
+                x_axis: 0,
+                y_axis: 0,
+            }, {
+                id: "",
+                device: "",
+                subnetid: "",
+                deviceid: "",
+                channel: "",
+                address: "Boss Office",
+                devicetype: 'ac',
+                on_off: "",
+                status: "",
+                icon: "",
+                starttine: "",
+                endtime: "",
+                mode: "",
+                grade: "",
+                breed: "",
+                x_axis: 100,
+                y_axis: 100,
+            },],
             showTypeList: false
         }
     },
     // prop:[address],
     methods: {
+        handleCommand(command) {
+            var deviceObj = {}
+            deviceObj.id = ""
+            deviceObj.device = ""
+            deviceObj.subnetid = ""
+            deviceObj.deviceid = ""
+            deviceObj.channel = ""
+            deviceObj.address = this.address.device
+            deviceObj.devicetype = command
+            deviceObj.on_off = ""
+            deviceObj.status = ""
+            deviceObj.icon = ""
+            deviceObj.starttine = ""
+            deviceObj.endtime = ""
+            deviceObj.mode = ""
+            deviceObj.grade = ""
+            deviceObj.breed = ""
+            deviceObj.x_axis = 0
+            deviceObj.y_axis = 0
+            this.deviceList.push(deviceObj)
+            this.$nextTick(function() {
+                for (var device of this.$refs.device) {
+                    $(device).myDrag({
+                        parent: 'parent', //定义拖动不能超出的外框,拖动范围
+                        randomPosition: false, //初始化随机位置
+                        direction: 'all', //方向
+                        handler: false, //把手
+                        dragStart: function(x, y) { }, //拖动开始 x,y为当前坐标
+                        dragEnd: function(x, y) { }, //拖动停止 x,y为当前坐标
+                        dragMove: function(x, y) { } //拖动进行中 x,y为当前坐标
+                    });
+                }
+            })
+
+        },
         settingClick() {
-            this.showUpdate = true
             let url = '/home/setting/address/update'
             router.push({ path: url, query: { address: this.address } })
         },
         floatClick() {
-            this.showImage = true
-            this.showHome = false
+            this.showFloor = true
+            this.showHotel = false
+            this.showRoom = false
             this.showTypeList = false
         },
         roomClick(val) {
-            console.log(this.countryArr)
-            this.showImage = false
-            this.showHome = false
-            this.showTypeList = true
-            for (var country of this.countryArr) {
-                for (var address of country.addressList) {
-                    if (val == address.name) {
-                        this.typeList = address.typeList
-                        console.log(this.typeList)
-                    }
-                }
-            }
-        }
+            this.showFloor = false
+            this.showHotel = false
+            this.showRoom = true
+            this.showTypeList = false
+            this.typeList = this.address.typeList
+
+        },
     },
     created() {
         console.log("report")
 
+
+    },
+    mounted() {
+
+        for (var device of this.$refs.device) {
+            $(device).myDrag({
+                parent: 'parent', //定义拖动不能超出的外框,拖动范围
+                randomPosition: false, //初始化随机位置
+                direction: 'all', //方向
+                handler: false, //把手
+                dragStart: function(x, y) { }, //拖动开始 x,y为当前坐标
+                dragEnd: function(x, y) { }, //拖动停止 x,y为当前坐标
+                dragMove: function(x, y) { } //拖动进行中 x,y为当前坐标
+            });
+        }
+        // $('.device').each(() => {
+        //     console.log(this)
+        //     $(this).myDrag({
+        //         parent: 'parent', //定义拖动不能超出的外框,拖动范围
+        //         randomPosition: true, //初始化随机位置
+        //         direction: 'all', //方向
+        //         handler: false, //把手
+        //         dragStart: function(x, y) { }, //拖动开始 x,y为当前坐标
+        //         dragEnd: function(x, y) { }, //拖动停止 x,y为当前坐标
+        //         dragMove: function(x, y) { } //拖动进行中 x,y为当前坐标
+        //     });
+        // });
+        //  $('.device').myDrag({
+        //         parent: 'parent', //定义拖动不能超出的外框,拖动范围
+        //         randomPosition: true, //初始化随机位置
+        //         direction: 'all', //方向
+        //         handler: false, //把手
+        //         dragStart: function(x, y) { }, //拖动开始 x,y为当前坐标
+        //         dragEnd: function(x, y) { }, //拖动停止 x,y为当前坐标
+        //         dragMove: function(x, y) { } //拖动进行中 x,y为当前坐标
+        //     });
     },
     components: {
         deviceList,
-        update,
+        deviceTap,
     },
     computed: {
         address() {
@@ -160,6 +281,7 @@ export default {
     position: absolute;
     right: 5px;
     top: 5px;
+    z-index: 100;
 }
 
 .container-in {
@@ -251,7 +373,7 @@ export default {
 }
 
 
-.backGroundImga {
+.floorImga {
     position: relative;
     width: 1031px;
     height: 609px;
@@ -262,8 +384,26 @@ export default {
     -moz-background-size: 100% 100%;
 }
 
-.backGroundImga>div:hover {
+.floorImga>div:hover {
     border: 2px solid #20A0FF;
+}
+
+.device-list {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    width: 200px;
+    height: 50px;
+}
+
+.roomImga {
+    position: relative;
+    width: 895px;
+    height: 487px;
+    background-image: url("../../../assets/images/room.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
 }
 
 .room1 {
