@@ -4,7 +4,7 @@
             <el-form-item label="Device Name">
                 <el-input v-model.trim="form.device" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item label="Device Type">
+            <el-form-item v-show="notHotel" label="Device Type">
                 <el-select v-model="form.devicetype" filterable placeholder="Select Type" class="h-40 w-200">
                     <el-option v-for="item in deviceTypeOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
@@ -25,14 +25,14 @@
             <el-form-item label="Channel">
                 <el-input v-model.trim="form.channel" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item label="Address">
+            <el-form-item v-show="notHotel" label="Address">
                 <el-select v-model="form.address" filterable placeholder="Select Address" class="h-40 w-200">
                     <el-option v-for="item in address" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="update('form')" :loading="isLoading">Commit</el-button>
+                <el-button type="primary" @click="commit('form')" :loading="isLoading">Commit</el-button>
                 <el-button @click="goback()">Back</el-button>
             </el-form-item>
         </el-form>
@@ -65,7 +65,7 @@ export default {
             //     endtime: '',
 
             // },
-
+            // form: {},
             deviceTypeOptions: [
                 { label: 'AC', value: 'ac' },
                 { label: 'Light', value: 'light' },
@@ -74,27 +74,50 @@ export default {
         }
     },
     methods: {
-        update(form) {
+        goback() {
+            this.$emit("changeUpdate", false)
+        },
+        commit(form) {
             console.log(this.form)
             this.isLoading = !this.isLoading
             const data = {
                 params: this.form
             }
-            this.apiGet('device/index.php?action=update', data).then((res) => {
-                // _g.clearVuex('setRules')
-                if (res[0]) {
-                    var devices = this.$store.state.devices
-                    devices.push(this.form)
-                    this.$store.dispatch('setDevices', devices)
-                    _g.toastMsg('success', res[1])
-                    setTimeout(() => {
-                        this.goback()
-                    }, 500)
-                } else {
-                    _g.toastMsg('error', res[1])
-                }
+            if (this.form.id) {
+                this.apiGet('device/index.php?action=update', data).then((res) => {
+                    // _g.clearVuex('setRules')
+                    if (res[0]) {
+                        var devices = this.$store.state.devices
+                        devices.push(this.form)
+                        this.$store.dispatch('setDevices', devices)
+                        _g.toastMsg('success', res[1])
+                        setTimeout(() => {
+                            this.goback()
+                        }, 500)
+                    } else {
+                        _g.toastMsg('error', res[1])
+                    }
 
-            })
+                })
+            }
+            else {
+                this.apiGet('device/index.php?action=insert', data).then((res) => {
+                    // _g.clearVuex('setRules')
+                    if (res[0]) {
+                        var devices = this.$store.state.devices
+                        devices.push(this.form)
+                        this.$store.dispatch('setDevices', devices)
+                        _g.toastMsg('success', res[1])
+                        setTimeout(() => {
+                            this.goback()
+                        }, 500)
+                    } else {
+                        _g.toastMsg('error', res[1])
+                    }
+
+                })
+            }
+
         },
         getBreedList(breeds) {
             var breedArr = []
@@ -107,6 +130,7 @@ export default {
             return breedArr
         },
     },
+    props: ['device', 'notHotel'],
     created() {
         console.log("plan update")
     },
@@ -114,9 +138,11 @@ export default {
     },
     components: {
     },
+
     computed: {
-        form(){
-            var device = this.$store.state.device
+        form() {
+            // var device = this.$store.state.device
+            var device = this.device
             return device
         },
         breedData() {

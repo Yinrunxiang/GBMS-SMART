@@ -1,68 +1,74 @@
 <template>
-    <div class="p-20">
-        <div class="m-b-20 ovf-hd">
-            <div class="fl">
-                <router-link class="btn-link-large add-btn" to="plan/add">
-                    <i class="el-icon-plus"></i>&nbsp;&nbsp;Add device
-                </router-link>
+    <div>
+        <div v-show="!showDeviceUpdate" class="p-20">
+            <div class="m-b-20 ovf-hd">
+                <div class="fl">
+                    <router-link class="btn-link-large add-btn" to="plan/add">
+                        <i class="el-icon-plus"></i>&nbsp;&nbsp;Add device
+                    </router-link>
+                </div>
+                <div class="fl w-300 m-l-30">
+                    <el-input placeholder="Please enter the device name" v-model="keywords">
+                        <el-button slot="append" icon="search" @click="search()"></el-button>
+                    </el-input>
+                </div>
             </div>
-            <div class="fl w-300 m-l-30">
-                <el-input placeholder="Please enter the device name" v-model="keywords">
-                    <el-button slot="append" icon="search" @click="search()"></el-button>
-                </el-input>
+            <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
+                <el-table-column type="selection" width="50">
+                </el-table-column>
+                <el-table-column prop="device" label="Device name" width="150">
+                </el-table-column>
+                <el-table-column label="Device type" prop="devicetype" width="150">
+                </el-table-column>
+                <el-table-column label="Address" prop="address" width="150">
+                </el-table-column>
+                <el-table-column label="status" prop="status" width="150">
+                </el-table-column>
+                <el-table-column label="IP" prop="ip" width="150">
+                </el-table-column>
+                <el-table-column label="Start Time" prop="start" width="220">
+                    <template scope="scope">
+                        <el-time-select placeholder="Start Time" @change="startTimeChange(scope.row)" v-model="scope.row.starttime" :picker-options="{
+                              start: '08:00',
+                              step: '00:10',
+                              end: '18:00'
+                            }">
+                        </el-time-select>
+                    </template>
+                </el-table-column>
+                <el-table-column label="Over Time" prop="over" width="220">
+                    <template scope="scope">
+                        <el-time-select placeholder="End Time" @change="endTimeChange(scope.row)" v-model="scope.row.endtime" :picker-options="{
+                          start: '08:00',
+                          step: '00:10',
+                          end: '18:00',
+                          minTime: scope.row.starttime
+                        }">
+                        </el-time-select>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pos-rel p-t-20">
+                <div>
+                    <el-button size="small" type="success" @click="setStatusBtn('enabled')">Enabled</el-button>
+                    <el-button size="small" type="warning" @click="setStatusBtn('disabled')">Disabled</el-button>
+                    <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button>
+                </div>
+                <div class="block pages">
+                    <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">
+                    </el-pagination>
+                </div>
             </div>
         </div>
-        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
-            <el-table-column type="selection" width="50">
-            </el-table-column>
-            <el-table-column prop="device" label="Device name" width="150">
-            </el-table-column>
-            <el-table-column label="Device type" prop="devicetype" width="150">
-            </el-table-column>
-            <el-table-column label="Address" prop="address" width="150">
-            </el-table-column>
-            <el-table-column label="status" prop="status" width="150">
-            </el-table-column>
-            <el-table-column label="IP" prop="ip" width="150">
-            </el-table-column>
-            <el-table-column label="Start Time" prop="start" width="220">
-                <template scope="scope">
-                    <el-time-select placeholder="Start Time" @change="startTimeChange(scope.row)" v-model="scope.row.starttime" :picker-options="{
-                      start: '08:00',
-                      step: '00:10',
-                      end: '18:00'
-                    }">
-                    </el-time-select>
-                </template>
-            </el-table-column>
-            <el-table-column label="Over Time" prop="over" width="220">
-                <template scope="scope">
-                    <el-time-select placeholder="End Time" @change="endTimeChange(scope.row)" v-model="scope.row.endtime" :picker-options="{
-                  start: '08:00',
-                  step: '00:10',
-                  end: '18:00',
-                  minTime: scope.row.starttime
-                }">
-                    </el-time-select>
-                </template>
-            </el-table-column>
-        </el-table>
-        <div class="pos-rel p-t-20">
-            <div>
-                <el-button size="small" type="success" @click="setStatusBtn('enabled')">Enabled</el-button>
-                <el-button size="small" type="warning" @click="setStatusBtn('disabled')">Disabled</el-button>
-                <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button>
-            </div>
-            <div class="block pages">
-                <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">
-                </el-pagination>
-            </div>
+        <div v-show="showDeviceUpdate">
+            <deviceUpdate :device="thisdevice" :notHotel='notHotel' @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
     </div>
 </template>
 
 <script>
 import btnGroup from '../Common/btn-group.vue'
+import deviceUpdate from './plan/update'
 import http from '../../assets/js/http'
 
 export default {
@@ -76,11 +82,17 @@ export default {
             // dataCount: null,
             currentPage: null,
             keywords: '',
+            thisdevice: {},
+            notHotel: true,
             multipleSelection: [],
             limit: 15,
+            showDeviceUpdate: false,
         }
     },
     methods: {
+        changeUpdate(data){
+            this.showDeviceUpdate = data
+        },
         //搜索关键字
         search() {
             router.push({ path: this.$route.path, query: { keywords: this.keywords, page: 1 } })
@@ -94,10 +106,13 @@ export default {
         handleCurrentChange(page) {
             router.push({ path: this.$route.path, query: { keywords: this.keywords, page: page } })
         },
-        rowDblclick(row){
-            let url = '/home/plan/update'
-            this.$store.dispatch('setDevice', row)
-            router.push(url)
+        rowDblclick(row) {
+            this.showDeviceUpdate= true;
+            this.thisdevice = row
+            console.log(this.thisdevice)
+            // let url = '/home/plan/update'
+            // this.$store.dispatch('setDevice', row)
+            // router.push(url)
         },
         //开始时间改变事件
         startTimeChange(row) {
@@ -225,7 +240,8 @@ export default {
         this.init()
     },
     components: {
-        btnGroup
+        btnGroup,
+        deviceUpdate,
     },
     computed: {
         //从vuex中获取设备数据

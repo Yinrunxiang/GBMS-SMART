@@ -22,39 +22,39 @@
                 </div>
             </div>
             <!-- <div class="container-float" :span="24">
-                                                                                                <div>
-                                                                                                    <div class="float-row" :span="24">
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                    </div>
-                                                                                                    <div class="float-row" :span="24">
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                    </div>
-                                                                                                    <div class="float-aisle" :span="24">Aisle</div>
-                                                                                                    <div class="float-row row">
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                    </div>
-                                                                                                    <div class="float-row" :span="24">
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
-                                                                                                        <div class="float-room" :span="6">ROOM</div>
+                                                                                                    <div>
+                                                                                                        <div class="float-row" :span="24">
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                        </div>
+                                                                                                        <div class="float-row" :span="24">
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                        </div>
+                                                                                                        <div class="float-aisle" :span="24">Aisle</div>
+                                                                                                        <div class="float-row row">
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                        </div>
+                                                                                                        <div class="float-row" :span="24">
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                            <div class="float-room" :span="6">ROOM</div>
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            <div class="container-room" :span="24">
-                                                                                                <div class="parlor  room" :span="24">Parlor</div>
-                                                                                                <div class="livingroom room" :span="16">Living room</div>
-                                                                                                <div class="bathroom room"  :span="8">Bathroom</div>
-                                                                                            </div> -->
+                                                                                                <div class="container-room" :span="24">
+                                                                                                    <div class="parlor  room" :span="24">Parlor</div>
+                                                                                                    <div class="livingroom room" :span="16">Living room</div>
+                                                                                                    <div class="bathroom room"  :span="8">Bathroom</div>
+                                                                                                </div> -->
         </div>
 
         <div v-show="showFloor" class="mode">
@@ -85,17 +85,20 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <div class="roomImga">
-                <div v-for="device in deviceList" ref="device" :style="{left:device.x_axis + 'px', top:device.y_axis + 'px'}">
+                <div v-for="device in deviceList" ref="device" :style="{left:device.x_axis + 'px', top:device.y_axis + 'px'}" @dblclick="deviceDbclick(device)">
                     <deviceTap :device="device"></deviceTap>
                 </div>
             </div>
             <!-- <div class="device-list">
-                                        
-                                    </div> -->
+                                            
+                                        </div> -->
         </div>
-        <div v-show="showTypeList" style="background-color: #fff">
-            <deviceList :typeList="typeList"></deviceList>
+        <div v-show="showDeviceUpdate">
+            <deviceUpdate :device="thisdevice"  :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
+        <!-- <div v-show="showTypeList" style="background-color: #fff">
+                <deviceList :typeList="typeList"></deviceList>
+            </div> -->
     </div>
 </template>
 
@@ -106,6 +109,7 @@
 <script>
 import deviceList from '../../Common/device/deviceList'
 import deviceTap from '../../Common/device/deviceTap'
+import deviceUpdate from '../plan/update'
 // import $ from 'jquery'
 // import '../../../assets/css/drag.css'
 import '../../../assets/js/jquery-1.9.1.min.js'
@@ -116,6 +120,27 @@ export default {
             showHotel: true,
             showFloor: false,
             showRoom: false,
+            showDeviceUpdate: false,
+            notHotel: false,
+            thisdevice: {
+                id: "",
+                device: "",
+                subnetid: "",
+                deviceid: "",
+                channel: "",
+                address: "Boss Office",
+                devicetype: 'light',
+                on_off: "",
+                status: "",
+                icon: "",
+                starttine: "",
+                endtime: "",
+                mode: "",
+                grade: "",
+                breed: "",
+                x_axis: 0,
+                y_axis: 0,
+            },
             typeList: [],
             deviceList: [{
                 id: "",
@@ -159,6 +184,10 @@ export default {
     },
     // prop:[address],
     methods: {
+        changeUpdate(data){
+            this.showDeviceUpdate = data
+            this.showRoom = !data
+        },
         handleCommand(command) {
             var deviceObj = {}
             deviceObj.id = ""
@@ -193,6 +222,11 @@ export default {
                 }
             })
 
+        },
+        deviceDbclick(device) {
+            this.showRoom = false
+            this.showDeviceUpdate = true
+            this.thisdevice = device
         },
         settingClick() {
             let url = '/home/setting/address/update'
@@ -256,6 +290,7 @@ export default {
     components: {
         deviceList,
         deviceTap,
+        deviceUpdate,
     },
     computed: {
         address() {
