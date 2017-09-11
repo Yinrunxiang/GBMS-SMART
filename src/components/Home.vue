@@ -10,16 +10,16 @@
 				</template>
 			</el-col>
 			<!-- <el-col :span="4" :offset="16" class="pos-rel">
-																			<el-dropdown @command="handleMenu" class="user-menu">
-																	      <span class="el-dropdown-link c-gra" style="cursor: default">
-																	        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
-																	      </span>
-																	      <el-dropdown-menu slot="dropdown">
-																	        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
-																	        <el-dropdown-item command="logout">退出</el-dropdown-item>
-																	      </el-dropdown-menu>
-																	    </el-dropdown>
-																		</el-col> -->
+																									<el-dropdown @command="handleMenu" class="user-menu">
+																							      <span class="el-dropdown-link c-gra" style="cursor: default">
+																							        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
+																							      </span>
+																							      <el-dropdown-menu slot="dropdown">
+																							        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
+																							        <el-dropdown-item command="logout">退出</el-dropdown-item>
+																							      </el-dropdown-menu>
+																							    </el-dropdown>
+																								</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -208,6 +208,26 @@ export default {
 				this.$store.dispatch('setAddress', res)
 			});
 		},
+		getFloor() {
+			const data = {
+				params: {
+					action: "search"
+				}
+			}
+			this.apiGet("device/floor.php", data).then(res => {
+				this.$store.dispatch('setFloor', res)
+			});
+		},
+		getRoom() {
+			const data = {
+				params: {
+					action: "search"
+				}
+			}
+			this.apiGet("device/room.php", data).then(res => {
+				this.$store.dispatch('setRoom', res)
+			});
+		},
 		getRecord() {
 			const data = {
 				params: {
@@ -285,12 +305,13 @@ export default {
 							addressObject.address = item.address
 							addressObject.lat = item.lat
 							addressObject.lng = item.lng
-							addressObject.floor = parseInt(item.floor)
 							addressObject.ip = item.ip
 							addressObject.port = item.port
 							addressObject.mac = item.mac
-							addressObject.typeList = []
-							addressObject.typeArr = []
+							addressObject.floorList = []
+							addressObject.floorArr = []
+							// addressObject.typeList = []
+							// addressObject.typeArr = []
 							addressObject.deviceTypeNumber = {}
 							country.addressList.push(addressObject)
 						}
@@ -299,26 +320,54 @@ export default {
 						for (var address of country.addressList) {
 							//筛选重复类型
 							if (item.address == address.name) {
-								if (address.typeArr.indexOf(item.devicetype) == -1) {
-									address.typeArr.push(item.devicetype)
-									var typeObject = {}
-									typeObject.name = item.devicetype
-									typeObject.deviceList = []
-									address.typeList.push(typeObject)
+								if (address.floorArr.indexOf(item.floor) == -1) {
+									address.floorArr.push(item.floor)
+									var floorObject = {}
+									floorObject.name = item.floor
+									floorObject.roomList = []
+									floorObject.roomArr = []
+									address.floorList.push(floorObject)
 								}
+
 								address.deviceTypeNumber[item.devicetype] ? address.deviceTypeNumber[item.devicetype] += 1 : address.deviceTypeNumber[item.devicetype] = 1
-								for (var type of address.typeList) {
+								for (var floor of address.floorList) {
 									//筛选重复类型
-									if (item.devicetype == type.name) {
-										type.deviceList.push(item)
+									if (item.floor == floor.name) {
+										if (floor.roomArr.indexOf(item.floor) == -1) {
+											floor.roomArr.push(item.floor)
+											var roomObject = {}
+											roomObject.name = item.room
+											roomObject.typeList = []
+											roomObject.typeArr = []
+											floor.roomList.push(roomObject)
+										}
+										for (var room of floor.roomList) {
+											if (item.room == room.name) {
+												if (room.typeArr.indexOf(item.devicetype) == -1) {
+													room.typeArr.push(item.devicetype)
+													var typeObject = {}
+													typeObject.name = item.devicetype
+													typeObject.deviceList = []
+													room.typeList.push(typeObject)
+												}
+												for (var type of room.typeList) {
+													//筛选重复类型
+													if (item.devicetype == type.name) {
+														type.deviceList.push(item)
+													}
+												}
+											}
+										}
 									}
+
 								}
+
 							}
 						}
 					}
 				}
 			}
-			// console.log(countryArr)
+			console.log(countryArr)
 			this.$store.dispatch('setCountryArr', countryArr)
 
 			// return countryArr

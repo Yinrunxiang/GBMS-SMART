@@ -2,10 +2,11 @@
     <el-row class="panel m-w-1100">
         <el-col :span="24" class="contral-panel-center h-100p ">
             <aside class="w-180 h-100p ovf-hd" style="background: #eef1f6;">
-                <el-menu default-active="1"  class="el-menu-vertical-demo" @select="selectCountry">
+                <el-menu default-active="1" class="el-menu-vertical-demo" @select="selectCountry">
                     <div v-for="country in countryArr">
                         <el-submenu :index="country.name">
-                            <template slot="title"><i class="el-icon-menu"></i>{{country.name}}</template>
+                            <template slot="title">
+                                <i class="el-icon-menu"></i>{{country.name}}</template>
                             <div v-for="address in country.addressList">
                                 <el-menu-item :index="address.name" @click="menuClick">
                                     {{address.name}}</el-menu-item>
@@ -14,9 +15,9 @@
                     </div>
 
                     <!-- <div v-for="country in countryArr">
-                                    <el-menu-item :index="country.name" @click="menuClick">
-                                        <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
-                                </div> -->
+                                        <el-menu-item :index="country.name" @click="menuClick">
+                                            <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
+                                    </div> -->
                 </el-menu>
             </aside>
             <section class="panel-c-c">
@@ -55,7 +56,11 @@ export default {
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {
                     if (key == address.name) {
-                        this.typeList = address.typeList
+                        for (var floor of address.floorList) {
+                            for (var room of floor.roomList) {
+                                this.typeList = room.typeList
+                            }
+                        }
                     }
                 }
             }

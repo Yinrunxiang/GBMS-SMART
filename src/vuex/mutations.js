@@ -46,6 +46,12 @@ const mutations = {
   },
   setAddress(state, address) {
     state.address = address
+  },
+  setFloor(state, floor) {
+    state.floor = floor
+  },
+  setRoom(state, room) {
+    state.room = room
   }
 }
 

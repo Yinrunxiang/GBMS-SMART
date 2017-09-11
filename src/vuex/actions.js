@@ -46,6 +46,12 @@ const actions = {
   },
   setAddress({ commit }, address) {
     commit("setAddress", address);
+  },
+  setFloor({ commit }, floor) {
+    commit("setFloor", floor);
+  },
+  setRoom({ commit }, room) {
+    commit("setRoom", room);
   }
 };
 

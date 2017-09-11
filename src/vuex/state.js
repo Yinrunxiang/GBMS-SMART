@@ -15,6 +15,8 @@ const state = {
   record:[],
   countryArr:[],
   address:[],
+  floor:[],
+  room:[],
 }
 
 export default state

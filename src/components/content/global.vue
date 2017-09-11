@@ -24,7 +24,7 @@ import 'echarts/map/js/world.js';
 export default {
     data() {
         return {
-            address:{}
+            address: {}
             // record : this.$store.state.record
             // devices: this.$store.state.devices,
         }
@@ -36,7 +36,7 @@ export default {
             var map = this.$refs.worldmap
             map.style.width = width + 'px';
             map.style.height = height + 'px';
-            console.log(map.style.width + map.style.height)
+            // console.log(map.style.width + map.style.height)
 
         },
         // createChart(record) {
@@ -150,15 +150,15 @@ export default {
         addressClick(addressName) {
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {
-                    if (address.name == addressName) {                       
+                    if (address.name == addressName) {
                         this.address = address
                     }
                 }
 
             }
-            console.log(this.address)
+            // console.log(this.address)
             let url = '/home/global/hotel'
-            router.push({ path: url, query: { address: this.address }})
+            router.push({ path: url, query: { address: this.address } })
         },
         //悬浮提示数据
         itCounteyTooltip(params) {
@@ -169,17 +169,25 @@ export default {
             //     }
             // }
             // return itCounteyTooltip
-            console.log(this.countryArr)
+            // console.log(this.countryArr)
             var itCounteyTooltip = 'Hotel : ' + params.name + '<br/>'
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {
                     if (address.name == params.name) {
-                        for (var type of address.typeList) {
-                            itCounteyTooltip += type.name + ' : ' + address.deviceTypeNumber[type.name] + '<br/>'
+                        for (var floor of address.floorList) {
+                            for (var room of floor.roomList) {
+                                for (var type of room.typeList) {
+                                    itCounteyTooltip += type.name + ' : ' + address.deviceTypeNumber[type.name] + '<br/>'
+                                }
+                            }
                         }
+
+
+
+
+
                     }
                 }
-
             }
             return itCounteyTooltip
         },
@@ -199,15 +207,13 @@ export default {
         // },
         initData() {
             var mapData = []
-            for (var country of this.countryArr) {
-                for (var address of country.addressList) {
-                    var mapObj = {}
-                    mapObj.name = address.name
-                    mapObj.value = [address.lng, address.lat]
-                    mapData.push(mapObj)
-                }
+            for (var address of this.allAddress) {
+                var mapObj = {}
+                mapObj.name = address.address
+                mapObj.value = [address.lng, address.lat]
+                mapData.push(mapObj)
             }
-            console.log(mapData)
+            // console.log(mapData)
             return mapData
         },
         //创建地图
@@ -321,7 +327,7 @@ export default {
             myChart.setOption(option);
             myChart.on('click', function(params) {
                 var dataIndex = params.dataIndex;
-                console.log(params);
+                // console.log(params);
                 e.addressClick(params.data.name)
             });
         },
@@ -344,15 +350,18 @@ export default {
 
     },
     computed: {
-        // devices() {
-        //     var devices = []
-        //     for (var device of this.$store.state.devices) {
-        //         if (device.status == 'enabled') {
-        //             devices.push(device)
-        //         }
-        //     }
-        //     return devices
-        // },
+        devices() {
+            return this.$store.state.devices
+        },
+        allAddress() {
+            return this.$store.state.address
+        },
+        allFloor() {
+            return this.$store.state.floor
+        },
+        allRoom() {
+            return this.$store.state.room
+        },
         //计算该国家的设备类型，各种设备类型的数量，生成国家数组让地图调用
         countryArr() {
             return this.$store.state.countryArr

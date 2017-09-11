@@ -167,7 +167,7 @@ switch ($action)
     }
     break;
     case "search":
-        $sql="SELECT a.id,device,subnetid,deviceid,channel,b.id as addressid,mac,ip,port,lat,lng,floor,devicetype,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,x_axis,y_axis FROM device as a left join address as b on a.address = b.address order by address,devicetype ";
+        $sql="SELECT a.id,device,subnetid,deviceid,channel,b.id as addressid,mac,ip,port,lat,lng,a.floor,a.room,devicetype,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,x_axis,y_axis FROM device as a left join address as b on a.address = b.address order by address,devicetype ";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {
