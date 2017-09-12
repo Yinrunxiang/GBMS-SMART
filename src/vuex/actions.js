@@ -52,6 +52,9 @@ const actions = {
   },
   setRoom({ commit }, room) {
     commit("setRoom", room);
+  },
+  setMaxid({ commit }, maxid) {
+    commit("setMaxid", maxid);
   }
 };
 

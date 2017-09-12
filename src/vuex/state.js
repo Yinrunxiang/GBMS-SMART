@@ -17,6 +17,7 @@ const state = {
   address:[],
   floor:[],
   room:[],
+  maxid:"",
 }
 
 export default state

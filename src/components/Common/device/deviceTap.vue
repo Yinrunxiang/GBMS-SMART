@@ -63,7 +63,10 @@ export default {
     props: ['device'],
     methods: {
         iconClick() {
-
+            this.$store.dispatch('showContral', true)
+            let url = '/home/contral/' + this.device.devicetype
+            this.$store.dispatch('setDevice', this.device)
+            router.push(url)
         },
         deviceContral(device) {
             this.$store.dispatch('showContral', true)

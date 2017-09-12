@@ -385,6 +385,8 @@ export default {
 		this.apiGet("device/index.php", data).then(res => {
 			this.$store.dispatch('setDevices', res)
 			var devices = []
+			var maxid  = res[0].maxid
+			this.$store.dispatch('setMaxid', maxid)
 			for (var device of res) {
 				if (device.status == 'enabled') {
 					devices.push(device)

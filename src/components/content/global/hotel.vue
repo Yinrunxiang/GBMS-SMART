@@ -92,7 +92,7 @@
                                                                                         </div> -->
         </div>
         <div v-show="showDeviceUpdate">
-            <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
+            <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate" ></deviceUpdate>
         </div>
         <!-- <div v-show="showTypeList" style="background-color: #fff">
                                                                 <deviceList :typeList="typeList"></deviceList>
@@ -137,6 +137,15 @@ export default {
             this.showDeviceUpdate = data
             this.showRoom = !data
         },
+        // updateDevice(updateDevice){
+        //     console.log(updateDevice)
+        //     for(var device of this.deviceList){
+        //         if(device.device == updateDevice.device){
+        //             device = updateDevice
+        //         }
+
+        //     }
+        // },
         handleCommand(command) {
             var deviceObj = {}
             deviceObj.id = ""

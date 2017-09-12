@@ -88,7 +88,11 @@ export default {
                     // _g.clearVuex('setRules')
                     if (res[0]) {
                         var devices = this.$store.state.devices
-                        devices.push(this.form)
+                        for (var i = 0; i < devices.length; i++) {
+                            if (devices[i].id == this.form.id) {
+                                devices[i] = this.form
+                            }
+                        }
                         this.$store.dispatch('setDevices', devices)
                         _g.toastMsg('success', res[1])
                         setTimeout(() => {
@@ -105,6 +109,8 @@ export default {
                     // _g.clearVuex('setRules')
                     if (res[0]) {
                         var devices = this.$store.state.devices
+                        console.log("maxid:"+this.$store.state.maxid)
+                        this.form.id = parseInt(this.$store.state.maxid)+1
                         devices.push(this.form)
                         this.$store.dispatch('setDevices', devices)
                         _g.toastMsg('success', res[1])
@@ -144,6 +150,10 @@ export default {
             // var device = this.$store.state.device
             var device = this.device
             return device
+        },
+        maxid() {
+            var maxid = this.getBreedList(this.$store.state.maxid)
+            return maxid
         },
         breedData() {
             switch (this.form.devicetype) {
