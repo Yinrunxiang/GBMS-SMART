@@ -22,56 +22,56 @@
                 </div>
             </div>
             <!-- <div class="container-floor" :span="24">
-                                                                                                                                        <div>
-                                                                                                                                            <div class="floor-row" :span="24">
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                            </div>
-                                                                                                                                            <div class="floor-row" :span="24">
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                            </div>
-                                                                                                                                            <div class="floor-aisle" :span="24">Aisle</div>
-                                                                                                                                            <div class="floor-row row">
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                            </div>
-                                                                                                                                            <div class="floor-row" :span="24">
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                                <div class="floor-room" :span="6">ROOM</div>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                    <div class="container-room" :span="24">
-                                                                                                                                        <div class="parlor  room" :span="24">Parlor</div>
-                                                                                                                                        <div class="livingroom room" :span="16">Living room</div>
-                                                                                                                                        <div class="bathroom room"  :span="8">Bathroom</div>
-                                                                                                                                    </div> -->
+                                                                                                                                                    <div>
+                                                                                                                                                        <div class="floor-row" :span="24">
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div class="floor-row" :span="24">
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div class="floor-aisle" :span="24">Aisle</div>
+                                                                                                                                                        <div class="floor-row row">
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div class="floor-row" :span="24">
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                            <div class="floor-room" :span="6">ROOM</div>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+                                                                                                                                                <div class="container-room" :span="24">
+                                                                                                                                                    <div class="parlor  room" :span="24">Parlor</div>
+                                                                                                                                                    <div class="livingroom room" :span="16">Living room</div>
+                                                                                                                                                    <div class="bathroom room"  :span="8">Bathroom</div>
+                                                                                                                                                </div> -->
         </div>
 
         <div v-show="showFloor" class="mode">
             <div class="floorImga">
-                <div class="room1" @click="roomClick('Boss Office')"></div>
-                <div class="room2" @click="roomClick('Boss Office')"></div>
-                <div class="room3" @click="roomClick('Boss Office')"></div>
-                <div class="room4" @click="roomClick('Boss Office')"></div>
-                <div class="room5" @click="roomClick('Boss Office')"></div>
-                <div class="room6" @click="roomClick('Boss Office')"></div>
-                <div class="room7" @click="roomClick('Boss Office')"></div>
-                <div class="room8" @click="roomClick('Boss Office')"></div>
-                <div class="room9" @click="roomClick('Boss Office')"></div>
-                <div class="room10" @click="roomClick('Boss Office')"></div>
-                <div class="room11" @click="roomClick('Boss Office')"></div>
-                <div class="room12" @click="roomClick('Boss Office')"></div>
-                <div class="room13" @click="roomClick('Boss Office')"></div>
+                <div class="room1" @click="roomClick('101')"></div>
+                <div class="room2" @click="roomClick('101')"></div>
+                <div class="room3" @click="roomClick('101')"></div>
+                <div class="room4" @click="roomClick('101')"></div>
+                <div class="room5" @click="roomClick('101')"></div>
+                <div class="room6" @click="roomClick('101')"></div>
+                <div class="room7" @click="roomClick('101')"></div>
+                <div class="room8" @click="roomClick('101')"></div>
+                <div class="room9" @click="roomClick('101')"></div>
+                <div class="room10" @click="roomClick('101')"></div>
+                <div class="room11" @click="roomClick('101')"></div>
+                <div class="room12" @click="roomClick('101')"></div>
+                <div class="room13" @click="roomClick('101')"></div>
             </div>
         </div>
         <div v-show="showRoom" id="parentConstrain" class="mode" style="position:absolute;width:100%;height:100%;background-color:#fff;">
@@ -85,20 +85,18 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <div class="roomImga">
-                <div v-for="device in deviceList" :device = 'device' ref="device" :style="{left:device.x_axis + 'px', top:device.y_axis + 'px'}" @dblclick="deviceDbclick(device)">
-                    <deviceTap :device="device"></deviceTap>
-                </div>
+                <deviceTap v-for="device in deviceList" :device="device" @deviceDbclick="deviceDbclick"></deviceTap>
             </div>
             <!-- <div class="device-list">
-                                                                                
-                                                                            </div> -->
+                                                                                            
+                                                                                        </div> -->
         </div>
         <div v-show="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
         <!-- <div v-show="showTypeList" style="background-color: #fff">
-                                                    <deviceList :typeList="typeList"></deviceList>
-                                                </div> -->
+                                                                <deviceList :typeList="typeList"></deviceList>
+                                                            </div> -->
     </div>
 </template>
 
@@ -123,65 +121,13 @@ export default {
             hotelName: "",
             floorName: "",
             roomName: "",
+            floorList: [],
+            roomList: [],
+            deviceList: [],
             showDeviceUpdate: false,
             notHotel: false,
-            thisdevice: {
-                id: "",
-                device: "",
-                subnetid: "",
-                deviceid: "",
-                channel: "",
-                address: "Boss Office",
-                devicetype: 'light',
-                on_off: "",
-                status: "",
-                icon: "",
-                starttine: "",
-                endtime: "",
-                mode: "",
-                grade: "",
-                breed: "",
-                x_axis: 0,
-                y_axis: 0,
-            },
+            thisdevice: {},
             typeList: ['light', 'ac', 'led', 'music'],
-            deviceList: [{
-                id: "",
-                device: "",
-                subnetid: "",
-                deviceid: "",
-                channel: "",
-                address: "Boss Office",
-                devicetype: 'light',
-                on_off: "",
-                status: "",
-                icon: "",
-                starttine: "",
-                endtime: "",
-                mode: "",
-                grade: "",
-                breed: "",
-                x_axis: 0,
-                y_axis: 0,
-            }, {
-                id: "",
-                device: "",
-                subnetid: "",
-                deviceid: "",
-                channel: "",
-                address: "Boss Office",
-                devicetype: 'ac',
-                on_off: "",
-                status: "",
-                icon: "",
-                starttine: "",
-                endtime: "",
-                mode: "",
-                grade: "",
-                breed: "",
-                x_axis: 100,
-                y_axis: 100,
-            },],
             showTypeList: false
         }
     },
@@ -198,7 +144,9 @@ export default {
             deviceObj.subnetid = ""
             deviceObj.deviceid = ""
             deviceObj.channel = ""
-            deviceObj.address = this.address.device
+            deviceObj.address = this.address.name
+            deviceObj.floor = this.floorName
+            deviceObj.room = this.roomName
             deviceObj.devicetype = command
             deviceObj.on_off = ""
             deviceObj.status = ""
@@ -211,52 +159,56 @@ export default {
             deviceObj.x_axis = 0
             deviceObj.y_axis = 0
             this.deviceList.push(deviceObj)
-            this.$nextTick(function() {
-                for (var device of this.$refs.device) {
-                    $(device).myDrag({
-                        parent: 'parent', //定义拖动不能超出的外框,拖动范围
-                        randomPosition: false, //初始化随机位置
-                        direction: 'all', //方向
-                        handler: false, //把手
-                        dragStart: function(x, y) { }, //拖动开始 x,y为当前坐标
-                        dragEnd: function(x, y) {
-                            deviceObj.x_axis = x
-                            deviceObj.y_axis = y
-                         }, //拖动停止 x,y为当前坐标
-                        dragMove: function(x, y) { } //拖动进行中 x,y为当前坐标
-                    });
-                }
-            })
 
         },
-        deviceDbclick(device) {
-            this.showRoom = false
-            this.showDeviceUpdate = true
+        deviceDbclick(showRoom, showDeviceUpdate, device) {
+            this.showRoom = showRoom
+            this.showDeviceUpdate = showDeviceUpdate
             this.thisdevice = device
         },
         settingClick() {
             let url = '/home/setting/address/update'
             router.push({ path: url, query: { address: this.address } })
         },
-        floorClick(floor) {
+        floorClick(val) {
             this.showFloor = true
             this.showHotel = false
             this.showRoom = false
             this.showTypeList = false
-            this.floorNmae = floor
+            this.floorName = val
+            for (var floor of this.floorList) {
+                if (floor.name == val) {
+                    this.roomList = floor.roomList
+                }
+            }
         },
         roomClick(val) {
             this.showFloor = false
             this.showHotel = false
             this.showRoom = true
             this.showTypeList = false
-            // for (var floor of this.address.floorList) {
-            //     for (var room of floor.roomList) {
-            //         if (room.name == '101') {
-            //             this.typeList = room.typeList
+            this.roomName = val
+            // for (var room of this.roomList) {
+            //     if (room.name == '101') {
+            //         for(var type of room.typeList){
+            //             this.deviceList.concat(type.deviceList)
             //         }
+
             //     }
             // }
+            for (var floor of this.address.floorList) {
+                for (var room of floor.roomList) {
+                    if (room.name == '101') {
+                        for (var type of room.typeList) {
+                            for (var device of type.deviceList) {
+                                this.deviceList.push(device)
+                            }
+
+                        }
+
+                    }
+                }
+            }
         },
     },
     created() {
@@ -266,22 +218,23 @@ export default {
     },
     mounted() {
         this.hotelName = this.address.name
+        this.floorList = this.address.floorList
         // console.log(this.addressProperty.floor_num)
         // console.log(this.deviceList)
-        this.$nextTick(function() {
-            for (var device of this.$refs.device) {
-                console.log($(device).attr('device').device)
-                $(device).myDrag({
-                    parent: 'parent', //定义拖动不能超出的外框,拖动范围
-                    randomPosition: false, //初始化随机位置
-                    direction: 'all', //方向
-                    handler: false, //把手
-                    dragStart: function(x, y) { }, //拖动开始 x,y为当前坐标
-                    dragEnd: function(x, y) { }, //拖动停止 x,y为当前坐标
-                    dragMove: function(x, y) { } //拖动进行中 x,y为当前坐标
-                });
-            }
-        })
+        // this.$nextTick(function() {
+        //     for (var device of this.$refs.device) {
+        //         console.log($(device).attr('device').device)
+        //         $(device).myDrag({
+        //             parent: 'parent', //定义拖动不能超出的外框,拖动范围
+        //             randomPosition: false, //初始化随机位置
+        //             direction: 'all', //方向
+        //             handler: false, //把手
+        //             dragStart: function(x, y) { }, //拖动开始 x,y为当前坐标
+        //             dragEnd: function(x, y) { }, //拖动停止 x,y为当前坐标
+        //             dragMove: function(x, y) { } //拖动进行中 x,y为当前坐标
+        //         });
+        //     }
+        // })
 
     },
     components: {

@@ -34,7 +34,11 @@ switch ($action)
         $devicetype = isset($_REQUEST["devicetype"]) ? $_REQUEST["devicetype"] : '';
         $breed = isset($_REQUEST["breed"]) ? $_REQUEST["breed"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
-        $sql="insert into device (device,subnetid,deviceid,channel,address,devicetype,breed,status) values ('".$device."','".$subnetid."','".$deviceid."','".$channel."','".$address."','".$devicetype."','".$breed."','enabled')";
+        $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
+        $room = isset($_REQUEST["room"]) ? $_REQUEST["room"] : '';
+        $x_axis = isset($_REQUEST["x_axis"]) ? $_REQUEST["x_axis"] : '';
+        $y_axis = isset($_REQUEST["y_axis"]) ? $_REQUEST["y_axis"] : '';
+        $sql="insert into device (device,subnetid,deviceid,channel,address,floor,room,x_axis,y_axis,devicetype,breed,status) values ('".$device."','".$subnetid."','".$deviceid."','".$channel."','".$address."','".$floor."','".$room."','".$x_axis."','".$y_axis."','".$devicetype."','".$breed."','enabled')";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -57,7 +61,11 @@ switch ($action)
         $devicetype = isset($_REQUEST["devicetype"]) ? $_REQUEST["devicetype"] : '';
         $breed = isset($_REQUEST["breed"]) ? $_REQUEST["breed"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
-        $sql="update device set device = '".$device."', subnetid = '".$subnetid."', deviceid = '".$deviceid."', channel = '".$channel."', devicetype = '".$devicetype."', breed = '".$breed."', address = '".$address."' where id = '".$id."'";
+        $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
+        $room = isset($_REQUEST["room"]) ? $_REQUEST["room"] : '';
+        $x_axis = isset($_REQUEST["x_axis"]) ? $_REQUEST["x_axis"] : '';
+        $y_axis = isset($_REQUEST["y_axis"]) ? $_REQUEST["y_axis"] : '';
+        $sql="update device set device = '".$device."', subnetid = '".$subnetid."', deviceid = '".$deviceid."', channel = '".$channel."', devicetype = '".$devicetype."', breed = '".$breed."', address = '".$address."', floor = '".$floor."', room = '".$room."', x_axis = '".$x_axis."', y_axis = '".$y_axis."' where id = '".$id."'";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -70,6 +78,24 @@ switch ($action)
             $message[1] = "update successfully";
             echo(json_encode($message)); 
         }
+        break;
+        case "updateLocation":
+            $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
+            $x_axis = isset($_REQUEST["x_axis"]) ? $_REQUEST["x_axis"] : '';
+            $y_axis = isset($_REQUEST["y_axis"]) ? $_REQUEST["y_axis"] : '';
+            $sql="update device set x_axis = '".$x_axis."', y_axis = '".$y_axis."' where id = '".$id."'";
+            if (!mysqli_query($con,$sql))
+            {
+                $message = [];
+                $message[0] = false;
+                $message[1] = "update failed: " . mysqli_error($con);
+                echo(json_encode($message)); 
+            }else{
+                $message = [];
+                $message[0] = true;
+                $message[1] = "update successfully";
+                echo(json_encode($message)); 
+            }
         break;
     case "delete":
         
@@ -167,7 +193,7 @@ switch ($action)
     }
     break;
     case "search":
-        $sql="SELECT a.id,device,subnetid,deviceid,channel,b.id as addressid,mac,ip,port,lat,lng,a.floor,a.room,devicetype,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,x_axis,y_axis FROM device as a left join address as b on a.address = b.address order by address,devicetype ";
+        $sql="SELECT a.id,device,subnetid,deviceid,channel,b.id as addressid,mac,ip,port,lat,lng,a.floor,a.room,devicetype,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,floor,room,x_axis,y_axis FROM device as a left join address as b on a.address = b.address order by address,devicetype ";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {
