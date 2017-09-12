@@ -137,15 +137,6 @@ export default {
             this.showDeviceUpdate = data
             this.showRoom = !data
         },
-        // updateDevice(updateDevice){
-        //     console.log(updateDevice)
-        //     for(var device of this.deviceList){
-        //         if(device.device == updateDevice.device){
-        //             device = updateDevice
-        //         }
-
-        //     }
-        // },
         handleCommand(command) {
             var deviceObj = {}
             deviceObj.id = ""
