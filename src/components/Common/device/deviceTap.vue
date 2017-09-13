@@ -1,6 +1,6 @@
 <template>
     <div class="device-tap" @dblclick="deviceDbclick()" ref="device" :style="{left:device.x_axis + 'px', top:device.y_axis + 'px'}">
-        <div class="icon" @click="iconClick">
+        <div :class="{'device-tap-border': setting }" class="icon">
             <i class="fa" :class="iconstyle(device.devicetype)"></i>
         </div>
         <el-switch class="device-switch" v-model="device.on_off" @change="switch_change">
@@ -42,6 +42,10 @@
     border-radius: 15px;
     margin-left: -13px;
 }
+
+.device-tap-border {
+    border: 2px solid #fff;
+}
 </style>
 
 <script>
@@ -80,7 +84,15 @@ export default {
             }
         },
         deviceDbclick() {
-            this.$emit('deviceDbclick', false, true, this.device)
+            if (this.setting) {
+                this.$emit('deviceDbclick', false, true, this.device)
+            } else {
+                this.$store.dispatch('showContral', true)
+                let url = '/home/contral/' + this.device.devicetype
+                this.$store.dispatch('setDevice', this.device)
+                router.push(url)
+            }
+
         },
         switch_change(val) {
             switch (this.device.devicetype) {
@@ -202,7 +214,7 @@ export default {
             });
         })
     },
-    props: ['device'],
+    props: ['device', 'setting'],
     components: {
 
     },

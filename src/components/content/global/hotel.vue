@@ -39,29 +39,42 @@
                 <div class="room13" @click="roomClick('101')"></div>
             </div>
         </div>
-        <div v-show="showRoom" id="parentConstrain" class="mode" style="position:absolute;width:100%;height:100%;background-color:#fff;">
-            <el-dropdown class="setting-icon" @command="handleCommand">
-                <el-button type="primary">
-                    Add Device
-                    <i class="el-icon-caret-bottom el-icon--right"></i>
-                </el-button>
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item style="width:100px;" v-for="devicetype in typeList" :command="devicetype">{{devicetype}}</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
+        <div v-show="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
+            <!-- <el-dropdown class="setting-icon" @command="handleCommand">
+                                            <el-button type="primary">
+                                                Add Device
+                                                <i class="el-icon-caret-bottom el-icon--right"></i>
+                                            </el-button>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item style="width:100px;" v-for="devicetype in typeList" :command="devicetype">{{devicetype}}</el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown> -->
+            <div ref="roomWatts" style="position: absolute;right: 0;bottom: 0;width:350px;height:350px;z-index:10;"></div>
+            <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
+                <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
+            </el-popover>
+            <div class="icon-list">
+                <div v-popover:addDevice>
+                    <i class="fa fa-plus"></i>
+                </div>
+                <div @click="settingStatusClick">
+                    <i class="el-icon-setting"></i>
+                </div>
+            </div>
             <div class="roomImga">
-                <deviceTap v-for="device in deviceList" :device="device" @deviceDbclick="deviceDbclick"></deviceTap>
+                <deviceTap v-for="device in deviceList" :device="device" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
+
             </div>
             <!-- <div class="device-list">
-                                                                                            
-                                                                                        </div> -->
+                                                                                                                                            
+                                                                                                                                        </div> -->
         </div>
         <div v-show="showDeviceUpdate">
-            <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate" ></deviceUpdate>
+            <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
         <!-- <div v-show="showTypeList" style="background-color: #fff">
-                                                                <deviceList :typeList="typeList"></deviceList>
-                                                            </div> -->
+                                                                                                                <deviceList :typeList="typeList"></deviceList>
+                                                                                                            </div> -->
     </div>
 </template>
 
@@ -77,6 +90,7 @@ import deviceUpdate from '../plan/update'
 // import '../../../assets/css/drag.css'
 import '../../../assets/js/jquery-1.9.1.min.js'
 import '../../../assets/js/drag.js'
+import echarts from 'echarts'
 export default {
     data() {
         return {
@@ -93,7 +107,8 @@ export default {
             notHotel: false,
             thisdevice: {},
             typeList: ['light', 'ac', 'led', 'music'],
-            showTypeList: false
+            showTypeList: false,
+            setting: false,
         }
     },
     // prop:[address],
@@ -102,7 +117,10 @@ export default {
             this.showDeviceUpdate = data
             this.showRoom = !data
         },
-        handleCommand(command) {
+        settingStatusClick() {
+            this.setting = !this.setting
+        },
+        addDeviceListClick(device) {
             var deviceObj = {}
             deviceObj.id = ""
             deviceObj.device = ""
@@ -112,7 +130,7 @@ export default {
             deviceObj.address = this.address.name
             deviceObj.floor = this.floorName
             deviceObj.room = this.roomName
-            deviceObj.devicetype = command
+            deviceObj.devicetype = device
             deviceObj.on_off = ""
             deviceObj.status = ""
             deviceObj.icon = ""
@@ -146,6 +164,39 @@ export default {
                     this.roomList = floor.roomList
                 }
             }
+            var roomWatts = echarts.init(this.$refs.roomWatts);
+            var roomWattsOption = {
+                tooltip: {
+                    formatter: "{b} : {c}w"
+                },
+                // toolbox: {
+                //     feature: {
+                //         restore: {},
+                //         saveAsImage: {}
+                //     }
+                // },
+                series: [
+                    {
+                        name: '',
+                        type: 'gauge',
+                        min:0,
+                        max:3000,
+                        splitNumber:10,
+                        axisLine:{
+                            lineStyle:{width:15}
+                        },
+                        splitLine:{
+                            length:20
+                        },
+                        detail: { formatter: '{value}w' },
+                        data: [{ value: 50, name: 'Watts' }]
+                    }
+                ]
+            };
+            setInterval(function() {
+                roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
+                roomWatts.setOption(roomWattsOption, true);
+            },2000)
         },
         roomClick(val) {
             this.showFloor = false
@@ -184,22 +235,7 @@ export default {
     mounted() {
         this.hotelName = this.address.name
         this.floorList = this.address.floorList
-        // console.log(this.addressProperty.floor_num)
-        // console.log(this.deviceList)
-        // this.$nextTick(function() {
-        //     for (var device of this.$refs.device) {
-        //         console.log($(device).attr('device').device)
-        //         $(device).myDrag({
-        //             parent: 'parent', //定义拖动不能超出的外框,拖动范围
-        //             randomPosition: false, //初始化随机位置
-        //             direction: 'all', //方向
-        //             handler: false, //把手
-        //             dragStart: function(x, y) { }, //拖动开始 x,y为当前坐标
-        //             dragEnd: function(x, y) { }, //拖动停止 x,y为当前坐标
-        //             dragMove: function(x, y) { } //拖动进行中 x,y为当前坐标
-        //         });
-        //     }
-        // })
+
 
     },
     components: {
@@ -282,7 +318,8 @@ export default {
     height: 500px;
     margin: 30px auto;
 }
-.build-img img{
+
+.build-img img {
     width: 100%;
     height: 100%;
 }
@@ -295,7 +332,7 @@ export default {
 .floor {
     position: absolute;
     right: 50px;
-    bottom:  75px;
+    bottom: 75px;
     width: 200px;
     height: 300px;
     margin: 0 30px 0 100px;
@@ -306,8 +343,8 @@ export default {
     height: 30px;
     line-height: 30px;
     margin: 3px auto;
-    background-color: rgba(0, 0, 0,0.7);
-    /* background-color: rgb(88, 183, 255); */
+    /* background-color: rgba(0, 0, 0,0.7); */
+    background-color: rgb(88, 183, 255);
     border: 1px solid #fff;
     /* border-radius: 5px; */
     text-align: center;
@@ -348,11 +385,8 @@ export default {
     height: 400px;
 }
 
-.livingroom,
-.bathroom {
-    height: 200px
-}
-.floor-content{
+
+.floor-content {
     width: 100%;
     height: 740px;
     background-color: #fff;
@@ -372,6 +406,39 @@ export default {
 .floorImga>div:hover {
     border: 2px solid #20A0FF;
 }
+
+
+
+
+
+
+
+/* .add-type-list{
+    width:100px;
+    height: 25px;
+    line-height:25px;
+    font-size:16px;
+    border-bottom: 1px solid #dfe6ec;
+} */
+
+.room-content .icon-list {
+    position: absolute;
+    top: 10px;
+    right: 5px;
+}
+
+.room-content .icon-list div {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 16px;
+    background-color: #20A0FF;
+    color: #fff;
+    border-radius: 50px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
 
 .device-list {
     position: absolute;
