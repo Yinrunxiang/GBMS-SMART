@@ -41,14 +41,14 @@
         </div>
         <div v-show="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
             <!-- <el-dropdown class="setting-icon" @command="handleCommand">
-                                            <el-button type="primary">
-                                                Add Device
-                                                <i class="el-icon-caret-bottom el-icon--right"></i>
-                                            </el-button>
-                                            <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item style="width:100px;" v-for="devicetype in typeList" :command="devicetype">{{devicetype}}</el-dropdown-item>
-                                            </el-dropdown-menu>
-                                        </el-dropdown> -->
+                                                        <el-button type="primary">
+                                                            Add Device
+                                                            <i class="el-icon-caret-bottom el-icon--right"></i>
+                                                        </el-button>
+                                                        <el-dropdown-menu slot="dropdown">
+                                                            <el-dropdown-item style="width:100px;" v-for="devicetype in typeList" :command="devicetype">{{devicetype}}</el-dropdown-item>
+                                                        </el-dropdown-menu>
+                                                    </el-dropdown> -->
             <div ref="roomWatts" style="position: absolute;right: 0;bottom: 0;width:350px;height:350px;z-index:10;"></div>
             <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
                 <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
@@ -66,15 +66,15 @@
 
             </div>
             <!-- <div class="device-list">
-                                                                                                                                            
-                                                                                                                                        </div> -->
+                                                                                                                                                        
+                                                                                                                                                    </div> -->
         </div>
         <div v-show="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
         <!-- <div v-show="showTypeList" style="background-color: #fff">
-                                                                                                                <deviceList :typeList="typeList"></deviceList>
-                                                                                                            </div> -->
+                                                                                                                            <deviceList :typeList="typeList"></deviceList>
+                                                                                                                        </div> -->
     </div>
 </template>
 
@@ -109,6 +109,7 @@ export default {
             typeList: ['light', 'ac', 'led', 'music'],
             showTypeList: false,
             setting: false,
+            roomWatts: {},
         }
     },
     // prop:[address],
@@ -164,39 +165,7 @@ export default {
                     this.roomList = floor.roomList
                 }
             }
-            var roomWatts = echarts.init(this.$refs.roomWatts);
-            var roomWattsOption = {
-                tooltip: {
-                    formatter: "{b} : {c}w"
-                },
-                // toolbox: {
-                //     feature: {
-                //         restore: {},
-                //         saveAsImage: {}
-                //     }
-                // },
-                series: [
-                    {
-                        name: '',
-                        type: 'gauge',
-                        min:0,
-                        max:3000,
-                        splitNumber:10,
-                        axisLine:{
-                            lineStyle:{width:15}
-                        },
-                        splitLine:{
-                            length:20
-                        },
-                        detail: { formatter: '{value}w' },
-                        data: [{ value: 50, name: 'Watts' }]
-                    }
-                ]
-            };
-            setInterval(function() {
-                roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
-                roomWatts.setOption(roomWattsOption, true);
-            },2000)
+
         },
         roomClick(val) {
             this.showFloor = false
@@ -225,7 +194,47 @@ export default {
                     }
                 }
             }
+            // this.roomWatts = echarts.init(this.$refs.roomWatts);
         },
+        creatWatts() {
+            this.nextTick(function() {
+                var roomWatts = echarts.init(this.$refs.roomWatts);
+                var roomWattsOption = {
+                    tooltip: {
+                        formatter: "{b} : {c}w"
+                    },
+                    // toolbox: {
+                    //     feature: {
+                    //         restore: {},
+                    //         saveAsImage: {}
+                    //     }
+                    // },
+                    series: [
+                        {
+                            name: '',
+                            type: 'gauge',
+                            min: 0,
+                            max: 3000,
+                            splitNumber: 10,
+                            axisLine: {
+                                lineStyle: { width: 15 }
+                            },
+                            splitLine: {
+                                length: 20
+                            },
+                            detail: { formatter: '{value}w' },
+                            data: [{ value: 50, name: 'Watts' }]
+                        }
+                    ]
+                };
+                roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
+                roomWatts.setOption(roomWattsOption, true);
+                // setInterval(function() {
+                //     roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
+                //     roomWatts.setOption(roomWattsOption, true);
+                // }, 2000)
+            })
+        }
     },
     created() {
         console.log("report")
@@ -274,6 +283,84 @@ export default {
                 }
             }
         },
+    },
+    watch: {
+        deviceList: {
+            handler: function(val, oldVal) {
+                var ac_breeds = this.$store.state.ac_breed
+                var light_breeds = this.$store.state.light_breed
+                var led_breeds = this.$store.state.led_breed
+                var wattsTotal = 0
+                for (var device of val) {
+                    if (device.on_off) {
+                        switch (device.devicetype) {
+                            case "ac":
+                                for (var ac_breed of ac_breeds) {
+                                    if (device.breed == ac_breed.breed) {
+                                        device.watts = parseInt(ac_breed[device.mode]) + parseInt(ac_breed[device.grade])
+                                        wattsTotal += device.watts
+                                    }
+                                }
+                                break
+                            case "light":
+                                for (var light_breed of light_breeds) {
+                                    if (device.breed == light_breed.breed) {
+                                        device.watts = parseInt(light_breed.watts)
+                                        wattsTotal += device.watts
+                                    }
+                                }
+                                break
+                            case "led":
+                                for (var led_breed of led_breeds) {
+                                    if (device.breed == led_breed.breed) {
+                                        device.watts = parseInt(led_breed.watts)
+                                        wattsTotal += device.watts
+                                    }
+                                }
+                                break
+                        }
+                    }
+                }
+                // this.nextTick(function() {
+                    var roomWatts = echarts.init(this.$refs.roomWatts);
+                    var roomWattsOption = {
+                        tooltip: {
+                            formatter: "{b} : {c}w"
+                        },
+                        // toolbox: {
+                        //     feature: {
+                        //         restore: {},
+                        //         saveAsImage: {}
+                        //     }
+                        // },
+                        series: [
+                            {
+                                name: '',
+                                type: 'gauge',
+                                min: 0,
+                                max: 3000,
+                                splitNumber: 10,
+                                axisLine: {
+                                    lineStyle: { width: 15 }
+                                },
+                                splitLine: {
+                                    length: 20
+                                },
+                                detail: { formatter: '{value}w' },
+                                data: [{ value: wattsTotal, name: 'Watts' }]
+                            }
+                        ]
+                    };
+                    // roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
+                    roomWatts.setOption(roomWattsOption, true);
+                    // setInterval(function() {
+                    //     roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
+                    //     roomWatts.setOption(roomWattsOption, true);
+                    // }, 2000)
+                // })
+            },
+            deep: true
+        }
     }
 }
 </script>
@@ -406,6 +493,9 @@ export default {
 .floorImga>div:hover {
     border: 2px solid #20A0FF;
 }
+
+
+
 
 
 

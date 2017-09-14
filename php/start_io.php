@@ -78,8 +78,8 @@ $sender_io->on('connection', function($socket){
 // 当$sender_io启动后监听一个http端口，通过这个端口可以给任意uid或者所有uid推送数据
 $sender_io->on('workerStart', function(){
     // 监听一个UDP端口
-    $inner_udp_worker = new Worker('udp://0.0.0.0:6000');
-    // $inner_udp_worker = new Worker('udp://0.0.0.0:8888');
+    // $inner_udp_worker = new Worker('udp://0.0.0.0:6000');
+    $inner_udp_worker = new Worker('udp://0.0.0.0:8888');
     // $inner_udp_worker = new Worker('udp://0.0.0.0:59263');
     // 当UDP客户端发来数据时触发
     $inner_udp_worker->onMessage = function($udp_connection, $data){
@@ -105,12 +105,14 @@ $sender_io->on('workerStart', function(){
                 $channelnum  =  hexdec(substr($msg,50, 2));
                 $mac = "";
                 $remote = substr($msg,52+($channelnum*2), 2);
+                // echo '  remote: '.$remote;
                 if($remote == "02"){
                     for($i = 0;$i <8 ;$i++){
                         $start  = 54+($channelnum*2)+($i*2);
                         $mac  = $mac.'.'.substr($msg,$start, 2);
                     }
                 }
+                // echo '  mac: '.$mac;
                 // echo $remote.' '.$mac.'     ';
                 for($i = 1 ; $i <= $channelnum; $i++){
                     $start = ($i *2)+50;
