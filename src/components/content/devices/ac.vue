@@ -3,62 +3,62 @@
         <el-col :span="8">
             <div>
                 <el-row class="m-t-30" style="font-size:30px;text-align:center">
-                    <i class="fa" :class="modestyle(device.mode)"></i>
-                    <span> {{device.tmp}} ℃</span>
+                    <i class="fa" :class="modestyle(deviceProperty.mode)"></i>
+                    <span> {{deviceProperty.tmp}} ℃</span>
                 </el-row>
                 <i class="fa fa-thermometer big-font-icon"></i>
             </div>
         </el-col>
         <el-col :span="12" class="m-b-20 p-l-20 p-r-20 ovf-hd" style="margin-top:80px">
-            <el-switch v-model="device.on_off" @change="switch_change">
+            <el-switch v-model="deviceProperty.on_off" @change="switch_change">
             </el-switch>
-            <div v-if="device.on_off" class="m-t-20">
-                <el-row v-if="device.mode=='auto'">
+            <div v-if="deviceProperty.on_off" class="m-t-20">
+                <el-row v-if="deviceProperty.mode=='auto'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="device.autotmp" :min='0' :max='32' :step="1" @change="autotmp_change">
+                                <el-slider v-model="deviceProperty.autotmp" :min='0' :max='32' :step="1" @change="autotmp_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{device.autotmp}} ℃</span>
+                        <span class="fl" style="line-height:36px">{{deviceProperty.autotmp}} ℃</span>
                     </el-col>
                 </el-row>
-                <el-row v-if="device.mode=='cool' || device.mode=='fan'">
+                <el-row v-if="deviceProperty.mode=='cool' || deviceProperty.mode=='fan'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="device.cooltmp" :min='0' :max='32' :step="1" @change="cooltmp_change">
+                                <el-slider v-model="deviceProperty.cooltmp" :min='0' :max='32' :step="1" @change="cooltmp_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{device.cooltmp}} ℃</span>
+                        <span class="fl" style="line-height:36px">{{deviceProperty.cooltmp}} ℃</span>
                     </el-col>
                 </el-row>
-                <el-row v-if="device.mode=='heat'">
+                <el-row v-if="deviceProperty.mode=='heat'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="device.heattmp" :min='0' :max='32' :step="1" @change="heattmp_change">
+                                <el-slider v-model="deviceProperty.heattmp" :min='0' :max='32' :step="1" @change="heattmp_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{device.heattmp}} ℃</span>
+                        <span class="fl" style="line-height:36px">{{deviceProperty.heattmp}} ℃</span>
                     </el-col>
                 </el-row>
                 <el-row class="m-t-20">
@@ -68,13 +68,13 @@
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="device.wind" :min='0' :max='3' :step="1" :format-tooltip="formatTooltip" @change="wind_change">
+                                <el-slider v-model="deviceProperty.wind" :min='0' :max='3' :step="1" :format-tooltip="formatTooltip" @change="wind_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{formatTooltip(device.wind)}}</span>
+                        <span class="fl" style="line-height:36px">{{formatTooltip(deviceProperty.wind)}}</span>
                     </el-col>
                 </el-row>
                 <el-col :span="20" :offset="4" class="m-t-20">
@@ -93,7 +93,7 @@ import acApi from './ac/ac.js'
 export default {
     data() {
         return {
-            device: {
+            deviceProperty: {
                 on_off: false,
                 cooltmp: 26,
                 autotmp: 0,
@@ -139,61 +139,48 @@ export default {
             }
         },
         switch_change(val) {
-            acApi.switch_change(val, this.device)
+            acApi.switch_change(val, this.device, this.deviceProperty)
         },
         autotmp_change(val) {
-            acApi.autotmp_change(val, this.device)
+            acApi.autotmp_change(val, this.device, this.deviceProperty)
         },
         cooltmp_change(val) {
-            acApi.cooltmp_change(val, this.device)
+            acApi.cooltmp_change(val, this.device, this.deviceProperty)
         },
         heattmp_change(val) {
-            acApi.heattmp_change(val, this.device)
+            acApi.heattmp_change(val, this.device, this.deviceProperty)
         },
         wind_change(val) {
-            acApi.wind_change(val, this.device)
+            acApi.wind_change(val, this.device, this.deviceProperty)
         },
 
         autobtn() {
-            acApi.autobtn(this.device)
+            acApi.autobtn(this.device, this.deviceProperty)
         },
         fanbtn() {
-            acApi.fanbtn(this.device)
+            acApi.fanbtn(this.device, this.deviceProperty)
         },
         coolbtn() {
-            acApi.coolbtn(this.device)
+            acApi.coolbtn(this.device, this.deviceProperty)
         },
         heatbtn() {
-            acApi.heatbtn(this.device)
+            acApi.heatbtn(this.device, this.deviceProperty)
         },
 
 
-    },
-    created() {
-        this.device = this.getDevice
-        this.device.mode = this.device.mode ? this.device.mode : "cool"
-        this.device.subnetid = this.device.subnetid ? this.device.subnetid : '00'
-        this.device.deviceid = this.device.deviceid ? this.device.deviceid : '00'
-        this.device.on_off = this.device.on_off ? this.device.on_off : false
-        this.device.cooltmp = this.device.cooltmp ? this.device.cooltmp : 26
-        this.device.autotmp = this.device.autotmp ? this.device.autotmp : 0
-        this.device.heattmp = this.device.heattmp ? this.device.heattmp : 0
-        this.device.tmp = this.device.tmp ? this.device.tmp : 26
-        this.device.wind = this.device.wind ? this.device.wind : 2
-        
     },
     mounted() {
         console.log("ac")
 
-        acApi.readStatus(this.device)
+        acApi.readStatus(this.device, this.deviceProperty)
     },
     components: {
 
     },
     computed: {
-        getDevice() {
-            console.log(this.$store.state.device)
+        device() {
             var device = this.$store.state.device
+
             return device
         }
     },

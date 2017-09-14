@@ -41,14 +41,14 @@
         </div>
         <div v-show="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
             <!-- <el-dropdown class="setting-icon" @command="handleCommand">
-                                                        <el-button type="primary">
-                                                            Add Device
-                                                            <i class="el-icon-caret-bottom el-icon--right"></i>
-                                                        </el-button>
-                                                        <el-dropdown-menu slot="dropdown">
-                                                            <el-dropdown-item style="width:100px;" v-for="devicetype in typeList" :command="devicetype">{{devicetype}}</el-dropdown-item>
-                                                        </el-dropdown-menu>
-                                                    </el-dropdown> -->
+                                                            <el-button type="primary">
+                                                                Add Device
+                                                                <i class="el-icon-caret-bottom el-icon--right"></i>
+                                                            </el-button>
+                                                            <el-dropdown-menu slot="dropdown">
+                                                                <el-dropdown-item style="width:100px;" v-for="devicetype in typeList" :command="devicetype">{{devicetype}}</el-dropdown-item>
+                                                            </el-dropdown-menu>
+                                                        </el-dropdown> -->
             <div ref="roomWatts" style="position: absolute;right: 0;bottom: 0;width:350px;height:350px;z-index:10;"></div>
             <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
                 <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
@@ -66,15 +66,15 @@
 
             </div>
             <!-- <div class="device-list">
-                                                                                                                                                        
-                                                                                                                                                    </div> -->
+                                                                                                                                                            
+                                                                                                                                                        </div> -->
         </div>
         <div v-show="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
         <!-- <div v-show="showTypeList" style="background-color: #fff">
-                                                                                                                            <deviceList :typeList="typeList"></deviceList>
-                                                                                                                        </div> -->
+                                                                                                                                <deviceList :typeList="typeList"></deviceList>
+                                                                                                                            </div> -->
     </div>
 </template>
 
@@ -196,6 +196,28 @@ export default {
             }
             // this.roomWatts = echarts.init(this.$refs.roomWatts);
         },
+        initMode(value) {
+            if(value == "auto"){
+                value == "mode_auto"
+            }
+            return value
+        },
+        initWind(value){
+            switch (value) {
+                case 0:
+                    return "wind_auto";
+                    break;
+                case 1:
+                    return "hign";
+                    break;
+                case 2:
+                    return "medial";
+                    break;
+                case 3:
+                    return "low";
+                    break;
+            }
+        },
         creatWatts() {
             this.nextTick(function() {
                 var roomWatts = echarts.init(this.$refs.roomWatts);
@@ -297,7 +319,11 @@ export default {
                             case "ac":
                                 for (var ac_breed of ac_breeds) {
                                     if (device.breed == ac_breed.breed) {
-                                        device.watts = parseInt(ac_breed[device.mode]) + parseInt(ac_breed[device.grade])
+                                        var modeWatts = parseInt(ac_breed[this.initMode(device.mode)])
+                                        modeWatts = modeWatts?modeWatts:0
+                                        var windWatts = parseInt(ac_breed[this.initWind(device.wind)])
+                                        windWatts = windWatts? windWatts:0
+                                        device.watts = modeWatts + windWatts
                                         wattsTotal += device.watts
                                     }
                                 }
@@ -306,7 +332,7 @@ export default {
                                 for (var light_breed of light_breeds) {
                                     if (device.breed == light_breed.breed) {
                                         device.watts = parseInt(light_breed.watts)
-                                        wattsTotal += device.watts
+                                        wattsTotal += device.watts?device.watts:0
                                     }
                                 }
                                 break
@@ -314,7 +340,7 @@ export default {
                                 for (var led_breed of led_breeds) {
                                     if (device.breed == led_breed.breed) {
                                         device.watts = parseInt(led_breed.watts)
-                                        wattsTotal += device.watts
+                                        wattsTotal += device.watts?device.watts:0
                                     }
                                 }
                                 break
@@ -322,41 +348,41 @@ export default {
                     }
                 }
                 // this.nextTick(function() {
-                    var roomWatts = echarts.init(this.$refs.roomWatts);
-                    var roomWattsOption = {
-                        tooltip: {
-                            formatter: "{b} : {c}w"
-                        },
-                        // toolbox: {
-                        //     feature: {
-                        //         restore: {},
-                        //         saveAsImage: {}
-                        //     }
-                        // },
-                        series: [
-                            {
-                                name: '',
-                                type: 'gauge',
-                                min: 0,
-                                max: 3000,
-                                splitNumber: 10,
-                                axisLine: {
-                                    lineStyle: { width: 15 }
-                                },
-                                splitLine: {
-                                    length: 20
-                                },
-                                detail: { formatter: '{value}w' },
-                                data: [{ value: wattsTotal, name: 'Watts' }]
-                            }
-                        ]
-                    };
-                    // roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
-                    roomWatts.setOption(roomWattsOption, true);
-                    // setInterval(function() {
-                    //     roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
-                    //     roomWatts.setOption(roomWattsOption, true);
-                    // }, 2000)
+                var roomWatts = echarts.init(this.$refs.roomWatts);
+                var roomWattsOption = {
+                    tooltip: {
+                        formatter: "{b} : {c}w"
+                    },
+                    // toolbox: {
+                    //     feature: {
+                    //         restore: {},
+                    //         saveAsImage: {}
+                    //     }
+                    // },
+                    series: [
+                        {
+                            name: '',
+                            type: 'gauge',
+                            min: 0,
+                            max: 3000,
+                            splitNumber: 10,
+                            axisLine: {
+                                lineStyle: { width: 15 }
+                            },
+                            splitLine: {
+                                length: 20
+                            },
+                            detail: { formatter: '{value}w' },
+                            data: [{ value: wattsTotal, name: 'Watts' }]
+                        }
+                    ]
+                };
+                // roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
+                roomWatts.setOption(roomWattsOption, true);
+                // setInterval(function() {
+                //     roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
+                //     roomWatts.setOption(roomWattsOption, true);
+                // }, 2000)
                 // })
             },
             deep: true
@@ -493,6 +519,7 @@ export default {
 .floorImga>div:hover {
     border: 2px solid #20A0FF;
 }
+
 
 
 
