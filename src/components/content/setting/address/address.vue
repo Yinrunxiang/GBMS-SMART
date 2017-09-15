@@ -1,54 +1,59 @@
 <template>
-    <div class="p-20">
-        <div class="m-b-20 ovf-hd">
-            <div class="fl">
-                <router-link class="btn-link-large add-btn" to="address/add">
-                    <i class="el-icon-plus"></i>&nbsp;&nbsp;Add Mode
-                </router-link>
+    <div>
+        <div v-show="!setting" class="p-20">
+            <div class="m-b-20 ovf-hd">
+                <div class="fl">
+                    <div class="btn-link-large add-btn" @click="addressSetting">
+                        <i class="el-icon-plus"></i>&nbsp;&nbsp;Add Mode
+                    </div>
+                </div>
+                <div class="fl w-300 m-l-30">
+                    <el-input placeholder="Please enter the model" v-model="keywords">
+                        <el-button slot="append" icon="search" @click="search()"></el-button>
+                    </el-input>
+                </div>
             </div>
-            <div class="fl w-300 m-l-30">
-                <el-input placeholder="Please enter the model" v-model="keywords">
-                    <el-button slot="append" icon="search" @click="search()"></el-button>
-                </el-input>
+            <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
+                <el-table-column type="selection" width="50">
+                </el-table-column>
+                <el-table-column label="Country" prop="country" width="150">
+                </el-table-column>
+                <el-table-column label="Address" prop="address" width="150">
+                </el-table-column>
+                <el-table-column label="IP" prop="ip" width="150">
+                </el-table-column>
+                <el-table-column label="Port" prop="port" width="150">
+                </el-table-column>
+                <el-table-column label="MAC" prop="mac" width="200">
+                </el-table-column>
+                <el-table-column label="Latitude" prop="lat" width="200">
+                </el-table-column>
+                <el-table-column label="Longitude" prop="lng" width="200">
+                </el-table-column>
+                <el-table-column label="Status" prop="status">
+                </el-table-column>
+            </el-table>
+            <div class="pos-rel p-t-20">
+                <div>
+                    <el-button size="small" type="success" @click="setStatusBtn('enabled')">Enabled</el-button>
+                    <el-button size="small" type="warning" @click="setStatusBtn('disabled')">Disabled</el-button>
+                    <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button>
+                </div>
+                <div class="block pages">
+                    <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">
+                    </el-pagination>
+                </div>
             </div>
         </div>
-        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem">
-            <el-table-column type="selection" width="50">
-            </el-table-column>
-            <el-table-column label="Country" prop="country" width="150">
-            </el-table-column>
-            <el-table-column label="Address" prop="address" width="150">
-            </el-table-column>
-            <el-table-column label="IP" prop="ip" width="150">
-            </el-table-column>
-            <el-table-column label="Port" prop="port" width="150">
-            </el-table-column>
-            <el-table-column label="MAC" prop="mac" width="200">
-            </el-table-column>
-            <el-table-column label="Latitude" prop="lat" width="200">
-            </el-table-column>
-            <el-table-column label="Longitude" prop="lng" width="200">
-            </el-table-column>
-            <el-table-column label="Status" prop="status">
-            </el-table-column>
-        </el-table>
-        <div class="pos-rel p-t-20">
-            <div>
-                <el-button size="small" type="success" @click="setStatusBtn('enabled')">Enabled</el-button>
-                <el-button size="small" type="warning" @click="setStatusBtn('disabled')">Disabled</el-button>
-                <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button>
-            </div>
-            <div class="block pages">
-                <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">
-                </el-pagination>
-            </div>
+        <div v-show="setting">
+            <add :add="add" :address="address" @goback="goback"></add>
         </div>
     </div>
 </template>
 
 <script>
 import http from '../../../../assets/js/http'
-
+import add from './add'
 export default {
     //  currentPage        页码
     //  keywords           关键字
@@ -62,9 +67,36 @@ export default {
             keywords: '',
             multipleSelection: [],
             limit: 15,
+            add: true,
+            setting: false,
+            address:{},
         }
     },
     methods: {
+        goback(bool){
+            this.setting = bool
+        },
+        addressSetting() {
+            this.add = true
+            this.setting = true
+            var address= {
+                country: '',
+                address: '',
+                ip: '',
+                port: '',
+                mac: '',
+                lat: '',
+                lng: '',
+                status: 'enabled',
+            }
+            this.address = address
+        },
+        rowDblclick(row) {
+            this.add = false
+            this.setting = true
+            this.address = row
+            console.log(this.address)
+        },
         //搜索关键字
         search() {
             router.push({ path: this.$route.path, query: { keywords: this.keywords, page: 1 } })
@@ -167,7 +199,7 @@ export default {
         this.init()
     },
     components: {
-        
+        add
     },
     computed: {
         //从vuex中获取设备数据

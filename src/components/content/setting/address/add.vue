@@ -26,7 +26,7 @@
                 <el-input v-model.trim="form.lng" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="add('form')" :loading="isLoading">Commit</el-button>
+                <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Commit</el-button>
                 <el-button @click="goback()">Back</el-button>
             </el-form-item>
         </el-form>
@@ -35,47 +35,75 @@
 
 <script>
 import http from '../../../../assets/js/http'
-import fomrMixin from '../../../../assets/js/form_com'
+// import fomrMixin from '../../../../assets/js/form_com'
 
 export default {
     data() {
         return {
             isLoading: false,
-            form: {
-                country: '',
-                address: '',
-                ip: '',
-                port: '',
-                mac: '',
-                lat:'',
-                lng:'',
-                status: 'enabled',
-            },
+            // form: {
+            //     country: '',
+            //     address: '',
+            //     ip: '',
+            //     port: '',
+            //     mac: '',
+            //     lat: '',
+            //     lng: '',
+            //     status: 'enabled',
+            // },
             addressOptions: [],
         }
     },
     methods: {
-        add(form) {
+        goback() {
+            this.$emit("goback", false)
+        },
+        addAddress(form) {
             console.log(this.form)
             this.isLoading = !this.isLoading
             const data = {
                 params: this.form
             }
-            this.apiGet('device/address.php?action=insert', data).then((res) => {
-                // _g.clearVuex('setRules')
-                if (res[0]) {
-                    var address = this.$store.state.address
-                    address.push(this.form)
-                    this.$store.dispatch('setAddress', address)
-                    _g.toastMsg('success', res[1])
-                    setTimeout(() => {
-                        this.goback()
-                    }, 500)
-                } else {
-                    _g.toastMsg('error', res[1])
-                }
+            if (add) {
+                this.apiGet('device/address.php?action=insert', data).then((res) => {
+                    // _g.clearVuex('setRules')
+                    if (res[0]) {
+                        var address = this.$store.state.address
+                        address.push(this.form)
+                        this.$store.dispatch('setAddress', address)
+                        _g.toastMsg('success', res[1])
+                        setTimeout(() => {
+                            this.goback()
+                        }, 500)
+                    } else {
+                        _g.toastMsg('error', res[1])
+                    }
 
-            })
+                })
+            } else {
+                this.apiGet('device/address.php?action=update', data).then((res) => {
+                    // _g.clearVuex('setRules')
+                    if (res[0]) {
+                        var address = this.$store.state.address
+                        for (var i = 0; i < address.length; i++) {
+                            for (var form of this.form) {
+                                if (address[i].address == form.address) {
+                                    address[i] = form
+                                }
+                            }
+                        }
+                        this.$store.dispatch('setAddress', address)
+                        _g.toastMsg('success', res[1])
+                        setTimeout(() => {
+                            this.goback()
+                        }, 500)
+                    } else {
+                        _g.toastMsg('error', res[1])
+                    }
+
+                })
+            }
+
         },
         getAddressOptions() {
             var option = [
@@ -271,14 +299,17 @@ export default {
             return address
         },
     },
-    created() {
-        
-    },
+    props: ['add', 'address'],
     mounted() {
         this.addressOptions = this.getAddressOptions()
     },
+    computed: {
+        form() {
+            return this.address
+        },
+    },
     components: {
     },
-    mixins: [http,fomrMixin]
+    mixins: [http]
 }
 </script>

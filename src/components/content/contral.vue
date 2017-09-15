@@ -53,6 +53,7 @@ export default {
     },
     methods: {
         selectCountry(key, keyPath) {
+            window.socketio.removeAllListeners("new_msg");
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {
                     if (key == address.name) {
@@ -66,6 +67,7 @@ export default {
             }
         },
         menuClick() {
+            
             this.$store.dispatch('showContral', false)
         }
 

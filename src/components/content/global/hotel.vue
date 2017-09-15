@@ -1,29 +1,37 @@
 <template>
     <div class="container-out" style="height:100%">
-        <div ref="roomWatts" style="position: absolute;right: 0;bottom: 0;width:350px;height:350px;z-index:10;"></div>
-        <div v-show="showHotel" class="setting-icon">
-            <!-- <router-link to="setting/address/update" :form='address'> -->
-            <el-button size="small" type="info" @click="settingClick">
-                <i class="el-icon-setting"></i>
-            </el-button>
-            <!-- </router-link> -->
-        </div>
-        <div v-show="showHotel" class="container-in">
-            <div class="container-home">
-                <div class="build">
-                    <a class="build-img">
-                        <img src="../../../assets/images/build.jpg">
-                    </a>
-                    <!-- <p class="p-title">Build</p> -->
+        <div ref="roomWatts" class="roomWatts" style=""></div>
+        <div v-show="showHotel" class="hotel-content">
+            <div class="icon-list">
+                <div @click="hotelBack">
+                    <i class="fa fa-reply"></i>
                 </div>
-                <div class="floor">
-                    <div v-for="num in addressProperty.floor_num" class="floor-centent" @click="floorClick(num)">Floor{{addressProperty.floor_num +1-num}}
+                <div @click="settingClick">
+                    <i class="el-icon-setting"></i>
+                </div>
+            </div>
+            <div class="container-in">
+                <div class="container-home">
+                    <div class="build">
+                        <a class="build-img">
+                            <img src="../../../assets/images/build.jpg">
+                        </a>
+                        <!-- <p class="p-title">Build</p> -->
                     </div>
-                    <!-- <p class="p-title">Floor</p> -->
+                    <div class="floor">
+                        <div v-for="num in addressProperty.floor_num" class="floor-centent" @click="floorClick(num)">Floor{{addressProperty.floor_num +1-num}}
+                        </div>
+                        <!-- <p class="p-title">Floor</p> -->
+                    </div>
                 </div>
             </div>
         </div>
         <div v-show="showFloor" class="floor-content">
+            <div class="icon-list">
+                <div @click="floorBack">
+                    <i class="fa fa-reply"></i>
+                </div>
+            </div>
             <div class="floorImga">
                 <div class="room1" @click="roomClick('101')"></div>
                 <div class="room2" @click="roomClick('101')"></div>
@@ -41,16 +49,6 @@
             </div>
         </div>
         <div v-show="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
-            <!-- <el-dropdown class="setting-icon" @command="handleCommand">
-                                                                                    <el-button type="primary">
-                                                                                        Add Device
-                                                                                        <i class="el-icon-caret-bottom el-icon--right"></i>
-                                                                                    </el-button>
-                                                                                    <el-dropdown-menu slot="dropdown">
-                                                                                        <el-dropdown-item style="width:100px;" v-for="devicetype in typeList" :command="devicetype">{{devicetype}}</el-dropdown-item>
-                                                                                    </el-dropdown-menu>
-                                                                                </el-dropdown> -->
-
             <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
                 <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
             </el-popover>
@@ -61,21 +59,27 @@
                 <div @click="settingStatusClick">
                     <i class="el-icon-setting"></i>
                 </div>
+                <div @click="roomBack">
+                    <i class="fa fa-reply"></i>
+                </div>
             </div>
             <div class="roomImga">
                 <deviceTap v-for="device in deviceList" :device="device" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
 
             </div>
             <!-- <div class="device-list">
-                                                                                                                                                                                    
-                                                                                                                                                                                </div> -->
+                                                                                                                                                                                                        
+                                                                                                                                                                                                    </div> -->
         </div>
         <div v-show="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
+        <div v-show="showHotelUpdate">
+            <addressUpdate :add="addressAdd" :address="address"  @goback="addressBack"></addressUpdate>
+        </div>
         <!-- <div v-show="showTypeList" style="background-color: #fff">
-                                                                                                                                                        <deviceList :typeList="typeList"></deviceList>
-                                                                                                                                                    </div> -->
+                                                                                                                                                                            <deviceList :typeList="typeList"></deviceList>
+                                                                                                                                                                        </div> -->
     </div>
 </template>
 
@@ -87,6 +91,7 @@
 import deviceList from '../../Common/device/deviceList'
 import deviceTap from '../../Common/device/deviceTap'
 import deviceUpdate from '../plan/update'
+import addressUpdate from '../setting/address/add'
 // import $ from 'jquery'
 // import '../../../assets/css/drag.css'
 import '../../../assets/js/jquery-1.9.1.min.js'
@@ -111,6 +116,8 @@ export default {
             showTypeList: false,
             setting: false,
             roomWatts: {},
+            showHotelUpdate:false,
+            addressAdd:false,
         }
     },
     // prop:[address],
@@ -152,8 +159,16 @@ export default {
             this.thisdevice = device
         },
         settingClick() {
-            let url = '/home/setting/address/update'
-            router.push({ path: url, query: { address: this.address } })
+            this.showHotelUpdate = true
+            this.showHotel =false
+        },
+        addressBack(bool){
+            this.showHotelUpdate = bool
+            this.showHotel = !bool
+        },
+        hotelBack() {
+            let url = '/home/global'
+            router.push(url)
         },
         floorClick(val) {
             this.showFloor = true
@@ -165,11 +180,11 @@ export default {
             for (var floor of this.floorList) {
                 if (floor.name == val) {
                     this.roomList = floor.roomList
-                    for (var room of floor.roomList) {
-                        for (var type of room.typeList) {
-                            for (var device of type.deviceList) {
-                                deviceList.push(device)
-                            }
+                }
+                for (var room of floor.roomList) {
+                    for (var type of room.typeList) {
+                        for (var device of type.deviceList) {
+                            deviceList.push(device)
                         }
                     }
                 }
@@ -177,7 +192,12 @@ export default {
             this.deviceList = deviceList
 
         },
+        floorBack() {
+            this.showHotel = true
+            this.showFloor = false
+        },
         roomClick(val) {
+            window.socketio.removeAllListeners("new_msg");
             this.showFloor = false
             this.showHotel = false
             this.showRoom = true
@@ -208,6 +228,10 @@ export default {
             this.deviceList = deviceList
             // this.roomWatts = echarts.init(this.$refs.roomWatts);
         },
+        roomBack() {
+            this.showFloor = true
+            this.showRoom = false
+        },
         initMode(value) {
             if (value == "auto") {
                 value == "mode_auto"
@@ -230,45 +254,6 @@ export default {
                     break;
             }
         },
-        creatWatts() {
-            this.nextTick(function() {
-                var roomWatts = echarts.init(this.$refs.roomWatts);
-                var roomWattsOption = {
-                    tooltip: {
-                        formatter: "{b} : {c}w"
-                    },
-                    // toolbox: {
-                    //     feature: {
-                    //         restore: {},
-                    //         saveAsImage: {}
-                    //     }
-                    // },
-                    series: [
-                        {
-                            name: '',
-                            type: 'gauge',
-                            min: 0,
-                            max: 3000,
-                            splitNumber: 10,
-                            axisLine: {
-                                lineStyle: { width: 15 }
-                            },
-                            splitLine: {
-                                length: 20
-                            },
-                            detail: { formatter: '{value}w' },
-                            data: [{ value: 50, name: 'Watts' }]
-                        }
-                    ]
-                };
-                roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
-                roomWatts.setOption(roomWattsOption, true);
-                // setInterval(function() {
-                //     roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
-                //     roomWatts.setOption(roomWattsOption, true);
-                // }, 2000)
-            })
-        }
     },
     created() {
         console.log("report")
@@ -297,6 +282,7 @@ export default {
         deviceList,
         deviceTap,
         deviceUpdate,
+        addressUpdate
     },
     computed: {
         address() {
@@ -377,6 +363,15 @@ export default {
                     tooltip: {
                         formatter: "{b} : {c}w"
                     },
+                    backgroundColor: new echarts.graphic.RadialGradient(0.5, 0.5, 0.4, [{
+                    offset: 0,
+                    // color: 'rgba(75,87,105,0.8)'
+                    color: 'rgba(255,255,255,0.5)'
+                    
+                }, {
+                    offset: 1,
+                    color: 'rgba(255,255,255,0.5)'
+                }]),
                     // toolbox: {
                     //     feature: {
                     //         restore: {},
@@ -389,15 +384,27 @@ export default {
                             type: 'gauge',
                             min: 0,
                             max: 3000,
+                            radius:'99%',
+                            //分割单位
                             splitNumber: 10,
+                            //刻度背景
                             axisLine: {
-                                lineStyle: { width: 15 }
+                                lineStyle: { width: 5 }
                             },
+                            //刻度线
                             splitLine: {
-                                length: 20
+                                length: 10
                             },
-                            detail: { formatter: '{value}w' },
-                            data: [{ value: wattsTotal, name: 'Watts' }]
+                            //指针
+                            pointer: {
+                                width: 6
+                            },
+                            detail: {
+                                formatter: '{value}w',
+                                fontSize: 24
+                            },
+                            data: [{ value: wattsTotal }]
+                            // data: [{ value: wattsTotal, name: 'Watts' }]
                         }
                     ]
                 };
@@ -427,11 +434,30 @@ export default {
     background-color: #ccc;
 }
 
+.roomWatts {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 250px;
+    height: 250px;
+    
+    z-index: 10;
+}
+.roomWatts div{
+    border-radius: 250px;
+}
+
+
 .setting-icon {
     position: absolute;
     right: 5px;
     top: 5px;
     z-index: 100;
+}
+.hotel-content{
+    position: relative;
+    width:100%;
+    height:100%;
 }
 
 .container-in {
@@ -544,49 +570,26 @@ export default {
 .floorImga>div:hover {
     border: 2px solid #20A0FF;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* .add-type-list{
-    width:100px;
-    height: 25px;
-    line-height:25px;
-    font-size:16px;
-    border-bottom: 1px solid #dfe6ec;
-} */
-
-.room-content .icon-list {
+.icon-list {
     position: absolute;
     top: 10px;
     right: 5px;
 }
 
-.room-content .icon-list div {
+.icon-list div {
     width: 35px;
     height: 35px;
     line-height: 35px;
     font-size: 16px;
-    background-color: #20A0FF;
+    background-color: #50bfff;
     color: #fff;
     border-radius: 50px;
     text-align: center;
     margin-bottom: 8px;
 }
-
+.icon-list div:hover{
+    background-color: #73ccff;
+}
 
 .device-list {
     position: absolute;
