@@ -1,5 +1,6 @@
 <template>
     <div class="container-out" style="height:100%">
+        <div ref="roomWatts" style="position: absolute;right: 0;bottom: 0;width:350px;height:350px;z-index:10;"></div>
         <div v-show="showHotel" class="setting-icon">
             <!-- <router-link to="setting/address/update" :form='address'> -->
             <el-button size="small" type="info" @click="settingClick">
@@ -41,15 +42,15 @@
         </div>
         <div v-show="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
             <!-- <el-dropdown class="setting-icon" @command="handleCommand">
-                                                            <el-button type="primary">
-                                                                Add Device
-                                                                <i class="el-icon-caret-bottom el-icon--right"></i>
-                                                            </el-button>
-                                                            <el-dropdown-menu slot="dropdown">
-                                                                <el-dropdown-item style="width:100px;" v-for="devicetype in typeList" :command="devicetype">{{devicetype}}</el-dropdown-item>
-                                                            </el-dropdown-menu>
-                                                        </el-dropdown> -->
-            <div ref="roomWatts" style="position: absolute;right: 0;bottom: 0;width:350px;height:350px;z-index:10;"></div>
+                                                                                    <el-button type="primary">
+                                                                                        Add Device
+                                                                                        <i class="el-icon-caret-bottom el-icon--right"></i>
+                                                                                    </el-button>
+                                                                                    <el-dropdown-menu slot="dropdown">
+                                                                                        <el-dropdown-item style="width:100px;" v-for="devicetype in typeList" :command="devicetype">{{devicetype}}</el-dropdown-item>
+                                                                                    </el-dropdown-menu>
+                                                                                </el-dropdown> -->
+
             <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
                 <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
             </el-popover>
@@ -66,15 +67,15 @@
 
             </div>
             <!-- <div class="device-list">
-                                                                                                                                                            
-                                                                                                                                                        </div> -->
+                                                                                                                                                                                    
+                                                                                                                                                                                </div> -->
         </div>
         <div v-show="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
         <!-- <div v-show="showTypeList" style="background-color: #fff">
-                                                                                                                                <deviceList :typeList="typeList"></deviceList>
-                                                                                                                            </div> -->
+                                                                                                                                                        <deviceList :typeList="typeList"></deviceList>
+                                                                                                                                                    </div> -->
     </div>
 </template>
 
@@ -160,11 +161,20 @@ export default {
             this.showRoom = false
             this.showTypeList = false
             this.floorName = val
+            var deviceList = []
             for (var floor of this.floorList) {
                 if (floor.name == val) {
                     this.roomList = floor.roomList
+                    for (var room of floor.roomList) {
+                        for (var type of room.typeList) {
+                            for (var device of type.deviceList) {
+                                deviceList.push(device)
+                            }
+                        }
+                    }
                 }
             }
+            this.deviceList = deviceList
 
         },
         roomClick(val) {
@@ -181,12 +191,13 @@ export default {
 
             //     }
             // }
+            var deviceList = []
             for (var floor of this.address.floorList) {
                 for (var room of floor.roomList) {
                     if (room.name == '101') {
                         for (var type of room.typeList) {
                             for (var device of type.deviceList) {
-                                this.deviceList.push(device)
+                                deviceList.push(device)
                             }
 
                         }
@@ -194,15 +205,16 @@ export default {
                     }
                 }
             }
+            this.deviceList = deviceList
             // this.roomWatts = echarts.init(this.$refs.roomWatts);
         },
         initMode(value) {
-            if(value == "auto"){
+            if (value == "auto") {
                 value == "mode_auto"
             }
             return value
         },
-        initWind(value){
+        initWind(value) {
             switch (value) {
                 case 0:
                     return "wind_auto";
@@ -266,7 +278,19 @@ export default {
     mounted() {
         this.hotelName = this.address.name
         this.floorList = this.address.floorList
-
+        this.$nextTick(function() {
+            var deviceList = []
+            for (var floor of this.address.floorList) {
+                for (var room of floor.roomList) {
+                    for (var type of room.typeList) {
+                        for (var device of type.deviceList) {
+                            deviceList.push(device)
+                        }
+                    }
+                }
+            }
+            this.deviceList = deviceList
+        })
 
     },
     components: {
@@ -320,9 +344,9 @@ export default {
                                 for (var ac_breed of ac_breeds) {
                                     if (device.breed == ac_breed.breed) {
                                         var modeWatts = parseInt(ac_breed[this.initMode(device.mode)])
-                                        modeWatts = modeWatts?modeWatts:0
+                                        modeWatts = modeWatts ? modeWatts : 0
                                         var windWatts = parseInt(ac_breed[this.initWind(device.wind)])
-                                        windWatts = windWatts? windWatts:0
+                                        windWatts = windWatts ? windWatts : 0
                                         device.watts = modeWatts + windWatts
                                         wattsTotal += device.watts
                                     }
@@ -332,7 +356,7 @@ export default {
                                 for (var light_breed of light_breeds) {
                                     if (device.breed == light_breed.breed) {
                                         device.watts = parseInt(light_breed.watts)
-                                        wattsTotal += device.watts?device.watts:0
+                                        wattsTotal += device.watts ? device.watts : 0
                                     }
                                 }
                                 break
@@ -340,7 +364,7 @@ export default {
                                 for (var led_breed of led_breeds) {
                                     if (device.breed == led_breed.breed) {
                                         device.watts = parseInt(led_breed.watts)
-                                        wattsTotal += device.watts?device.watts:0
+                                        wattsTotal += device.watts ? device.watts : 0
                                     }
                                 }
                                 break
@@ -348,7 +372,7 @@ export default {
                     }
                 }
                 // this.nextTick(function() {
-                var roomWatts = echarts.init(this.$refs.roomWatts);
+                // var roomWatts = echarts.init(this.$refs.roomWatts);
                 var roomWattsOption = {
                     tooltip: {
                         formatter: "{b} : {c}w"
@@ -378,6 +402,7 @@ export default {
                     ]
                 };
                 // roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
+                var roomWatts = echarts.init(this.$refs.roomWatts);
                 roomWatts.setOption(roomWattsOption, true);
                 // setInterval(function() {
                 //     roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
@@ -519,6 +544,12 @@ export default {
 .floorImga>div:hover {
     border: 2px solid #20A0FF;
 }
+
+
+
+
+
+
 
 
 
