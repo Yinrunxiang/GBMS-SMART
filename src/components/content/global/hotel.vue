@@ -77,9 +77,6 @@
         <div v-show="showHotelUpdate">
             <addressUpdate :add="addressAdd" :address="address"  @goback="addressBack"></addressUpdate>
         </div>
-        <!-- <div v-show="showTypeList" style="background-color: #fff">
-                                                                                                                                                                            <deviceList :typeList="typeList"></deviceList>
-                                                                                                                                                                        </div> -->
     </div>
 </template>
 
@@ -408,14 +405,8 @@ export default {
                         }
                     ]
                 };
-                // roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
                 var roomWatts = echarts.init(this.$refs.roomWatts);
                 roomWatts.setOption(roomWattsOption, true);
-                // setInterval(function() {
-                //     roomWattsOption.series[0].data[0].value = parseInt(Math.random() * 1000);
-                //     roomWatts.setOption(roomWattsOption, true);
-                // }, 2000)
-                // })
             },
             deep: true
         }
