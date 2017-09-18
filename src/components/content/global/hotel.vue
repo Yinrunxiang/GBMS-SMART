@@ -19,8 +19,18 @@
                         <!-- <p class="p-title">Build</p> -->
                     </div>
                     <div class="floor">
-                        <div v-for="num in addressProperty.floor_num" class="floor-centent" @click="floorClick(num)">Floor{{addressProperty.floor_num +1-num}}
+
+                        <div v-for="num in addressProperty.floor_num">
+                            <el-tooltip placement="right"  transition="">
+                                <div slot="content">
+                                    <p v-for="(val, key, index) in floorTypeNumber">{{key}}:{{val}}</p>
+                                </div>
+                                <div class="floor-centent" @click="floorClick(num)" @mouseover="floorOver(num)">Floor{{addressProperty.floor_num +1-num}}
+                                </div>
+                            </el-tooltip>
+
                         </div>
+
                         <!-- <p class="p-title">Floor</p> -->
                     </div>
                 </div>
@@ -33,19 +43,14 @@
                 </div>
             </div>
             <div class="floorImga">
-                <div class="room1" @click="roomClick('101')"></div>
-                <div class="room2" @click="roomClick('101')"></div>
-                <div class="room3" @click="roomClick('101')"></div>
-                <div class="room4" @click="roomClick('101')"></div>
-                <div class="room5" @click="roomClick('101')"></div>
-                <div class="room6" @click="roomClick('101')"></div>
-                <div class="room7" @click="roomClick('101')"></div>
-                <div class="room8" @click="roomClick('101')"></div>
-                <div class="room9" @click="roomClick('101')"></div>
-                <div class="room10" @click="roomClick('101')"></div>
-                <div class="room11" @click="roomClick('101')"></div>
-                <div class="room12" @click="roomClick('101')"></div>
-                <div class="room13" @click="roomClick('101')"></div>
+                <div v-for="num in room_num">
+                    <el-tooltip placement="right" transition="">
+                        <div slot="content">
+                            <p v-for="(val, key, index) in roomTypeNumber">{{key}}:{{val}}</p>
+                        </div>
+                        <div :class="'room'+num" class="room" @click="roomClick('101')" @mouseover="roomOver('101')"></div>
+                    </el-tooltip>
+                </div>
             </div>
         </div>
         <div v-show="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
@@ -68,14 +73,14 @@
 
             </div>
             <!-- <div class="device-list">
-                                                                                                                                                                                                        
-                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                </div> -->
         </div>
         <div v-show="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
         <div v-show="showHotelUpdate">
-            <addressUpdate :add="addressAdd" :address="address"  @goback="addressBack"></addressUpdate>
+            <addressUpdate :add="addressAdd" :address="address" @goback="addressBack"></addressUpdate>
         </div>
     </div>
 </template>
@@ -113,8 +118,11 @@ export default {
             showTypeList: false,
             setting: false,
             roomWatts: {},
-            showHotelUpdate:false,
-            addressAdd:false,
+            showHotelUpdate: false,
+            addressAdd: false,
+            floorTypeNumber: {},
+            roomTypeNumber: {},
+            room_num: 13,
         }
     },
     // prop:[address],
@@ -157,9 +165,9 @@ export default {
         },
         settingClick() {
             this.showHotelUpdate = true
-            this.showHotel =false
+            this.showHotel = false
         },
-        addressBack(bool){
+        addressBack(bool) {
             this.showHotelUpdate = bool
             this.showHotel = !bool
         },
@@ -188,6 +196,14 @@ export default {
             }
             this.deviceList = deviceList
 
+        },
+        floorOver(num) {
+            for (var floor of this.floorList) {
+                if (floor.name == num) {
+                    // this.roomList = floor.roomList
+                }
+                this.floorTypeNumber = floor.deviceTypeNumber
+            }
         },
         floorBack() {
             this.showHotel = true
@@ -224,6 +240,15 @@ export default {
             }
             this.deviceList = deviceList
             // this.roomWatts = echarts.init(this.$refs.roomWatts);
+        },
+        roomOver(val) {
+            for (var floor of this.address.floorList) {
+                for (var room of floor.roomList) {
+                    if (room.name == '101') {
+                        this.roomTypeNumber = room.deviceTypeNumber
+                    }
+                }
+            }
         },
         roomBack() {
             this.showFloor = true
@@ -361,14 +386,14 @@ export default {
                         formatter: "{b} : {c}w"
                     },
                     backgroundColor: new echarts.graphic.RadialGradient(0.5, 0.5, 0.4, [{
-                    offset: 0,
-                    // color: 'rgba(75,87,105,0.8)'
-                    color: 'rgba(255,255,255,0.5)'
-                    
-                }, {
-                    offset: 1,
-                    color: 'rgba(255,255,255,0.5)'
-                }]),
+                        offset: 0,
+                        // color: 'rgba(75,87,105,0.8)'
+                        color: 'rgba(255,255,255,0.5)'
+
+                    }, {
+                        offset: 1,
+                        color: 'rgba(255,255,255,0.5)'
+                    }]),
                     // toolbox: {
                     //     feature: {
                     //         restore: {},
@@ -381,7 +406,7 @@ export default {
                             type: 'gauge',
                             min: 0,
                             max: 3000,
-                            radius:'99%',
+                            radius: '99%',
                             //分割单位
                             splitNumber: 10,
                             //刻度背景
@@ -431,10 +456,11 @@ export default {
     bottom: 0;
     width: 250px;
     height: 250px;
-    
+
     z-index: 10;
 }
-.roomWatts div{
+
+.roomWatts div {
     border-radius: 250px;
 }
 
@@ -445,10 +471,11 @@ export default {
     top: 5px;
     z-index: 100;
 }
-.hotel-content{
+
+.hotel-content {
     position: relative;
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
 }
 
 .container-in {
@@ -558,9 +585,10 @@ export default {
     -moz-background-size: 100% 100%;
 }
 
-.floorImga>div:hover {
+.floorImga .room:hover {
     border: 2px solid #20A0FF;
 }
+
 .icon-list {
     position: absolute;
     top: 10px;
@@ -578,7 +606,8 @@ export default {
     text-align: center;
     margin-bottom: 8px;
 }
-.icon-list div:hover{
+
+.icon-list div:hover {
     background-color: #73ccff;
 }
 

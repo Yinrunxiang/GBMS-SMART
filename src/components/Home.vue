@@ -326,6 +326,7 @@ export default {
 									floorObject.name = item.floor
 									floorObject.roomList = []
 									floorObject.roomArr = []
+									floorObject.deviceTypeNumber = {}
 									address.floorList.push(floorObject)
 								}
 
@@ -339,8 +340,10 @@ export default {
 											roomObject.name = item.room
 											roomObject.typeList = []
 											roomObject.typeArr = []
+											roomObject.deviceTypeNumber = {}
 											floor.roomList.push(roomObject)
 										}
+										floor.deviceTypeNumber[item.devicetype] ? floor.deviceTypeNumber[item.devicetype] += 1 : floor.deviceTypeNumber[item.devicetype] = 1
 										for (var room of floor.roomList) {
 											if (item.room == room.name) {
 												if (room.typeArr.indexOf(item.devicetype) == -1) {
@@ -350,6 +353,7 @@ export default {
 													typeObject.deviceList = []
 													room.typeList.push(typeObject)
 												}
+												room.deviceTypeNumber[item.devicetype] ? room.deviceTypeNumber[item.devicetype] += 1 : room.deviceTypeNumber[item.devicetype] = 1
 												for (var type of room.typeList) {
 													//筛选重复类型
 													if (item.devicetype == type.name) {

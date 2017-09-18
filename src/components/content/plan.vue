@@ -1,81 +1,14 @@
 <template>
     <div>
-        <div v-show="!showDeviceUpdate" class="p-20">
-            <div class="m-b-20 ovf-hd">
-                <div class="fl">
-                    <router-link class="btn-link-large add-btn" to="plan/add">
-                        <i class="el-icon-plus"></i>&nbsp;&nbsp;Add device
-                    </router-link>
-                </div>
-                <div class="fl w-300 m-l-30">
-                    <el-input placeholder="Please enter the device name" v-model="keywords">
-                        <el-button slot="append" icon="search" @click="search()"></el-button>
-                    </el-input>
-                </div>
-            </div>
-            <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
-                <el-table-column type="selection" width="50">
-                </el-table-column>
-                <el-table-column prop="device" label="Device name" width="150">
-                </el-table-column>
-                <el-table-column label="Device type" prop="devicetype" width="150">
-                </el-table-column>
-                <el-table-column label="Address" prop="address" width="150">
-                </el-table-column>
-                <el-table-column label="status" prop="status" width="150">
-                </el-table-column>
-                <el-table-column label="IP" prop="ip" width="150">
-                </el-table-column>
-                <el-table-column label="Start Time" prop="start" width="220">
-                    <template scope="scope">
-                        <el-time-select placeholder="Start Time" @change="startTimeChange(scope.row)" v-model="scope.row.starttime" :picker-options="{
-                              start: '08:00',
-                              step: '00:10',
-                              end: '18:00'
-                            }">
-                        </el-time-select>
-                    </template>
-                </el-table-column>
-                <el-table-column label="Over Time" prop="over" width="220">
-                    <template scope="scope">
-                        <el-time-select placeholder="End Time" @change="endTimeChange(scope.row)" v-model="scope.row.endtime" :picker-options="{
-                          start: '08:00',
-                          step: '00:10',
-                          end: '18:00',
-                          minTime: scope.row.starttime
-                        }">
-                        </el-time-select>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="pos-rel p-t-20">
-                <div>
-                    <el-button size="small" type="success" @click="setStatusBtn('enabled')">Enabled</el-button>
-                    <el-button size="small" type="warning" @click="setStatusBtn('disabled')">Disabled</el-button>
-                    <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button>
-                </div>
-                <div class="block pages">
-                    <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">
-                    </el-pagination>
-                </div>
-            </div>
-        </div>
-        <div v-show="showDeviceUpdate">
-            <deviceUpdate :device="thisdevice" :notHotel='notHotel' @changeUpdate="changeUpdate"></deviceUpdate>
-        </div>
+        <div ref="lineChart" class="line-chart fl" style="width:600px;height:500px"></div>
+        <div ref="pieChart" class="pie-chart fl" style="width:500px;height:500px"></div>
     </div>
 </template>
 
 <script>
-import btnGroup from '../Common/btn-group.vue'
-import deviceUpdate from './plan/update'
-import http from '../../assets/js/http'
 
+import echarts from 'echarts'
 export default {
-    //  currentPage        页码
-    //  keywords           关键字
-    //  multipleSelection  被选中的数据
-    //  limit              每页最大行数
     data() {
         return {
             // tableData: [],
@@ -90,169 +23,176 @@ export default {
         }
     },
     methods: {
-        changeUpdate(data){
-            this.showDeviceUpdate = data
-        },
-        //搜索关键字
-        search() {
-            router.push({ path: this.$route.path, query: { keywords: this.keywords, page: 1 } })
-        },
-        //获取被选中的数据
-        selectItem(val) {
-            this.multipleSelection = val
-            console.log(this.multipleSelection)
-        },
-        //换页事件
-        handleCurrentChange(page) {
-            router.push({ path: this.$route.path, query: { keywords: this.keywords, page: page } })
-        },
-        rowDblclick(row) {
-            this.showDeviceUpdate= true;
-            this.thisdevice = row
-            console.log(this.thisdevice)
-            // let url = '/home/plan/update'
-            // this.$store.dispatch('setDevice', row)
-            // router.push(url)
-        },
-        //开始时间改变事件
-        startTimeChange(row) {
-            const data = {
-                params: {
-                    selection: row,
-                    type: 'start'
-                    // status: status
-                }
-            }
-            console.log(row)
-            this.apiGet('device/index.php?action=setTime', data).then((res) => {
-                if (res[0]) {
-                    _g.toastMsg('success', res[1])
-                } else {
-                    _g.toastMsg('error', res[1])
-                }
+        initLineChart() {
+            var myChart = echarts.init(this.$refs.lineChart);
+            var base = +new Date(2017, 1, 1);
+            var oneDay = 24 * 3600 * 1000;
+            var date = [];
 
-            })
-        },
-        //结束时间改变事件
-        endTimeChange(row) {
-            const data = {
-                params: {
-                    selection: row,
-                    type: 'end'
-                    // status: status
-                }
-            }
-            console.log(row)
-            this.apiGet('device/index.php?action=setTime', data).then((res) => {
-                if (res[0]) {
-                    _g.toastMsg('success', res[1])
-                } else {
-                    _g.toastMsg('error', res[1])
-                }
+            var data = [Math.random() * 300];
 
-            })
-        },
-        //保存状态点击事件
-        setStatusBtn(status) {
-            const data = {
-                params: {
-                    selections: this.multipleSelection,
-                    status: status
-                }
+            for (var i = 1; i < 2000; i++) {
+                var now = new Date(base += oneDay);
+                date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
+                data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
             }
-            this.apiGet('device/index.php?action=setStatus', data).then((res) => {
-                if (res[0]) {
-                    for (var selection of this.multipleSelection) {
-                        selection.status = status
+
+            var option = {
+                tooltip: {
+                    trigger: 'axis',
+                    position: function(pt) {
+                        return [pt[0], '10%'];
                     }
-                    _g.toastMsg('success', res[1])
-                } else {
-                    _g.toastMsg('error', res[1])
-                }
-
-            })
-        },
-        //删除按钮事件
-        deleteBtn() {
-            this.$confirm('Are you sure to delete the selected data?', 'Tips', {
-                confirmButtonText: 'Yse',
-                cancelButtonText: 'No',
-                type: 'warning'
-            }).then(() => {
-                const data = {
-                    params: {
-                        selections: this.multipleSelection
+                },
+                title: {
+                    left: 'center',
+                    text: 'Line Chart',
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: date
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '100%']
+                },
+                dataZoom: [{
+                    type: 'inside',
+                    start: 0,
+                    end: 10
+                }, {
+                    start: 0,
+                    end: 10,
+                    handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '80%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
                     }
-                }
-                this.apiGet('device/index.php?action=delete', data).then((res) => {
-                    if (res[0]) {
+                }],
+                series: [
+                    {
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        itemStyle: {
+                            normal: {
+                                color: 'rgb(255, 70, 131)'
+                            }
+                        },
+                        areaStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgb(255, 158, 68)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgb(255, 70, 131)'
+                                }])
+                            }
+                        },
+                        data: data
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        },
+        initPieChart() {
+            var myChart = echarts.init(this.$refs.pieChart);
+            var option = {
+                backgroundColor: '#f1f2f7',
 
-                        var devices = this.$store.state.devices
-                        for (var i = 0; i < devices.length; i++) {
-                            for (var selection of this.multipleSelection) {
-                                if (devices[i].device == selection.device) {
-                                    devices.splice(i, 1)
+                title: {
+                    text: 'Pie Chart',
+                    left: 'center',
+                    top: 20,
+                    textStyle: {
+                        color: '#000'
+                    }
+                },
+
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} : {c}w ({d}%)"
+                },
+
+                visualMap: {
+                    show: false,
+                    min: 80,
+                    max: 600,
+                    inRange: {
+                        colorLightness: [0, 1]
+                    }
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '50%'],
+                        data: [
+                            { value: 335, name: 'Light' },
+                            { value: 310, name: 'LED' },
+                            { value: 274, name: 'Music' },
+                            { value: 235, name: 'Other' },
+                            { value: 400, name: 'AC' }
+                        ].sort(function(a, b) { return a.value - b.value; }),
+                        roseType: 'radius',
+                        label: {
+                            normal: {
+                                textStyle: {
+                                    color: 'rgb(0, 0, 0)'
                                 }
                             }
-                        }
-                        this.$store.dispatch('setDevices', devices)
-                        _g.toastMsg('success', res[1])
-                    } else {
-                        _g.toastMsg('error', res[1])
-                    }
+                        },
+                        labelLine: {
+                            normal: {
+                                lineStyle: {
+                                    color: 'rgba(255, 255, 255, 0.3)'
+                                },
+                                smooth: 0.2,
+                                length: 10,
+                                length2: 20
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: '#c23531',
+                                // shadowBlur: 200,
+                                // shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
 
-                })
-            }).catch(() => {
-                // catch error
-            })
+                        animationType: 'scale',
+                        animationEasing: 'elasticOut',
+                        animationDelay: function(idx) {
+                            return Math.random() * 200;
+                        }
+                    }
+                ]
+            };
+            myChart.setOption(option);
         },
-        //获取页码
-        getCurrentPage() {
-            let data = this.$route.query
-            if (data) {
-                if (data.page) {
-                    this.currentPage = parseInt(data.page)
-                } else {
-                    this.currentPage = 1
-                }
-            }
-        },
-        //获取关键值
-        getKeywords() {
-            let data = this.$route.query
-            if (data) {
-                if (data.keywords) {
-                    this.keywords = data.keywords
-                } else {
-                    this.keywords = ''
-                }
-            }
-        },
-        //初始化时统一加载
-        init() {
-            this.getKeywords()
-            this.getCurrentPage()
-            // this.getAllDevices()
-        }
+
     },
     created() {
         console.log('Plan')
-        this.init()
+        
+
+    },
+    mounted(){
+        this.initLineChart()
+        this.initPieChart()
     },
     components: {
-        btnGroup,
-        deviceUpdate,
+
     },
     computed: {
-        //从vuex中获取设备数据
-        tableData() {
-            return this.$store.state.devices
-        },
-        //从vuex中获取设备数据条数
-        dataCount() {
-            return this.$store.state.devices.length
-        }
-    },
-    mixins: [http]
+
+    }
 }
 </script>
