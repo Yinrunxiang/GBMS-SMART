@@ -335,16 +335,7 @@ export default {
     mounted() {
         console.log('global')
         this.initMapSize()
-        // const data = {
-        // 	params: {
-        // 		action: "getrecord"
-        // 	}
-        // }
-        // this.apiGet("device/index.php", data).then(res => {
-        // 	this.$store.dispatch('setDevices', res)
-        // });
         this.createmap(this)
-        // this.createChart(this.allRecord)
     },
     components: {
 
@@ -366,24 +357,7 @@ export default {
         countryArr() {
             return this.$store.state.countryArr
         },
-        record() {
-            return this.$store.state.record
-        },
-        allRecord() {
-            var records = {}
-            records.dateArr = []
-            records.recordArr = []
-            for (var record of this.$store.state.record) {
-                if (records.dateArr.indexOf(record.record_date) == -1) {
-                    records.dateArr.push(record.record_date)
-                    records.recordArr.push(record.watts)
-                } else {
-                    var index = records.dateArr.indexOf(record.record_date)
-                    records.recordArr[index] += record.watts
-                }
-            }
-            return records
-        }
+       
 
     },
     mixins: [http]

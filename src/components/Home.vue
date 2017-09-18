@@ -236,11 +236,12 @@ export default {
 			}
 			this.apiGet("device/index.php", data).then(res => {
 				var records = res
+				var newRecords = []
 				var ac_breeds = this.$store.state.ac_breed
 				var light_breeds = this.$store.state.light_breed
 				var led_breeds = this.$store.state.led_breed
 				for (var record of records) {
-					if (record.on_off) {
+					if (record.on_off == "on") {
 						switch (record.devicetype) {
 							case "ac":
 								for (var ac_breed of ac_breeds) {
@@ -264,15 +265,18 @@ export default {
 								}
 								break
 						}
+						if(record.watts){
+							newRecords.push(record)
+						}
+						
 					}
 
 				}
-				// console.log(records)
-				this.records = records
+				this.records = newRecords
 				//记录数据处理完成
 				//以下是记录数据的使用
 
-				this.$store.dispatch('setRecord', records)
+				this.$store.dispatch('setRecord', newRecords)
 			});
 		},
 		countryArr(devices) {

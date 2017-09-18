@@ -1,372 +1,229 @@
 <template>
-    <div class="container-out" style="height:100%">
-        <div class="setting-icon">
-            <!-- <router-link to="setting/address/update" :form='address'> -->
-                <el-button size="small" type="info" @click="settingClick">
-                    <i class="el-icon-setting"></i>
-                </el-button>
-            <!-- </router-link> -->
-        </div>
-        <div v-show="showHome" class="container-in">
-            <div class="container-home">
-                <div class="build">
-                    <a class="build-img">
-                        <img src="../../assets/images/build.jpg"><img>
-                    </a>
-                    <!-- <p class="p-title">Build</p> -->
-                </div>
-                <div class="float">
-                    <div class="float-centent" float="12" @click="floatClick">Floor 12</div>
-                    <div class="float-centent" float="11" @click="floatClick">Floor 11</div>
-                    <div class="float-centent" float="10" @click="floatClick">Floor 10</div>
-                    <div class="float-centent" float="9" @click="floatClick">Floor 9</div>
-                    <div class="float-centent" float="8" @click="floatClick">Floor 8</div>
-                    <div class="float-centent" float="7" @click="floatClick">Floor 7</div>
-                    <div class="float-centent" float="6" @click="floatClick">Floor 6</div>
-                    <div class="float-centent" float="5" @click="floatClick">Floor 5</div>
-                    <div class="float-centent" float="4" @click="floatClick">Floor 4</div>
-                    <div class="float-centent" float="3" @click="floatClick">Floor 3</div>
-                    <div class="float-centent" float="2" @click="floatClick">Floor 2</div>
-                    <div class="float-centent" float="1" @click="floatClick">Floor 1</div>
-                    <!-- <p class="p-title">Floor</p> -->
-                </div>
-            </div>
-            <!-- <div class="container-float" :span="24">
-                        <div>
-                            <div class="float-row" :span="24">
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                            </div>
-                            <div class="float-row" :span="24">
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                            </div>
-                            <div class="float-aisle" :span="24">Aisle</div>
-                            <div class="float-row row">
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                            </div>
-                            <div class="float-row" :span="24">
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                                <div class="float-room" :span="6">ROOM</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container-room" :span="24">
-                        <div class="parlor  room" :span="24">Parlor</div>
-                        <div class="livingroom room" :span="16">Living room</div>
-                        <div class="bathroom room"  :span="8">Bathroom</div>
-                    </div> -->
-        </div>
-        <div v-show="showImage" class="mode">
-            <div class="backGroundImga">
-                <div class="room1" @click="roomClick('Boss Office')"></div>
-                <div class="room2" @click="roomClick('Boss Office')"></div>
-                <div class="room3" @click="roomClick('Boss Office')"></div>
-                <div class="room4" @click="roomClick('Boss Office')"></div>
-                <div class="room5" @click="roomClick('Boss Office')"></div>
-                <div class="room6" @click="roomClick('Boss Office')"></div>
-                <div class="room7" @click="roomClick('Boss Office')"></div>
-                <div class="room8" @click="roomClick('Boss Office')"></div>
-                <div class="room9" @click="roomClick('Boss Office')"></div>
-                <div class="room10" @click="roomClick('Boss Office')"></div>
-                <div class="room11" @click="roomClick('Boss Office')"></div>
-                <div class="room12" @click="roomClick('Boss Office')"></div>
-                <div class="room13" @click="roomClick('Boss Office')"></div>
-            </div>
-        </div>
-        <div v-show="showTypeList" style="background-color: #fff">
-            <deviceList :typeList="typeList"></deviceList>
-        </div>
+    <div>
+        <div ref="lineChart" class="line-chart fl"></div>
+        <div ref="pieChart" class="pie-chart fl"></div>
     </div>
 </template>
 
-
-
-
-
 <script>
-import deviceList from '../Common/device/deviceList'
+
+import echarts from 'echarts'
 export default {
     data() {
         return {
-            showHome: true,
-            showImage: false,
-            typeList: [],
-            showTypeList: false
+            // tableData: [],
+            // dataCount: null,
+            currentPage: null,
+            keywords: '',
+            thisdevice: {},
+            notHotel: true,
+            multipleSelection: [],
+            limit: 15,
+            showDeviceUpdate: false,
         }
     },
-    // prop:[address],
     methods: {
-        settingClick(){
-            let url = 'setting/address/update'
-            router.push({ path: url, query: { address: this.address }})
+        initMapSize(chart) {
+            var width = (document.body.clientWidth - 180)*0.5
+            var height = (document.body.clientHeight - 60)*0.8
+            chart.style.width = width + 'px';
+            chart.style.height = height + 'px';
         },
-        floatClick() {
-            this.showImage = true
-            this.showHome = false
-            this.showTypeList = false
-        },
-        roomClick(val) {
-            console.log(this.countryArr)
-            this.showImage = false
-            this.showHome = false
-            this.showTypeList = true
-            for (var country of this.countryArr) {
-                for (var address of country.addressList) {
-                    if (val == address.name) {
-                        this.typeList = address.typeList
-                        console.log(this.typeList)
+        initLineChart() {
+            var chart = this.$refs.lineChart
+            this.initMapSize(chart)
+            var chart = echarts.init(chart);
+            // var base = +new Date(2017, 1, 1);
+            // var oneDay = 24 * 3600 * 1000;
+            // var date = [];
+
+            // var data = [Math.random() * 300];
+
+            // for (var i = 1; i < 2000; i++) {
+            //     var now = new Date(base += oneDay);
+            //     date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
+            //     data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
+            // }
+            var date = this.allRecord.dateArr
+            var data = this.allRecord.recordArr
+
+            var option = {
+                tooltip: {
+                    trigger: 'axis',
+                    position: function(pt) {
+                        return [pt[0], '10%'];
                     }
-                }
-            }
-        }
+                },
+                title: {
+                    left: 'center',
+                    text: 'Line Chart',
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: date
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '100%']
+                },
+                dataZoom: [{
+                    type: 'inside',
+                    start: 0,
+                    end: 10
+                }, {
+                    start: 0,
+                    end: 10,
+                    handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '80%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
+                    }
+                }],
+                series: [
+                    {
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        itemStyle: {
+                            normal: {
+                                color: 'rgb(255, 70, 131)'
+                            }
+                        },
+                        areaStyle: {
+                            normal: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                    offset: 0,
+                                    color: 'rgb(255, 158, 68)'
+                                }, {
+                                    offset: 1,
+                                    color: 'rgb(255, 70, 131)'
+                                }])
+                            }
+                        },
+                        data: data
+                    }
+                ]
+            };
+            chart.setOption(option);
+        },
+        initPieChart() {
+            var chart = this.$refs.pieChart
+            this.initMapSize(chart)
+            var chart = echarts.init(chart);
+            
+            var option = {
+                backgroundColor: '#f1f2f7',
+
+                title: {
+                    text: 'Pie Chart',
+                    left: 'center',
+                    top: 20,
+                    textStyle: {
+                        color: '#000'
+                    }
+                },
+
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} : {c}w ({d}%)"
+                },
+
+                visualMap: {
+                    show: false,
+                    min: 80,
+                    max: 600,
+                    inRange: {
+                        colorLightness: [0, 1]
+                    }
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '50%'],
+                        data: [
+                            { value: 335, name: 'Light' },
+                            { value: 310, name: 'LED' },
+                            { value: 274, name: 'Music' },
+                            { value: 235, name: 'Other' },
+                            { value: 400, name: 'AC' }
+                        ].sort(function(a, b) { return a.value - b.value; }),
+                        roseType: 'radius',
+                        label: {
+                            normal: {
+                                textStyle: {
+                                    color: 'rgb(0, 0, 0)'
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                lineStyle: {
+                                    color: 'rgba(255, 255, 255, 0.3)'
+                                },
+                                smooth: 0.2,
+                                length: 10,
+                                length2: 20
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: '#c23531',
+                                // shadowBlur: 200,
+                                // shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        },
+
+                        animationType: 'scale',
+                        animationEasing: 'elasticOut',
+                        animationDelay: function(idx) {
+                            return Math.random() * 200;
+                        }
+                    }
+                ]
+            };
+            chart.setOption(option);
+        },
+
     },
     created() {
-        console.log("report")
+        console.log('Report')
         
+
+    },
+    mounted(){
+        this.initLineChart()
+        this.initPieChart()
     },
     components: {
-        deviceList
+
     },
     computed: {
-        address() {
-            return this.$route.query.address
+         record() {
+            return this.$store.state.record
         },
+        allRecord() {
+            var records = {}
+            records.dateArr = []
+            records.recordArr = []
+            for (var record of this.$store.state.record) {
+                var date = record.record_date.substr(0,15)+'0'
+                if (records.dateArr.indexOf(date) == -1) {
+                    records.dateArr.push(date)
+                    records.recordArr.push(parseInt(record.watts))
+                } else {
+                    var index = records.dateArr.indexOf(date)
+                    records.recordArr[index] += parseInt(record.watts)
+                }
+            }
+            return records
+        }
     }
 }
 </script>
-
-
-<style>
-.container-out {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #ccc;
-}
-
-.setting-icon {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-}
-
-.container-in {
-    position: relative;
-    width: 800px;
-    height: 550px;
-    padding: 0;
-    margin: 10px auto;
-    /* border: 1px solid #000;
-    border-radius: 10px; */
-}
-
-.build {
-    width: 200px;
-    height: 300px;
-    margin: 0 30px 0 100px;
-}
-
-.build-img {
-    display: inline-block;
-    width: 100px;
-    height: 300px;
-    margin: 30px auto;
-}
-
-.p-title {
-    text-align: center;
-    font-size: 36px;
-}
-
-.float {
-    position: absolute;
-    right: 50px;
-    top: 30px;
-    width: 200px;
-    height: 300px;
-    margin: 0 30px 0 100px;
-}
-
-.float-centent {
-    width: 200px;
-    height: 30px;
-    line-height: 30px;
-    margin: 3px auto;
-    background-color: rgb(88, 183, 255);
-    border: 1px solid #fff;
-    border-radius: 5px;
-    text-align: center;
-    color: #fff;
-    font-size: 14px
-}
-
-.container-float {
-    text-align: center;
-    color: #fff;
-    font-size: 36px;
-}
-
-.float-room {
-    height: 130px;
-    background-color: rgb(88, 183, 255);
-    border: 1px solid #fff;
-}
-
-.float-aisle {
-    height: 80px;
-    background-color: rgb(88, 183, 255);
-    border: 1px solid #fff;
-}
-
-.container-room {
-    text-align: center;
-    color: #fff;
-    font-size: 36px;
-}
-
-.container-room .room {
-    background-color: rgb(88, 183, 255);
-    border: 1px solid #fff;
-}
-
-.parlor {
-    height: 400px;
-}
-
-.livingroom,
-.bathroom {
-    height: 200px
-}
-
-
-.backGroundImga {
-    position: relative;
-    width: 1031px;
-    height: 609px;
-    margin: 0px auto;
-    background-image: url("../../assets/images/hotal.jpg");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    -moz-background-size: 100% 100%;
-}
-
-.backGroundImga>div:hover {
-    border: 2px solid #20A0FF;
-}
-
-.room1 {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    width: 108px;
-    height: 226px;
-}
-
-.room2 {
-    position: absolute;
-    left: 123px;
-    top: 10px;
-    width: 264px;
-    height: 226px;
-}
-
-.room3 {
-    position: absolute;
-    left: 393px;
-    top: 10px;
-    width: 118px;
-    height: 226px;
-}
-
-.room4 {
-    position: absolute;
-    left: 519px;
-    top: 10px;
-    width: 246px;
-    height: 226px;
-}
-
-.room5 {
-    position: absolute;
-    left: 772px;
-    top: 10px;
-    width: 144px;
-    height: 226px;
-}
-
-.room6 {
-    position: absolute;
-    left: 922px;
-    top: 10px;
-    width: 100px;
-    height: 226px;
-}
-
-.room7 {
-    position: absolute;
-    left: 10px;
-    top: 326px;
-    width: 250px;
-    height: 231px;
-}
-
-.room8 {
-    position: absolute;
-    left: 266px;
-    top: 326px;
-    width: 120px;
-    height: 275px;
-}
-
-.room9 {
-    position: absolute;
-    left: 393px;
-    top: 326px;
-    width: 120px;
-    height: 275px;
-}
-
-.room10 {
-    position: absolute;
-    left: 520px;
-    top: 326px;
-    width: 120px;
-    height: 275px;
-}
-
-.room11 {
-    position: absolute;
-    left: 645px;
-    top: 326px;
-    width: 120px;
-    height: 275px;
-}
-
-.room12 {
-    position: absolute;
-    left: 770px;
-    top: 326px;
-    width: 120px;
-    height: 275px;
-}
-
-.room13 {
-    position: absolute;
-    left: 897px;
-    top: 326px;
-    width: 120px;
-    height: 275px;
-}
-</style>

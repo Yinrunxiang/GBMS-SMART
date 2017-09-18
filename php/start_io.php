@@ -78,8 +78,8 @@ $sender_io->on('connection', function($socket){
 // 当$sender_io启动后监听一个http端口，通过这个端口可以给任意uid或者所有uid推送数据
 $sender_io->on('workerStart', function(){
     // 监听一个UDP端口
-    $inner_udp_worker = new Worker('udp://0.0.0.0:6000');
-    // $inner_udp_worker = new Worker('udp://0.0.0.0:8888');
+    // $inner_udp_worker = new Worker('udp://0.0.0.0:6000');
+    $inner_udp_worker = new Worker('udp://0.0.0.0:8888');
     // $inner_udp_worker = new Worker('udp://0.0.0.0:59263');
     // 当UDP客户端发来数据时触发
     $inner_udp_worker->onMessage = function($udp_connection, $data){
@@ -105,15 +105,12 @@ $sender_io->on('workerStart', function(){
                 $channelnum  =  hexdec(substr($msg,50, 2));
                 $mac = "";
                 $remote = substr($msg,52+($channelnum*2), 2);
-                // echo '  remote: '.$remote;
-                if($remote == "02"){
-                    for($i = 0;$i <8 ;$i++){
-                        $start  = 54+($channelnum*2)+($i*2);
-                        $mac  = $mac.'.'.substr($msg,$start, 2);
-                    }
-                }
-                // echo '  mac: '.$mac;
-                // echo $remote.' '.$mac.'     ';
+                // if($remote == "02"){
+                //     for($i = 0;$i <8 ;$i++){
+                //         $start  = 54+($channelnum*2)+($i*2);
+                //         $mac  = $mac.'.'.substr($msg,$start, 2);
+                //     }
+                // }
                 for($i = 1 ; $i <= $channelnum; $i++){
                     $start = ($i *2)+50;
                     if(substr($msg,$start, 2) != "00"){
@@ -123,7 +120,7 @@ $sender_io->on('workerStart', function(){
                     }
                     $channel = toHex($i);
                     // echo  $channel;
-                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."' and  mac = '".$mac."'";
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
                     mysqli_query($con,$sql);
                     // echo $sql;
                 }
@@ -149,14 +146,14 @@ $sender_io->on('workerStart', function(){
                         $mode = "fan";
                         break;
                     case 3:
-                        $mode = "auto";
+                        $mode = "mode_auto";
                         break;
                 }
                 $grade = substr($msg,56, 2);
                 $grade = hexdec($grade);
                 switch ($grade) {
                     case 0:
-                        $grade = "auto";
+                        $grade = "wind_auto";
                         break;
                     case 1:
                         $grade = "high";
@@ -168,15 +165,16 @@ $sender_io->on('workerStart', function(){
                         $grade = "low";
                         break;
                 }
-                $mac = "";
-                $remote = substr($msg,66, 2);
-                if($remote == "02"){
-                    for($i = 0;$i <8 ;$i++){
-                        $start  = 68+($i*2);
-                        $mac  = $mac.'.'.substr($msg,$start, 2);
-                    }
-                }
-                $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  mac = '".$mac."'";
+                // $mac = "";
+                // $remote = substr($msg,66, 2);
+                // if($remote == "02"){
+                //     for($i = 0;$i <8 ;$i++){
+                //         $start  = 68+($i*2);
+                //         $mac  = $mac.'.'.substr($msg,$start, 2);
+                //     }
+                // }
+                
+                $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
                 // echo $sql;
                 // $sql="insert into record (deviceid,devicetype,on_off,record_date) values ('".$deviceid."','".$devicetype."','".$on_off."',now())";
                 // echo $sql;
@@ -209,7 +207,7 @@ $sender_io->on('workerStart', function(){
                     $operatorCodesec = '33';
                     $targetDeviceID = $row["deviceid"]? $row["deviceid"] : '';
                     $additionalContentData = $row["channel"] ? [$row["channel"],'00','00','00']:[];
-                    $macAddress = $row["mac"] ? $row["mac"]: [];
+                    $macAddress = $row["mac"] ? explode('.',$row["mac"]): [];
                     $msg  = $udpProtocol->UdpProtocol($operatorCodefst,$operatorCodesec,$targetDeviceID,$additionalContentData,$macAddress);
                     // echo bin2hex($msg);
                     $dest_address = $row["ip"]? $row["ip"] : '192.168.1.255';
@@ -221,7 +219,7 @@ $sender_io->on('workerStart', function(){
                     $operatorCodesec = 'EC';
                     $targetDeviceID = $row["deviceid"]? $row["deviceid"] : '';
                     $additionalContentData = ['00'];
-                    $macAddress = $row["mac"] ? $row["mac"]: [];
+                    $macAddress = $row["mac"] ? explode('.',$row["mac"]): [];
                     $msg  = $udpProtocol->UdpProtocol($operatorCodefst,$operatorCodesec,$targetDeviceID,$additionalContentData,$macAddress);
                     // echo bin2hex($msg);
                     $dest_address = $row["ip"]? $row["ip"] : '192.168.1.255';
@@ -233,7 +231,7 @@ $sender_io->on('workerStart', function(){
                     $operatorCodesec = '33';
                     $targetDeviceID = $row["deviceid"]? $row["deviceid"] : '';
                     $additionalContentData = [];
-                    $macAddress = $row["mac"] ? $row["mac"]: [];
+                    $macAddress = $row["mac"] ? explode('.',$row["mac"]): [];
                     $msg  = $udpProtocol->UdpProtocol($operatorCodefst,$operatorCodesec,$targetDeviceID,$additionalContentData,$macAddress);
                     // echo bin2hex($msg);
                     $dest_address = $row["ip"]? $row["ip"] : '192.168.1.255';
