@@ -147,13 +147,7 @@ export default {
                         type: 'pie',
                         radius: '55%',
                         center: ['50%', '50%'],
-                        data: [
-                            { value: 335, name: 'Light' },
-                            { value: 310, name: 'LED' },
-                            { value: 274, name: 'Music' },
-                            { value: 235, name: 'Other' },
-                            { value: 400, name: 'AC' }
-                        ].sort(function(a, b) { return a.value - b.value; }),
+                        data: this.allRecord.typeArr.sort(function(a, b) { return a.value - b.value; }),
                         roseType: 'radius',
                         label: {
                             normal: {
@@ -212,6 +206,8 @@ export default {
             var records = {}
             records.dateArr = []
             records.recordArr = []
+            records.typeArr = []
+            var typeArr = {}
             for (var record of this.$store.state.record) {
                 var date = record.record_date.substr(0,15)+'0'
                 if (records.dateArr.indexOf(date) == -1) {
@@ -221,6 +217,19 @@ export default {
                     var index = records.dateArr.indexOf(date)
                     records.recordArr[index] += parseInt(record.watts)
                 }
+
+                typeArr[record.devicetype] ? typeArr[record.devicetype] += parseInt(record.watts) : typeArr[record.devicetype] = parseInt(record.watts)
+                // if (typeArr.indexOf(record.devicetype) == -1){
+                //     typeArr[record.devicetype] = parseInt(record.watts)
+                // }else{
+                //     typeArr[record.devicetype] += parseInt(record.watts)
+                // }
+            }
+            for(var key in typeArr){
+                var typeObj = {}
+                typeObj.name = key
+                typeObj.value = typeArr[key]
+                records.typeArr.push(typeObj)
             }
             return records
         }
