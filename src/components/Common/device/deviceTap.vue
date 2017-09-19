@@ -86,12 +86,16 @@ export default {
         deviceDbclick() {
             if (this.setting) {
                 this.$emit('deviceDbclick', false, true, this.device)
-            } else {
-                this.$store.dispatch('showContral', true)
-                let url = '/home/contral/' + this.device.devicetype
-                this.$store.dispatch('setDevice', this.device)
-                router.push(url)
+            } else{
+                this.$emit('deviceDbclick', false, false, this.device)
             }
+            this.$store.dispatch('setDevice', this.device)
+            // else {
+            //     this.$store.dispatch('showContral', true)
+            //     let url = '/home/contral/' + this.device.devicetype
+            //     this.$store.dispatch('setDevice', this.device)
+            //     router.push(url)
+            // }
 
         },
         switch_change(val) {

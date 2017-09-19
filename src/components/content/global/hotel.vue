@@ -1,83 +1,88 @@
 <template>
     <div class="container-out" style="height:100%">
-        <div ref="roomWatts" class="roomWatts" style=""></div>
-        <div v-show="showHotel" class="hotel-content">
-            <div class="icon-list">
-                <div @click="hotelBack">
-                    <i class="fa fa-reply"></i>
-                </div>
-                <div @click="settingClick">
-                    <i class="el-icon-setting"></i>
-                </div>
-            </div>
-            <div class="container-in">
-                <div class="container-home">
-                    <div class="build">
-                        <a class="build-img">
-                            <img src="../../../assets/images/build.jpg">
-                        </a>
-                        <!-- <p class="p-title">Build</p> -->
+        <div v-show="showAll" style="width:100%;height:100%" >
+            <div ref="roomWatts" class="roomWatts" style=""></div>
+            <div v-show="showHotel" class="hotel-content">
+                <div class="icon-list">
+                    <div @click="hotelBack">
+                        <i class="fa fa-reply"></i>
                     </div>
-                    <div class="floor">
-
-                        <div v-for="num in addressProperty.floor_num">
-                            <el-tooltip placement="right"  transition="">
-                                <div slot="content">
-                                    <p v-for="(val, key, index) in floorTypeNumber">{{key}}:{{val}}</p>
-                                </div>
-                                <div class="floor-centent" @click="floorClick(num)" @mouseover="floorOver(num)">Floor{{addressProperty.floor_num +1-num}}
-                                </div>
-                            </el-tooltip>
-
-                        </div>
-
-                        <!-- <p class="p-title">Floor</p> -->
+                    <div @click="settingClick">
+                        <i class="el-icon-setting"></i>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div v-show="showFloor" class="floor-content">
-            <div class="icon-list">
-                <div @click="floorBack">
-                    <i class="fa fa-reply"></i>
-                </div>
-            </div>
-            <div class="floorImga">
-                <div v-for="num in room_num">
-                    <el-tooltip placement="right" transition="">
-                        <div slot="content">
-                            <p v-for="(val, key, index) in roomTypeNumber">{{key}}:{{val}}</p>
+                <div class="container-in">
+                    <div class="container-home">
+                        <div class="build">
+                            <a class="build-img">
+                                <img src="../../../assets/images/build.jpg">
+                            </a>
+                            <!-- <p class="p-title">Build</p> -->
                         </div>
-                        <div :class="'room'+num" class="room" @click="roomClick('101')" @mouseover="roomOver('101')"></div>
-                    </el-tooltip>
-                </div>
-            </div>
-        </div>
-        <div v-show="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
-            <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
-                <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
-            </el-popover>
-            <div class="icon-list">
-                <div v-popover:addDevice>
-                    <i class="fa fa-plus"></i>
-                </div>
-                <div @click="settingStatusClick">
-                    <i class="el-icon-setting"></i>
-                </div>
-                <div @click="roomBack">
-                    <i class="fa fa-reply"></i>
-                </div>
-            </div>
-            <div class="roomImga">
-                <deviceTap v-for="device in deviceList" :device="device" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
+                        <div class="floor">
 
+                            <div v-for="num in addressProperty.floor_num">
+                                <el-tooltip placement="right" transition="">
+                                    <div slot="content">
+                                        <p v-for="(val, key, index) in floorTypeNumber">{{key}}:{{val}}</p>
+                                    </div>
+                                    <div class="floor-centent" @click="floorClick(num)" @mouseover="floorOver(num)">Floor{{addressProperty.floor_num +1-num}}
+                                    </div>
+                                </el-tooltip>
+
+                            </div>
+
+                            <!-- <p class="p-title">Floor</p> -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- <div class="device-list">
-                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                </div> -->
+            <div v-show="showFloor" class="floor-content">
+                <div class="icon-list">
+                    <div @click="floorBack">
+                        <i class="fa fa-reply"></i>
+                    </div>
+                </div>
+                <div class="floorImga">
+                    <div v-for="num in room_num">
+                        <el-tooltip placement="right" transition="">
+                            <div slot="content">
+                                <p v-for="(val, key, index) in roomTypeNumber">{{key}}:{{val}}</p>
+                            </div>
+                            <div :class="'room'+num" class="room" @click="roomClick('101')" @mouseover="roomOver('101')"></div>
+                        </el-tooltip>
+                    </div>
+                </div>
+            </div>
+            <div v-show="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
+                <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
+                    <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
+                </el-popover>
+                <div class="icon-list">
+                    <div v-popover:addDevice>
+                        <i class="fa fa-plus"></i>
+                    </div>
+                    <div @click="settingStatusClick">
+                        <i class="el-icon-setting"></i>
+                    </div>
+                    <div @click="roomBack">
+                        <i class="fa fa-reply"></i>
+                    </div>
+                </div>
+                <div class="roomImga">
+                    <deviceTap v-for="device in deviceList" :device="device" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
+
+                </div>
+                <!-- <div class="device-list">
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                    </div> -->
+            </div>
         </div>
         <div v-show="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
+        </div>
+        <div v-if="showDevicePage">
+            <devicePage :device="thisdevice" @changeContral="changeContral"></devicePage>
         </div>
         <div v-show="showHotelUpdate">
             <addressUpdate :add="addressAdd" :address="address" @goback="addressBack"></addressUpdate>
@@ -92,6 +97,7 @@
 <script>
 import deviceList from '../../Common/device/deviceList'
 import deviceTap from '../../Common/device/deviceTap'
+import devicePage from '../../Common/device/devicePage'
 import deviceUpdate from '../plan/update'
 import addressUpdate from '../setting/address/add'
 // import $ from 'jquery'
@@ -103,6 +109,7 @@ export default {
     data() {
         return {
             showHotel: true,
+            showAll:true,
             showFloor: false,
             showRoom: false,
             hotelName: "",
@@ -112,6 +119,7 @@ export default {
             roomList: [],
             deviceList: [],
             showDeviceUpdate: false,
+            showDevicePage: false,
             notHotel: false,
             thisdevice: {},
             typeList: ['light', 'ac', 'led', 'music'],
@@ -130,6 +138,12 @@ export default {
         changeUpdate(data) {
             this.showDeviceUpdate = data
             this.showRoom = !data
+            this.showAll = !data
+        },
+        changeContral(data) {
+            this.showDevicePage = data
+            this.showRoom = !data
+            this.showAll = !data
         },
         settingStatusClick() {
             this.setting = !this.setting
@@ -159,8 +173,10 @@ export default {
 
         },
         deviceDbclick(showRoom, showDeviceUpdate, device) {
+            this.showAll = showRoom
             this.showRoom = showRoom
             this.showDeviceUpdate = showDeviceUpdate
+            this.showDevicePage = !showDeviceUpdate
             this.thisdevice = device
         },
         settingClick() {
@@ -304,7 +320,8 @@ export default {
         deviceList,
         deviceTap,
         deviceUpdate,
-        addressUpdate
+        addressUpdate,
+        devicePage
     },
     computed: {
         address() {

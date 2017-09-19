@@ -183,19 +183,22 @@ export default {
             });
         },
         init() {
-            if (this.dataReady) {
-                this.initMapSize()
-                this.createmap(this)
-                _g.closeGlobalLoading()
-            }
+            this.initMapSize()
+            this.createmap(this)
+            _g.closeGlobalLoading()
+
         }
     },
     mounted() {
         console.log('global')
         var vm = this
-        window.setInterval(function() {
-            vm.init()
-        }, 3000);
+        var time = setInterval(function() {
+            if (vm.dataReady) {
+                vm.init()
+                clearInterval(time)
+            }
+        }, 100);
+
 
 
     },
@@ -219,9 +222,9 @@ export default {
         countryArr() {
             return this.$store.state.countryArr
         },
-		globalLoading() {
-			return store.state.globalLoading
-		}
+        globalLoading() {
+            return store.state.globalLoading
+        }
     },
     // watch: {
     //     countryArr: {
