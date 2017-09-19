@@ -74,6 +74,7 @@ export default {
     },
     created() {
         console.log('contral')
+        _g.closeGlobalLoading()
     },
     mounted() {
 

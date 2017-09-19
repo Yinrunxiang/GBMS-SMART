@@ -188,7 +188,7 @@ export default {
     },
     created() {
         console.log('Report')
-        
+        _g.closeGlobalLoading()
 
     },
     mounted(){

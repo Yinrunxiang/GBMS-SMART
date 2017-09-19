@@ -30,7 +30,8 @@
     "vue": "^2.0.7",
     "vue-color-picker": "^0.6.1",
     "vuex": "^2.0.0-rc.6",
-    "katavorio": "^0.19.2"
+    "katavorio": "^0.19.2",
+    "pace-progress": "^1.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="panel m-w-1100" v-loading="globalLoading">
         <div ref="worldmap" id="world-map"></div>
         <!-- <div ref="chart" id="chart"></div> -->
     </div>
@@ -15,6 +15,16 @@
 
 
 <script>
+// import pace from 'pace-progress'
+// import 'pace-progress/themes/blue/pace-theme-center-atom.css'
+
+// window.paceOptions = {
+//   ajax: {
+//     trackMethods: ['GET', 'POST']
+//   },
+//   eventLag: false,
+//   elements: false
+// }
 import http from '../../assets/js/http'
 import echarts from 'echarts'
 // import 'echarts/lib/chart/map';
@@ -29,6 +39,7 @@ export default {
             // devices: this.$store.state.devices,
         }
     },
+    props: ['dataReady'],
     methods: {
         initMapSize() {
             var width = document.body.clientWidth - 180
@@ -36,117 +47,8 @@ export default {
             var map = this.$refs.worldmap
             map.style.width = width + 'px';
             map.style.height = height + 'px';
-            // console.log(map.style.width + map.style.height)
 
         },
-        // createChart(record) {
-        //     var myChart = echarts.init(this.$refs.chart);
-        //     // var base = +new Date(1968, 9, 3);
-        //     // var oneDay = 24 * 3600 * 1000;
-        //     var date = record.dateArr
-        //     var data = record.recordArr
-        //     // var date = [];
-
-        //     // // var data = [Math.random() * 300];
-
-        //     // // for (var i = 1; i < 20000; i++) {
-        //     // //     var now = new Date(base += oneDay);
-        //     // //     date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
-        //     // //     data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
-        //     // // }
-
-        //     var option = {
-        //         tooltip: {
-        //             trigger: 'axis',
-        //             position: function(pt) {
-        //                 return [pt[0], '10%'];
-        //             }
-        //         },
-        //         title: {
-        //             left: 'center',
-        //             text: 'Power Mete',
-        //         },
-        //         toolbox: {
-        //             feature: {
-        //                 dataZoom: {
-        //                     yAxisIndex: 'none'
-        //                 },
-        //                 restore: {},
-        //                 saveAsImage: {}
-        //             }
-        //         },
-        //         xAxis: {
-        //             type: 'category',
-        //             boundaryGap: false,
-        //             data: date
-        //         },
-        //         yAxis: {
-        //             type: 'value',
-        //             boundaryGap: [0, '100%']
-        //         },
-        //         dataZoom: [{
-        //             type: 'inside',
-        //             start: 0,
-        //             end: 10
-        //         }, {
-        //             start: 0,
-        //             end: 10,
-        //             handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-        //             handleSize: '80%',
-        //             handleStyle: {
-        //                 color: '#fff',
-        //                 shadowBlur: 3,
-        //                 shadowColor: 'rgba(0, 0, 0, 0.6)',
-        //                 shadowOffsetX: 2,
-        //                 shadowOffsetY: 2
-        //             }
-        //         }],
-        //         series: [
-        //             {
-        //                 name: '模拟数据',
-        //                 type: 'line',
-        //                 smooth: true,
-        //                 symbol: 'none',
-        //                 sampling: 'average',
-        //                 itemStyle: {
-        //                     normal: {
-        //                         color: 'rgb(255, 70, 131)'
-        //                     }
-        //                 },
-        //                 areaStyle: {
-        //                     normal: {
-        //                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-        //                             offset: 0,
-        //                             color: 'rgb(255, 158, 68)'
-        //                         }, {
-        //                             offset: 1,
-        //                             color: 'rgb(255, 70, 131)'
-        //                         }])
-        //                     }
-        //                 },
-        //                 data: data
-        //             }
-        //         ]
-        //     };
-        //     myChart.setOption(option);
-        // },
-        // countryChange(country) {
-        //     var records = {}
-        //     records.dateArr = []
-        //     records.recordArr = []
-        //     for (var record of this.$store.state.record) {
-        //         if (record.country == country) {
-        //             if (records.dateArr.indexOf(record.record_date) == -1) {
-        //                 records.dateArr.push(record.record_date)
-        //                 records.recordArr.push(record.watts)
-        //             } else {
-        //                 var index = records.dateArr.indexOf(record.record_date)
-        //                 records.recordArr[index] += record.watts
-        //             }
-        //         }
-        //     }
-        //     this.createChart(records)
-        // },
         addressClick(addressName) {
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {
@@ -156,20 +58,11 @@ export default {
                 }
 
             }
-            // console.log(this.address)
             let url = '/home/global/hotel'
             router.push({ path: url, query: { address: this.address } })
         },
         //悬浮提示数据
         itCounteyTooltip(params) {
-            // var itCounteyTooltip = 'Country : ' + params.name + '<br/>'
-            // for(var item of this.countryList){
-            //     if(item.name == params.name){
-            //         itCounteyTooltip += 'Device : ' + item.device + ' Type : ' + item.devicetype + '<br/>'
-            //     }
-            // }
-            // return itCounteyTooltip
-            // console.log(this.countryArr)
             var itCounteyTooltip = 'Hotel : ' + params.name + '<br/>'
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {
@@ -191,20 +84,6 @@ export default {
             }
             return itCounteyTooltip
         },
-        // makeMapData() {
-        //     var mapData = [];
-        //     for (var i = 0; i < this.rawData.length; i++) {
-        //         var geoCoord = this.geoCoordMap[this.rawData[i][0]];
-        //         if (geoCoord) { 
-        //             mapData.push({
-        //                 name: this.rawData[i][0],
-        //                 value: geoCoord.concat(this.rawData[i].slice(1))
-        //             });
-        //         }
-        //     }
-        //     console.log(mapData)
-        //     return mapData;
-        // },
         initData() {
             var mapData = []
             for (var address of this.allAddress) {
@@ -246,19 +125,6 @@ export default {
                     },
                     z: 202
                 },
-                // brush: {
-                //     geoIndex: 0,
-                //     brushLink: 'all',
-                //     inBrush: {
-                //         opacity: 1,
-                //         symbolSize: 14
-                //     },
-                //     outOfBrush: {
-                //         color: '#000',
-                //         opacity: 0.2
-                //     },
-                //     z: 10
-                // },
                 geo: {
                     map: 'world',
                     silent: true,
@@ -279,15 +145,6 @@ export default {
                     bottom: '10%',
                     right: '6%',
                     roam: true
-                    // itemStyle: {
-                    //     normal: {
-                    //         areaColor: '#323c48',
-                    //         borderColor: '#111'
-                    //     },
-                    //     emphasis: {
-                    //         areaColor: '#2a333d'
-                    //     }
-                    // }
                 },
 
 
@@ -306,14 +163,8 @@ export default {
                                 position: 'right',
                                 show: false
                             },
-                            // emphasis: {
-                            //     show: true
-                            // }
                         },
                         symbolSize: 10,
-                        // symbolSize: function (data) {
-                        //     return Math.max(5, data[2] / 5);
-                        // },
                         itemStyle: {
                             normal: {
                                 borderColor: '#fff',
@@ -331,11 +182,22 @@ export default {
                 e.addressClick(params.data.name)
             });
         },
+        init() {
+            if (this.dataReady) {
+                this.initMapSize()
+                this.createmap(this)
+                _g.closeGlobalLoading()
+            }
+        }
     },
     mounted() {
         console.log('global')
-        this.initMapSize()
-        this.createmap(this)
+        var vm = this
+        window.setInterval(function() {
+            vm.init()
+        }, 3000);
+
+
     },
     components: {
 
@@ -357,9 +219,23 @@ export default {
         countryArr() {
             return this.$store.state.countryArr
         },
-       
-
+		globalLoading() {
+			return store.state.globalLoading
+		}
     },
+    // watch: {
+    //     countryArr: {
+    //         handler: function(val, oldVal) {
+    //             if (this.countryArr.length > 0) {
+    //                 this.initMapSize()
+    //                 this.createmap(this)
+    //                 _g.closeGlobalLoading()
+    //             }
+    //         },
+    //         deep: true
+    //     }
+    // },
+
     mixins: [http]
 }
 </script>

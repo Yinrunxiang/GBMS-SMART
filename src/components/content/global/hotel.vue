@@ -279,7 +279,7 @@ export default {
     },
     created() {
         console.log("report")
-
+        _g.closeGlobalLoading()
 
     },
     mounted() {

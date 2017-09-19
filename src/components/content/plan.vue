@@ -237,6 +237,7 @@ export default {
     },
     created() {
         console.log('Plan')
+        _g.closeGlobalLoading()
         this.init()
     },
     components: {

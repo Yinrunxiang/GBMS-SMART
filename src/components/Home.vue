@@ -10,16 +10,16 @@
 				</template>
 			</el-col>
 			<!-- <el-col :span="4" :offset="16" class="pos-rel">
-																									<el-dropdown @command="handleMenu" class="user-menu">
-																							      <span class="el-dropdown-link c-gra" style="cursor: default">
-																							        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
-																							      </span>
-																							      <el-dropdown-menu slot="dropdown">
-																							        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
-																							        <el-dropdown-item command="logout">退出</el-dropdown-item>
-																							      </el-dropdown-menu>
-																							    </el-dropdown>
-																								</el-col> -->
+																										<el-dropdown @command="handleMenu" class="user-menu">
+																								      <span class="el-dropdown-link c-gra" style="cursor: default">
+																								        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
+																								      </span>
+																								      <el-dropdown-menu slot="dropdown">
+																								        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
+																								        <el-dropdown-item command="logout">退出</el-dropdown-item>
+																								      </el-dropdown-menu>
+																								    </el-dropdown>
+																									</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -30,7 +30,7 @@
 				<div class="grid-content bg-purple-light">
 					<el-col :span="24">
 						<transition name="fade" mode="out-in" appear>
-							<router-view></router-view>
+							<router-view :dataReady="dataReady"  ></router-view>
 						</transition>
 					</el-col>
 				</div>
@@ -155,6 +155,7 @@ export default {
 			title: '',
 			logo_type: null,
 			records: [],
+			dataReady: false,
 		}
 	},
 	methods: {
@@ -265,10 +266,10 @@ export default {
 								}
 								break
 						}
-						if(record.watts){
+						if (record.watts) {
 							newRecords.push(record)
 						}
-						
+
 					}
 
 				}
@@ -377,7 +378,7 @@ export default {
 			}
 			console.log(countryArr)
 			this.$store.dispatch('setCountryArr', countryArr)
-
+			this.dataReady =true
 			// return countryArr
 		},
 	},
@@ -393,7 +394,7 @@ export default {
 		this.apiGet("device/index.php", data).then(res => {
 			this.$store.dispatch('setDevices', res)
 			var devices = []
-			var maxid  = res[0].maxid
+			var maxid = res[0].maxid
 			this.$store.dispatch('setMaxid', maxid)
 			for (var device of res) {
 				if (device.status == 'enabled') {
@@ -424,6 +425,9 @@ export default {
 			}
 			return devices
 		},
+		globalLoading() {
+			return store.state.globalLoading
+		}
 	},
 	mixins: [http]
 }
