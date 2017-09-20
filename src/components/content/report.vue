@@ -24,8 +24,8 @@ export default {
     },
     methods: {
         initMapSize(chart) {
-            var width = (document.body.clientWidth - 180)*0.5
-            var height = (document.body.clientHeight - 60)*0.8
+            var width = (document.body.clientWidth - 180) * 0.5
+            var height = (document.body.clientHeight - 60) * 0.8
             chart.style.width = width + 'px';
             chart.style.height = height + 'px';
         },
@@ -52,7 +52,8 @@ export default {
                     trigger: 'axis',
                     position: function(pt) {
                         return [pt[0], '10%'];
-                    }
+                    },
+                    formatter: "{c}w"
                 },
                 title: {
                     left: 'center',
@@ -70,7 +71,7 @@ export default {
                 dataZoom: [{
                     type: 'inside',
                     start: 0,
-                    end: 10
+                    end: 100
                 }, {
                     start: 0,
                     end: 10,
@@ -116,7 +117,7 @@ export default {
             var chart = this.$refs.pieChart
             this.initMapSize(chart)
             var chart = echarts.init(chart);
-            
+
             var option = {
                 backgroundColor: '#f1f2f7',
 
@@ -136,8 +137,8 @@ export default {
 
                 visualMap: {
                     show: false,
-                    min: 80,
-                    max: 600,
+                    min: this.allRecord.wattSort[0]*0.8,
+                    max: this.allRecord.wattSort[this.allRecord.wattSort.length - 1]*1.5,
                     inRange: {
                         colorLightness: [0, 1]
                     }
@@ -148,6 +149,13 @@ export default {
                         radius: '55%',
                         center: ['50%', '50%'],
                         data: this.allRecord.typeArr.sort(function(a, b) { return a.value - b.value; }),
+                        // data: [
+                        //     { value: 335, name: 'Light' },
+                        //     { value: 310, name: 'LED' },
+                        //     { value: 274, name: 'Music' },
+                        //     { value: 235, name: 'Other' },
+                        //     { value: 400, name: 'AC' }
+                        // ].sort(function(a, b) { return a.value - b.value; }),
                         roseType: 'radius',
                         label: {
                             normal: {
@@ -191,15 +199,16 @@ export default {
         _g.closeGlobalLoading()
 
     },
-    mounted(){
+    mounted() {
         this.initLineChart()
         this.initPieChart()
+        console.log(this.allRecord)
     },
     components: {
 
     },
     computed: {
-         record() {
+        record() {
             return this.$store.state.record
         },
         allRecord() {
@@ -209,7 +218,7 @@ export default {
             records.typeArr = []
             var typeArr = {}
             for (var record of this.$store.state.record) {
-                var date = record.record_date.substr(0,15)+'0'
+                var date = record.record_date.substr(0, 15) + '0'
                 if (records.dateArr.indexOf(date) == -1) {
                     records.dateArr.push(date)
                     records.recordArr.push(parseInt(record.watts))
@@ -225,12 +234,20 @@ export default {
                 //     typeArr[record.devicetype] += parseInt(record.watts)
                 // }
             }
-            for(var key in typeArr){
+            var wattSort = []
+            for (var key in typeArr) {
+
                 var typeObj = {}
                 typeObj.name = key
                 typeObj.value = typeArr[key]
+                wattSort.push(typeArr[key])
                 records.typeArr.push(typeObj)
             }
+            function sortNumber(a, b) {
+                return a - b
+            }
+            wattSort.sort(sortNumber)
+            records.wattSort = wattSort
             return records
         }
     }

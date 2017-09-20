@@ -28,6 +28,7 @@ import lightApi from "../../content/devices/light/light.js"
 import acApi from "../../content/devices/ac/ac.js"
 import ledApi from "../../content/devices/led/led.js"
 import musicApi from "../../content/devices/music/music.js"
+import cutainApi from "../../content/devices/cutain/cutain.js"
 export default {
     data() {
         return {
@@ -55,7 +56,7 @@ export default {
                         on_off: false,
                         brightness: 0,
                     }
-                    lightApi.switch_change(val, this.device,deviceProperty)
+                    lightApi.switch_change(val, this.device, deviceProperty)
                     break
                 case "ac":
                     this.device.on_ff = false
@@ -71,10 +72,17 @@ export default {
                         green: "cc",
                         blue: "da",
                     }
-                    ledApi.switch_change(val, this.device,deviceProperty)
+                    ledApi.switch_change(val, this.device, deviceProperty)
                     break
                 case "music":
                     // musicApi.switch_change(this.device)
+                    break
+                case "cutain":
+                    var deviceProperty = {
+                        on_off: false,
+                        brightness: 0,
+                    }
+                    cutainApi.switch_change(val, this.device, deviceProperty)
                     break
             }
         },
@@ -100,6 +108,10 @@ export default {
                 case "music":
                     // this.device.on_off = false
                     // musicApi.readOpen(this.device)
+                    break
+                case "cutain":
+                    this.device.on_ff = false
+                    cutainApi.readOpen(this.device)
                     break
             }
 

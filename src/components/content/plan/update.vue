@@ -78,11 +78,18 @@ export default {
             this.$emit("changeUpdate", false)
         },
         commit(form) {
-            console.log(this.form)
+            this.form.subnetid = _g.toHex(this.form.subnetid)
+            this.form.deviceid = _g.toHex(this.form.deviceid)
+            this.form.channel = _g.toHex(this.form.channel)
+            this.form.channel_spare = _g.toHex(this.form.channel_spare ? this.form.channel_spare : 0)
             this.isLoading = !this.isLoading
             const data = {
                 params: this.form
             }
+            // data.params.subnetid = _g.toHex(data.params.subnetid)
+            // data.params.deviceid = _g.toHex(data.params.deviceid)
+            // data.params.channel = _g.toHex(data.params.channel)
+            // data.params.channel_spare = _g.toHex(data.params.channel_spare)
             if (this.form.id) {
                 this.apiGet('device/index.php?action=update', data).then((res) => {
                     // _g.clearVuex('setRules')
@@ -109,8 +116,8 @@ export default {
                     // _g.clearVuex('setRules')
                     if (res[0]) {
                         var devices = this.$store.state.devices
-                        console.log("maxid:"+this.$store.state.maxid)
-                        this.form.id = parseInt(this.$store.state.maxid)+1
+                        console.log("maxid:" + this.$store.state.maxid)
+                        this.form.id = parseInt(this.$store.state.maxid) + 1
                         devices.push(this.form)
                         this.$store.dispatch('setDevices', devices)
                         _g.toastMsg('success', res[1])
@@ -139,8 +146,13 @@ export default {
     props: ['device', 'notHotel'],
     created() {
         console.log("plan update")
+        // this.form.subnetid = parseInt('0x' + this.form.subnetid)
+        // this.form.deviceid = parseInt('0x' + this.form.deviceid)
+        // this.form.channel = parseInt('0x' + this.form.channel)
+        // this.form.channel_spare = parseInt('0x' + this.form.channel_spare)
     },
     mounted() {
+
     },
     components: {
     },
@@ -148,7 +160,16 @@ export default {
     computed: {
         form() {
             // var device = this.$store.state.device
-            var device = this.device
+            console.log(this.device)
+
+            
+            var device = Object.assign({},this.device)
+
+
+            device.subnetid = parseInt('0x' + device.subnetid)
+            device.deviceid = parseInt('0x' + device.deviceid)
+            device.channel = parseInt('0x' + device.channel)
+            device.channel_spare = parseInt('0x' + device.channel_spare)
             return device
         },
         maxid() {

@@ -12,40 +12,12 @@ class UdpSocket
         // echo $dest_address.' ';
         // echo $dest_port;
         //发送广播
+        // $dest_address = gethostbyname("www.smartbuscloud.com");
         while(socket_sendto($socket, $msg, strlen($msg), 0, $dest_address, $dest_port))
         {
             return $hear = '发送成功';
         }
         return $hear = '发送失败';
-        
-        //接收广播
-
-        // $socket = stream_socket_client("udp://{$dest_address}:{$dest_port}", $errno, $errstr);  
-        // // if( !$socket ){  
-        // //     die("ERROR: {$errno} - {$errstr}\n");  
-        // // }  
-        // fwrite($socket, $msg."\n"); 
-
-
-        // $hear = '';
-        // while($hear = socket_read($socket, 1024, PHP_BINARY_READ)){
-        //         $hear = bin2hex($hear);
-        // }
-        // return $hear;
-        // $hear = "";
-        // while ( true ) {
-        //     $from = "";
-        //     $port = 0;
-        //     socket_recvfrom( $socket, $buf,1024, 0, $from, $port );
-        //     $hear = $hear.$buf;
-        //     return $hear;
-        //     usleep( 1000 );
-        // }
-        
-        // $hear = "";
-        // $hear = socket_read($socket, 1024, PHP_BINARY_READ);  // 采用2进制方式接收数据
-        // $hear = bin2hex($hear);
-        // return $hear;
-        
+             
     }
 }

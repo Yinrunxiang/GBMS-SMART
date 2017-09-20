@@ -5,7 +5,7 @@ const commonFn = {
   },
   // 十进制转十六进制
   toHex(num) {
-    let num16 = num.toString(16);
+    let num16 = parseInt(num).toString(16);
     num = num < 16 ? "0" + num16 : num16;
     return num;
   },
