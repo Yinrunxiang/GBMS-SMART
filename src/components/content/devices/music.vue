@@ -10,8 +10,8 @@
         <el-col :span="16" class="m-b-20 p-l-20 p-r-20 ovf-hd" style="margin-top:80px">
             <el-row>
                 <el-col :span="8" style="line-height:36px;">
-                    <span>{{device.music_name}}</span>
-                    <span>{{device.music_autor}}</span>
+                    <span>{{deviceProperty.music_name}}</span>
+                    <span>{{deviceProperty.music_autor}}</span>
                 </el-col>
                 <el-col :span="6" :offset="2">
                     <el-col :span="3">
@@ -22,7 +22,7 @@
                     <el-col :span="18" :offset="3">
                         <template>
                             <div>
-                                <el-slider v-model="device.vol" :min='0' :max='79' :step="1" @change="vol_change">
+                                <el-slider v-model="deviceProperty.vol" :min='0' :max='79' :step="1" @change="vol_change">
                                 </el-slider>
                             </div>
                         </template>
@@ -33,14 +33,14 @@
                 <el-col :span="16">
                     <template>
                         <div>
-                            <el-slider v-model="device.time_now" :min='0' :max='30' :step="1" @change="time_change">
+                            <el-slider v-model="deviceProperty.time_now" :min='0' :max='30' :step="1" @change="time_change">
                             </el-slider>
                         </div>
                     </template>
                 </el-col>
                 <el-col :span="5" :offset="1">
-                    <span>{{device.time_now}}</span>
-                    <span>{{device.time_over}}</span>
+                    <span>{{deviceProperty.time_now}}</span>
+                    <span>{{deviceProperty.time_over}}</span>
                 </el-col>
             </el-row>
             <el-row class="m-t-20">
@@ -48,10 +48,10 @@
                     <el-button @click="pre()" class="music-btn">
                         <i class="fa fa-step-backward"></i>
                     </el-button>
-                    <el-button @click="play()" class="music-btn" v-show="device.on_off == false">
+                    <el-button @click="play()" class="music-btn" v-show="deviceProperty.on_off == false">
                         <i class="fa fa-play"></i>
                     </el-button>
-                    <el-button @click="pause()" class="music-btn" v-show="device.on_off">
+                    <el-button @click="pause()" class="music-btn" v-show="deviceProperty.on_off">
                         <i class="fa fa-pause"></i>
                     </el-button>
                     <el-button @click="next()" class="music-btn">
@@ -73,10 +73,10 @@
             <el-row class="m-t-20">
                 <el-col :span="24">
                     <ul class="songlist">
-                        <li v-for="item in device.songlist">
+                        <li v-for="item in deviceProperty.songlist">
                             <ul>
-                                <li>album:{{albumlist[item.albumno]}}</li>
-                                <li v-for = "song in item.songlist">{{song}}</li>
+                                <li>album:{{deviceProperty.albumlist[item.albumno]}}</li>
+                                <li v-for="song in item.songlist">{{song}}</li>
                             </ul>
                         </li>
                     </ul>
@@ -138,69 +138,70 @@ import musicApi from "./music/music"
 export default {
     data() {
         return {
-            // vol: 0,
-            // on_off: false,
-            // music_name: "any",
-            // music_autor: "any",
-            // time_now: 0,
-            // time_over: 0,
-            // albumno: 0,
-            // albumlist: [],
-            // songno: 0,
-            // songlist: [],
-            // device: this.$store.state.device,
+            deviceProperty: {
+                vol: 0,
+                on_off: false,
+                music_name: "any",
+                music_autor: "any",
+                time_now: 0,
+                time_over: 0,
+                albumno: 0,
+                albumlist: [],
+                songno: 0,
+                songlist: [],
+            }
         }
     },
     methods: {
         time_change(val) {
-            musicApi.time_change(val,this.device)
+            musicApi.time_change(val, this.device, this.deviceProperty)
         },
         vol_change(val) {
-            musicApi.vol_change(val,this.device)
+            musicApi.vol_change(val, this.device, this.deviceProperty)
         },
         pre() {
-            musicApi.pre(this.device)
+            musicApi.pre(this.device, this.deviceProperty)
         },
         next() {
-            musicApi.next(this.device)
+            musicApi.next(this.device, this.deviceProperty)
         },
         play() {
-            musicApi.play(this.device)
+            musicApi.play(this.device, this.deviceProperty)
         },
         pause() {
-            musicApi.pause(this.device)
+            musicApi.pause(this.device, this.deviceProperty)
         },
         random() {
-            musicApi.random(this.device)
+            musicApi.random(this.device, this.deviceProperty)
         },
         single() {
-            musicApi.single(this.device)
+            musicApi.single(this.device, this.deviceProperty)
         },
         allmusic() {
-            musicApi.allmusic(this.device)
+            musicApi.allmusic(this.device, this.deviceProperty)
         },
     },
     mounted() {
         console.log('music')
-        musicApi.readStatus(this.device)
+        musicApi.readStatus(this.device, this.deviceProperty)
     },
 
     components: {
 
     },
-    computed:{
-        device(){
+    computed: {
+        device() {
             var device = this.$store.state.device
-            device.vol = 0,
-            device.on_off = false
-            device.music_name = "any"
-            device.music_autor = "any"
-            device.time_now = 0
-            device.time_over = 0
-            device.albumno = 0
-            device.albumlist = []
-            device.songno = 0
-            device.songlist = []
+            // device.vol = 0,
+            // device.on_off = false
+            // device.music_name = "any"
+            // device.music_autor = "any"
+            // device.time_now = 0
+            // device.time_over = 0
+            // device.albumno = 0
+            // device.albumlist = []
+            // device.songno = 0
+            // device.songlist = []
             return device
         }
     }

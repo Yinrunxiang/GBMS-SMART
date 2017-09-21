@@ -1,4 +1,13 @@
 import api from "../../../../assets/js/api";
+
+function strToarr(str) {
+  var len = str.length / 4;
+  var arr = [];
+  for (var i = 0; i < len; i++) {
+    arr.push(str.substr(i * 4, 4));
+  }
+  return arr;
+}
 const musicApi = {
   time_change(val,device) {
     // device.autotmp = val;
@@ -19,8 +28,8 @@ const musicApi = {
     //     // _g.closeGlobalLoading()
     // })
   },
-  vol_change(val,device) {
-    device.cooltmp = val;
+  vol_change(val,device,deviceProperty) {
+    deviceProperty.vol = val;
     device.loading = true;
     val = 79 - val;
     // if(val < 10)
@@ -163,16 +172,9 @@ const musicApi = {
       // _g.closeGlobalLoading()
     });
   },
-  strToarr(str) {
-    var len = str.length / 2;
-    var arr = [];
-    for (var i = 0; i < len; i++) {
-      arr.push(str.substr(i * 2, 2));
-    }
-    return arr;
-  },
 
-  readStatus(device) {
+
+  readStatus(device,deviceProperty) {
     var source = "01";
     var albumnum = 0;
     var albumNote = 0;
@@ -180,11 +182,11 @@ const musicApi = {
     _g.sendUdp(
       "02",
       "E0",
-      device.device.deviceid,
+      device.deviceid,
       additionalContentData,
-      device.device.mac,
-      device.device.ip,
-      device.device.port
+      device.mac,
+      device.ip,
+      device.port
     );
     window.socketio.removeAllListeners("new_msg");
     window.socketio.on("new_msg", function(msg) {
@@ -204,17 +206,17 @@ const musicApi = {
         if (operationcode.toLowerCase() == "02e1") {
           var source = _g.getadditional(msg, 0);
           var albumpack = msg.substring(52, stop);
-          var additionalContentData = device.strToarr(albumpack);
+          var additionalContentData = strToarr(albumpack);
           additionalContentData.unshift(source);
           // console.log(additionalContentData)
           _g.sendUdp(
             "02",
             "E2",
-            device.device.deviceid,
+            device.deviceid,
             additionalContentData,
-            device.device.mac,
-            device.device.ip,
-            device.device.port
+            device.mac,
+            device.ip,
+            device.port
           );
           console.log("02E1");
         }
@@ -224,29 +226,29 @@ const musicApi = {
           // device.albumno = '06'
           albumnum = _g.getadditional(msg, 4);
           var albumlist = msg.substring(64);
-          device.albumlist = [];
-          var albumlist = device.strToarr(albumlist);
+          deviceProperty.albumlist = [];
+          var albumlist = strToarr(albumlist);
           for (var item of albumlist) {
             item = parseInt("0x" + item);
-            device.albumlist.push(String.fromCharCode(item));
+            deviceProperty.albumlist.push(String.fromCharCode(item));
           }
-          device.albumlist = device.albumlist.join("");
-          device.albumlist = device.albumlist.match(/[a-zA-Z0-9.]+/g);
-          device.albumlist = device.albumlist ? device.albumlist.join("") : "";
-          device.albumlist = device.albumlist.split(".PLS");
-          console.log(e.albumlist);
-          device.songlist = [];
+          deviceProperty.albumlist = deviceProperty.albumlist.join("");
+          deviceProperty.albumlist = deviceProperty.albumlist.match(/[a-zA-Z0-9.]+/g);
+          deviceProperty.albumlist = deviceProperty.albumlist ? deviceProperty.albumlist.join("") : "";
+          deviceProperty.albumlist = deviceProperty.albumlist.split(".PLS");
+          console.log(deviceProperty.albumlist);
+          deviceProperty.songlist = [];
           albumnum = parseInt("0x" + albumnum);
           for (var i = 1; i <= albumnum; i++) {
             var additionalContentData = (source + "," + _g.toHex(i)).split(",");
             _g.sendUdp(
               "02",
               "E4",
-              device.device.deviceid,
+              device.deviceid,
               additionalContentData,
-              device.device.mac,
-              device.device.ip,
-              device.device.port
+              device.mac,
+              device.ip,
+              device.port
             );
           }
           // device.albumlist = []
@@ -256,14 +258,14 @@ const musicApi = {
           // }
           // console.log(albumlist)
           // var additionalContentData = (source + ',' + device.albumno).split(",")
-          //     _g.sendUdp(e, "02", "E4", device.device.deviceid, additionalContentData, device.device.mac, device.device.ip, device.device.port)
+          //     _g.sendUdp(e, "02", "E4", device.deviceid, additionalContentData, device.mac, device.ip, device.port)
           // console.log("02E3")
         }
         if (operationcode.toLowerCase() == "02e5") {
           var source = _g.getadditional(msg, 0);
           var albumno = _g.getadditional(msg, 1);
           var songpack = msg.substring(54, 56);
-          var additionalContentData = device.strToarr(songpack);
+          var additionalContentData = strToarr(songpack);
           additionalContentData.unshift(albumno);
           additionalContentData.unshift(source);
           console.log(additionalContentData);
@@ -271,11 +273,11 @@ const musicApi = {
           _g.sendUdp(
             "02",
             "E6",
-            device.device.deviceid,
+            device.deviceid,
             additionalContentData,
-            device.device.mac,
-            device.device.ip,
-            device.device.port
+            device.mac,
+            device.ip,
+            device.port
           );
           // console.log("02E5")
         }
@@ -287,10 +289,10 @@ const musicApi = {
           var songObj = {};
           songObj.albumno = parseInt("0x" + albumno);
           var songlist = [];
-          var currentSonglist = device.strToarr(currentSonglist);
+          var currentSonglist = strToarr(currentSonglist);
           for (var item of currentSonglist) {
-            item = parseInt("0x" + item);
-            songlist.push(String.fromCharCode(item));
+            // item = parseInt("0x" + item);
+            songlist.push(String.fromCharCode("0x" + item));
           }
           songlist = songlist.join("");
           songlist = songlist.match(/[a-zA-Z0-9. ]+/g);
@@ -303,8 +305,8 @@ const musicApi = {
             }
           }
           songObj.songlist = songlist;
-          device.songlist.push(songObj);
-          console.log(e.songlist);
+          deviceProperty.songlist.push(songObj);
+          console.log(deviceProperty.songlist);
           albumNote = albumNote + 1;
           if (albumNote == albumnum - 1)
             window.socketio.removeAllListeners("new_msg");

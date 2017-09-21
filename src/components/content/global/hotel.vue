@@ -1,6 +1,6 @@
 <template>
     <div class="container-out" style="height:100%">
-        <div v-show="showAll" style="width:100%;height:100%" >
+        <div v-show="showAll" style="width:100%;height:100%">
             <div ref="roomWatts" class="roomWatts" style=""></div>
             <div v-show="showHotel" class="hotel-content">
                 <div class="icon-list">
@@ -74,8 +74,8 @@
 
                 </div>
                 <!-- <div class="device-list">
-                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                        </div> -->
             </div>
         </div>
         <div v-show="showDeviceUpdate">
@@ -109,7 +109,7 @@ export default {
     data() {
         return {
             showHotel: true,
-            showAll:true,
+            showAll: true,
             showFloor: false,
             showRoom: false,
             hotelName: "",
@@ -178,10 +178,12 @@ export default {
             this.showDeviceUpdate = showDeviceUpdate
             this.showDevicePage = !showDeviceUpdate
             this.thisdevice = device
-            this.thisdevice.subnetid = this.thisdevice.subnetid?parseInt('0x' + this.thisdevice.subnetid):""
-            this.thisdevice.deviceid = this.thisdevice.deviceid?parseInt('0x' + this.thisdevice.deviceid):""
-            this.thisdevice.channel = this.thisdevice.channel?parseInt('0x' + this.thisdevice.channel):""
-            this.thisdevice.channel_spare = this.thisdevice.channel_spare?parseInt('0x' + this.thisdevice.channel_spare):""
+            if (this.setting) {
+                this.thisdevice.subnetid = this.thisdevice.subnetid ? parseInt('0x' + this.thisdevice.subnetid) : ""
+                this.thisdevice.deviceid = this.thisdevice.deviceid ? parseInt('0x' + this.thisdevice.deviceid) : ""
+                this.thisdevice.channel = this.thisdevice.channel ? parseInt('0x' + this.thisdevice.channel) : ""
+                this.thisdevice.channel_spare = this.thisdevice.channel_spare ? parseInt('0x' + this.thisdevice.channel_spare) : ""
+            }
         },
         settingClick() {
             this.showHotelUpdate = true

@@ -53,7 +53,7 @@ export default {
                     position: function(pt) {
                         return [pt[0], '10%'];
                     },
-                    formatter: "{c}w"
+                    formatter: "{b} : {c}w"
                 },
                 title: {
                     left: 'center',
