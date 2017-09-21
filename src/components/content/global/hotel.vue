@@ -178,6 +178,10 @@ export default {
             this.showDeviceUpdate = showDeviceUpdate
             this.showDevicePage = !showDeviceUpdate
             this.thisdevice = device
+            this.thisdevice.subnetid = this.thisdevice.subnetid?parseInt('0x' + this.thisdevice.subnetid):""
+            this.thisdevice.deviceid = this.thisdevice.deviceid?parseInt('0x' + this.thisdevice.deviceid):""
+            this.thisdevice.channel = this.thisdevice.channel?parseInt('0x' + this.thisdevice.channel):""
+            this.thisdevice.channel_spare = this.thisdevice.channel_spare?parseInt('0x' + this.thisdevice.channel_spare):""
         },
         settingClick() {
             this.showHotelUpdate = true

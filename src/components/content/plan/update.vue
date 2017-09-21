@@ -1,8 +1,10 @@
 <template>
-    <div class="m-l-50 m-t-30 w-500">
+    <div class="m-l-50 m-t-30 w-500 plan-update">
         <el-form ref="form" :model="form" label-width="110px">
-            <el-form-item label="Device Name">
-                <el-input v-model.trim="form.device" class="h-40 w-200"></el-input>
+            <el-form-item label="Device Name" prop="device" :rules="[
+                                  { required: true, message: 'The Device Name must not be null'}
+                                ]">
+                <el-input type="device" v-model.trim="form.device" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item v-show="notHotel" label="Device Type">
                 <el-select v-model="form.devicetype" filterable placeholder="Select Type" class="h-40 w-200">
@@ -16,14 +18,25 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="Subnet ID">
-                <el-input v-model.trim="form.subnetid" class="h-40 w-200"></el-input>
+            <el-form-item label="Subnet ID" prop="subnetid" :rules="[
+                                  { required: true, message: 'The Subnet ID must not be null'}
+                                ]">
+                <el-input type="subnetid" v-model="form.subnetid" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item label="Device ID">
-                <el-input v-model.trim="form.deviceid" class="h-40 w-200"></el-input>
+            <el-form-item label="Device ID" prop="deviceid" :rules="[
+                                  { required: true, message: 'The Device ID must not be null'}
+                                ]">
+                <el-input type="deviceid" v-model="form.deviceid" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item label="Channel">
-                <el-input v-model.trim="form.channel" class="h-40 w-200"></el-input>
+            <el-form-item label="Channel" prop="channel" :rules="[
+                                  { required: true, message: 'The Channel must not be null'}
+                                ]">
+                <el-input type="channel" v-model="form.channel" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <el-form-item label="Channel Spare" prop="channel_spare" :rules="[
+                                  { required: true, message: 'The Channel Spare must not be null'}
+                                ]">
+                <el-input type="channel_spare" v-model="form.channel_spare" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item v-show="notHotel" label="Address">
                 <el-select v-model="form.address" filterable placeholder="Select Address" class="h-40 w-200">
@@ -38,6 +51,12 @@
         </el-form>
     </div>
 </template>
+<style>
+.plan-update .el-form-item__error {
+    padding: 0;
+}
+</style>
+
 
 <script>
 import http from '../../../assets/js/http'
@@ -75,24 +94,26 @@ export default {
     },
     methods: {
         goback() {
-            this.$emit("changeUpdate", false)
-        },
-        commit(form) {
             this.form.subnetid = _g.toHex(this.form.subnetid)
             this.form.deviceid = _g.toHex(this.form.deviceid)
             this.form.channel = _g.toHex(this.form.channel)
             this.form.channel_spare = _g.toHex(this.form.channel_spare ? this.form.channel_spare : 0)
+            this.$emit("changeUpdate", false)
+        },
+        commit(form) {
+            // this.form.subnetid = _g.toHex(this.form.subnetid)
+            // this.form.deviceid = _g.toHex(this.form.deviceid)
+            // this.form.channel = _g.toHex(this.form.channel)
+            // this.form.channel_spare = _g.toHex(this.form.channel_spare ? this.form.channel_spare : 0)
             this.isLoading = !this.isLoading
             const data = {
                 params: this.form
             }
-            // data.params.subnetid = _g.toHex(data.params.subnetid)
-            // data.params.deviceid = _g.toHex(data.params.deviceid)
-            // data.params.channel = _g.toHex(data.params.channel)
-            // data.params.channel_spare = _g.toHex(data.params.channel_spare)
             if (this.form.id) {
                 this.apiGet('device/index.php?action=update', data).then((res) => {
                     // _g.clearVuex('setRules')
+                    console.log(res)
+
                     if (res[0]) {
                         var devices = this.$store.state.devices
                         for (var i = 0; i < devices.length; i++) {
@@ -102,18 +123,21 @@ export default {
                         }
                         this.$store.dispatch('setDevices', devices)
                         _g.toastMsg('success', res[1])
-                        setTimeout(() => {
-                            this.goback()
-                        }, 500)
+                        this.goback()
                     } else {
                         _g.toastMsg('error', res[1])
                     }
-
+                    // for (var key in this.form) {
+                    //     this.form[key] = ""
+                    // }
+                    this.isLoading = !this.isLoading
                 })
             }
             else {
                 this.apiGet('device/index.php?action=insert', data).then((res) => {
                     // _g.clearVuex('setRules')
+                    console.log(res)
+
                     if (res[0]) {
                         var devices = this.$store.state.devices
                         console.log("maxid:" + this.$store.state.maxid)
@@ -121,13 +145,14 @@ export default {
                         devices.push(this.form)
                         this.$store.dispatch('setDevices', devices)
                         _g.toastMsg('success', res[1])
-                        setTimeout(() => {
-                            this.goback()
-                        }, 500)
+                        this.goback()
                     } else {
                         _g.toastMsg('error', res[1])
                     }
-
+                    // for (var key in this.form) {
+                    //     this.form[key] = ""
+                    // }
+                    this.isLoading = !this.isLoading
                 })
             }
 
@@ -161,16 +186,22 @@ export default {
         form() {
             // var device = this.$store.state.device
             console.log(this.device)
-
-            
-            var device = Object.assign({},this.device)
-
-
-            device.subnetid = parseInt('0x' + device.subnetid)
-            device.deviceid = parseInt('0x' + device.deviceid)
-            device.channel = parseInt('0x' + device.channel)
-            device.channel_spare = parseInt('0x' + device.channel_spare)
+            var device = this.device
+            // var device = Object.assign({}, this.device)
+            // device.subnetid = parseInt('0x' + device.subnetid)
+            // device.deviceid = parseInt('0x' + device.deviceid)
+            // device.channel = parseInt('0x' + device.channel)
+            // device.channel_spare = parseInt('0x' + device.channel_spare)
             return device
+
+            // var device = Object.assign({}, this.device)
+
+
+            // device.subnetid = parseInt('0x' + device.subnetid)
+            // device.deviceid = parseInt('0x' + device.deviceid)
+            // device.channel = parseInt('0x' + device.channel)
+            // device.channel_spare = parseInt('0x' + device.channel_spare)
+            // return device
         },
         maxid() {
             var maxid = this.getBreedList(this.$store.state.maxid)
@@ -208,6 +239,20 @@ export default {
             return address
         }
     },
+    // watch: {
+    //     device: {
+    //         handler: function(val, oldVal) {
+    //             console.log(this.device)
+    //             var device = Object.assign({}, this.device)
+    //             device.subnetid = parseInt('0x' + device.subnetid)
+    //             device.deviceid = parseInt('0x' + device.deviceid)
+    //             device.channel = parseInt('0x' + device.channel)
+    //             device.channel_spare = parseInt('0x' + device.channel_spare)
+    //             this.form = device
+    //         },
+    //         deep: true
+    //     }
+    // },
     mixins: [http, fomrMixin]
 }
 </script>

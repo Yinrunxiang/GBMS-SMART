@@ -11,6 +11,7 @@ import light from "./components/content/devices/light.vue";
 import ac from "./components/content/devices/ac.vue";
 import music from "./components/content/devices/music.vue";
 import led from "./components/content/devices/led.vue";
+import cutain from "./components/content/devices/cutain.vue";
 import planAdd from "./components/content/plan/add.vue";
 import planUpdate from "./components/content/plan/update.vue";
 import settingTypeAc from "./components/content/setting/type/ac/ac.vue";
@@ -57,6 +58,7 @@ const routes = [
           {path: "ac", component: ac, name: "ac" },
           {path: "music", component: music, name: "music" },
           {path: "led", component: led, name: "led" },
+          {path: "cutain", component: cutain, name: "cutain" },
         ]
       }
     ]

@@ -22,6 +22,14 @@ mysqli_set_charset($con, "utf8");
 // mysqli_select_db($con,"g4ever_news");
 // mysqli_set_charset($con, "utf8");
 
+function toHex($num) {
+    $num = dechex($num);
+    if(strlen($num) < 2){
+        $num = '0'.$num;
+    }
+    return $num ;
+}
+
 $action =  $_REQUEST["action"];
 
 switch ($action)
@@ -29,9 +37,13 @@ switch ($action)
     case "insert":
         $device = isset($_REQUEST["device"]) ? $_REQUEST["device"] : '';
         $subnetid = isset($_REQUEST["subnetid"]) ? $_REQUEST["subnetid"] : '';
+        $subnetid = toHex($subnetid);
         $deviceid = isset($_REQUEST["deviceid"]) ? $_REQUEST["deviceid"] : '';
+        $deviceid = toHex($deviceid);
         $channel = isset($_REQUEST["channel"]) ? $_REQUEST["channel"] : '';
+        $channel = toHex($channel);
         $channel_spare = isset($_REQUEST["channel_spare"]) ? $_REQUEST["channel_spare"] : '';
+        $channel_spare = toHex($channel_spare);
         $devicetype = isset($_REQUEST["devicetype"]) ? $_REQUEST["devicetype"] : '';
         $breed = isset($_REQUEST["breed"]) ? $_REQUEST["breed"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
@@ -57,9 +69,13 @@ switch ($action)
         $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
         $device = isset($_REQUEST["device"]) ? $_REQUEST["device"] : '';
         $subnetid = isset($_REQUEST["subnetid"]) ? $_REQUEST["subnetid"] : '';
+        $subnetid = toHex($subnetid);
         $deviceid = isset($_REQUEST["deviceid"]) ? $_REQUEST["deviceid"] : '';
+        $deviceid = toHex($deviceid);
         $channel = isset($_REQUEST["channel"]) ? $_REQUEST["channel"] : '';
+        $channel = toHex($channel);
         $channel_spare = isset($_REQUEST["channel_spare"]) ? $_REQUEST["channel_spare"] : '';
+        $channel_spare = toHex($channel_spare);
         $devicetype = isset($_REQUEST["devicetype"]) ? $_REQUEST["devicetype"] : '';
         $breed = isset($_REQUEST["breed"]) ? $_REQUEST["breed"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';

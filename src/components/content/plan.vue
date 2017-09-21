@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div v-show="showDeviceUpdate">
+        <div v-if="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel='notHotel' @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
     </div>
@@ -109,6 +109,10 @@ export default {
         rowDblclick(row) {
             this.showDeviceUpdate= true;
             this.thisdevice = row
+            this.thisdevice.subnetid = this.thisdevice.subnetid?parseInt('0x' + this.thisdevice.subnetid):""
+            this.thisdevice.deviceid = this.thisdevice.deviceid?parseInt('0x' + this.thisdevice.deviceid):""
+            this.thisdevice.channel = this.thisdevice.channel?parseInt('0x' + this.thisdevice.channel):""
+            this.thisdevice.channel_spare = this.thisdevice.channel_spare?parseInt('0x' + this.thisdevice.channel_spare):""
             console.log(this.thisdevice)
             // let url = '/home/plan/update'
             // this.$store.dispatch('setDevice', row)

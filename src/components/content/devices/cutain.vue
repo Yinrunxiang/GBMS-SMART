@@ -2,7 +2,7 @@
     <el-col :span="24">
         <el-col :span="8">
             <div>
-                <i class="fa fa-lightbulb-o big-font-icon"></i>
+                <i class="fa fa-columns big-font-icon" style="font-size:200px"></i>
             </div>
         </el-col>
         <el-col :span="8" class="m-b-20 p-l-20 p-r-20 ovf-hd" style="margin-top:80px">

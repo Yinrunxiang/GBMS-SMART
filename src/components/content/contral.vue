@@ -54,17 +54,19 @@ export default {
     methods: {
         selectCountry(key, keyPath) {
             window.socketio.removeAllListeners("new_msg");
+            var typeList = []
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {
                     if (key == address.name) {
                         for (var floor of address.floorList) {
                             for (var room of floor.roomList) {
-                                this.typeList = room.typeList
+                                typeList = typeList.concat(room.typeList)
                             }
                         }
                     }
                 }
             }
+            this.typeList = typeList
         },
         menuClick() {
             
