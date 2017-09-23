@@ -73,12 +73,8 @@
             <el-row class="m-t-20">
                 <el-col :span="24">
                     <ul class="songlist">
-                        <li v-for="item in deviceProperty.songlist">
-                            <ul>
-                                <li>album:{{deviceProperty.albumlist[item.albumno]}}</li>
-                                <li v-for="song in item.songlist">{{song}}</li>
-                            </ul>
-                        </li>
+                                <li @dblclick="selectSong(song)" v-for="song in deviceProperty.songlist">{{song.songName}}</li>
+
                     </ul>
                 </el-col>
             </el-row>
@@ -125,7 +121,7 @@
     overflow-y: auto;
 }
 
-.songlist li ul li {
+.songlist li {
     padding-left: 10px;
     height: 30px;
     line-height: 30px;
@@ -180,6 +176,9 @@ export default {
         allmusic() {
             musicApi.allmusic(this.device, this.deviceProperty)
         },
+        selectSong(song){
+            musicApi.selectSong(this.device, this.deviceProperty,song)
+        }
     },
     mounted() {
         console.log('music')
