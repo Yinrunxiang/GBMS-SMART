@@ -192,7 +192,7 @@ const musicApi = {
         operatorCodesec: "18",
         targetDeviceID: device.deviceid,
         // additionalContentData: ("06," + song.albumNo+',' +songNoHigh+',' +songNoLow).split(","),
-        additionalContentData: ("06," + song.albumNo+',' +song.songNoHigh+',' +song.songNoLow).split(","),
+        additionalContentData: ("06," + song.albumNo + ',' + song.songNoHigh + ',' + song.songNoLow).split(","),
         macAddress: device.mac ? device.mac.split(".") : "",
         dest_address: device.ip ? device.ip : "",
         dest_port: device.port ? device.port : ""
@@ -345,47 +345,52 @@ const musicApi = {
           var source = _g.getadditional(msg, 0);
           var albumno = _g.getadditional(msg, 1);
           var songpack = msg.substring(54, 56);
-          if(!albumNoList[albumno]) albumNoList[albumno] = true
-          songpack = parseInt("0x" + songpack);
+          if (!albumNoList[albumno]) {
+            albumNoList[albumno] = true
 
-          for (var i = 1; i <= songpack; i++) {
-            songNoList[albumno + _g.toHex(i)] = false
-            var additionalContentData = (source + "," + albumno + "," + _g.toHex(i)).split(",");
-            _g.sendUdp(
-              "02",
-              "E6",
-              device.deviceid,
-              additionalContentData,
-              device.mac,
-              device.ip,
-              device.port
-            );
-          }
-          var songInterval = setInterval(function () {
-            var check = true
-            for (var key in songNoList) {
-              if (!songNoList[key]) {
-                check = false
-                var additionalContentData = (source + "," + key.substr(0, 2) + "," + key.substr(2, 2)).split(",");
-                _g.sendUdp(
-                  "02",
-                  "E6",
-                  device.deviceid,
-                  additionalContentData,
-                  device.mac,
-                  device.ip,
-                  device.port
-                );
+            songpack = parseInt("0x" + songpack);
+
+            for (var i = 1; i <= songpack; i++) {
+              songNoList[albumno + _g.toHex(i)] = false
+              var additionalContentData = (source + "," + albumno + "," + _g.toHex(i)).split(",");
+              _g.sendUdp(
+                "02",
+                "E6",
+                device.deviceid,
+                additionalContentData,
+                device.mac,
+                device.ip,
+                device.port
+              );
+            }
+            var songInterval = setInterval(function () {
+              var check = true
+              for (var key in songNoList) {
+                if (!songNoList[key]) {
+                  check = false
+                  var additionalContentData = (source + "," + key.substr(0, 2) + "," + key.substr(2, 2)).split(",");
+                  _g.sendUdp(
+                    "02",
+                    "E6",
+                    device.deviceid,
+                    additionalContentData,
+                    device.mac,
+                    device.ip,
+                    device.port
+                  );
+                }
               }
-            }
-            if (check) {
-              clearInterval(songInterval)
-              deviceProperty.songlist.sort(function (a, b) {
-                return parseInt(a.albumNo+a.packNo) - parseInt(b.albumNo+b.packNo)
-              });
-            }
-          }, 1000)
+              if (check) {
+                clearInterval(songInterval)
+                deviceProperty.songlist.sort(function (a, b) {
+                  // return a.songNo - b.songNo
+                  return parseInt(a.albumNo + a.packNo +a.songNo) - parseInt(b.albumNo + b.packNo +b.songNo)
+                });
+              }
+            }, 1000)
+          }
         }
+
         if (operationcode.toLowerCase() == "02e7") {
           var songNum = _g.getadditional(msg, 5)
           songNum = parseInt("0x" + songNum)
@@ -395,45 +400,49 @@ const musicApi = {
           var currentSonglist = msg.substring(62)
           var albumno = _g.getadditional(msg, 3)
           var packNo = _g.getadditional(msg, 4)
-          if(!songNoList[albumno + packNo]) songNoList[albumno + packNo]= true
-          var songlist = [];
-          for (var i = 0; i < songNum; i++) {
-            var songLength = currentSonglist.substr(songCount + 4, 2);
-            songLength = parseInt('0x' + songLength) * 2
-            var songName = currentSonglist.substr(songCount + 6, songLength)
-            songName = strToarr4(songName)
-            var songNameList = []
-            for (var item of songName) {
-              songNameList.push(String.fromCharCode("0x" + item));
+          if (!songNoList[albumno + packNo]) {
+          songNoList[albumno + packNo] = true
+            var songlist = [];
+            for (var i = 0; i < songNum; i++) {
+              var songLength = currentSonglist.substr(songCount + 4, 2);
+              songLength = parseInt('0x' + songLength) * 2
+              var songName = currentSonglist.substr(songCount + 6, songLength)
+              songName = strToarr4(songName)
+              var songNameList = []
+              for (var item of songName) {
+                songNameList.push(String.fromCharCode("0x" + item));
+              }
+              songName = songNameList.join("");
+              // songlist.push(songName)
+              var songObj = {}
+              songObj.albumNo = albumno
+              // songObj.songNo = currentSonglist.substr(songCount, 4)
+              songObj.songNo = parseInt('0x' + currentSonglist.substr(songCount, 4))
+              songObj.songNoHigh = currentSonglist.substr(songCount, 2);
+              songObj.songNoLow = currentSonglist.substr(songCount + 2, 2);
+              songObj.songName = songName
+              songObj.select = false
+              deviceProperty.songlist.push(songObj);
+              songCount = songCount + songLength + 6
             }
-            songName = songNameList.join("");
-            // songlist.push(songName)
-            var songObj = {}
-            songObj.albumNo = albumno
-            songObj.songNo = parseInt('0x'+currentSonglist.substr(songCount, 4))
-            songObj.songNoHigh = currentSonglist.substr(songCount, 2);
-            songObj.songNoLow = currentSonglist.substr(songCount + 2, 2);
-            songObj.songName = songName
-            deviceProperty.songlist.push(songObj);
-            songCount = songCount + songLength + 6
+
+            // songlist = songlist.match(/[a-zA-Z0-9\u4e00-\u9fa5. ]+/g);
+            // // songlist = songlist.match(/[a-zA-Z0-9. ]+/g);
+            // // if (songlist) {
+            // songlist = songlist ? songlist.join("") : "";
+            // songlist = songlist.split(".mp3");
+            // for (var i = 0; i < songlist.length; i++) {
+            //   if (songlist[i] == "") {
+            //     songlist.splice(i, 1);
+            //   }
+            // }
+
+            // console.log(deviceProperty.songlist);
+            albumNote = albumNote + 1;
+            // if (albumNote == albumnum - 1)
+            //   window.socketio.removeAllListeners("new_msg");
+            // }
           }
-
-          // songlist = songlist.match(/[a-zA-Z0-9\u4e00-\u9fa5. ]+/g);
-          // // songlist = songlist.match(/[a-zA-Z0-9. ]+/g);
-          // // if (songlist) {
-          // songlist = songlist ? songlist.join("") : "";
-          // songlist = songlist.split(".mp3");
-          // for (var i = 0; i < songlist.length; i++) {
-          //   if (songlist[i] == "") {
-          //     songlist.splice(i, 1);
-          //   }
-          // }
-
-          // console.log(deviceProperty.songlist);
-          albumNote = albumNote + 1;
-          // if (albumNote == albumnum - 1)
-          //   window.socketio.removeAllListeners("new_msg");
-          // }
         }
       }
     });

@@ -168,6 +168,9 @@ export default {
                 case 'music':
                     return 'fa-music'
                     break
+                    case 'cutain':
+                    return 'fa-columns'
+                    break
             }
         },
     },
