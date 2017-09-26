@@ -1,7 +1,26 @@
 <template>
     <el-col :span="24">
         <div class="music" style="width:350px;height:550px;padding:0;margin:20px auto;text-align: center;">
+            <div class="fa fa-bars album-btn" @click="albumBtnClick"></div>
+            <div v-show="albumShow" class="album">
+                <div class="fa fa-reply album-btn-back" @click="albumBtnClickBack"></div>
+                <el-menu class="album-list">
+                    <el-menu-item-group>
+                        <span slot="title">Album</span>
+                        <el-menu-item class="album-list-li" :index="album.albumNo" v-for="album in deviceProperty.albumlist" @click="albumClick(album.albumNo)">
+                            </i>{{album.albumName}}</el-menu-item>
+                    </el-menu-item-group>
+                    <!-- <el-submenu index="1" class="album-btn">
+                                    <template slot="title">
+                                        <i class="el-icon-message"></i>
+                                        <span slot="title">导航一</span>
+                                    </template> -->
+                    <!-- <el-menu-item v-for="album in deviceProperty.albumlist" index="plan">
+                                        <i class="el-icon-menu"></i>{{album.albumName}}</el-menu-item> -->
 
+                    <!-- </el-submenu> -->
+                </el-menu>
+            </div>
             <div class="music-title">
                 <p>{{deviceProperty.music_name}}</p>
             </div>
@@ -16,7 +35,7 @@
                     <div v-show="deviceProperty.mode == 'random'" class="fa fa-random content-icon fl" style="margin-left:16px" @click="random()"></div>
                     <div v-show="deviceProperty.mode == 'single'" class="fa fa-exchange content-icon fl" style="margin-left:16px" @click="single()"></div>
                     <div v-show="deviceProperty.mode == 'allmusic'" class="fa fa-navicon content-icon fl" style="margin-left:16px" @click="allmusic()"></div>
-                    
+
                     <el-col :span="15" class="fr" style="margin-right:26px">
                         <template>
                             <div>
@@ -25,7 +44,7 @@
                             </div>
                         </template>
                     </el-col>
-                    <div class="fa fa-volume-up content-icon fr" ></div>
+                    <div class="fa fa-volume-up content-icon fr"></div>
                 </div>
             </div>
             <div class="model-item">
@@ -33,7 +52,7 @@
             </div>
             <div class="music-list">
                 <ul style="margin:0;padding:0;">
-                    <li @dblclick="selectSong(song)" :class="song.select?'select':''" v-for="song in deviceProperty.songlist">
+                    <li @dblclick="selectSong(song)" :class="song.select?'select':''" v-for="song in deviceProperty.songList">
                         <div class="song">
                             <!-- <div class="song-num">{{song.songNo}}</div> -->
                             <div class="song-name">{{song.songName}}</div>
@@ -42,90 +61,12 @@
                 </ul>
             </div>
         </div>
-        <!-- <el-col :span="8">
-                                            <div>
-                                                <div class="">
-                                                    <i class="fa fa-music big-music-icon"></i>
-                                                </div>
-                                            </div>
-                                        </el-col>
-                                        <el-col :span="16" class="m-b-20 p-l-20 p-r-20 ovf-hd" style="margin-top:80px">
-                                            <el-row>
-                                                <el-col :span="8" style="line-height:36px;">
-                                                    <span>{{deviceProperty.music_name}}</span>
-                                                    <span>{{deviceProperty.music_autor}}</span>
-                                                </el-col>
-                                                <el-col :span="6" :offset="2">
-                                                    <el-col :span="3">
-                                                        <span class="fr" style="line-height:36px">
-                                                            <i class="fa fa-volume-up"></i>
-                                                        </span>
-                                                    </el-col>
-                                                    <el-col :span="18" :offset="3">
-                                                        <template>
-                                                            <div>
-                                                                <el-slider v-model="deviceProperty.vol" :min='0' :max='79' :step="1" @change="vol_change">
-                                                                </el-slider>
-                                                            </div>
-                                                        </template>
-                                                    </el-col>
-                                                </el-col>
-                                            </el-row>
-                                            <el-row>
-                                                <el-col :span="16">
-                                                    <template>
-                                                        <div>
-                                                            <el-slider v-model="deviceProperty.time_now" :min='0' :max='30' :step="1" @change="time_change">
-                                                            </el-slider>
-                                                        </div>
-                                                    </template>
-                                                </el-col>
-                                                <el-col :span="5" :offset="1">
-                                                    <span>{{deviceProperty.time_now}}</span>
-                                                    <span>{{deviceProperty.time_over}}</span>
-                                                </el-col>
-                                            </el-row>
-                                            <el-row class="m-t-20">
-                                                <el-col :span="10">
-                                                    <el-button @click="pre()" class="music-btn">
-                                                        <i class="fa fa-step-backward"></i>
-                                                    </el-button>
-                                                    <el-button @click="play()" class="music-btn" v-show="deviceProperty.on_off == false">
-                                                        <i class="fa fa-play"></i>
-                                                    </el-button>
-                                                    <el-button @click="pause()" class="music-btn" v-show="deviceProperty.on_off">
-                                                        <i class="fa fa-pause"></i>
-                                                    </el-button>
-                                                    <el-button @click="next()" class="music-btn">
-                                                        <i class="fa fa-step-forward"></i>
-                                                    </el-button>
-                                                </el-col>
-                                                <el-col :span="10" :offset="2">
-                                                    <el-button @click="random()" class="music-btn">
-                                                        <i class="fa fa-random"></i>
-                                                    </el-button>
-                                                    <el-button @click="single()" class="music-btn">
-                                                        <i class="fa fa-exchange"></i>
-                                                    </el-button>
-                                                    <el-button @click="allmusic()" class="music-btn">
-                                                        <i class="fa fa-bar"></i>
-                                                    </el-button>
-                                                </el-col>
-                                            </el-row>
-                                            <el-row class="m-t-20">
-                                                <el-col :span="24">
-                                                    <ul class="songlist">
-                                                                <li @dblclick="selectSong(song)" v-for="song in deviceProperty.songlist">{{song.songName}}</li>
-
-                                                    </ul>
-                                                </el-col>
-                                            </el-row>
-                                        </el-col> -->
     </el-col>
 </template>
 
 <style>
 .music {
+    position: relative;
     border: 1px solid #d1dbe5;
     border-radius: 4px;
     overflow: hidden;
@@ -134,19 +75,54 @@
     color: #CCCCCC;
 }
 
+.music .album-btn {
+    position: absolute;
+    left: 8px;
+    top: 1px;
+    font-size: 22px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+}
+
+.album {
+    position: absolute;
+    left: 0;
+    top: 0;
+    text-align: left;
+    width: 150px;
+    height: 100%;
+    border: 1px solid #d1dbe5;
+    overflow: hidden;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
+    z-index: 99999;
+}
+
+.music .album-btn-back {
+    position: absolute;
+    left: 120px;
+    top: 8px;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    color: #20a0ff;
+    z-index: inherit;
+}
+
+.music .album-list {
+    position: absolute;
+    left: 0;
+    top: 0;
+    text-align: left;
+    width: 150px;
+    height: 100%;
+    border: 1px solid #d1dbe5;
+    overflow: hidden;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
+}
 
 
-
-
-
-/* .music-content .content-border {
-    background-color: #333;
-    margin: 20px auto;
-    width: 180px;
-    height: 180px;
-    border:1px solid #aaa;
-    border-radius: 180px
-} */
 
 .music-content {
 
@@ -193,8 +169,9 @@
     line-height: 38px;
     font-size: 18px;
 }
+
 .music-content .content-icon:hover {
-    color:#20a0ff;
+    color: #20a0ff;
     border-color: #20a0ff;
 }
 
@@ -229,8 +206,9 @@
 .music-list li:hover {
     background-color: #333;
 }
+
 .music-list li.select {
-    color:#20a0ff;
+    color: #20a0ff;
     background-color: #333;
 }
 
@@ -257,57 +235,6 @@
     line-height: 40px;
     font-size: 16px;
 }
-
-
-
-
-
-
-
-/* .music-btn {
-    padding: 15px;
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    font-size: 16px;
-    border-radius: 50px;
-}
-
-.music-mode-btn {
-    font-size: 25px;
-    height: 50px;
-    line-height: 50px;
-}
-
-.big-music-icon {
-    display: inline-block;
-    margin: 100px 80px 100px 80px;
-    padding: 30px;
-    width: 160px;
-    height: 160px;
-    font-size: 150px;
-    border: 3px solid #c0ccda;
-    border-radius: 160px;
-    color: #c0ccda;
-}
-
-.songlist {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 350px;
-    background: #fff;
-    border: 1px solid #c4c4c4;
-    border-radius: 5px;
-    overflow-y: auto;
-}
-
-.songlist li {
-    padding-left: 10px;
-    height: 30px;
-    line-height: 30px;
-    border-bottom: 1px solid #c4c4c4;
-} */
 </style>
 
 <script>
@@ -326,15 +253,33 @@ export default {
                 albumno: 0,
                 albumlist: [],
                 songno: 0,
-                songlist: [{
+                songList: [{
                     songNo: 1,
                     songName: 'Waitting',
-                    select:true
+                    select: true
                 }],
-            }
+                songListAll:[],
+            },
+            albumShow: false
         }
     },
     methods: {
+        albumBtnClick() {
+            this.albumShow = true
+        },
+        albumClick(albumNo){
+            this.albumShow = false
+            this.deviceProperty.songList = []
+            for(var song of this.deviceProperty.songListAll){
+                if(song.albumNo ==  albumNo){
+                    this.deviceProperty.songList.push(song)
+                }
+            }
+            
+        },
+        albumBtnClickBack() {
+            this.albumShow = false
+        },
         time_change(val) {
             musicApi.time_change(val, this.device, this.deviceProperty)
         },
@@ -369,7 +314,7 @@ export default {
         },
         selectSong(song) {
             this.deviceProperty.music_name = song.songName
-            for(var obj of this.deviceProperty.songlist){
+            for (var obj of this.deviceProperty.songList) {
                 obj.select = false
             }
             song.select = true
@@ -398,7 +343,7 @@ export default {
             // device.albumno = 0
             // device.albumlist = []
             // device.songno = 0
-            // device.songlist = []
+            // device.songList = []
             return device
         }
     }

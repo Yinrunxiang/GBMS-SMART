@@ -210,6 +210,8 @@ const musicApi = {
     var albumNote = 0;
     var albumNoList = {}
     var songNoList = {}
+    var songList = []
+    var albumList = []
     let additionalContentData = "01".split(",");
     _g.sendUdp(
       "02",
@@ -260,8 +262,8 @@ const musicApi = {
           albumnum = _g.getadditional(msg, 4);
           var albumlist = msg.substring(60);
           deviceProperty.albumlist = [];
-          deviceProperty.songlist = [];
-
+          deviceProperty.songList = [];
+          deviceProperty.songListAll = [];
 
           for (var i = 0; i < albumnum; i++) {
             var albumNo = albumlist.substr(albumCount, 2);
@@ -274,8 +276,12 @@ const musicApi = {
               albumName.push(String.fromCharCode("0x" + item));
             }
             albumName = albumName.join("");
-            deviceProperty.albumlist.push(albumName)
             albumNo = albumlist.substr(albumCount, 2);
+            var albumObj = {
+              albumName:albumName,
+              albumNo:albumNo
+            }
+            albumList.push(albumObj)
             albumNoList[albumNo] = false
             albumCount = albumCount + albumLength + 4
           }
@@ -313,8 +319,13 @@ const musicApi = {
             }
             if (check) {
               clearInterval(albumInterval)
+              albumList.sort(function (a, b) {
+                // return a.songNo - b.songNo
+                return parseInt(a.albumNo) - parseInt(b.albumNo)
+              });
+              deviceProperty.albumlist = albumList
             }
-          }, 1000)
+          }, 500)
           // setInterval(albumInterval, 100)
 
           // albumnum = parseInt("0x" + albumnum);
@@ -382,10 +393,12 @@ const musicApi = {
               }
               if (check) {
                 clearInterval(songInterval)
-                deviceProperty.songlist.sort(function (a, b) {
+                songList.sort(function (a, b) {
                   // return a.songNo - b.songNo
                   return parseInt(a.albumNo + a.packNo +a.songNo) - parseInt(b.albumNo + b.packNo +b.songNo)
                 });
+                deviceProperty.songList = songList
+                deviceProperty.songListAll = songList
               }
             }, 1000)
           }
@@ -402,7 +415,6 @@ const musicApi = {
           var packNo = _g.getadditional(msg, 4)
           if (!songNoList[albumno + packNo]) {
           songNoList[albumno + packNo] = true
-            var songlist = [];
             for (var i = 0; i < songNum; i++) {
               var songLength = currentSonglist.substr(songCount + 4, 2);
               songLength = parseInt('0x' + songLength) * 2
@@ -413,7 +425,7 @@ const musicApi = {
                 songNameList.push(String.fromCharCode("0x" + item));
               }
               songName = songNameList.join("");
-              // songlist.push(songName)
+              // songList.push(songName)
               var songObj = {}
               songObj.albumNo = albumno
               // songObj.songNo = currentSonglist.substr(songCount, 4)
@@ -422,22 +434,22 @@ const musicApi = {
               songObj.songNoLow = currentSonglist.substr(songCount + 2, 2);
               songObj.songName = songName
               songObj.select = false
-              deviceProperty.songlist.push(songObj);
+              songList.push(songObj);
               songCount = songCount + songLength + 6
             }
 
-            // songlist = songlist.match(/[a-zA-Z0-9\u4e00-\u9fa5. ]+/g);
-            // // songlist = songlist.match(/[a-zA-Z0-9. ]+/g);
-            // // if (songlist) {
-            // songlist = songlist ? songlist.join("") : "";
-            // songlist = songlist.split(".mp3");
-            // for (var i = 0; i < songlist.length; i++) {
-            //   if (songlist[i] == "") {
-            //     songlist.splice(i, 1);
+            // songList = songList.match(/[a-zA-Z0-9\u4e00-\u9fa5. ]+/g);
+            // // songList = songList.match(/[a-zA-Z0-9. ]+/g);
+            // // if (songList) {
+            // songList = songList ? songList.join("") : "";
+            // songList = songList.split(".mp3");
+            // for (var i = 0; i < songList.length; i++) {
+            //   if (songList[i] == "") {
+            //     songList.splice(i, 1);
             //   }
             // }
 
-            // console.log(deviceProperty.songlist);
+            // console.log(deviceProperty.songList);
             albumNote = albumNote + 1;
             // if (albumNote == albumnum - 1)
             //   window.socketio.removeAllListeners("new_msg");
