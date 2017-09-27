@@ -242,7 +242,7 @@ $sender_io->on('workerStart', function(){
         }
         //延迟3秒后，将设备运行状态记录到record表
         sleep(3);
-        $sql="insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,now() from device left join address on device.address = address.address ";
+        $sql="insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,floor,room,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,floor,room,now() from device left join address on device.address = address.address ";
         $result = mysqli_query($con,$sql);
         // global $uidConnectionMap, $sender_io, $last_online_count, $last_online_page_count;
         // $online_count_now = count($uidConnectionMap);

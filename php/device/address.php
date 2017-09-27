@@ -34,8 +34,8 @@ switch ($action)
         $mac = isset($_REQUEST["mac"]) ? $_REQUEST["mac"] : '';
         $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
         $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
-        $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
-        $sql="insert into address (country,address,ip,port,mac,lat,lng,floor,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','".$lat."','".$lng."','".$floor."','enabled')";
+        $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
+        $sql="insert into address (country,address,ip,port,mac,lat,lng,floor_num,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','".$lat."','".$lng."','".$floor_num."','enabled')";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -58,8 +58,8 @@ switch ($action)
         $mac = isset($_REQUEST["mac"]) ? $_REQUEST["mac"] : '';
         $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
         $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
-        $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
-        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor = '".$floor."' where id = '".$id."')";
+        $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
+        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."' where id = '".$id."')";
         if (!mysqli_query($con,$sql))
         {
             $message = [];

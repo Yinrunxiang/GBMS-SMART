@@ -1,8 +1,11 @@
 <template>
-    <div>
-        <div ref="lineChart" class="line-chart fl"></div>
-        <div ref="pieChart" class="pie-chart fl"></div>
-    </div>
+    <el-row class="panel m-w-1100">
+        <el-cascader class="m-t-10 m-l-15" :options="allAddress" change-on-select @change="addressChange"></el-cascader>
+        <div>
+            <div ref="lineChart" class="line-chart fl"></div>
+            <div ref="pieChart" class="pie-chart fl"></div>
+        </div>
+    </el-row>
 </template>
 
 <script>
@@ -13,6 +16,8 @@ export default {
         return {
             // tableData: [],
             // dataCount: null,
+            selectRecord: [],
+            allRecord: [],
             currentPage: null,
             keywords: '',
             thisdevice: {},
@@ -23,6 +28,35 @@ export default {
         }
     },
     methods: {
+        addressChange(value) {
+            var selectRecord = []
+            var len = value.length
+            switch (len) {
+                case 1:
+                    for (var record of this.record) {
+                        if (record.address == value[0]) {
+                            selectRecord.push(record)
+                        }
+                    }
+                    break
+                case 2:
+                    for (var record of this.record) {
+                        if (record.address == value[0] && record.floor == value[1]) {
+                            selectRecord.push(record)
+                        }
+                    }
+                    break
+                case 3:
+                    for (var record of this.record) {
+                        if (record.address == value[0] && record.floor == value[1] && record.room == value[2]) {
+                            selectRecord.push(record)
+                        }
+                    }
+                    break
+            }
+            this.selectRecord = selectRecord
+
+        },
         initMapSize(chart) {
             var width = (document.body.clientWidth - 180) * 0.5
             var height = (document.body.clientHeight - 60) * 0.8
@@ -137,8 +171,8 @@ export default {
 
                 visualMap: {
                     show: false,
-                    min: this.allRecord.wattSort[0]*0.8,
-                    max: this.allRecord.wattSort[this.allRecord.wattSort.length - 1]*1.5,
+                    min: this.allRecord.wattSort[0] * 0.8,
+                    max: this.allRecord.wattSort[this.allRecord.wattSort.length - 1] * 1.5,
                     inRange: {
                         colorLightness: [0, 1]
                     }
@@ -200,55 +234,135 @@ export default {
 
     },
     mounted() {
-        this.initLineChart()
-        this.initPieChart()
+        this.selectRecord = this.record
+        // this.initLineChart()
+        // this.initPieChart()
         console.log(this.allRecord)
     },
     components: {
 
     },
+    watch: {
+        selectRecord: {
+            handler: function(val, oldVal) {
+                var allRecord = {}
+                allRecord.dateArr = []
+                allRecord.recordArr = []
+                allRecord.typeArr = []
+                var typeArr = {}
+                for (var record of this.selectRecord) {
+                    var date = record.record_date.substr(0, 15) + '0'
+                    if (allRecord.dateArr.indexOf(date) == -1) {
+                        allRecord.dateArr.push(date)
+                        allRecord.recordArr.push(parseInt(record.watts))
+                    } else {
+                        var index = allRecord.dateArr.indexOf(date)
+                        allRecord.recordArr[index] += parseInt(record.watts)
+                    }
+
+                    typeArr[record.devicetype] ? typeArr[record.devicetype] += parseInt(record.watts) : typeArr[record.devicetype] = parseInt(record.watts)
+                    // if (typeArr.indexOf(record.devicetype) == -1){
+                    //     typeArr[record.devicetype] = parseInt(record.watts)
+                    // }else{
+                    //     typeArr[record.devicetype] += parseInt(record.watts)
+                    // }
+                }
+                var wattSort = []
+                for (var key in typeArr) {
+
+                    var typeObj = {}
+                    typeObj.name = key
+                    typeObj.value = typeArr[key]
+                    wattSort.push(typeArr[key])
+                    allRecord.typeArr.push(typeObj)
+                }
+                function sortNumber(a, b) {
+                    return a - b
+                }
+                wattSort.sort(sortNumber)
+                allRecord.wattSort = wattSort
+                this.allRecord = allRecord
+                this.initLineChart()
+                this.initPieChart()
+            },
+            deep: true
+        }
+    },
     computed: {
         record() {
+            // this.selectRecord = this.$store.state.record
             return this.$store.state.record
         },
-        allRecord() {
-            var records = {}
-            records.dateArr = []
-            records.recordArr = []
-            records.typeArr = []
-            var typeArr = {}
-            for (var record of this.$store.state.record) {
-                var date = record.record_date.substr(0, 15) + '0'
-                if (records.dateArr.indexOf(date) == -1) {
-                    records.dateArr.push(date)
-                    records.recordArr.push(parseInt(record.watts))
-                } else {
-                    var index = records.dateArr.indexOf(date)
-                    records.recordArr[index] += parseInt(record.watts)
+        // allRecord() {
+        //     var records = {}
+        //     records.dateArr = []
+        //     records.recordArr = []
+        //     records.typeArr = []
+        //     var typeArr = {}
+        //     for (var record of this.selectRecord) {
+        //         var date = record.record_date.substr(0, 15) + '0'
+        //         if (records.dateArr.indexOf(date) == -1) {
+        //             records.dateArr.push(date)
+        //             records.recordArr.push(parseInt(record.watts))
+        //         } else {
+        //             var index = records.dateArr.indexOf(date)
+        //             records.recordArr[index] += parseInt(record.watts)
+        //         }
+
+        //         typeArr[record.devicetype] ? typeArr[record.devicetype] += parseInt(record.watts) : typeArr[record.devicetype] = parseInt(record.watts)
+        //         // if (typeArr.indexOf(record.devicetype) == -1){
+        //         //     typeArr[record.devicetype] = parseInt(record.watts)
+        //         // }else{
+        //         //     typeArr[record.devicetype] += parseInt(record.watts)
+        //         // }
+        //     }
+        //     var wattSort = []
+        //     for (var key in typeArr) {
+
+        //         var typeObj = {}
+        //         typeObj.name = key
+        //         typeObj.value = typeArr[key]
+        //         wattSort.push(typeArr[key])
+        //         records.typeArr.push(typeObj)
+        //     }
+        //     function sortNumber(a, b) {
+        //         return a - b
+        //     }
+        //     wattSort.sort(sortNumber)
+        //     records.wattSort = wattSort
+        //     return records
+        // },
+        allAddress() {
+            var allAddress = []
+            for (var address of this.$store.state.address) {
+                var addressObj = {
+                    value: address.address,
+                    label: address.address,
+                    children: [],
                 }
-
-                typeArr[record.devicetype] ? typeArr[record.devicetype] += parseInt(record.watts) : typeArr[record.devicetype] = parseInt(record.watts)
-                // if (typeArr.indexOf(record.devicetype) == -1){
-                //     typeArr[record.devicetype] = parseInt(record.watts)
-                // }else{
-                //     typeArr[record.devicetype] += parseInt(record.watts)
-                // }
+                for (var floor of this.$store.state.floor) {
+                    if (floor.address == address.address) {
+                        var floorObj = {
+                            value: floor.floor,
+                            label: floor.floor,
+                            children: [],
+                        }
+                        for (var room of this.$store.state.room) {
+                            if (room.floor == floor.floor && room.address == address.address) {
+                                var roomObj = {
+                                    value: room.room,
+                                    label: room.room,
+                                }
+                                floorObj.children.push(roomObj)
+                            }
+                        }
+                        addressObj.children.push(floorObj)
+                    }
+                }
+                allAddress.push(addressObj)
             }
-            var wattSort = []
-            for (var key in typeArr) {
-
-                var typeObj = {}
-                typeObj.name = key
-                typeObj.value = typeArr[key]
-                wattSort.push(typeArr[key])
-                records.typeArr.push(typeObj)
-            }
-            function sortNumber(a, b) {
-                return a - b
-            }
-            wattSort.sort(sortNumber)
-            records.wattSort = wattSort
-            return records
+            console.log(allAddress)
+            return allAddress
         }
     }
 }

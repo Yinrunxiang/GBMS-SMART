@@ -11,12 +11,12 @@
                             </i>{{album.albumName}}</el-menu-item>
                     </el-menu-item-group>
                     <!-- <el-submenu index="1" class="album-btn">
-                                    <template slot="title">
-                                        <i class="el-icon-message"></i>
-                                        <span slot="title">导航一</span>
-                                    </template> -->
+                                                    <template slot="title">
+                                                        <i class="el-icon-message"></i>
+                                                        <span slot="title">导航一</span>
+                                                    </template> -->
                     <!-- <el-menu-item v-for="album in deviceProperty.albumlist" index="plan">
-                                        <i class="el-icon-menu"></i>{{album.albumName}}</el-menu-item> -->
+                                                        <i class="el-icon-menu"></i>{{album.albumName}}</el-menu-item> -->
 
                     <!-- </el-submenu> -->
                 </el-menu>
@@ -50,7 +50,7 @@
             <div class="model-item">
                 <div></div>
             </div>
-            <div class="music-list">
+            <div v-loading="deviceProperty.musicLoading" class="music-list">
                 <ul style="margin:0;padding:0;">
                     <li @dblclick="selectSong(song)" :class="song.select?'select':''" v-for="song in deviceProperty.songList">
                         <div class="song">
@@ -243,7 +243,7 @@ export default {
     data() {
         return {
             deviceProperty: {
-                vol: 0,
+                vol: 20,
                 mode: "random",
                 on_off: false,
                 music_name: "Waitting",
@@ -258,7 +258,8 @@ export default {
                     songName: 'Waitting',
                     select: true
                 }],
-                songListAll:[],
+                songListAll: [],
+                musicLoading:true,
             },
             albumShow: false
         }
@@ -267,15 +268,15 @@ export default {
         albumBtnClick() {
             this.albumShow = true
         },
-        albumClick(albumNo){
+        albumClick(albumNo) {
             this.albumShow = false
             this.deviceProperty.songList = []
-            for(var song of this.deviceProperty.songListAll){
-                if(song.albumNo ==  albumNo){
+            for (var song of this.deviceProperty.songListAll) {
+                if (song.albumNo == albumNo) {
                     this.deviceProperty.songList.push(song)
                 }
             }
-            
+
         },
         albumBtnClickBack() {
             this.albumShow = false
@@ -288,9 +289,42 @@ export default {
         },
         pre() {
             musicApi.pre(this.device, this.deviceProperty)
+            var len = this.deviceProperty.songList.length
+            for (var key in this.deviceProperty.songList) {
+                if (this.deviceProperty.songList[key].select) {
+                    this.deviceProperty.songList[key].select = false
+                    if (key == 0) {
+                        this.deviceProperty.music_name = this.deviceProperty.songList[len - 1].songName
+                        this.deviceProperty.songList[len - 1].select = true
+                        return
+                    } else {
+                        this.deviceProperty.music_name = this.deviceProperty.songList[key - 1].songName
+                        this.deviceProperty.songList[key - 1].select = true
+                        return
+                    }
+
+                }
+            }
         },
         next() {
             musicApi.next(this.device, this.deviceProperty)
+            var len = this.deviceProperty.songList.length
+            for (var key in this.deviceProperty.songList) {
+                key = parseInt(key)
+                if (this.deviceProperty.songList[key].select) {
+                    this.deviceProperty.songList[key].select = false
+                    if (key == len - 1) {
+                        this.deviceProperty.music_name = this.deviceProperty.songList[0].songName
+                        this.deviceProperty.songList[0].select = true
+                        return
+                    } else {
+                        this.deviceProperty.music_name = this.deviceProperty.songList[key + 1].songName
+                        this.deviceProperty.songList[key + 1].select = true
+                        return
+                    }
+
+                }
+            }
         },
         play() {
             this.deviceProperty.on_off = true
@@ -324,6 +358,8 @@ export default {
     mounted() {
         console.log('music')
         musicApi.readStatus(this.device, this.deviceProperty)
+        
+        
     },
     computed: {
 

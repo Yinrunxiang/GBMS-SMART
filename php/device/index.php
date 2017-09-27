@@ -220,17 +220,6 @@ switch ($action)
         $json_results = str_replace("\/","/",json_encode($results)); 
         echo $json_results;
     break;  
-    // case "getrecord":
-    //     $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light'";
-    //     $result = mysqli_query($con,$record);
-    //     $record = array();
-    //     while ($row = mysqli_fetch_assoc($result)) {
-    //         $record[] = $row;
-    //     }
-    //     // $data = [$ac_breed,$record];
-    //     $json_results = str_replace("\/","/",json_encode($record)); 
-    //     echo $json_results;
-    // break;  
     case "getrecord":
         $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
         $result = mysqli_query($con,$record);
@@ -241,38 +230,18 @@ switch ($action)
         // $data = [$ac_breed,$record];
         $json_results = str_replace("\/","/",json_encode($record)); 
         echo $json_results;
-    break;    
-    // case "getrecord":
-    //     $read  =  ture;
-    //     $start =  0;
-    //     $end = 1000;
-    //     $record = array();
-    //     while($read)
-    //     {    
-        
-    //         $sql = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > '".$start."' and id <= '".$end."'";
-    //         $result = mysqli_query($con,$sql);
-    //         $data = array();
-    //         while ($row = mysqli_fetch_assoc($result)) {
-                
-    //             $data[] = $row;
-    //         }
-    //         // $data = [$ac_breed,$record];
-            
-            
-    //         if(count($record) == 0)
-    //         {    
-    //             $read = false;
-    //             // break;数据为空,直接停止了循环
-    //         }
-    //         array_push($record,$data);
-    //         $start = $end;
-    //         $end += 1000;
-        
+    break;
+    // case "getDetailAddress":
+    //     $address = "SELECT a.id,a.room,floor,a.address,country FROM record as a left join address as b on a.address = b.address ";
+    //     $result = mysqli_query($con,$address);
+    //     $address = array();
+    //     while ($row = mysqli_fetch_assoc($result)) {
+    //         $address[] = $row;
     //     }
-    //     $json_results = str_replace("\/","/",json_encode($record)); 
+    //     // $data = [$ac_breed,$record];
+    //     $json_results = str_replace("\/","/",json_encode($address)); 
     //     echo $json_results;
-    // break;  
+    // break;
 };
 mysqli_close($con);
 

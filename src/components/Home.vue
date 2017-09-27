@@ -409,6 +409,8 @@ export default {
 		this.getLightBreed()
 		this.getLedBreed()
 		this.getAddress()
+		this.getFloor()
+		this.getRoom()
 		this.getRecord()
 
 	},

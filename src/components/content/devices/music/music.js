@@ -278,8 +278,8 @@ const musicApi = {
             albumName = albumName.join("");
             albumNo = albumlist.substr(albumCount, 2);
             var albumObj = {
-              albumName:albumName,
-              albumNo:albumNo
+              albumName: albumName,
+              albumNo: albumNo
             }
             albumList.push(albumObj)
             albumNoList[albumNo] = false
@@ -395,10 +395,29 @@ const musicApi = {
                 clearInterval(songInterval)
                 songList.sort(function (a, b) {
                   // return a.songNo - b.songNo
-                  return parseInt(a.albumNo + a.packNo +a.songNo) - parseInt(b.albumNo + b.packNo +b.songNo)
+                  return parseInt(a.albumNo + a.packNo + a.songNo) - parseInt(b.albumNo + b.packNo + b.songNo)
                 });
                 deviceProperty.songList = songList
                 deviceProperty.songListAll = songList
+                deviceProperty.musicLoading = false
+                var song = {
+                  albumNo: "03",
+                  select: true,
+                  songName: "09-California.mp3",
+                  songNo: 71,
+                  songNoHigh: "00",
+                  songNoLow: "47",
+                }
+                for (var obj of deviceProperty.songList) {
+                  obj.select = false
+                  if (obj.albumNo == song.albumNo && obj.songNoHigh == song.songNoHigh && obj.songNoLow == song.songNoLow) {
+                    obj.select = true
+                  }
+
+                }
+                deviceProperty.music_name = song.songName
+                musicApi.selectSong(device, deviceProperty, song)
+                musicApi.pause(device, deviceProperty)
               }
             }, 1000)
           }
@@ -414,7 +433,7 @@ const musicApi = {
           var albumno = _g.getadditional(msg, 3)
           var packNo = _g.getadditional(msg, 4)
           if (!songNoList[albumno + packNo]) {
-          songNoList[albumno + packNo] = true
+            songNoList[albumno + packNo] = true
             for (var i = 0; i < songNum; i++) {
               var songLength = currentSonglist.substr(songCount + 4, 2);
               songLength = parseInt('0x' + songLength) * 2

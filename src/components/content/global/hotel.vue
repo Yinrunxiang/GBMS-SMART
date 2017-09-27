@@ -74,8 +74,8 @@
 
                 </div>
                 <!-- <div class="device-list">
-                                                                                                                                                                                                                                            
-                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                    </div> -->
             </div>
         </div>
         <div v-show="showDeviceUpdate">
@@ -309,15 +309,27 @@ export default {
         this.floorList = this.address.floorList
         this.$nextTick(function() {
             var deviceList = []
-            for (var floor of this.address.floorList) {
-                for (var room of floor.roomList) {
-                    for (var type of room.typeList) {
-                        for (var device of type.deviceList) {
-                            deviceList.push(device)
+            if (this.address.floorList) {
+                for (var floor of this.address.floorList) {
+                    if (floor.roomList) {
+                        for (var room of floor.roomList) {
+                            if (room.typeList) {
+                                for (var type of room.typeList) {
+                                    if (type.deviceList) {
+                                        for (var device of type.deviceList) {
+                                            deviceList.push(device)
+                                        }
+                                    }
+
+                                }
+                            }
+
                         }
                     }
+
                 }
             }
+
             this.deviceList = deviceList
         })
 
@@ -330,38 +342,51 @@ export default {
         devicePage
     },
     computed: {
+        //获取酒店
         address() {
             // console.log(this.$route.query.address.floor)
 
             return this.$route.query.address
         },
+        //获取酒店信息
         addressProperty() {
+            var initAddress = {
+                floor_num: 0
+            }
             for (var address of this.$store.state.address) {
-                if (address.address = this.hotelName) {
-                    address.floor_num = parseInt(address.floor_num)
+                if (address.address == this.hotelName) {
+                    address.floor_num = address.floor_num ? parseInt(address.floor_num) : 0
                     // console.log(address)
-                    return address
+                    initAddress = address
                 }
             }
+            return initAddress
 
         },
+        //获取楼层信息
         floorProperty() {
+            var initFloor = {
+                room_num: 0
+            }
             for (var floor of this.$store.state.floor) {
-                if (floor.floor = this.floorName) {
-                    floor.room_num = parseInt(floor.room_num)
-                    return floor
+                if (floor.floor == this.floorName) {
+                    floor.room_num = floor.room_num ? parseInt(floor.room_num) : 0
+                    initFloor = floor
                 }
             }
+            return initFloor
         },
+        //获取房间信息
         roomProperty() {
             for (var room of this.$store.state.room) {
-                if (room.room = this.roomName) {
+                if (room.room == this.roomName) {
                     return room
                 }
             }
         },
     },
     watch: {
+        //计算功耗
         deviceList: {
             handler: function(val, oldVal) {
                 var ac_breeds = this.$store.state.ac_breed

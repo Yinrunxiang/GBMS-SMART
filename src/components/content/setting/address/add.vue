@@ -19,6 +19,9 @@
             <el-form-item label="MAC">
                 <el-input v-model.trim="form.mac" class="h-40 w-200"></el-input>
             </el-form-item>
+            <el-form-item label="Floor Num">
+                <el-input v-model.trim="form.floor_num" class="h-40 w-200"></el-input>
+            </el-form-item>
             <el-form-item label="Latitude">
                 <el-input v-model.trim="form.lat" class="h-40 w-200"></el-input>
             </el-form-item>
@@ -64,7 +67,7 @@ export default {
             const data = {
                 params: this.form
             }
-            if (add) {
+            if (this.add) {
                 this.apiGet('device/address.php?action=insert', data).then((res) => {
                     // _g.clearVuex('setRules')
                     if (res[0]) {
@@ -78,6 +81,7 @@ export default {
                     } else {
                         _g.toastMsg('error', res[1])
                     }
+                    this.isLoading =false
 
                 })
             } else {
@@ -100,6 +104,7 @@ export default {
                     } else {
                         _g.toastMsg('error', res[1])
                     }
+                    this.isLoading =false
 
                 })
             }
