@@ -16,10 +16,13 @@ import planAdd from "./components/content/plan/add.vue";
 import planUpdate from "./components/content/plan/update.vue";
 import settingTypeAc from "./components/content/setting/type/ac/ac.vue";
 import settingTypeAcAdd from "./components/content/setting/type/ac/add.vue";
+import settingTypeAcUpdate from "./components/content/setting/type/ac/update.vue";
 import settingTypeLight from "./components/content/setting/type/light/light.vue";
 import settingTypeLightAdd from "./components/content/setting/type/light/add.vue";
+import settingTypeLightUpdate from "./components/content/setting/type/light/update.vue";
 import settingTypeLed from "./components/content/setting/type/led/led.vue";
 import settingTypeLedAdd from "./components/content/setting/type/led/add.vue";
+import settingTypeLedUpdate from "./components/content/setting/type/led/update.vue";
 import address from "./components/content/setting/address/address.vue";
 import addressAdd from "./components/content/setting/address/add.vue";
 import addressUpdate from "./components/content/setting/address/update.vue";
@@ -85,10 +88,13 @@ const routes = [
     children: [
       { path: "setting/type/ac", component: settingTypeAc, name: "settingTypeAc" },
       { path: "setting/type/ac/add", component: settingTypeAcAdd, name: "settingTypeAcAdd" },
+      { path: "setting/type/ac/update", component: settingTypeAcUpdate, name: "settingTypeAcUpdate" },
       { path: "setting/type/light", component: settingTypeLight, name: "settingTypeLight" },
       { path: "setting/type/light/add", component: settingTypeLightAdd, name: "settingTypeLightAdd" },
+      { path: "setting/type/light/update", component: settingTypeLightUpdate, name: "settingTypeLightUpdate" },
       { path: "setting/type/led", component: settingTypeLed, name: "settingTypeLed" },
       { path: "setting/type/led/add", component: settingTypeLedAdd, name: "settingTypeLedAdd" },
+      { path: "setting/type/led/update", component: settingTypeLedUpdate, name: "settingTypeLedUpdate" },
       { path: "setting/address", component: address, name: "address" },
       { path: "setting/address/add", component: addressAdd, name: "addressAdd" },
       { path: "setting/address/update", component: addressUpdate, name: "addressUpdate" },

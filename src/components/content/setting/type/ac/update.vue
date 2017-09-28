@@ -2,7 +2,7 @@
     <div class="m-l-50 m-t-30 w-500">
         <el-form ref="form" :model="form" label-width="150px">
             <el-form-item label="Mode Name">
-                <el-input v-model.trim="form.breed" class="h-40 w-200"></el-input>
+                <el-input :disabled="true" v-model.trim="form.breed" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Auto Watts">
                 <el-input v-model.trim="form.mode_auto" class="h-40 w-200"></el-input>
@@ -27,6 +27,9 @@
             </el-form-item>
             <el-form-item label="High Wind Watts">
                 <el-input v-model="form.high" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <el-form-item label="Run Time(h)">
+                <el-input v-model="form.run_time" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="add('form')" :loading="isLoading">Commit</el-button>
@@ -68,9 +71,14 @@ export default {
             this.apiGet('device/ac_breed.php?action=update', data).then((res) => {
                 // _g.clearVuex('setRules')
                 if (res[0] == true) {
-                    var ac_breed = this.$store.state.ac_breed
-                    ac_breed.push(this.form)
-                    this.$store.dispatch('setAcBreed', ac_breed)
+                    for(var breed of this.$store.state.ac_breed){
+                        if(breed.breed == this.form.breed){
+                            breed = this.form
+                        }
+                    }
+                    // var ac_breed = this.$store.state.ac_breed
+                    // ac_breed.push(this.form)
+                    // this.$store.dispatch('setAcBreed', ac_breed)
                     _g.toastMsg('success', res[1])
                     setTimeout(() => {
                         this.goback()
@@ -78,12 +86,14 @@ export default {
                 } else {
                     _g.toastMsg('error', res[1])
                 }
+                this.isLoading = false
 
             })
         },
     },
     created() {
         console.log('ac_breed add')
+        this.form = this.$route.query
     },
     mounted() {
     },

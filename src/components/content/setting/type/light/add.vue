@@ -7,6 +7,9 @@
             <el-form-item label="Watts">
                 <el-input v-model.trim="form.watts" class="h-40 w-200"></el-input>
             </el-form-item>
+            <el-form-item label="Run Time(h)">
+                <el-input v-model="form.run_time" class="h-40 w-200"></el-input>
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="add('form')" :loading="isLoading">Commit</el-button>
                 <el-button @click="goback()">Back</el-button>
@@ -26,6 +29,7 @@ export default {
             form: {
                 breed: '',
                 watts: '',
+                run_time:'',
                 status: 'enabled',
             },
         }
@@ -42,7 +46,7 @@ export default {
                 if (res[0]) {
                     var light_breed = this.$store.state.light_breed
                     light_breed.push(this.form)
-                    this.$store.dispatch('setLightBreed', light_breed)
+                    // this.$store.dispatch('setLightBreed', light_breed)
                     _g.toastMsg('success', res[1])
                     setTimeout(() => {
                         this.goback()
@@ -50,7 +54,7 @@ export default {
                 } else {
                     _g.toastMsg('error', res[1])
                 }
-
+                this.isLoading = false
             })
         },
     },

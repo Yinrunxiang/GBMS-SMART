@@ -12,7 +12,7 @@
                 </el-input>
             </div>
         </div>
-        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem">
+        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
             <el-table-column type="selection" width="50">
             </el-table-column>
             <el-table-column label="Mode(W)" prop="breed" width="150">
@@ -32,6 +32,8 @@
             <el-table-column label="Medium Wind(W)" prop="medium" width="150">
             </el-table-column>
             <el-table-column label="High Wind(W)" prop="high" width="150">
+            </el-table-column>
+            <el-table-column label="Run Time(h)" prop="run_time" width="200">
             </el-table-column>
             <el-table-column label="Status" prop="status">
             </el-table-column>
@@ -72,6 +74,10 @@ export default {
         //搜索关键字
         search() {
             router.push({ path: this.$route.path, query: { keywords: this.keywords, page: 1 } })
+        },
+        rowDblclick(row){
+            var url = 'ac/update'
+             router.push({ path: url, query:row })
         },
         //获取被选中的数据
         selectItem(val) {
@@ -171,7 +177,7 @@ export default {
         this.init()
     },
     components: {
-        
+
     },
     computed: {
         //从vuex中获取设备数据

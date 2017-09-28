@@ -4,20 +4,10 @@
       <el-menu-item index="global">
         <i class="el-icon-menu"></i>Global</el-menu-item>
       <el-menu-item index="contral">
-        <i class="el-icon-menu"></i>Contral</el-menu-item>
-      <!-- <el-submenu index="11">
-        <template slot="title">
-          <i class="el-icon-menu"></i>Contral</template>
-        <el-submenu :index="country.name" v-for="country in countryArr">
-          <template slot="title">
-            <i class="el-icon-menu"></i>{{country.name}}</template>
-          <el-submenu :index="devicetype.name" v-for="devicetype in country.typeList">
-            <template slot="title">
-              <i class="el-icon-menu"></i>{{devicetype.name}}</template>
-            <el-menu-item :index="device.device" v-for="device in devicetype.deviceList"><i class="el-icon-menu"></i>{{device.device}}</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-      </el-submenu> -->
+        <el-badge :value="deviceWarn" class="badge-div">
+          <i class="el-icon-menu"></i>Contral
+        </el-badge>
+      </el-menu-item>
       <el-menu-item index="plan">
         <i class="el-icon-menu"></i>Plan</el-menu-item>
       <el-menu-item index="report">
@@ -25,7 +15,7 @@
       <el-submenu index="111">
         <template slot="title">
           <i class="el-icon-setting"></i>Setting</template>
-          <el-menu-item index="address">Address</el-menu-item>
+        <el-menu-item index="address">Address</el-menu-item>
         <el-submenu index="222">
           <template slot="title">Device Type</template>
           <el-menu-item index="settingTypeAc">AC</el-menu-item>
@@ -36,6 +26,21 @@
     </el-menu>
   </div>
 </template>
+
+<style>
+.badge-div {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.badge-div sup {
+  position: absolute !important;
+  top: 15px !important;
+  right: 10px !important;
+}
+</style>
+
 
 <script>
 export default {
@@ -109,11 +114,24 @@ export default {
   },
   created() {
     console.log('leftmeun')
+
   },
   computed: {
-    countryArr() {
-      return this.$store.state.countryArr
-    }
-  }
+    //获取异常设备
+    deviceWarn() {
+      var warn = 0
+      for (var device of this.$store.state.devices) {
+        if (device.on_off == 'on') {
+          for (var breed of this.$store.state[device.devicetype + "_breed"]) {
+            var run_time = breed.run_time
+            if (device.breed == breed.breed && device.run_time >= run_time) {
+              warn += 1
+            }
+          }
+        }
+      }
+      return warn
+    },
+  },
 }
 </script>

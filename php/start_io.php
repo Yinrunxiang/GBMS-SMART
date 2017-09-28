@@ -120,7 +120,12 @@ $sender_io->on('workerStart', function(){
                     }
                     $channel = toHex($i);
                     // echo  $channel;
-                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
+                    if($on_off == 'on'){
+                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',run_date = now() where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
+                    }else{
+                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',run_date = null where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
+                    }
+                    
                     mysqli_query($con,$sql);
                     // echo $sql;
                 }
@@ -173,8 +178,12 @@ $sender_io->on('workerStart', function(){
                 //         $mac  = $mac.'.'.substr($msg,$start, 2);
                 //     }
                 // }
+                if($on_off == 'on'){
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."',run_date = now() where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                }else{
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."',run_date = null where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                }
                 
-                $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
                 // echo $sql;
                 // $sql="insert into record (deviceid,devicetype,on_off,record_date) values ('".$deviceid."','".$devicetype."','".$on_off."',now())";
                 // echo $sql;

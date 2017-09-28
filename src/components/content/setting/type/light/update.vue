@@ -1,8 +1,8 @@
 <template>
     <div class="m-l-50 m-t-30 w-500">
         <el-form ref="form" :model="form" label-width="150px">
-            <el-form-item label="Mode Name">
-                <el-input v-model.trim="form.breed" class="h-40 w-200"></el-input>
+            <el-form-item  label="Mode Name">
+                <el-input :disabled="true" v-model.trim="form.breed" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Watts">
                 <el-input v-model.trim="form.watts" class="h-40 w-200"></el-input>
@@ -29,7 +29,7 @@ export default {
             form: {
                 breed: '',
                 watts: '',
-                run_time:'',
+                run_time: '',
                 status: 'enabled',
             },
         }
@@ -41,12 +41,14 @@ export default {
             const data = {
                 params: this.form
             }
-            this.apiGet('device/led_breed.php?action=insert', data).then((res) => {
+            this.apiGet('device/light_breed.php?action=update', data).then((res) => {
                 // _g.clearVuex('setRules')
                 if (res[0]) {
-                    var led_breed = this.$store.state.led_breed
-                    led_breed.push(this.form)
-                    // this.$store.dispatch('setLedBreed', led_breed)
+                    for (var breed of this.$store.state.light_breed) {
+                        if (breed.breed == this.form.breed) {
+                            breed = this.form
+                        }
+                    }
                     _g.toastMsg('success', res[1])
                     setTimeout(() => {
                         this.goback()
@@ -59,12 +61,12 @@ export default {
         },
     },
     created() {
-        
+        this.form = this.$route.query
     },
     mounted() {
     },
     components: {
     },
-    mixins: [http,fomrMixin]
+    mixins: [http, fomrMixin]
 }
 </script>
