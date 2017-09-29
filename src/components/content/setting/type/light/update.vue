@@ -44,11 +44,18 @@ export default {
             this.apiGet('device/light_breed.php?action=update', data).then((res) => {
                 // _g.clearVuex('setRules')
                 if (res[0]) {
-                    for (var breed of this.$store.state.light_breed) {
-                        if (breed.breed == this.form.breed) {
-                            breed = this.form
+                    var light_breed = this.$store.state.light_breed
+                    for (var i = 0; i < light_breed.length; i++) {
+                        if (light_breed[i].breed == this.form.breed) {
+                            light_breed[i] = this.form
                         }
+
                     }
+                    // for (var breed of this.$store.state.light_breed) {
+                    //     if (breed.breed == this.form.breed) {
+                    //         breed = this.form
+                    //     }
+                    // }this.$store.dispatch('setLightBreed', this.$store.state.light_breed)
                     _g.toastMsg('success', res[1])
                     setTimeout(() => {
                         this.goback()

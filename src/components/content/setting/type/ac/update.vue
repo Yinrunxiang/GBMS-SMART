@@ -71,13 +71,16 @@ export default {
             this.apiGet('device/ac_breed.php?action=update', data).then((res) => {
                 // _g.clearVuex('setRules')
                 if (res[0] == true) {
-                    for(var breed of this.$store.state.ac_breed){
-                        if(breed.breed == this.form.breed){
-                            breed = this.form
+                    var ac_breed = this.$store.state.ac_breed
+
+                    for (var i = 0; i < ac_breed.length; i++) {
+                        if (ac_breed[i].breed == this.form.breed) {
+                            ac_breed[i] = this.form
                         }
+
                     }
-                    // var ac_breed = this.$store.state.ac_breed
-                    // ac_breed.push(this.form)
+                    // // var ac_breed = this.$store.state.ac_breed
+                    // // ac_breed.push(this.form)
                     // this.$store.dispatch('setAcBreed', ac_breed)
                     _g.toastMsg('success', res[1])
                     setTimeout(() => {
@@ -99,6 +102,6 @@ export default {
     },
     components: {
     },
-    mixins: [http,fomrMixin]
+    mixins: [http, fomrMixin]
 }
 </script>

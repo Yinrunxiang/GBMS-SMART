@@ -5,19 +5,27 @@
                 <el-menu default-active="1" class="el-menu-vertical-demo" @select="selectCountry">
                     <div v-for="country in countryArr">
                         <el-submenu :index="country.name">
+
                             <template slot="title">
-                                <i class="el-icon-menu"></i>{{country.name}}</template>
+                                <el-badge :value="country.warn" class="country-badge-div">
+                                    <i class="el-icon-menu"></i>{{country.name}}
+                                </el-badge>
+                            </template>
+
                             <div v-for="address in country.addressList">
-                                <el-menu-item :index="address.name" @click="menuClick">
-                                    {{address.name}}</el-menu-item>
+                                <el-badge :value="address.warn" class="address-badge-div">
+                                    <el-menu-item :index="address.name" @click="menuClick">
+                                        {{address.name}}</el-menu-item>
+                                </el-badge>
                             </div>
+
                         </el-submenu>
                     </div>
 
                     <!-- <div v-for="country in countryArr">
-                                        <el-menu-item :index="country.name" @click="menuClick">
-                                            <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
-                                    </div> -->
+                                                            <el-menu-item :index="country.name" @click="menuClick">
+                                                                <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
+                                                        </div> -->
                 </el-menu>
             </aside>
             <section class="panel-c-c">
@@ -52,6 +60,20 @@ export default {
         }
     },
     methods: {
+        deviceWarn() {
+            var warn = 0
+            for (var device of this.$store.state.devices) {
+                if (device.on_off == 'on') {
+                    for (var breed of this.$store.state[device.devicetype + "_breed"]) {
+                        var run_time = parseInt(breed.run_time) * 36000
+                        if (device.breed == breed.breed && device.run_time >= run_time) {
+                            warn += 1
+                        }
+                    }
+                }
+            }
+            return warn
+        },
         selectCountry(key, keyPath) {
             window.socketio.removeAllListeners("new_msg");
             var typeList = []
@@ -69,7 +91,7 @@ export default {
             this.typeList = typeList
         },
         menuClick() {
-            
+
             this.$store.dispatch('showContral', false)
         }
 
@@ -85,6 +107,7 @@ export default {
         deviceList,
     },
     computed: {
+
         devices() {
             var devices = []
             for (var device of this.$store.state.devices) {
@@ -95,7 +118,37 @@ export default {
             return devices
         },
         countryArr() {
-            return this.$store.state.countryArr
+            var countryArr = this.$store.state.countryArr
+            // var countryArr = []
+            // countryArr.concat(this.$store.state.countryArr)
+            // console.log(countryArr)
+            for (var country of countryArr) {
+                country.warn = 0
+                for (var device of country.deviceList) {
+                    if (device.on_off == 'on') {
+                        for (var breed of this.$store.state[device.devicetype + "_breed"]) {
+                            var run_time = parseInt(breed.run_time) * 36000
+                            if (device.breed == breed.breed && device.run_time >= run_time) {
+                                country.warn += 1
+                            }
+                        }
+                    }
+                }
+                for (var address of country.addressList) {
+                    address.warn = 0
+                    for (var device of address.deviceList) {
+                        if (device.on_off == 'on') {
+                            for (var breed of this.$store.state[device.devicetype + "_breed"]) {
+                                var run_time = parseInt(breed.run_time) * 36000
+                                if (device.breed == breed.breed && device.run_time >= run_time) {
+                                    address.warn += 1
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return countryArr
         },
         iconstyle(type) {
             switch (type) {
@@ -114,3 +167,29 @@ export default {
     mixins: [http]
 }
 </script>
+
+<style>
+.country-badge-div {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.country-badge-div sup {
+    position: absolute !important;
+    top: 10px !important;
+    right: 2px !important;
+}
+.address-badge-div {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.address-badge-div sup {
+    position: absolute !important;
+    top: 12px !important;
+    right: 22px !important;
+}
+</style>
+

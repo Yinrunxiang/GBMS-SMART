@@ -41,15 +41,23 @@ export default {
             const data = {
                 params: this.form
             }
+            
             this.apiGet('device/led_breed.php?action=update', data).then((res) => {
                 // _g.clearVuex('setRules')
                 if (res[0]) {
-                    for(var breed of this.$store.state.led_breed){
-                        if(breed.breed == this.form.breed){
-                            breed = this.form
+                     var led_breed = this.$store.state.led_breed
+                    for (var i = 0; i < led_breed.length; i++) {
+                        if (led_breed[i].breed == this.form.breed) {
+                            led_breed[i] = this.form
                         }
+
                     }
-                    this.$store.dispatch('setLedBreed', led_breed)
+                    // for(var breed of this.$store.state.led_breed){
+                    //     if(breed.breed == this.form.breed){
+                    //         breed = this.form
+                    //     }
+                    // }
+                    // this.$store.dispatch('setLedBreed', this.$store.state.led_breed)
                     _g.toastMsg('success', res[1])
                     setTimeout(() => {
                         this.goback()

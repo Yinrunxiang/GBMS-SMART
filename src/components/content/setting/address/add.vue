@@ -81,7 +81,7 @@ export default {
                     } else {
                         _g.toastMsg('error', res[1])
                     }
-                    this.isLoading =false
+                    this.isLoading = false
 
                 })
             } else {
@@ -90,11 +90,10 @@ export default {
                     if (res[0]) {
                         var address = this.$store.state.address
                         for (var i = 0; i < address.length; i++) {
-                            for (var form of this.form) {
-                                if (address[i].address == form.address) {
-                                    address[i] = form
-                                }
+                            if (address[i].address == this.form.address) {
+                                address[i] = this.form
                             }
+
                         }
                         this.$store.dispatch('setAddress', address)
                         _g.toastMsg('success', res[1])
@@ -104,7 +103,7 @@ export default {
                     } else {
                         _g.toastMsg('error', res[1])
                     }
-                    this.isLoading =false
+                    this.isLoading = false
 
                 })
             }

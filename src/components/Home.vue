@@ -10,16 +10,16 @@
 				</template>
 			</el-col>
 			<!-- <el-col :span="4" :offset="16" class="pos-rel">
-																										<el-dropdown @command="handleMenu" class="user-menu">
-																								      <span class="el-dropdown-link c-gra" style="cursor: default">
-																								        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
-																								      </span>
-																								      <el-dropdown-menu slot="dropdown">
-																								        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
-																								        <el-dropdown-item command="logout">退出</el-dropdown-item>
-																								      </el-dropdown-menu>
-																								    </el-dropdown>
-																									</el-col> -->
+																											<el-dropdown @command="handleMenu" class="user-menu">
+																									      <span class="el-dropdown-link c-gra" style="cursor: default">
+																									        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
+																									      </span>
+																									      <el-dropdown-menu slot="dropdown">
+																									        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
+																									        <el-dropdown-item command="logout">退出</el-dropdown-item>
+																									      </el-dropdown-menu>
+																									    </el-dropdown>
+																										</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -30,7 +30,7 @@
 				<div class="grid-content bg-purple-light">
 					<el-col :span="24">
 						<transition name="fade" mode="out-in" appear>
-							<router-view :dataReady="dataReady"  ></router-view>
+							<router-view :dataReady="dataReady"></router-view>
 						</transition>
 					</el-col>
 				</div>
@@ -293,6 +293,7 @@ export default {
 					mapIportCountryObject.selected = true
 					mapIportCountryObject.addressList = []
 					mapIportCountryObject.addressArr = []
+					mapIportCountryObject.deviceList = []
 					mapIportCountryObject.deviceTypeNumber = {}
 					// mapIportCountryObject.deviceList = {}
 					countryArr.push(mapIportCountryObject)
@@ -315,11 +316,13 @@ export default {
 							addressObject.mac = item.mac
 							addressObject.floorList = []
 							addressObject.floorArr = []
+							addressObject.deviceList = []
 							// addressObject.typeList = []
 							// addressObject.typeArr = []
 							addressObject.deviceTypeNumber = {}
 							country.addressList.push(addressObject)
 						}
+						country.deviceList.push(item)
 						//计算各种设备类型的数量
 						country.deviceTypeNumber[item.devicetype] ? country.deviceTypeNumber[item.devicetype] += 1 : country.deviceTypeNumber[item.devicetype] = 1
 						for (var address of country.addressList) {
@@ -331,10 +334,11 @@ export default {
 									floorObject.name = item.floor
 									floorObject.roomList = []
 									floorObject.roomArr = []
+									floorObject.deviceList = []
 									floorObject.deviceTypeNumber = {}
 									address.floorList.push(floorObject)
 								}
-
+								address.deviceList.push(item)
 								address.deviceTypeNumber[item.devicetype] ? address.deviceTypeNumber[item.devicetype] += 1 : address.deviceTypeNumber[item.devicetype] = 1
 								for (var floor of address.floorList) {
 									//筛选重复类型
@@ -345,9 +349,11 @@ export default {
 											roomObject.name = item.room
 											roomObject.typeList = []
 											roomObject.typeArr = []
+											roomObject.deviceList = []
 											roomObject.deviceTypeNumber = {}
 											floor.roomList.push(roomObject)
 										}
+										floor.deviceList.push(item)
 										floor.deviceTypeNumber[item.devicetype] ? floor.deviceTypeNumber[item.devicetype] += 1 : floor.deviceTypeNumber[item.devicetype] = 1
 										for (var room of floor.roomList) {
 											if (item.room == room.name) {
@@ -358,6 +364,7 @@ export default {
 													typeObject.deviceList = []
 													room.typeList.push(typeObject)
 												}
+												room.deviceList.push(item)
 												room.deviceTypeNumber[item.devicetype] ? room.deviceTypeNumber[item.devicetype] += 1 : room.deviceTypeNumber[item.devicetype] = 1
 												for (var type of room.typeList) {
 													//筛选重复类型
@@ -378,7 +385,7 @@ export default {
 			}
 			console.log(countryArr)
 			this.$store.dispatch('setCountryArr', countryArr)
-			this.dataReady =true
+			this.dataReady = true
 			// return countryArr
 		},
 	},

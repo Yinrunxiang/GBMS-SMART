@@ -21,17 +21,15 @@
                         </div>
                         <div class="floor">
 
-                            <div v-for="num in addressProperty.floor_num">
+                            <div v-for="(floor, floor_key, floor_index) in addressProperty.floorList">
                                 <el-tooltip placement="right" transition="">
                                     <div slot="content">
-                                        <p v-for="(val, key, index) in floorTypeNumber">{{key}}:{{val}}</p>
+                                        <p v-for="(val, key, index) in floor.deviceTypeNumber">{{key}}:{{val}}</p>
                                     </div>
-                                    <div class="floor-centent" @click="floorClick(num)" @mouseover="floorOver(num)">Floor{{addressProperty.floor_num +1-num}}
+                                    <div class="floor-centent" @click="floorClick(addressProperty.floor_num -floor_key)" @mouseover="floorOver(addressProperty.floor_num)">Floor{{addressProperty.floor_num}}
                                     </div>
                                 </el-tooltip>
-
                             </div>
-
                             <!-- <p class="p-title">Floor</p> -->
                         </div>
                     </div>
@@ -74,8 +72,8 @@
 
                 </div>
                 <!-- <div class="device-list">
-                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                </div> -->
             </div>
         </div>
         <div v-show="showDeviceUpdate">
@@ -207,14 +205,15 @@ export default {
             for (var floor of this.floorList) {
                 if (floor.name == val) {
                     this.roomList = floor.roomList
-                }
-                for (var room of floor.roomList) {
-                    for (var type of room.typeList) {
-                        for (var device of type.deviceList) {
-                            deviceList.push(device)
+                    for (var room of floor.roomList) {
+                        for (var type of room.typeList) {
+                            for (var device of type.deviceList) {
+                                deviceList.push(device)
+                            }
                         }
                     }
                 }
+
             }
             this.deviceList = deviceList
 
@@ -222,9 +221,9 @@ export default {
         floorOver(num) {
             for (var floor of this.floorList) {
                 if (floor.name == num) {
+                    this.floorTypeNumber = floor.deviceTypeNumber
                     // this.roomList = floor.roomList
                 }
-                this.floorTypeNumber = floor.deviceTypeNumber
             }
         },
         floorBack() {
@@ -355,9 +354,9 @@ export default {
             }
             for (var address of this.$store.state.address) {
                 if (address.address == this.hotelName) {
-                    address.floor_num = address.floor_num ? parseInt(address.floor_num) : 0
+                    this.$route.query.address.floor_num = address.floor_num ? parseInt(address.floor_num) : 0
                     // console.log(address)
-                    initAddress = address
+                    initAddress = this.$route.query.address
                 }
             }
             return initAddress

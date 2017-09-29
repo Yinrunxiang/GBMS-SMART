@@ -123,7 +123,7 @@ export default {
       for (var device of this.$store.state.devices) {
         if (device.on_off == 'on') {
           for (var breed of this.$store.state[device.devicetype + "_breed"]) {
-            var run_time = breed.run_time
+            var run_time = parseInt(breed.run_time) * 36000
             if (device.breed == breed.breed && device.run_time >= run_time) {
               warn += 1
             }

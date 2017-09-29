@@ -59,7 +59,7 @@ switch ($action)
         $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
         $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
         $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
-        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."' where id = '".$id."')";
+        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."' where id = '".$id."'";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
