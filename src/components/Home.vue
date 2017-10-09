@@ -283,6 +283,9 @@ export default {
 		countryArr(devices) {
 			var countryArr = []
 			var countryList = []
+			// var initAddress = this.$store.state.address
+			// var initFloor = this.$store.state.floor
+			// var initRoom = this.$store.state.room
 			//this.devices原始设备数据
 			for (var item of devices) {
 				//筛选重复国家
@@ -320,6 +323,14 @@ export default {
 							// addressObject.typeList = []
 							// addressObject.typeArr = []
 							addressObject.deviceTypeNumber = {}
+							//设置楼层数组长度
+							// let floor_num = 0
+							// for(let address of initAddress){
+							// 	if(address.address == item.address){
+							// 		floor_num = address.floor_num
+							// 	}
+							// }
+							// addressObject.floorList = Array.apply(null, {length: floor_num});
 							country.addressList.push(addressObject)
 						}
 						country.deviceList.push(item)
@@ -343,8 +354,8 @@ export default {
 								for (var floor of address.floorList) {
 									//筛选重复类型
 									if (item.floor == floor.name) {
-										if (floor.roomArr.indexOf(item.floor) == -1) {
-											floor.roomArr.push(item.floor)
+										if (floor.roomArr.indexOf(item.room) == -1) {
+											floor.roomArr.push(item.room)
 											var roomObject = {}
 											roomObject.name = item.room
 											roomObject.typeList = []
@@ -393,6 +404,13 @@ export default {
 
 	},
 	mounted() {
+		this.getAcBreed()
+		this.getLightBreed()
+		this.getLedBreed()
+		this.getAddress()
+		this.getFloor()
+		this.getRoom()
+
 		const data = {
 			params: {
 				action: "search"
@@ -412,12 +430,7 @@ export default {
 			this.countryArr(devices)
 
 		});
-		this.getAcBreed()
-		this.getLightBreed()
-		this.getLedBreed()
-		this.getAddress()
-		this.getFloor()
-		this.getRoom()
+
 		this.getRecord()
 
 	},

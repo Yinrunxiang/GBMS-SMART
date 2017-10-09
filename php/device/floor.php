@@ -31,7 +31,7 @@ switch ($action)
         $room_num = isset($_REQUEST["room_num"]) ? $_REQUEST["room_num"] : '';
         $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
-        $sql="insert into floor (floor,room_num,image,address) values ('".$floor."','".$room_num."','".$image."','".$address."','".$mac."','".$lat."','".$lng."','".$floor."','enabled')";
+        $sql="insert into floor (floor,room_num,image,address,status) values ('".$floor."','".$room_num."','".$image."','".$address."','enabled')";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -46,16 +46,11 @@ switch ($action)
         }
         break;
     case "update":
-        $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
-        $country = isset($_REQUEST["country"]) ? $_REQUEST["country"] : '';
-        $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
-        $ip = isset($_REQUEST["ip"]) ? $_REQUEST["ip"] : '';
-        $port = isset($_REQUEST["port"]) ? $_REQUEST["port"] : '';
-        $mac = isset($_REQUEST["mac"]) ? $_REQUEST["mac"] : '';
-        $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
-        $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
         $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
-        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor = '".$floor."' where id = '".$id."')";
+        $room_num = isset($_REQUEST["room_num"]) ? $_REQUEST["room_num"] : '';
+        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
+        $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
+        $sql="update floor set floor = '".$floor."',room_num = '".$room_num."',image = '".$image."',address = '".$address."')";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -75,11 +70,11 @@ switch ($action)
         $re_str = "";
         for ($i = 0; $i  < count($selections); $i++) {
             $selection = json_decode($selections[$i]);
-            $sql = " delete from address where id = '".$selection->id."'";
+            $sql = " delete from floor where id = '".$selection->floor."'";
             if (!mysqli_query($con,$sql))
             {
                 $re = false;
-                $re_str = $re_str." Delete failed: " .$selection->address;
+                $re_str = $re_str." Delete failed: " .$selection->floor;
             }
             else{
                 $re = true;
@@ -106,7 +101,7 @@ switch ($action)
     $re_str = "";
     for ($i = 0; $i  < count($selections); $i++) {
         $selection = json_decode($selections[$i]);
-        $sql = " update address set status = '".$status."' where id = '".$selection->id."'";
+        $sql = " update address set status = '".$status."' where floor = '".$selection->floor."'";
         if (!mysqli_query($con,$sql))
         {
             $re = false;

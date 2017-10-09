@@ -21,12 +21,12 @@
                         </div>
                         <div class="floor">
 
-                            <div v-for="(floor, floor_key, floor_index) in addressProperty.floorList">
+                            <div v-for="(floor, floor_key, floor_index) in addressProperty.floor_num">
                                 <el-tooltip placement="right" transition="">
-                                    <div slot="content">
-                                        <p v-for="(val, key, index) in floor.deviceTypeNumber">{{key}}:{{val}}</p>
+                                    <div v-if="addressProperty.floorList[addressProperty.floor_num -floor_key -1]?true:false" slot="content">
+                                        <p v-for="(val, key, index) in addressProperty.floorList[addressProperty.floor_num -floor_key -1].deviceTypeNumber">{{key}}:{{val}}</p>
                                     </div>
-                                    <div class="floor-centent" @click="floorClick(addressProperty.floor_num -floor_key)" @mouseover="floorOver(addressProperty.floor_num)">Floor{{addressProperty.floor_num}}
+                                    <div class="floor-centent" @click="floorClick(addressProperty.floor_num -floor_key)" @mouseover="floorOver(addressProperty.floor_num -floor_key)">Floor{{addressProperty.floor_num -floor_key}}
                                     </div>
                                 </el-tooltip>
                             </div>
@@ -42,12 +42,12 @@
                     </div>
                 </div>
                 <div class="floorImga">
-                    <div v-for="num in room_num">
+                    <div v-for="(room, room_key, room_index) in room_num">
                         <el-tooltip placement="right" transition="">
-                            <div slot="content">
-                                <p v-for="(val, key, index) in roomTypeNumber">{{key}}:{{val}}</p>
+                            <div v-if="roomList[room_key]?true:false" slot="content">
+                                <p v-for="(val, key, index) in roomList[room_key].deviceTypeNumber">{{key}}:{{val}}</p>
                             </div>
-                            <div :class="'room'+num" class="room" @click="roomClick('101')" @mouseover="roomOver('101')"></div>
+                            <div :class="'room'+room" class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
                         </el-tooltip>
                     </div>
                 </div>
@@ -72,8 +72,8 @@
 
                 </div>
                 <!-- <div class="device-list">
-                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                </div> -->
+                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                        </div> -->
             </div>
         </div>
         <div v-show="showDeviceUpdate">
@@ -202,18 +202,23 @@ export default {
             this.showTypeList = false
             this.floorName = val
             var deviceList = []
-            for (var floor of this.floorList) {
+            for (let floor of this.floorProperty) {
+                if (floor.floor == val) {
+                    this.room_num = floor.room_num ? parseInt(floor.room_num) : 0
+
+                }
+            }
+            for (let floor of this.floorList) {
                 if (floor.name == val) {
                     this.roomList = floor.roomList
-                    for (var room of floor.roomList) {
-                        for (var type of room.typeList) {
-                            for (var device of type.deviceList) {
+                    for (let room of floor.roomList) {
+                        for (let type of room.typeList) {
+                            for (let device of type.deviceList) {
                                 deviceList.push(device)
                             }
                         }
                     }
                 }
-
             }
             this.deviceList = deviceList
 
@@ -246,30 +251,27 @@ export default {
             //     }
             // }
             var deviceList = []
-            for (var floor of this.address.floorList) {
-                for (var room of floor.roomList) {
-                    if (room.name == '101') {
-                        for (var type of room.typeList) {
-                            for (var device of type.deviceList) {
-                                deviceList.push(device)
-                            }
-
+            for (var room of this.roomList) {
+                if (room.name == val) {
+                    for (var type of room.typeList) {
+                        for (var device of type.deviceList) {
+                            deviceList.push(device)
                         }
 
                     }
+
                 }
             }
             this.deviceList = deviceList
             // this.roomWatts = echarts.init(this.$refs.roomWatts);
         },
         roomOver(val) {
-            for (var floor of this.address.floorList) {
-                for (var room of floor.roomList) {
-                    if (room.name == '101') {
-                        this.roomTypeNumber = room.deviceTypeNumber
-                    }
+            for (var room of this.roomList) {
+                if (room.name == val) {
+                    this.roomTypeNumber = room.deviceTypeNumber
                 }
             }
+
         },
         roomBack() {
             this.showFloor = true
@@ -364,17 +366,20 @@ export default {
         },
         //获取楼层信息
         floorProperty() {
-            var initFloor = {
-                room_num: 0
-            }
-            for (var floor of this.$store.state.floor) {
-                if (floor.floor == this.floorName) {
-                    floor.room_num = floor.room_num ? parseInt(floor.room_num) : 0
-                    initFloor = floor
-                }
-            }
-            return initFloor
+            return this.$store.state.floor
         },
+        // floorProperty() {
+        //     var initFloor = {
+        //         room_num: 0
+        //     }
+        //     for (var floor of this.$store.state.floor) {
+        //         if (floor.floor == this.floorName) {
+        //             floor.room_num = floor.room_num ? parseInt(floor.room_num) : 0
+        //             initFloor = floor
+        //         }
+        //     }
+        //     return initFloor
+        // },
         //获取房间信息
         roomProperty() {
             for (var room of this.$store.state.room) {

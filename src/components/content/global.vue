@@ -61,24 +61,57 @@ export default {
             let url = '/home/global/hotel'
             router.push({ path: url, query: { address: this.address } })
         },
+        //  addressClick(addressName) {
+        //     for (var country of this.countryArr) {
+        //         for (var address of country.addressList) {
+        //             if (address.name == addressName) {
+        //                 this.address = address
+        //             }
+        //         }
+
+        //     }
+        //     var floorList = []
+        //     var floor_num = 0
+        //     for (var address of this.allAddress) {
+        //         if (address.address == addressName) {
+        //             floor_num = address.floor_num ? parseInt(address.floor_num) : 0
+        //         }
+        //     }
+        //     for (var i = 0; i < floor_num; i++) {
+        //         var obj = {
+        //             name: i
+        //         }
+        //         floorList.push(obj)
+        //     }
+        //     for (var floor of this.address.floorList) {
+        //         for (var floor_t of floorList) {
+        //             if (floor.name == floor_t.name) {
+        //                 floor_t = floor
+        //             }
+        //         }
+
+        //     }
+        //     this.address.floorList = floorList
+        //     console.log(this.address)
+        //     let url = '/home/global/hotel'
+        //     router.push({ path: url, query: { address: this.address } })
+        // },
         //悬浮提示数据
         itCounteyTooltip(params) {
             var itCounteyTooltip = 'Hotel : ' + params.name + '<br/>'
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {
                     if (address.name == params.name) {
-                        for (var floor of address.floorList) {
-                            for (var room of floor.roomList) {
-                                for (var type of room.typeList) {
-                                    itCounteyTooltip += type.name + ' : ' + address.deviceTypeNumber[type.name] + '<br/>'
-                                }
-                            }
+                        // for (var floor of address.floorList) {
+                        //     for (var room of floor.roomList) {
+                        //         for (var type of room.typeList) {
+                        //             itCounteyTooltip += type.name + ' : ' + address.deviceTypeNumber[type.name] + '<br/>'
+                        //         }
+                        //     }
+                        // }
+                        for(var type in address.deviceTypeNumber){
+                            itCounteyTooltip += type + ' : ' + address.deviceTypeNumber[type] + '<br/>'
                         }
-
-
-
-
-
                     }
                 }
             }
