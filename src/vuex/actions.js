@@ -53,6 +53,9 @@ const actions = {
   setRoom({ commit }, room) {
     commit("setRoom", room);
   },
+  setWarn({ commit }, warn) {
+    commit("setWarn", warn);
+  },
   setMaxid({ commit }, maxid) {
     commit("setMaxid", maxid);
   }

@@ -53,6 +53,9 @@ const mutations = {
   setRoom(state, room) {
     state.room = room
   },
+  setWarn(state, warn) {
+    state.warn = warn
+  },
   setMaxid(state, maxid) {
     state.maxid = maxid
   }

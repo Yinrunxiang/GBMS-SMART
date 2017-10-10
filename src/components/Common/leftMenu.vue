@@ -119,17 +119,18 @@ export default {
   computed: {
     //获取异常设备
     deviceWarn() {
-      var warn = 0
-      for (var device of this.$store.state.devices) {
-        if (device.on_off == 'on') {
-          for (var breed of this.$store.state[device.devicetype + "_breed"]) {
-            var run_time = parseInt(breed.run_time) * 36000
-            if (device.breed == breed.breed && device.run_time >= run_time) {
-              warn += 1
-            }
-          }
-        }
-      }
+      // var warn = 0
+      // for (var device of this.$store.state.devices) {
+      //   if (device.on_off == 'on') {
+      //     for (var breed of this.$store.state[device.devicetype + "_breed"]) {
+      //       var run_time = parseInt(breed.run_time) * 36000
+      //       if (device.breed == breed.breed && device.run_time >= run_time) {
+      //         warn += 1
+      //       }
+      //     }
+      //   }
+      // }
+      var warn = this.$store.state.warn
       return warn
     },
   },

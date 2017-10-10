@@ -17,6 +17,7 @@ const state = {
   address:[],
   floor:[],
   room:[],
+  warn:0,
   maxid:"",
 }
 

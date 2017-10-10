@@ -29,21 +29,21 @@
                 <el-table-column label="Start Time" prop="start" width="220">
                     <template scope="scope">
                         <el-time-select placeholder="Start Time" @change="startTimeChange(scope.row)" v-model="scope.row.starttime" :picker-options="{
-                              start: '08:00',
-                              step: '00:10',
-                              end: '18:00'
-                            }">
+                                  start: '08:00',
+                                  step: '00:10',
+                                  end: '18:00'
+                                }">
                         </el-time-select>
                     </template>
                 </el-table-column>
                 <el-table-column label="Over Time" prop="over" width="220">
                     <template scope="scope">
                         <el-time-select placeholder="End Time" @change="endTimeChange(scope.row)" v-model="scope.row.endtime" :picker-options="{
-                          start: '08:00',
-                          step: '00:10',
-                          end: '18:00',
-                          minTime: scope.row.starttime
-                        }">
+                              start: '08:00',
+                              step: '00:10',
+                              end: '18:00',
+                              minTime: scope.row.starttime
+                            }">
                         </el-time-select>
                     </template>
                 </el-table-column>
@@ -55,7 +55,7 @@
                     <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button>
                 </div>
                 <div class="block pages">
-                    <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">
+                    <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="15" :current-page="currentPage" :total="dataCount">
                     </el-pagination>
                 </div>
             </div>
@@ -78,7 +78,7 @@ export default {
     //  limit              每页最大行数
     data() {
         return {
-            // tableData: [],
+            tableData: [],
             // dataCount: null,
             currentPage: null,
             keywords: '',
@@ -90,7 +90,7 @@ export default {
         }
     },
     methods: {
-        changeUpdate(data){
+        changeUpdate(data) {
             this.showDeviceUpdate = data
         },
         //搜索关键字
@@ -107,12 +107,12 @@ export default {
             router.push({ path: this.$route.path, query: { keywords: this.keywords, page: page } })
         },
         rowDblclick(row) {
-            this.showDeviceUpdate= true;
+            this.showDeviceUpdate = true;
             this.thisdevice = row
-            this.thisdevice.subnetid = this.thisdevice.subnetid?parseInt('0x' + this.thisdevice.subnetid):""
-            this.thisdevice.deviceid = this.thisdevice.deviceid?parseInt('0x' + this.thisdevice.deviceid):""
-            this.thisdevice.channel = this.thisdevice.channel?parseInt('0x' + this.thisdevice.channel):""
-            this.thisdevice.channel_spare = this.thisdevice.channel_spare?parseInt('0x' + this.thisdevice.channel_spare):""
+            this.thisdevice.subnetid = this.thisdevice.subnetid ? parseInt('0x' + this.thisdevice.subnetid) : ""
+            this.thisdevice.deviceid = this.thisdevice.deviceid ? parseInt('0x' + this.thisdevice.deviceid) : ""
+            this.thisdevice.channel = this.thisdevice.channel ? parseInt('0x' + this.thisdevice.channel) : ""
+            this.thisdevice.channel_spare = this.thisdevice.channel_spare ? parseInt('0x' + this.thisdevice.channel_spare) : ""
             console.log(this.thisdevice)
             // let url = '/home/plan/update'
             // this.$store.dispatch('setDevice', row)
@@ -232,11 +232,18 @@ export default {
                 }
             }
         },
+        getAllDevices(){
+            // var pages = Math.ceil(this.dataCount/this.limit)
+            var data = this.devices
+            var start = this.currentPage*this.limit
+            var end = start + this.limit
+            this.tableData  = data.slice(start,end)
+        },
         //初始化时统一加载
         init() {
             this.getKeywords()
             this.getCurrentPage()
-            // this.getAllDevices()
+            this.getAllDevices()
         }
     },
     created() {
@@ -250,12 +257,17 @@ export default {
     },
     computed: {
         //从vuex中获取设备数据
-        tableData() {
+        devices() {
             return this.$store.state.devices
         },
         //从vuex中获取设备数据条数
         dataCount() {
             return this.$store.state.devices.length
+        }
+    },
+    watch: {
+        '$route'(to, from) {
+            this.init()
         }
     },
     mixins: [http]

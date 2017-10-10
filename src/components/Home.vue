@@ -10,16 +10,16 @@
 				</template>
 			</el-col>
 			<!-- <el-col :span="4" :offset="16" class="pos-rel">
-																											<el-dropdown @command="handleMenu" class="user-menu">
-																									      <span class="el-dropdown-link c-gra" style="cursor: default">
-																									        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
-																									      </span>
-																									      <el-dropdown-menu slot="dropdown">
-																									        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
-																									        <el-dropdown-item command="logout">退出</el-dropdown-item>
-																									      </el-dropdown-menu>
-																									    </el-dropdown>
-																										</el-col> -->
+																																<el-dropdown @command="handleMenu" class="user-menu">
+																														      <span class="el-dropdown-link c-gra" style="cursor: default">
+																														        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
+																														      </span>
+																														      <el-dropdown-menu slot="dropdown">
+																														        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
+																														        <el-dropdown-item command="logout">退出</el-dropdown-item>
+																														      </el-dropdown-menu>
+																														    </el-dropdown>
+																															</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -283,6 +283,7 @@ export default {
 		countryArr(devices) {
 			var countryArr = []
 			var countryList = []
+			var warn = 0
 			// var initAddress = this.$store.state.address
 			// var initFloor = this.$store.state.floor
 			// var initRoom = this.$store.state.room
@@ -298,6 +299,7 @@ export default {
 					mapIportCountryObject.addressArr = []
 					mapIportCountryObject.deviceList = []
 					mapIportCountryObject.deviceTypeNumber = {}
+					mapIportCountryObject.warn = 0
 					// mapIportCountryObject.deviceList = {}
 					countryArr.push(mapIportCountryObject)
 				}
@@ -320,6 +322,7 @@ export default {
 							addressObject.floorList = []
 							addressObject.floorArr = []
 							addressObject.deviceList = []
+							addressObject.warn = 0
 							// addressObject.typeList = []
 							// addressObject.typeArr = []
 							addressObject.deviceTypeNumber = {}
@@ -334,6 +337,15 @@ export default {
 							country.addressList.push(addressObject)
 						}
 						country.deviceList.push(item)
+						if (item.on_off == 'on') {
+							for (var breed of this.$store.state[item.devicetype + "_breed"]) {
+								var run_time = parseInt(breed.run_time) * 36000
+								if (item.breed == breed.breed && item.run_time >= run_time) {
+									country.warn += 1
+									warn += 1
+								}
+							}
+						}
 						//计算各种设备类型的数量
 						country.deviceTypeNumber[item.devicetype] ? country.deviceTypeNumber[item.devicetype] += 1 : country.deviceTypeNumber[item.devicetype] = 1
 						for (var address of country.addressList) {
@@ -350,6 +362,14 @@ export default {
 									address.floorList.push(floorObject)
 								}
 								address.deviceList.push(item)
+								if (item.on_off == 'on') {
+									for (var breed of this.$store.state[item.devicetype + "_breed"]) {
+										var run_time = parseInt(breed.run_time) * 36000
+										if (item.breed == breed.breed && item.run_time >= run_time) {
+											address.warn += 1
+										}
+									}
+								}
 								address.deviceTypeNumber[item.devicetype] ? address.deviceTypeNumber[item.devicetype] += 1 : address.deviceTypeNumber[item.devicetype] = 1
 								for (var floor of address.floorList) {
 									//筛选重复类型
@@ -358,6 +378,7 @@ export default {
 											floor.roomArr.push(item.room)
 											var roomObject = {}
 											roomObject.name = item.room
+											roomObject.room_name = item.room_name
 											roomObject.typeList = []
 											roomObject.typeArr = []
 											roomObject.deviceList = []
@@ -395,6 +416,7 @@ export default {
 				}
 			}
 			console.log(countryArr)
+			this.$store.dispatch('setWarn', warn)
 			this.$store.dispatch('setCountryArr', countryArr)
 			this.dataReady = true
 			// return countryArr

@@ -23,9 +23,9 @@
                     </div>
 
                     <!-- <div v-for="country in countryArr">
-                                                            <el-menu-item :index="country.name" @click="menuClick">
-                                                                <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
-                                                        </div> -->
+                                                                                    <el-menu-item :index="country.name" @click="menuClick">
+                                                                                        <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
+                                                                                </div> -->
                 </el-menu>
             </aside>
             <section class="panel-c-c">
@@ -36,7 +36,15 @@
                                 <router-view></router-view>
                             </div>
                             <div v-if="!showContral">
-                                <deviceList :typeList="typeList"></deviceList>
+                                <el-collapse v-model="activeFloor" accordion>
+                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList" :title='"Floor  "+floor.name' :name='floor_key'>
+                                        <el-collapse v-model="activeRoom" accordion>
+                                            <el-collapse-item v-for="(room,room_key) in floor.roomList" :title='"Room  "+room.room_name' :name='room_key'>
+                                                <deviceList :typeList="room.typeList"></deviceList>
+                                            </el-collapse-item>
+                                        </el-collapse>
+                                    </el-collapse-item>
+                                </el-collapse>
                             </div>
                         </transition>
                     </el-col>
@@ -56,7 +64,10 @@ import deviceList from '../Common/device/deviceList'
 export default {
     data() {
         return {
+            address: {},
             typeList: [],
+            activeFloor: 0,
+            activeRoom:0,
         }
     },
     methods: {
@@ -80,11 +91,23 @@ export default {
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {
                     if (key == address.name) {
-                        for (var floor of address.floorList) {
-                            for (var room of floor.roomList) {
-                                typeList = typeList.concat(room.typeList)
-                            }
-                        }
+                        this.address = address
+                        // for (var floor of address.floorList) {
+                        //     for (var room of floor.roomList) {
+                        //         if (typeList.length == 0) {
+                        //             typeList = typeList.concat(room.typeList)
+                        //         } else {
+                        //             for (var type1 of typeList) {
+                        //                 for (var type2 of room.typeList) {
+                        //                     if (type1.name == type2.name) {
+                        //                         type1.deviceList = type1.deviceList.concat(type2.deviceList)
+                        //                     }
+                        //                 }
+                        //             }
+                        //         }
+
+                        //     }
+                        // }
                     }
                 }
             }
@@ -122,32 +145,32 @@ export default {
             // var countryArr = []
             // countryArr.concat(this.$store.state.countryArr)
             // console.log(countryArr)
-            for (var country of countryArr) {
-                country.warn = 0
-                for (var device of country.deviceList) {
-                    if (device.on_off == 'on') {
-                        for (var breed of this.$store.state[device.devicetype + "_breed"]) {
-                            var run_time = parseInt(breed.run_time) * 36000
-                            if (device.breed == breed.breed && device.run_time >= run_time) {
-                                country.warn += 1
-                            }
-                        }
-                    }
-                }
-                for (var address of country.addressList) {
-                    address.warn = 0
-                    for (var device of address.deviceList) {
-                        if (device.on_off == 'on') {
-                            for (var breed of this.$store.state[device.devicetype + "_breed"]) {
-                                var run_time = parseInt(breed.run_time) * 36000
-                                if (device.breed == breed.breed && device.run_time >= run_time) {
-                                    address.warn += 1
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            // for (var country of countryArr) {
+            //     // country.warn = 0
+            //     // for (var device of country.deviceList) {
+            //     //     if (device.on_off == 'on') {
+            //     //         for (var breed of this.$store.state[device.devicetype + "_breed"]) {
+            //     //             var run_time = parseInt(breed.run_time) * 36000
+            //     //             if (device.breed == breed.breed && device.run_time >= run_time) {
+            //     //                 country.warn += 1
+            //     //             }
+            //     //         }
+            //     //     }
+            //     // }
+            //     for (var address of country.addressList) {
+            //         address.warn = 0
+            //         for (var device of address.deviceList) {
+            //             if (device.on_off == 'on') {
+            //                 for (var breed of this.$store.state[device.devicetype + "_breed"]) {
+            //                     var run_time = parseInt(breed.run_time) * 36000
+            //                     if (device.breed == breed.breed && device.run_time >= run_time) {
+            //                         address.warn += 1
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
             return countryArr
         },
         iconstyle(type) {
@@ -180,6 +203,7 @@ export default {
     top: 10px !important;
     right: 2px !important;
 }
+
 .address-badge-div {
     position: relative;
     width: 100%;
