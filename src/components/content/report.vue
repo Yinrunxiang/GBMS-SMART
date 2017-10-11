@@ -1,5 +1,5 @@
 <template>
-    <el-row class="panel m-w-1100">
+    <el-row class="panel m-w-1100" v-loading="loading">
         <el-cascader class="m-t-10 m-l-15" :options="allAddress" change-on-select @change="addressChange"></el-cascader>
         <div>
             <div ref="lineChart" class="line-chart fl"></div>
@@ -16,6 +16,7 @@ export default {
         return {
             // tableData: [],
             // dataCount: null,
+            loading:true,
             selectRecord: [],
             allRecord: [],
             currentPage: null,
@@ -230,11 +231,9 @@ export default {
     },
     created() {
         console.log('Report')
-        _g.closeGlobalLoading()
-
     },
     mounted() {
-        this.selectRecord = this.record
+
         // this.initLineChart()
         // this.initPieChart()
         console.log(this.allRecord)
@@ -245,6 +244,7 @@ export default {
     watch: {
         selectRecord: {
             handler: function(val, oldVal) {
+
                 var allRecord = {}
                 allRecord.dateArr = []
                 allRecord.recordArr = []
@@ -284,6 +284,7 @@ export default {
                 this.allRecord = allRecord
                 this.initLineChart()
                 this.initPieChart()
+
             },
             deep: true
         }
@@ -292,6 +293,14 @@ export default {
         record() {
             // this.selectRecord = this.$store.state.record
             return this.$store.state.record
+        },
+        recordLoading() {
+            // return this.$store.state.recordLoading
+            var recordLoading = this.$store.state.recordLoading
+            if (!recordLoading) {
+                this.selectRecord = this.record
+                this.loading = recordLoading
+            }
         },
         // allRecord() {
         //     var records = {}

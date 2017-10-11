@@ -1,6 +1,8 @@
 <template>
     <el-card class="box-card" style="width:150px;padding:0;margin-right:30px;margin-bottom:16px;text-align: center;">
+        <i v-if="device.warn" class="el-icon-warning device-card-warn"></i>
         <div class="device-box">
+            
             <div @click="deviceContral(device)">
                 <i class="fa" :class="iconstyle(device.devicetype)" style="font-size:80px;color:#ccc"></i>
             </div>
@@ -17,9 +19,19 @@
 </template>
 
 <style>
+.box-card{
+    position: relative;
+}
 .device-box {
     padding: 0;
     margin-bottom: 10px
+}
+.device-card-warn{
+    position: absolute;
+    top:5px;
+    right:5px;
+    font-size: 16px;
+    color:#ff4949;
 }
 </style>
 

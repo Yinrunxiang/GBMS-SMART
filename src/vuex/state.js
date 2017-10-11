@@ -18,6 +18,7 @@ const state = {
   floor:[],
   room:[],
   warn:0,
+  recordLoading:true,
   maxid:"",
 }
 

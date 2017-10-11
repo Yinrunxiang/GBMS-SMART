@@ -10,16 +10,16 @@
 				</template>
 			</el-col>
 			<!-- <el-col :span="4" :offset="16" class="pos-rel">
-																																<el-dropdown @command="handleMenu" class="user-menu">
-																														      <span class="el-dropdown-link c-gra" style="cursor: default">
-																														        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
-																														      </span>
-																														      <el-dropdown-menu slot="dropdown">
-																														        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
-																														        <el-dropdown-item command="logout">退出</el-dropdown-item>
-																														      </el-dropdown-menu>
-																														    </el-dropdown>
-																															</el-col> -->
+																																							<el-dropdown @command="handleMenu" class="user-menu">
+																																					      <span class="el-dropdown-link c-gra" style="cursor: default">
+																																					        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
+																																					      </span>
+																																					      <el-dropdown-menu slot="dropdown">
+																																					        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
+																																					        <el-dropdown-item command="logout">退出</el-dropdown-item>
+																																					      </el-dropdown-menu>
+																																					    </el-dropdown>
+																																						</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -229,12 +229,15 @@ export default {
 				this.$store.dispatch('setRoom', res)
 			});
 		},
-		getRecord() {
+		getRecord(start, end,count) {
 			const data = {
 				params: {
-					action: "getrecord"
+					action: "getrecord",
+					start:start,
+					end:end,
 				}
 			}
+			var vm = this
 			this.apiGet("device/index.php", data).then(res => {
 				var records = res
 				var newRecords = []
@@ -273,11 +276,37 @@ export default {
 					}
 
 				}
-				this.records = newRecords
+				
 				//记录数据处理完成
 				//以下是记录数据的使用
-
-				this.$store.dispatch('setRecord', newRecords)
+				vm.records = vm.records.concat(newRecords) 
+				this.$store.dispatch('setRecord', vm.records)
+				if(end >= count){
+					this.$store.dispatch('setRecordLoading', false)
+				}
+			});
+		},
+		getRecordCount() {
+			var vm = this
+			const data = {
+				params: {
+					action: "getRecordCount"
+				}
+			}
+			this.apiGet("device/index.php", data).then(res => {
+				var count = parseInt(res[0].count)
+				var i = 0
+				// do {
+				// 	var start = i + 1
+				// 	var end = i + 500
+				// 	this.getRecord(start, end)
+				// 	i += 500
+				// } while (i < count)
+				for(var i = 0 ;i<count;i+=2000){
+					var start = i + 1
+					var end = i + 2000
+					this.getRecord(start, end,count)
+				}
 			});
 		},
 		countryArr(devices) {
@@ -288,7 +317,18 @@ export default {
 			// var initFloor = this.$store.state.floor
 			// var initRoom = this.$store.state.room
 			//this.devices原始设备数据
+
 			for (var item of devices) {
+				item.warn = false
+				if (item.on_off == 'on') {
+					for (var breed of this.$store.state[item.devicetype + "_breed"]) {
+						var run_time = parseInt(breed.run_time) * 36000
+						if (item.breed == breed.breed && item.run_time >= run_time) {
+							item.warn = true
+							warn += 1
+						}
+					}
+				}
 				//筛选重复国家
 				if (countryList.indexOf(item.country) == -1) {
 					countryList.push(item.country);
@@ -337,14 +377,8 @@ export default {
 							country.addressList.push(addressObject)
 						}
 						country.deviceList.push(item)
-						if (item.on_off == 'on') {
-							for (var breed of this.$store.state[item.devicetype + "_breed"]) {
-								var run_time = parseInt(breed.run_time) * 36000
-								if (item.breed == breed.breed && item.run_time >= run_time) {
-									country.warn += 1
-									warn += 1
-								}
-							}
+						if (item.warn) {
+							country.warn += 1
 						}
 						//计算各种设备类型的数量
 						country.deviceTypeNumber[item.devicetype] ? country.deviceTypeNumber[item.devicetype] += 1 : country.deviceTypeNumber[item.devicetype] = 1
@@ -359,16 +393,12 @@ export default {
 									floorObject.roomArr = []
 									floorObject.deviceList = []
 									floorObject.deviceTypeNumber = {}
+									floorObject.warn = 0
 									address.floorList.push(floorObject)
 								}
 								address.deviceList.push(item)
-								if (item.on_off == 'on') {
-									for (var breed of this.$store.state[item.devicetype + "_breed"]) {
-										var run_time = parseInt(breed.run_time) * 36000
-										if (item.breed == breed.breed && item.run_time >= run_time) {
-											address.warn += 1
-										}
-									}
+								if (item.warn) {
+									address.warn += 1
 								}
 								address.deviceTypeNumber[item.devicetype] ? address.deviceTypeNumber[item.devicetype] += 1 : address.deviceTypeNumber[item.devicetype] = 1
 								for (var floor of address.floorList) {
@@ -383,9 +413,13 @@ export default {
 											roomObject.typeArr = []
 											roomObject.deviceList = []
 											roomObject.deviceTypeNumber = {}
+											roomObject.warn = 0
 											floor.roomList.push(roomObject)
 										}
 										floor.deviceList.push(item)
+										if (item.warn) {
+											floor.warn += 1
+										}
 										floor.deviceTypeNumber[item.devicetype] ? floor.deviceTypeNumber[item.devicetype] += 1 : floor.deviceTypeNumber[item.devicetype] = 1
 										for (var room of floor.roomList) {
 											if (item.room == room.name) {
@@ -397,6 +431,9 @@ export default {
 													room.typeList.push(typeObject)
 												}
 												room.deviceList.push(item)
+												if (item.warn) {
+													room.warn += 1
+												}
 												room.deviceTypeNumber[item.devicetype] ? room.deviceTypeNumber[item.devicetype] += 1 : room.deviceTypeNumber[item.devicetype] = 1
 												for (var type of room.typeList) {
 													//筛选重复类型
@@ -452,8 +489,8 @@ export default {
 			this.countryArr(devices)
 
 		});
+		this.getRecordCount()
 
-		this.getRecord()
 
 	},
 	components: {

@@ -56,6 +56,9 @@ const mutations = {
   setWarn(state, warn) {
     state.warn = warn
   },
+  setRecordLoading(state, recordLoading) {
+    state.recordLoading = recordLoading
+  },
   setMaxid(state, maxid) {
     state.maxid = maxid
   }

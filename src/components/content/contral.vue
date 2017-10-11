@@ -23,9 +23,9 @@
                     </div>
 
                     <!-- <div v-for="country in countryArr">
-                                                                                    <el-menu-item :index="country.name" @click="menuClick">
-                                                                                        <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
-                                                                                </div> -->
+                                                                                                    <el-menu-item :index="country.name" @click="menuClick">
+                                                                                                        <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
+                                                                                                </div> -->
                 </el-menu>
             </aside>
             <section class="panel-c-c">
@@ -36,10 +36,29 @@
                                 <router-view></router-view>
                             </div>
                             <div v-if="!showContral">
+                                <!-- <el-collapse v-model="activeFloor" accordion>
+                                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList" :title='"Floor  "+floor.name' :name='floor_key'>
+                                                        <el-collapse v-model="activeRoom" accordion>
+                                                            <el-collapse-item v-for="(room,room_key) in floor.roomList" :title='"Room  "+room.room_name' :name='room_key'>
+                                                                <deviceList :typeList="room.typeList"></deviceList>
+                                                            </el-collapse-item>
+                                                        </el-collapse>
+                                                    </el-collapse-item>
+                                                </el-collapse> -->
                                 <el-collapse v-model="activeFloor" accordion>
-                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList" :title='"Floor  "+floor.name' :name='floor_key'>
+                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList"  :name='floor_key'>
+                                        <template slot="title">
+                                            <span>Floor  {{floor.name}}</span>
+                                            <el-badge :value="floor.warn">
+                                            </el-badge>
+                                        </template>
                                         <el-collapse v-model="activeRoom" accordion>
-                                            <el-collapse-item v-for="(room,room_key) in floor.roomList" :title='"Room  "+room.room_name' :name='room_key'>
+                                            <el-collapse-item v-for="(room,room_key) in floor.roomList"  :name='room_key'>
+                                                <template slot="title">
+                                            <span>Room  {{room.room_name}}</span>
+                                            <el-badge :value="room.warn">
+                                            </el-badge>
+                                        </template>
                                                 <deviceList :typeList="room.typeList"></deviceList>
                                             </el-collapse-item>
                                         </el-collapse>
@@ -67,7 +86,7 @@ export default {
             address: {},
             typeList: [],
             activeFloor: 0,
-            activeRoom:0,
+            activeRoom: 0,
         }
     },
     methods: {

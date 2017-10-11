@@ -56,6 +56,9 @@ const actions = {
   setWarn({ commit }, warn) {
     commit("setWarn", warn);
   },
+  setRecordLoading({ commit }, recordLoading) {
+    commit("setRecordLoading", recordLoading);
+  },
   setMaxid({ commit }, maxid) {
     commit("setMaxid", maxid);
   }
