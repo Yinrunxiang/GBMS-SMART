@@ -10,16 +10,16 @@
 				</template>
 			</el-col>
 			<!-- <el-col :span="4" :offset="16" class="pos-rel">
-																																							<el-dropdown @command="handleMenu" class="user-menu">
-																																					      <span class="el-dropdown-link c-gra" style="cursor: default">
-																																					        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
-																																					      </span>
-																																					      <el-dropdown-menu slot="dropdown">
-																																					        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
-																																					        <el-dropdown-item command="logout">退出</el-dropdown-item>
-																																					      </el-dropdown-menu>
-																																					    </el-dropdown>
-																																						</el-col> -->
+																																									<el-dropdown @command="handleMenu" class="user-menu">
+																																							      <span class="el-dropdown-link c-gra" style="cursor: default">
+																																							        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
+																																							      </span>
+																																							      <el-dropdown-menu slot="dropdown">
+																																							        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
+																																							        <el-dropdown-item command="logout">退出</el-dropdown-item>
+																																							      </el-dropdown-menu>
+																																							    </el-dropdown>
+																																								</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -229,12 +229,13 @@ export default {
 				this.$store.dispatch('setRoom', res)
 			});
 		},
-		getRecord(start, end,count) {
+		
+		getRecord(start, end) {
 			const data = {
 				params: {
 					action: "getrecord",
-					start:start,
-					end:end,
+					start: start,
+					end: end,
 				}
 			}
 			var vm = this
@@ -276,15 +277,31 @@ export default {
 					}
 
 				}
-				
+
 				//记录数据处理完成
 				//以下是记录数据的使用
-				vm.records = vm.records.concat(newRecords) 
-				this.$store.dispatch('setRecord', vm.records)
-				if(end >= count){
-					this.$store.dispatch('setRecordLoading', false)
-				}
+				vm.records = vm.records.concat(newRecords)
+				
+				
 			});
+		},
+		forGetRecord(count) {
+			var i = 0,start=0,end=0
+			var vm = this
+			
+			var getRecord = setInterval(function() {
+				if (end >= count) {
+					vm.$store.dispatch('setRecord', vm.records)
+					vm.$store.dispatch('setRecordLoading', false)
+					clearInterval(getRecord)
+				}
+				start = i + 1
+				end = i + 5000
+				i += 5000
+				vm.getRecord(start, end)
+			}, 1000)
+			
+			
 		},
 		getRecordCount() {
 			var vm = this
@@ -295,18 +312,12 @@ export default {
 			}
 			this.apiGet("device/index.php", data).then(res => {
 				var count = parseInt(res[0].count)
-				var i = 0
-				// do {
+				this.forGetRecord(count)
+				// for(var i = 0 ;i<count;i+=2000){
 				// 	var start = i + 1
-				// 	var end = i + 500
-				// 	this.getRecord(start, end)
-				// 	i += 500
-				// } while (i < count)
-				for(var i = 0 ;i<count;i+=2000){
-					var start = i + 1
-					var end = i + 2000
-					this.getRecord(start, end,count)
-				}
+				// 	var end = i + 2000
+				// 	this.getRecord(start, end,count)
+				// }
 			});
 		},
 		countryArr(devices) {
@@ -460,7 +471,7 @@ export default {
 		},
 	},
 	created() {
-
+		console.log('report')
 	},
 	mounted() {
 		this.getAcBreed()

@@ -23,10 +23,10 @@ export default {
         }
     },
     created() {
-        console.log('device list')
+        // console.log('device list')
     },
     mounted() {
-        console.log(this.devicetype)
+        // console.log(this.devicetype)
     },
     props: ['typeList'],
     components: {

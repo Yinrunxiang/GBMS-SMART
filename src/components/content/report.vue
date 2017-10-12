@@ -1,5 +1,5 @@
 <template>
-    <el-row class="panel m-w-1100" v-loading="loading">
+    <el-row class="panel m-w-1100" v-loading="recordLoading">
         <el-cascader class="m-t-10 m-l-15" :options="allAddress" change-on-select @change="addressChange"></el-cascader>
         <div>
             <div ref="lineChart" class="line-chart fl"></div>
@@ -16,7 +16,6 @@ export default {
         return {
             // tableData: [],
             // dataCount: null,
-            loading:true,
             selectRecord: [],
             allRecord: [],
             currentPage: null,
@@ -68,7 +67,7 @@ export default {
             var chart = this.$refs.lineChart
             this.initMapSize(chart)
             var chart = echarts.init(chart);
-            // var base = +new Date(2017, 1, 1);
+            // var base = new Date(2017, 1, 1);
             // var oneDay = 24 * 3600 * 1000;
             // var date = [];
 
@@ -236,7 +235,7 @@ export default {
 
         // this.initLineChart()
         // this.initPieChart()
-        console.log(this.allRecord)
+        // console.log(this.allRecord)
     },
     components: {
 
@@ -299,8 +298,9 @@ export default {
             var recordLoading = this.$store.state.recordLoading
             if (!recordLoading) {
                 this.selectRecord = this.record
-                this.loading = recordLoading
+                return false
             }
+            return true
         },
         // allRecord() {
         //     var records = {}
@@ -353,14 +353,14 @@ export default {
                     if (floor.address == address.address) {
                         var floorObj = {
                             value: floor.floor,
-                            label: floor.floor,
+                            label: 'floor '+floor.floor,
                             children: [],
                         }
                         for (var room of this.$store.state.room) {
                             if (room.floor == floor.floor && room.address == address.address) {
                                 var roomObj = {
                                     value: room.room,
-                                    label: room.room,
+                                    label: room.room_name,
                                 }
                                 floorObj.children.push(roomObj)
                             }
@@ -370,7 +370,7 @@ export default {
                 }
                 allAddress.push(addressObj)
             }
-            console.log(allAddress)
+            // console.log(allAddress)
             return allAddress
         }
     }

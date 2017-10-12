@@ -72,8 +72,8 @@
 
                 </div>
                 <!-- <div class="device-list">
-                                                                                                                                                                                                                                                                            
-                                                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                </div> -->
             </div>
         </div>
         <div v-show="showDeviceUpdate">
@@ -83,7 +83,7 @@
             <devicePage :device="thisdevice" @changeContral="changeContral"></devicePage>
         </div>
         <div v-show="showHotelUpdate">
-            <addressUpdate :add="addressAdd" :address="address" @goback="addressBack"></addressUpdate>
+            <addressUpdate :add="addressAdd" :address="addressUpdateData" @goback="addressBack"></addressUpdate>
         </div>
     </div>
 </template>
@@ -126,6 +126,7 @@ export default {
             roomWatts: {},
             showHotelUpdate: false,
             addressAdd: false,
+            addressUpdateData:{},
             floorTypeNumber: {},
             roomTypeNumber: {},
             room_num: 13,
@@ -186,10 +187,12 @@ export default {
         settingClick() {
             this.showHotelUpdate = true
             this.showHotel = false
+            this.showAll = false
         },
         addressBack(bool) {
             this.showHotelUpdate = bool
             this.showHotel = !bool
+            this.showAll =!bool
         },
         hotelBack() {
             let url = '/home/global'
@@ -308,6 +311,11 @@ export default {
     mounted() {
         this.hotelName = this.address.name
         this.floorList = this.address.floorList
+        for(var address of this.$store.state.address){
+            if(this.address.name == address.address){
+                this.addressUpdateData = address
+            }
+        }
         this.$nextTick(function() {
             var deviceList = []
             if (this.address.floorList) {
@@ -346,7 +354,7 @@ export default {
         //获取酒店
         address() {
             // console.log(this.$route.query.address.floor)
-
+            
             return this.$route.query.address
         },
         //获取酒店信息

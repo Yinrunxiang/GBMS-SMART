@@ -305,6 +305,7 @@ export default {
     },
     props: ['add', 'address'],
     mounted() {
+        console.log('address add')
         this.addressOptions = this.getAddressOptions()
     },
     computed: {

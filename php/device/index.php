@@ -238,7 +238,7 @@ break;
         // $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
         $start = $start = isset($_REQUEST["start"]) ? $_REQUEST["start"] : '';
         $end = $end = isset($_REQUEST["end"]) ? $_REQUEST["end"] : '';
-        $record = "SELECT device,devicetype,on_off,mode,grade,breed,record_date,country,address,floor,room FROM record where on_off = 'on' and devicetype = 'ac' or devicetype = 'light' limit ".$start." , ".$end."";
+        $record = "SELECT device,devicetype,on_off,mode,grade,breed,record_date,country,address,floor,room FROM record where on_off = 'on' and (devicetype = 'ac' or devicetype = 'light') limit ".$start." , ".$end."";
         $result = mysqli_query($con,$record);
         $record = array();
         while ($row = mysqli_fetch_assoc($result)) {
