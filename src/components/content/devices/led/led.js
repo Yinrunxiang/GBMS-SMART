@@ -29,7 +29,7 @@ const ledApi = {
         }
       };
       api.apiGet("udp/sendUdp.php", data).then(res => {
-        console.log("res = ", _g.j2s(res));
+        // console.log("res = ", _g.j2s(res));
         // _g.closeGlobalLoading()
       });
     } else {
@@ -45,7 +45,7 @@ const ledApi = {
         }
       };
       api.apiGet("udp/sendUdp.php", data).then(res => {
-        console.log("res = ", _g.j2s(res));
+        // console.log("res = ", _g.j2s(res));
         // _g.closeGlobalLoading()
       });
     }
@@ -55,7 +55,7 @@ const ledApi = {
     // var color = val.hex
     // color = color.substring(1)
     // color = _g.strToarr(color)
-    console.log(deviceProperty.color);
+    // console.log(deviceProperty.color);
     var color = val.hex;
     $(".led-light").css("color", color);
     var red = _g.toHex(Math.round(val.rgb[0] / 255 * 100));
@@ -80,7 +80,7 @@ const ledApi = {
         }
       };
       api.apiGet("udp/sendUdp.php", data).then(res => {
-        console.log("res = ", _g.j2s(res));
+        // console.log("res = ", _g.j2s(res));
         // _g.closeGlobalLoading()
       });
     }
@@ -96,9 +96,9 @@ const ledApi = {
         dest_port: device.port ? device.port : ""
       }
     };
-    console.log(device);
+    // console.log(device);
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
     // var socket = window.socket("http://" + document.domain + ":2120");
@@ -163,9 +163,9 @@ const ledApi = {
         dest_port: device.port ? device.port : ""
       }
     };
-    console.log(device);
+    // console.log(device);
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
     // var socket = window.socket("http://" + document.domain + ":2120");

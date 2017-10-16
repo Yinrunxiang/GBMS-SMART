@@ -1,4 +1,5 @@
 import refresh from "./components/refresh.vue";
+import Login from './components/Account/Login.vue'
 import Home from "./components/Home.vue";
 import global from "./components/content/global.vue";
 import hotel from "./components/content/global/hotel.vue";
@@ -34,6 +35,7 @@ import addressUpdate from "./components/content/setting/address/update.vue";
  */
 
 const routes = [
+  { path: '/', component: Login, name: 'Login' },
   {
     path: "/home",
     component: Home,

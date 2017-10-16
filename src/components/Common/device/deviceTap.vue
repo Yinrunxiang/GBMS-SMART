@@ -75,7 +75,7 @@ export default {
         deviceContral(device) {
             this.$store.dispatch('showContral', true)
             let url = '/home/contral/' + device.devicetype
-            console.log('typelist:' + url + '/n');
+            // console.log('typelist:' + url + '/n');
             this.$store.dispatch('setDevice', device)
             if (url != this.$route.path) {
                 router.push(url)
@@ -175,7 +175,7 @@ export default {
         },
     },
     created() {
-        console.log('device list device')
+        // console.log('device list device')
         this.readOpen()
     },
     mounted() {

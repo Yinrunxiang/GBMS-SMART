@@ -1,26 +1,5 @@
 <?php
-header("Content-type: text/html; charset=utf-8");
-// 指定允许其他域名访问  
-header('Access-Control-Allow-Origin:*');  
-// 响应类型  
-header('Access-Control-Allow-Methods:POST');  
-// 响应头设置  
-header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
-$con = mysqli_connect('localhost','root','root');
-if (!$con)
-{
-    die('Could not connect: ' . mysqli_error($con));
-}
-mysqli_select_db($con,"udp");
-mysqli_set_charset($con, "utf8");
-
-// $con = mysqli_connect('localhost','huangst_admin','123123');
-// if (!$con)
-// {
-//     die('Could not connect: ' . mysqli_error($con));
-// }
-// mysqli_select_db($con,"g4ever_news");
-// mysqli_set_charset($con, "utf8");
+include '../database.php';
 
 $action =  $_REQUEST["action"];
 

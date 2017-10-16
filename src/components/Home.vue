@@ -9,17 +9,18 @@
 					<span class="p-l-20">SMART GBMS</span>
 				</template>
 			</el-col>
-			<!-- <el-col :span="4" :offset="16" class="pos-rel">
-																																									<el-dropdown @command="handleMenu" class="user-menu">
-																																							      <span class="el-dropdown-link c-gra" style="cursor: default">
-																																							        Admin&nbsp;&nbsp;<i class="fa fa-user" aria-hidden="true"></i>
-																																							      </span>
-																																							      <el-dropdown-menu slot="dropdown">
-																																							        <el-dropdown-item command="changePwd">修改密码</el-dropdown-item>
-																																							        <el-dropdown-item command="logout">退出</el-dropdown-item>
-																																							      </el-dropdown-menu>
-																																							    </el-dropdown>
-																																								</el-col> -->
+			<el-col :offset="16" :span="4" class="pos-rel">
+				<el-dropdown @command="handleMenu" class="user-menu">
+
+					<p class="el-dropdown-link c-gra user-ground" style="cursor: default">
+						<i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;{{username}}
+					</p>
+					<el-dropdown-menu slot="dropdown">
+						<el-dropdown-item command="changePwd">Setting</el-dropdown-item>
+						<el-dropdown-item command="logout">Sign out</el-dropdown-item>
+					</el-dropdown-menu>
+				</el-dropdown>
+			</el-col>
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -36,7 +37,7 @@
 				</div>
 			</section>
 		</el-col>
-		<!-- <changePwd ref="changePwd"></changePwd> -->
+		<changePwd ref="changePwd"></changePwd>
 
 	</el-row>
 </template>
@@ -99,12 +100,21 @@
 	margin: 10px 10px 10px 18px;
 }
 
-.tip-logout {
+.user-ground {
+	margin: 0;
+	padding-top: 15px;
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+}
+
+
+/* .tip-logout {
 	float: right;
 	margin-right: 20px;
 	padding-top: 5px;
 	cursor: pointer;
-}
+} */
 
 .admin {
 	color: #c0ccda;
@@ -117,7 +127,7 @@
 </style>
 <script>
 import leftMenu from './Common/leftMenu.vue'
-// import changePwd from './Account/changePwd.vue'
+import changePwd from './Account/changePwd.vue'
 import http from '../assets/js/http'
 
 export default {
@@ -159,6 +169,25 @@ export default {
 		}
 	},
 	methods: {
+		logout() {
+			this.$confirm('Are you sure to exit?', 'Warning', {
+				confirmButtonText: 'Yes',
+				cancelButtonText: 'No'
+			}).then(() => {
+				Lockr.rm('username')
+				Lockr.rm('password')
+				Lockr.rm('database_name')
+				Cookies.remove('rememberPwd')
+				_g.toastMsg('success', 'Exit success')
+				setTimeout(() => {
+					router.replace('/')
+				}, 1500)
+			})
+		},
+		changePwd() {
+			console.log(this.$refs.changePwd)
+			this.$refs.changePwd.open()
+		},
 		handleMenu(val) {
 			switch (val) {
 				case 'logout':
@@ -229,7 +258,7 @@ export default {
 				this.$store.dispatch('setRoom', res)
 			});
 		},
-		
+
 		getRecord(start, end) {
 			const data = {
 				params: {
@@ -281,14 +310,14 @@ export default {
 				//记录数据处理完成
 				//以下是记录数据的使用
 				vm.records = vm.records.concat(newRecords)
-				
-				
+
+
 			});
 		},
 		forGetRecord(count) {
-			var i = 0,start=0,end=0
+			var i = 0, start = 0, end = 0
 			var vm = this
-			
+
 			var getRecord = setInterval(function() {
 				if (end >= count) {
 					vm.$store.dispatch('setRecord', vm.records)
@@ -300,8 +329,8 @@ export default {
 				i += 5000
 				vm.getRecord(start, end)
 			}, 1000)
-			
-			
+
+
 		},
 		getRecordCount() {
 			var vm = this
@@ -472,6 +501,16 @@ export default {
 	},
 	created() {
 		console.log('report')
+		let username = Lockr.get('username')
+		let password = Lockr.get('password')
+		this.username = username
+		if (!username || !password) {
+			_g.toastMsg('warning', 'You are not logged in yet')
+			setTimeout(() => {
+				router.replace('/')
+			}, 1500)
+			return
+		}
 	},
 	mounted() {
 		this.getAcBreed()
@@ -505,7 +544,8 @@ export default {
 
 	},
 	components: {
-		leftMenu
+		leftMenu,
+		changePwd,
 	},
 	computed: {
 		devices() {

@@ -45,6 +45,7 @@
                     <div v-for="(room, room_key, room_index) in room_num">
                         <el-tooltip placement="right" transition="">
                             <div v-if="roomList[room_key]?true:false" slot="content">
+                                <p>Room: {{roomList[room_key].room_name}}</p>
                                 <p v-for="(val, key, index) in roomList[room_key].deviceTypeNumber">{{key}}:{{val}}</p>
                             </div>
                             <div :class="'room'+room" class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>

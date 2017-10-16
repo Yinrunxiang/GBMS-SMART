@@ -17,9 +17,9 @@ const cutainApi = {
           dest_port: device.port ? device.port : ""
         }
       };
-      console.log(data)
+      // console.log(data)
       api.apiGet("udp/sendUdp.php", data).then(res => {
-        console.log("res = ", _g.j2s(res));
+        // console.log("res = ", _g.j2s(res));
         // _g.closeGlobalLoading()
       });
     } else {
@@ -36,7 +36,7 @@ const cutainApi = {
         }
       };
       api.apiGet("udp/sendUdp.php", data).then(res => {
-        console.log("res = ", _g.j2s(res));
+        // console.log("res = ", _g.j2s(res));
         // _g.closeGlobalLoading()
       });
     }
@@ -58,7 +58,7 @@ const cutainApi = {
       }
     };
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
   },
@@ -73,9 +73,9 @@ const cutainApi = {
         dest_port: device.port ? device.port : ""
       }
     };
-    console.log(device);
+    // console.log(device);
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
     // var socket = window.socket("http://" + document.domain + ":2120");
@@ -126,9 +126,9 @@ const cutainApi = {
         dest_port: device.port ? device.port : ""
       }
     };
-    console.log(device);
+    // console.log(device);
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
     // var socket = window.socket("http://" + document.domain + ":2120");

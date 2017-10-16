@@ -1,6 +1,9 @@
 const apiMethods = {
   methods: {
     apiGet(url, data) {
+      if(Lockr.get('database_name')){
+        data.params.database_name = Lockr.get('database_name')
+      }
       return new Promise((resolve, reject) => {
         axios.get(url, data).then((response) => {
           resolve(response.data)
@@ -15,6 +18,9 @@ const apiMethods = {
       })
     },
     apiPost(url, data) {
+      if(Lockr.get('database_name')){
+        data.database_name = Lockr.get('database_name')
+      }
       return new Promise((resolve, reject) => {
         axios.post(url, data).then((response) => {
           resolve(response.data)
@@ -97,7 +103,7 @@ const apiMethods = {
           // case 400:
           //   this.goback()
           //   break
-          default :
+          default:
             _g.toastMsg('error', res.error)
         }
       } else {
@@ -105,34 +111,42 @@ const apiMethods = {
       }
     },
     resetCommonData(data) {
-      _(data.menusList).forEach((res, key) => {
-        if (key == 0) {
-          res.selected = true
-        } else {
-          res.selected = false
-        }
-      })
-      Lockr.set('menus', data.menusList)              // 菜单数据
-      Lockr.set('authKey', data.authKey)              // 权限认证
-      Lockr.set('rememberKey', data.rememberKey)      // 记住密码的加密字符串
-      Lockr.set('authList', data.authList)            // 权限节点列表
-      Lockr.set('userInfo', data.userInfo)            // 用户信息
-      Lockr.set('sessionId', data.sessionId)          // 用户sessionid
-      window.axios.defaults.headers.authKey = Lockr.get('authKey')
-      let routerUrl = ''
-      if (data.menusList[0].url) {
-        routerUrl = data.menusList[0].url
-      } else {
-        routerUrl = data.menusList[0].child[0].child[0].url
-      }
-      setTimeout(() => {
-        let path = this.$route.path
-        if (routerUrl != path) {
-          router.replace(routerUrl)
-        } else {
-          _g.shallowRefresh(this.$route.name)
-        }
-      }, 1000)
+      Lockr.set('username', data.username)            // 用户信息
+      Lockr.set('password', data.password)            // 记住密码的加密字符串 
+      Lockr.set('database_name', data.database_name)            // 数据库名 
+      // setTimeout(() => {
+        router.replace('/home/global')
+      // }, 500)
+
+
+      // _(data.menusList).forEach((res, key) => {
+      //   if (key == 0) {
+      //     res.selected = true
+      //   } else {
+      //     res.selected = false
+      //   }
+      // })
+      // Lockr.set('menus', data.menusList)              // 菜单数据
+      // Lockr.set('authKey', data.authKey)              // 权限认证
+      // Lockr.set('rememberKey', data.rememberKey)      // 记住密码的加密字符串
+      // Lockr.set('authList', data.authList)            // 权限节点列表
+      // Lockr.set('userInfo', data.userInfo)            // 用户信息
+      // Lockr.set('sessionId', data.sessionId)          // 用户sessionid
+      // window.axios.defaults.headers.authKey = Lockr.get('authKey')
+      // let routerUrl = ''
+      // if (data.menusList[0].url) {
+      //   routerUrl = data.menusList[0].url
+      // } else {
+      //   routerUrl = data.menusList[0].child[0].child[0].url
+      // }
+      // setTimeout(() => {
+        // let path = this.$route.path
+        // if (routerUrl != path) {
+        // router.replace('/home/global')
+        // } else {
+        //   _g.shallowRefresh(this.$route.name)
+        // }
+      // }, 500)
     },
     reAjax(url, data) {
       return new Promise((resolve, reject) => {
