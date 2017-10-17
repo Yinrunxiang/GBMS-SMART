@@ -33,17 +33,23 @@ case "login":
     break;
     case "change":
     $username = $username = isset($_REQUEST["username"]) ? $_REQUEST["username"] : '';
-    $password = $password = isset($_REQUEST["password"]) ? $_REQUEST["password"] : '';
+    $password = $password = isset($_REQUEST["new_pwd"]) ? $_REQUEST["new_pwd"] : '';
         $sql = "update user set password = '".$password."' where username ='".$username."'";
         $result = mysqli_query($con,$sql);
-        $data = array();
-        while ($row = mysqli_fetch_assoc($result)) {
-         $data[] = $row;
+        if (!mysqli_query($con,$sql))
+        {
+            $message = [];
+            $message[0] = false;
+            $message[1] = "Failed";
+            echo(json_encode($message)); 
         }
-        $json_results = str_replace("\/","/",json_encode($data)); 
-        echo $json_results;
+        else{
+            $message = [];
+            $message[0] = true;
+            $message[1] = "Successfully";
+            echo(json_encode($message)); 
+        }
     break;
- 
     }
     mysqli_close($con);
     ?>

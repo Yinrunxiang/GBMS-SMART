@@ -37,7 +37,7 @@
 				</div>
 			</section>
 		</el-col>
-		<changePwd ref="changePwd"></changePwd>
+		<changePwd ref="changePwd" :showChange = 'showChange' @change = 'showChangePage'></changePwd>
 
 	</el-row>
 </template>
@@ -166,9 +166,13 @@ export default {
 			logo_type: null,
 			records: [],
 			dataReady: false,
+			showChange:false,
 		}
 	},
 	methods: {
+		showChangePage(val){
+			this.showChange = val
+		},
 		logout() {
 			this.$confirm('Are you sure to exit?', 'Warning', {
 				confirmButtonText: 'Yes',
@@ -185,8 +189,7 @@ export default {
 			})
 		},
 		changePwd() {
-			console.log(this.$refs.changePwd)
-			this.$refs.changePwd.open()
+			this.showChange = true
 		},
 		handleMenu(val) {
 			switch (val) {
