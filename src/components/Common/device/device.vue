@@ -126,6 +126,7 @@ export default {
                     cutainApi.readOpen(this.device)
                     break
             }
+            console.log('OK')
 
         },
         iconstyle(type) {
@@ -150,7 +151,7 @@ export default {
     },
     created() {
         // console.log('device list device')
-        this.readOpen()
+        // this.readOpen()
     },
     props: ['device'],
     components: {

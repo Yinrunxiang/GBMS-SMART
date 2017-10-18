@@ -226,7 +226,20 @@ switch ($action)
     // $data = [$ac_breed,$record];
     $json_results = str_replace("\/","/",json_encode($count)); 
     echo $json_results;
-break;
+    break;
+    case "getRunTime":
+    // $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
+    $device_id = $device_id = isset($_REQUEST["device_id"]) ? $_REQUEST["device_id"] : '';
+    $sql = "SELECT * FROM runtime where device_id = '".$device_id."'";
+    $result = mysqli_query($con,$sql);
+    $data = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $data[] = $row;
+    }
+    // $data = [$ac_breed,$record];
+    $json_results = str_replace("\/","/",json_encode($data)); 
+    echo $json_results;
+    break;
     case "getrecord":
         // $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
         $start = $start = isset($_REQUEST["start"]) ? $_REQUEST["start"] : '';

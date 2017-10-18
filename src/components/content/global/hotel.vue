@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="roomImga">
-                    <deviceTap v-for="device in deviceList" :device="device" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
+                    <deviceTap ref="device" v-for="device in deviceList" :device="device" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
 
                 </div>
                 <!-- <div class="device-list">
@@ -267,6 +267,26 @@ export default {
                 }
             }
             this.deviceList = deviceList
+
+            clearInterval(interval);
+            window.socketio.removeAllListeners("new_msg");
+            // console.log(val)
+            var vm = this
+            var i = 0;
+            var interval = setInterval(function() {
+                var deviceList = vm.$refs.device
+                if(!deviceList){
+                    clearInterval(interval);
+                    return
+                }
+                var len = deviceList.length
+                if (i > len-1) {
+                    clearInterval(interval);
+                    return
+                }
+                deviceList[i].readOpen()
+                i = i + 1
+            }, 300);
             // this.roomWatts = echarts.init(this.$refs.roomWatts);
         },
         roomOver(val) {

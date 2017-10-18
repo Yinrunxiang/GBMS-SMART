@@ -23,9 +23,9 @@
                     </div>
 
                     <!-- <div v-for="country in countryArr">
-                                                                                                    <el-menu-item :index="country.name" @click="menuClick">
-                                                                                                        <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
-                                                                                                </div> -->
+                                                                                                                        <el-menu-item :index="country.name" @click="menuClick">
+                                                                                                                            <i class="el-icon-menu"></i>{{country.name}}</el-menu-item>
+                                                                                                                    </div> -->
                 </el-menu>
             </aside>
             <section class="panel-c-c">
@@ -37,29 +37,31 @@
                             </div>
                             <div v-if="!showContral">
                                 <!-- <el-collapse v-model="activeFloor" accordion>
-                                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList" :title='"Floor  "+floor.name' :name='floor_key'>
-                                                        <el-collapse v-model="activeRoom" accordion>
-                                                            <el-collapse-item v-for="(room,room_key) in floor.roomList" :title='"Room  "+room.room_name' :name='room_key'>
-                                                                <deviceList :typeList="room.typeList"></deviceList>
-                                                            </el-collapse-item>
-                                                        </el-collapse>
-                                                    </el-collapse-item>
-                                                </el-collapse> -->
+                                                                        <el-collapse-item v-for="(floor,floor_key) in address.floorList" :title='"Floor  "+floor.name' :name='floor_key'>
+                                                                            <el-collapse v-model="activeRoom" accordion>
+                                                                                <el-collapse-item v-for="(room,room_key) in floor.roomList" :title='"Room  "+room.room_name' :name='room_key'>
+                                                                                    <deviceList :typeList="room.typeList"></deviceList>
+                                                                                </el-collapse-item>
+                                                                            </el-collapse>
+                                                                        </el-collapse-item>
+                                                                    </el-collapse> -->
                                 <el-collapse v-model="activeFloor" accordion>
-                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList"  :name='floor_key'>
+                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList" :name='floor_key'>
                                         <template slot="title">
-                                            <span>Floor  {{floor.name}}</span>
+                                            <span>Floor {{floor.name}}</span>
                                             <el-badge :value="floor.warn">
                                             </el-badge>
                                         </template>
-                                        <el-collapse v-model="activeRoom" accordion>
-                                            <el-collapse-item v-for="(room,room_key) in floor.roomList"  :name='room_key'>
+                                        <el-collapse @change="roomChange"  accordion>
+                                            <el-collapse-item v-for="(room,room_key) in floor.roomList" :name='room_key'>
                                                 <template slot="title">
-                                            <span>Room  {{room.room_name}}</span>
-                                            <el-badge :value="room.warn">
-                                            </el-badge>
-                                        </template>
-                                                <deviceList :typeList="room.typeList"></deviceList>
+                                                    <span>Room {{room.room_name}}</span>
+                                                    <el-badge :value="room.warn">
+                                                    </el-badge>
+                                                </template>
+                                                <transition name="fade" mode="out-in" appear>
+                                                    <deviceList ref="devicelist" :typeList="room.typeList"></deviceList>
+                                                </transition>
                                             </el-collapse-item>
                                         </el-collapse>
                                     </el-collapse-item>
@@ -86,10 +88,41 @@ export default {
             address: {},
             typeList: [],
             activeFloor: 0,
-            activeRoom: 0,
+          
         }
     },
     methods: {
+        roomChange(val) {
+            clearInterval(interval);
+            if (typeof(val) == 'string' && val == '') {
+                
+                return
+            }
+            window.socketio.removeAllListeners("new_msg");
+            // console.log(val)
+            var vm = this
+            var i = 0;
+            var interval = setInterval(function() {
+                var deviceList = vm.$refs.devicelist[val].$refs.device
+                if(!deviceList){
+                    clearInterval(interval);
+                    return
+                }
+                var len = deviceList.length
+                if (i > len-1) {
+                    clearInterval(interval);
+                    return
+                }
+                deviceList[i].readOpen()
+                i = i + 1
+            }, 300);
+
+            // for (var device of deviceList) {
+            //     // setTimeout(device.readOpen(),2000)
+            //     device.readOpen()
+            //     // console.log('OK')
+            // }
+        },
         deviceWarn() {
             var warn = 0
             for (var device of this.$store.state.devices) {
@@ -105,7 +138,7 @@ export default {
             return warn
         },
         selectCountry(key, keyPath) {
-            window.socketio.removeAllListeners("new_msg");
+
             var typeList = []
             for (var country of this.countryArr) {
                 for (var address of country.addressList) {

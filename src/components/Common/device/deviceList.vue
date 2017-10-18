@@ -7,7 +7,7 @@
                 </div>
                 <div class="w-100p">
                     <div v-for="device in devicetype.deviceList">
-                        <device  :device="device" class="fl"></device>
+                        <device ref="device"  :device="device" class="fl"></device>
                     </div>
                 </div>
             </el-row>
@@ -27,6 +27,9 @@ export default {
     },
     mounted() {
         // console.log(this.devicetype)
+    },
+    methods:{
+        
     },
     props: ['typeList'],
     components: {

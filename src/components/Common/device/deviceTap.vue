@@ -152,7 +152,7 @@ export default {
                     // musicApi.readOpen(this.device)
                     break
             }
-
+            console.log('OK')
         },
         iconstyle(type) {
             switch (type) {
@@ -176,7 +176,7 @@ export default {
     },
     created() {
         // console.log('device list device')
-        this.readOpen()
+        // this.readOpen()
     },
     mounted() {
         var self = this

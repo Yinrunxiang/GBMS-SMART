@@ -26,7 +26,12 @@
                 </el-table-column>
                 <el-table-column label="IP" prop="ip" width="150">
                 </el-table-column>
-                <el-table-column label="Start Time" prop="start" width="220">
+                <el-table-column label="Start Time" prop="start" >
+                    <template scope="scope">
+                        <el-button  size="small" icon="setting" @click="showTimeSetting(scope.row)"></el-button>
+                    </template>
+                </el-table-column>
+                <!-- <el-table-column label="Start Time" prop="start" width="220">
                     <template scope="scope">
                         <el-time-select placeholder="Start Time" @change="startTimeChange(scope.row)" v-model="scope.row.starttime" :picker-options="{
                                   start: '08:00',
@@ -46,7 +51,7 @@
                             }">
                         </el-time-select>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
             <div class="pos-rel p-t-20">
                 <div>
@@ -63,12 +68,14 @@
         <div v-if="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel='notHotel' @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
+        <timeSetting v-if="openTimeSetting" :open = "openTimeSetting" :device = "openTimeSettingDevice" @change="closeTimeSetting"></timeSetting>
     </div>
 </template>
 
 <script>
 import btnGroup from '../Common/btn-group.vue'
 import deviceUpdate from './plan/update'
+import timeSetting from './plan/timeStting'
 import http from '../../assets/js/http'
 
 export default {
@@ -87,9 +94,18 @@ export default {
             multipleSelection: [],
             limit: 15,
             showDeviceUpdate: false,
+            openTimeSetting:false,
+            openTimeSettingDevice:{},
         }
     },
     methods: {
+        showTimeSetting(row){
+            this.openTimeSetting = true
+            this.openTimeSettingDevice = row
+        },
+        closeTimeSetting(val){
+            this.openTimeSetting =val
+        },
         changeUpdate(data) {
             this.showDeviceUpdate = data
         },
@@ -254,6 +270,7 @@ export default {
     components: {
         btnGroup,
         deviceUpdate,
+        timeSetting,
     },
     computed: {
         //从vuex中获取设备数据
