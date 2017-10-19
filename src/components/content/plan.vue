@@ -26,9 +26,9 @@
                 </el-table-column>
                 <el-table-column label="IP" prop="ip" width="150">
                 </el-table-column>
-                <el-table-column label="Start Time" prop="start" >
+                <el-table-column label="Time" prop="start" >
                     <template scope="scope">
-                        <el-button  size="small" icon="setting" @click="showTimeSetting(scope.row)"></el-button>
+                        <el-button  size="small" icon="time" @click="showTimeSetting(scope.row)"></el-button>
                     </template>
                 </el-table-column>
                 <!-- <el-table-column label="Start Time" prop="start" width="220">
@@ -68,7 +68,7 @@
         <div v-if="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel='notHotel' @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
-        <timeSetting v-if="openTimeSetting" :open = "openTimeSetting" :device = "openTimeSettingDevice" @change="closeTimeSetting"></timeSetting>
+        <timeSetting v-if='openTimeSetting'  :open = "openTimeSetting" :device = "openTimeSettingDevice" @change="closeTimeSetting"></timeSetting>
     </div>
 </template>
 

@@ -240,6 +240,43 @@ switch ($action)
     $json_results = str_replace("\/","/",json_encode($data)); 
     echo $json_results;
     break;
+    case "setRunTime":
+    // $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
+    $device_id = $device_id = isset($_REQUEST["device_id"]) ? $_REQUEST["device_id"] : '';
+    $sun_up = $sun_up = isset($_REQUEST["sun_up"]) ? $_REQUEST["sun_up"] : '';
+    $sun_down = $sun_down = isset($_REQUEST["sun_down"]) ? $_REQUEST["sun_down"] : '';
+    $sun_status = $sun_status = isset($_REQUEST["sun_status"]) ? $_REQUEST["sun_status"] : '';
+    $mon_up = $mon_up = isset($_REQUEST["mon_up"]) ? $_REQUEST["mon_up"] : '';
+    $mon_down = $mon_down = isset($_REQUEST["mon_down"]) ? $_REQUEST["mon_down"] : '';
+    $mon_status = $mon_status = isset($_REQUEST["mon_status"]) ? $_REQUEST["mon_status"] : '';
+    $tues_up = $tues_up = isset($_REQUEST["tues_up"]) ? $_REQUEST["tues_up"] : '';
+    $tues_down = $tues_down = isset($_REQUEST["tues_down"]) ? $_REQUEST["tues_down"] : '';
+    $tues_status = $tues_status = isset($_REQUEST["tues_status"]) ? $_REQUEST["tues_status"] : '';
+    $wed_up = $wed_up = isset($_REQUEST["wed_up"]) ? $_REQUEST["wed_up"] : '';
+    $wed_down = $wed_down = isset($_REQUEST["wed_down"]) ? $_REQUEST["wed_down"] : '';
+    $wed_status = $wed_status = isset($_REQUEST["wed_status"]) ? $_REQUEST["wed_status"] : '';
+    $thur_up = $thur_up = isset($_REQUEST["thur_up"]) ? $_REQUEST["thur_up"] : '';
+    $thur_down = $thur_down = isset($_REQUEST["thur_down"]) ? $_REQUEST["thur_down"] : '';
+    $thur_status = $thur_status = isset($_REQUEST["thur_status"]) ? $_REQUEST["thur_status"] : '';
+    $fri_up = $fri_up = isset($_REQUEST["fri_up"]) ? $_REQUEST["fri_up"] : '';
+    $fri_down = $fri_down = isset($_REQUEST["fri_down"]) ? $_REQUEST["fri_down"] : '';
+    $fri_status = $fri_status = isset($_REQUEST["fri_status"]) ? $_REQUEST["fri_status"] : '';
+    $sat_up = $sat_up = isset($_REQUEST["sat_up"]) ? $_REQUEST["sat_up"] : '';
+    $sat_down = $sat_down = isset($_REQUEST["sat_down"]) ? $_REQUEST["sat_down"] : '';
+    $sat_status = $sat_status = isset($_REQUEST["sat_status"]) ? $_REQUEST["sat_status"] : '';
+    if($_REQUEST["type"] == 'insert'){
+        $sql = "insert into runtime (device_id,sun_up,sun_down,sun_status,mon_up,mon_down,mon_status,tues_up,tues_down,tues_status,wed_up,wed_down,wed_status,thur_up,thur_down,thur_status,fri_up,fri_down,fri_status,sat_up,sat_down,sat_status) values ('".device_id."','".sun_up."','".sun_down."','".sun_status."','".mon_up."','".mon_down."','".mon_status."','".tues_up."','".tues_down."','".tues_status."','".wed_up."','".wed_down."','".wed_status."','".thur_up."','".thur_down."','".thur_status."','".fri_up."','".fri_down."','".fri_status."','".sat_up."','".sat_down."','".sat_status."')";
+    }
+    $sql = "SELECT * FROM runtime where device_id = '".$device_id."'";
+    $result = mysqli_query($con,$sql);
+    $data = array();
+    while ($row = mysqli_fetch_assoc($result)) {
+        $data[] = $row;
+    }
+    // $data = [$ac_breed,$record];
+    $json_results = str_replace("\/","/",json_encode($data)); 
+    echo $json_results;
+    break;
     case "getrecord":
         // $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
         $start = $start = isset($_REQUEST["start"]) ? $_REQUEST["start"] : '';
