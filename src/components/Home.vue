@@ -262,7 +262,7 @@ export default {
 			});
 		},
 
-		getRecord(start, end) {
+		getRecord(start, end,count) {
 			const data = {
 				params: {
 					action: "getrecord",
@@ -313,7 +313,11 @@ export default {
 				//记录数据处理完成
 				//以下是记录数据的使用
 				vm.records = vm.records.concat(newRecords)
-
+				if (end >= count) {
+					vm.$store.dispatch('setRecord', vm.records)
+					vm.$store.dispatch('setRecordLoading', false)
+					clearInterval(getRecord)
+				}
 
 			});
 		},
@@ -322,15 +326,11 @@ export default {
 			var vm = this
 
 			var getRecord = setInterval(function() {
-				if (end >= count) {
-					vm.$store.dispatch('setRecord', vm.records)
-					vm.$store.dispatch('setRecordLoading', false)
-					clearInterval(getRecord)
-				}
+				
 				start = i + 1
 				end = i + 5000
 				i += 5000
-				vm.getRecord(start, end)
+				vm.getRecord(start, end,count)
 			}, 1000)
 
 

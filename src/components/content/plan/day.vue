@@ -48,10 +48,14 @@
   color:#fff;
   background-color: #20a0ff
 }
-.time-setting-day .time-setting-select:not(.active):hover {
+.time-setting-day .time-setting-select:hover {
   color:#fff;
   background-color: #20a0ff
 }
+/* .time-setting-day .time-setting-select:not(.active):hover {
+  color:#48576a;
+  background-color: #eef1f6;
+} */
 </style>
 <script>
 export default {

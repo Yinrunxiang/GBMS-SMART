@@ -61,8 +61,19 @@ $sender_io->on('workerStart', function(){
         $deviceid = substr($msg,36, 2);
         // echo $deviceid.'                      ';
         switch($operatorCode){
+            case "0032":
+            $channel = substr($msg,50, 2);
+            $brightness = substr($msg,54, 2);
+            $on_off = $brightness != '00'? $on_off = 'on' :$on_off = 'off';
+            if($on_off == 'on'){
+                $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',run_date = now() where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
+            }else{
+                $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',run_date = null where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
+            }
+            
+            mysqli_query($con,$sql);
+        break;
             case "0034":
-            echo $msg;
                 // $channel = substr($msg,52, 2);
                 $brightness = substr($msg,54, 2);
                 // $devicetype = $channel != '00'? 'light' : 'led';
@@ -87,9 +98,9 @@ $sender_io->on('workerStart', function(){
                     $channel = toHex($i);
                     // echo  $channel;
                     if($on_off == 'on'){
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',run_date = now() where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
+                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
                     }else{
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',run_date = null where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
+                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
                     }
                     
                     mysqli_query($con,$sql);
@@ -100,8 +111,74 @@ $sender_io->on('workerStart', function(){
                 // echo $sql;
                 
             break;
+            case "e3d9":
+            $type = substr($msg,50, 2);
+            $value = substr($msg,52, 2);
+            
+            switch($type){
+                case "03":
+                $type = 'on_off';
+                if ($value == "01") {
+                    $value = 'on';
+
+                } else {
+                    $value = 'off';
+                }
+                break;
+                case "05":
+                $type = 'grade';
+                    switch ($value) {
+                        case '00':
+                        $value= "Auto";
+                            break;
+                        case '01':
+                        $value= "Hign";
+                            break;
+                        case '02':
+                        $value= "Medial";
+                            break;
+                        case '03':
+                        $value= "Low";
+                            break;
+                    }
+                break;
+                case "06":
+                    $type = 'mode';
+                    switch ($value) {
+                        case '00':
+                        $value = "cool";
+                            break;
+                        case '01':
+                        $value = "heat";
+                            break;
+                        case '02':
+                        $value = "fan";
+                            break;
+                        case '03':
+                        $value = "auto";
+                            break;
+                    }
+                    break;
+                }
+            
+            if($type == 'on_off'){
+                if($value == 'on'){
+                    $sql = "update device as a left join address as b on a.address = b.address set $type = '".$value."',run_date = now() where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                }else{
+                    $sql = "update device as a left join address as b on a.address = b.address set $type = '".$value."',run_date = null where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                }
+            }
+            else{
+                $sql = "update device as a left join address as b on a.address = b.address set '.$type.' = '".$value."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+            }
+           
+            // echo $type.$value;
+            // echo $sql;
+            // $sql="insert into record (deviceid,devicetype,on_off,record_date) values ('".$deviceid."','".$devicetype."','".$on_off."',now())";
+            // echo $sql;
+            mysqli_query($con,$sql);
+            break;
             case "e0ed":
-            echo $msg;
                 $on_off = substr($msg,50, 2);
                 $on_off = $on_off != '00'? $on_off = 'on' :$on_off = 'off';
                 $devicetype = 'ac';
@@ -146,9 +223,9 @@ $sender_io->on('workerStart', function(){
                 //     }
                 // }
                 if($on_off == 'on'){
-                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."',run_date = now() where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
                 }else{
-                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."',run_date = null where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
                 }
                 
                 // echo $sql;
@@ -226,7 +303,7 @@ $sender_io->on('workerStart', function(){
         // global $devices;
         //延迟3秒后，将设备运行状态记录到record表
         // sleep(3);
-        $sql="insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,floor,room,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,floor,room,now() from device left join address on device.address = address.address ";
+        $sql="insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,floor,room,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,floor,room,now() from device left join address on device.address = address.address where on_off = 'on' ";
         $result = mysqli_query($con,$sql);
         // global $uidConnectionMap, $sender_io, $last_online_count, $last_online_page_count;
         // $online_count_now = count($uidConnectionMap);

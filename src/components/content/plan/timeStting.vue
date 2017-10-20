@@ -62,25 +62,19 @@ export default {
     };
   },
   methods: {
-    // open() {
-    //   console.log(this.$refs.dialog)
-    //   this.$refs.dialog.open()
-    // },
-    // close() {
-    //   this.$refs.dialog.close()
-    // },
+    //启用时间事件
     daySelect(day, val) {
       //   this.runtime[day].status = val;
       this.runtime[day].status = val;
     },
+    //选中星期几事件
     dayChange(val) {
       this.showing = val;
     },
-    startTimeChange() {},
-    endTimeChange() {},
     handleClose() {
       this.myopen = false;
     },
+    //保存运行时间
     submit() {
       var params = {
         action:'setRunTime',
@@ -90,20 +84,25 @@ export default {
         params.type='update'
       }
       else{
-        params.type='set'
+        params.type='insert'
       }
       for(var key in this.runtime){
           params[key+'_up'] =this.runtime[key].up
         params[key+'_down'] =this.runtime[key].down
-        params[key+'_status'] =this.runtime[key].status
+        params[key+'_status'] =this.runtime[key].status?1:0
       }
       const data = {
         params: params
       };
        this.apiGet("device/index.php", data).then(res => {
-           
+           if(res[0]){
+             _g.toastMsg('success', res[1])
+           }else{
+             _g.toastMsg('error', res[1])
+           }
        })
     },
+    //获取运行时间
     getRunTime() {
       const data = {
         params: {

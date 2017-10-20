@@ -265,17 +265,22 @@ switch ($action)
     $sat_down = $sat_down = isset($_REQUEST["sat_down"]) ? $_REQUEST["sat_down"] : '';
     $sat_status = $sat_status = isset($_REQUEST["sat_status"]) ? $_REQUEST["sat_status"] : '';
     if($_REQUEST["type"] == 'insert'){
-        $sql = "insert into runtime (device_id,sun_up,sun_down,sun_status,mon_up,mon_down,mon_status,tues_up,tues_down,tues_status,wed_up,wed_down,wed_status,thur_up,thur_down,thur_status,fri_up,fri_down,fri_status,sat_up,sat_down,sat_status) values ('".device_id."','".sun_up."','".sun_down."','".sun_status."','".mon_up."','".mon_down."','".mon_status."','".tues_up."','".tues_down."','".tues_status."','".wed_up."','".wed_down."','".wed_status."','".thur_up."','".thur_down."','".thur_status."','".fri_up."','".fri_down."','".fri_status."','".sat_up."','".sat_down."','".sat_status."')";
+        $sql = "insert into runtime (device_id,sun_up,sun_down,sun_status,mon_up,mon_down,mon_status,tues_up,tues_down,tues_status,wed_up,wed_down,wed_status,thur_up,thur_down,thur_status,fri_up,fri_down,fri_status,sat_up,sat_down,sat_status) values ('".$device_id."','".$sun_up."','".$sun_down."','".$sun_status."','".$mon_up."','".$mon_down."','".$mon_status."','".$tues_up."','".$tues_down."','".$tues_status."','".$wed_up."','".$wed_down."','".$wed_status."','".$thur_up."','".$thur_down."','".$thur_status."','".$fri_up."','".$fri_down."','".$fri_status."','".$sat_up."','".$sat_down."','".$sat_status."')";
+    }else{
+        $sql = "update runtime set device_id = '".$device_id."',sun_up = '".$sun_up."',sun_down = '".$sun_down."',sun_status = '".$sun_status."',mon_up = '".$mon_up."',mon_down = '".$mon_down."',mon_status = '".$mon_status."',tues_up = '".$tues_up."',tues_down = '".$tues_down."',tues_status = '".$tues_status."',wed_up = '".$wed_up."',wed_down = '".$wed_down."',wed_status = '".$wed_status."',thur_up = '".$thur_up."',thur_down = '".$thur_down."',thur_status = '".$thur_status."',fri_up = '".$fri_up."',fri_down = '".$fri_down."',fri_status = '".$fri_status."',sat_up = '".$sat_up."',sat_down = '".$sat_down."',sat_status = '".$sat_status."'";
     }
-    $sql = "SELECT * FROM runtime where device_id = '".$device_id."'";
-    $result = mysqli_query($con,$sql);
-    $data = array();
-    while ($row = mysqli_fetch_assoc($result)) {
-        $data[] = $row;
+    if (!mysqli_query($con,$sql))
+    {
+        $message[0] = false;
+        $message[1] = 'Failed';
+        echo(json_encode($message)); 
     }
-    // $data = [$ac_breed,$record];
-    $json_results = str_replace("\/","/",json_encode($data)); 
-    echo $json_results;
+    else{
+        $message = [];
+        $message[0] = true;
+        $message[1] = "Successfully";
+        echo(json_encode($message)); 
+    }
     break;
     case "getrecord":
         // $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
