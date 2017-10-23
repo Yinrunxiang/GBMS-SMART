@@ -204,7 +204,7 @@ switch ($action)
     }
     break;
     case "search":
-        $sql=" SELECT a.id,maxid,device,subnetid,deviceid,channel,channel_spare,b.id as addressid,mac,ip,port,lat,lng,a.floor,a.room,devicetype,case when on_off = 'on' then now() - run_date else null end as run_time,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,a.floor,a.room,room_name,x_axis,y_axis FROM device as a left join address as b on a.address = b.address left join room as r on a.room = r.room left join (select max(id) as maxid from device) as c on 1=1  order by a.address,a.floor,a.room + 0,devicetype,breed,id ";
+        $sql=" SELECT a.id,maxid,device,subnetid,deviceid,channel,channel_spare,b.id as addressid,mac,ip,port,lat,lng,a.floor,a.room,devicetype,case when on_off = 'on' then now() - run_date else null end as run_time,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,a.floor,a.room,room_name,x_axis,y_axis FROM device as a left join address as b on a.address = b.address left join room as r on a.address = r.address and a.floor = r.floor and a.room = r.room left join (select max(id) as maxid from device) as c on 1=1  order by a.address,a.floor,a.room + 0,devicetype,breed,id ";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {

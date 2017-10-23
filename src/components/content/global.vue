@@ -5,7 +5,7 @@
     </div>
 </template>
 
-<<style>
+<style>
 /* #world-map,#chart{
     width:1180px; 
     height: 100%;

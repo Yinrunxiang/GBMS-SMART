@@ -25,6 +25,8 @@ export default {
             multipleSelection: [],
             limit: 15,
             showDeviceUpdate: false,
+            lineChart:{},
+            pieChart:{},
         }
     },
     methods: {
@@ -66,7 +68,7 @@ export default {
         initLineChart() {
             var chart = this.$refs.lineChart
             this.initMapSize(chart)
-            var chart = echarts.init(chart);
+            this.lineChart = echarts.init(chart);
             // var base = new Date(2017, 1, 1);
             // var oneDay = 24 * 3600 * 1000;
             // var date = [];
@@ -78,6 +80,17 @@ export default {
             //     date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
             //     data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
             // }
+            
+        },
+        initPieChart() {
+            var chart = this.$refs.pieChart
+            this.initMapSize(chart)
+            this.pieChart = echarts.init(chart);
+
+            
+        },
+        setLineChart(){
+            this.lineChart.clear()
             var date = this.allRecord.dateArr
             var data = this.allRecord.recordArr
 
@@ -145,13 +158,10 @@ export default {
                     }
                 ]
             };
-            chart.setOption(option);
+           this.lineChart.setOption(option);
         },
-        initPieChart() {
-            var chart = this.$refs.pieChart
-            this.initMapSize(chart)
-            var chart = echarts.init(chart);
-
+        setPieChart(){
+            this.pieChart.clear()
             var option = {
                 backgroundColor: '#f1f2f7',
 
@@ -224,17 +234,18 @@ export default {
                     }
                 ]
             };
-            chart.setOption(option);
-        },
+            this.pieChart.setOption(option);
+        }
 
     },
     created() {
         console.log('Report')
+        
     },
     mounted() {
-
-        // this.initLineChart()
-        // this.initPieChart()
+this.initLineChart()
+        this.initPieChart()
+        
         // console.log(this.allRecord)
     },
     components: {
@@ -281,8 +292,8 @@ export default {
                 wattSort.sort(sortNumber)
                 allRecord.wattSort = wattSort
                 this.allRecord = allRecord
-                this.initLineChart()
-                this.initPieChart()
+                this.setLineChart()
+                this.setPieChart()
 
             },
             deep: true

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div  v-loading="globalLoading">
         <div v-show="!showDeviceUpdate" class="p-20">
             <div class="m-b-20 ovf-hd">
                 <div class="fl">
@@ -280,6 +280,9 @@ export default {
         //从vuex中获取设备数据条数
         dataCount() {
             return this.$store.state.devices.length
+        },
+        globalLoading() {
+            return store.state.globalLoading
         }
     },
     watch: {

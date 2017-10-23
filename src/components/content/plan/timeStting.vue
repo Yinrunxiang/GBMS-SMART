@@ -110,6 +110,7 @@ export default {
           device_id: this.device.id
         }
       };
+      _g.openGlobalLoading()
       this.apiGet("device/index.php", data).then(res => {
         if (res[0]) {
           var data = res[0];
@@ -195,6 +196,7 @@ export default {
           this.runtime = runtime;
         }
         this.ready = true;
+        _g.closeGlobalLoading()
       });
     }
   },

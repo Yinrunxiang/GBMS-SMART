@@ -1,7 +1,10 @@
 <template>
     <div class="container-out" style="height:100%">
         <div v-show="showAll" style="width:100%;height:100%">
-            <div ref="roomWatts" class="roomWatts" style=""></div>
+            <div class="roomWattsContainer">
+                <div ref="roomWatts" class="roomWatts" style=""></div>
+            </div>
+            
             <div v-show="showHotel" class="hotel-content">
                 <div class="icon-list">
                     <div @click="hotelBack">
@@ -53,7 +56,7 @@
                     </div>
                 </div>
             </div>
-            <div v-show="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
+            <div v-if="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
                 <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
                     <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
                 </el-popover>
@@ -63,6 +66,9 @@
                     </div>
                     <div @click="settingStatusClick">
                         <i class="el-icon-setting"></i>
+                    </div>
+                    <div @click="roomClose">
+                        <i class="fa fa-pause"></i>
                     </div>
                     <div @click="roomBack">
                         <i class="fa fa-reply"></i>
@@ -297,6 +303,14 @@ export default {
             }
 
         },
+        roomClose(){
+            var deviceList = this.$refs.device
+            console.log(deviceList)
+            for(var device of deviceList){
+                device.device.on_off = false
+                device.switch_change(false)
+            }
+        },
         roomBack() {
             this.showFloor = true
             this.showRoom = false
@@ -330,6 +344,7 @@ export default {
 
     },
     mounted() {
+        this.roomWatts = echarts.init(this.$refs.roomWatts);
         this.hotelName = this.address.name
         this.floorList = this.address.floorList
         for(var address of this.$store.state.address){
@@ -511,8 +526,8 @@ export default {
                         }
                     ]
                 };
-                var roomWatts = echarts.init(this.$refs.roomWatts);
-                roomWatts.setOption(roomWattsOption, true);
+                // var roomWatts = echarts.init(this.$refs.roomWatts);
+                this.roomWatts.setOption(roomWattsOption, true);
             },
             deep: true
         }
@@ -528,19 +543,20 @@ export default {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: #ccc;
+    
 }
-
+.roomWattsContainer{
+    position: fixed;
+    right: 15px;
+    bottom: 10px;
+    z-index: 10;
+}
 .roomWatts {
-    position: absolute;
-    right: 0;
-    bottom: 0;
     width: 250px;
     height: 250px;
 
-    z-index: 10;
+    
 }
-
 .roomWatts div {
     border-radius: 250px;
 }
@@ -557,6 +573,7 @@ export default {
     position: relative;
     width: 100%;
     height: 100%;
+    background-color: #ccc;
 }
 
 .container-in {
@@ -564,7 +581,7 @@ export default {
     width: 800px;
     height: 550px;
     padding: 0;
-    margin: 10px auto;
+    margin: 0 auto;
     /* border: 1px solid #000;
     border-radius: 10px; */
 }
