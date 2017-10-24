@@ -61,7 +61,16 @@ const actions = {
   },
   setMaxid({ commit }, maxid) {
     commit("setMaxid", maxid);
-  }
+  },
+  setShowHotel({ commit }, showHotel) {
+    commit("setShowHotel", showHotel);
+  },
+  setShowFloor({ commit }, showFloor) {
+    commit("setShowFloor", showFloor);
+  },
+  setShowRoom({ commit }, showRoom) {
+    commit("setShowRoom", showRoom);
+  },
 };
 
 export default actions;

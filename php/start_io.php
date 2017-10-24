@@ -303,7 +303,7 @@ $sender_io->on('workerStart', function(){
         // global $devices;
         //延迟3秒后，将设备运行状态记录到record表
         // sleep(3);
-        $sql="insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,floor,room,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,floor,room,now() from device left join address on device.address = address.address where on_off = 'on' ";
+        $sql="insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,floor,room,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,floor,room,now() from device left join address on device.address = address.address where on_off = 'on' and (devicetype = 'light' or devicetype = 'led' or devicetype = 'ac') ";
         $result = mysqli_query($con,$sql);
         // global $uidConnectionMap, $sender_io, $last_online_count, $last_online_page_count;
         // $online_count_now = count($uidConnectionMap);

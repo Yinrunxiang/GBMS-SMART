@@ -106,7 +106,7 @@ switch ($action)
     }
     break;
     case "search":
-        $sql="SELECT * FROM floor ";
+        $sql="SELECT * FROM floor order by floor+0 ";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {

@@ -1,7 +1,7 @@
 <template>
 	<el-row class="panel m-w-1280">
 		<el-col :span="24" class="panel-top">
-			<el-col :span="4">
+			<el-col class="w-180">
 				<template v-if="logo_type == '1'">
 					<!-- <img :src="img" class="logo"> -->
 				</template>
@@ -9,7 +9,10 @@
 					<span class="p-l-20">SMART GBMS</span>
 				</template>
 			</el-col>
-			<el-col :offset="16" :span="4" class="pos-rel">
+      <el-col :span="16">
+        <topMenu ref="topMenu"></topMenu>
+      </el-col>
+			<el-col  :span="4" class="pos-rel">
 				<el-dropdown @command="handleMenu" class="user-menu">
 
 					<p class="el-dropdown-link c-gra user-ground" style="cursor: default">
@@ -126,6 +129,7 @@
 </style>
 <script>
 import leftMenu from "./Common/leftMenu.vue";
+import topMenu from "./Common/topMenu.vue";
 import changePwd from "./Account/changePwd.vue";
 import http from "../assets/js/http";
 
@@ -133,7 +137,7 @@ export default {
   data() {
     return {
       username: "",
-      topMenu: [],
+      // topMenu: [],
       childMenu: [],
       menuData: [
         {
@@ -260,7 +264,7 @@ export default {
         this.$store.dispatch("setRoom", res);
       });
     },
-    getRecord(start, end, count,setIntervalRecord) {
+    getRecord(start, end, count, setIntervalRecord) {
       const data = {
         params: {
           action: "getrecord",
@@ -328,7 +332,7 @@ export default {
         start = i + 1;
         end = i + 5000;
         i += 5000;
-        vm.getRecord(start, end, count,setIntervalRecord);
+        vm.getRecord(start, end, count, setIntervalRecord);
       }, 1000);
     },
     getRecordCount() {
@@ -359,12 +363,19 @@ export default {
 
       for (var item of devices) {
         item.warn = false;
-        if (item.on_off == "on") {
-          for (var breed of this.$store.state[item.devicetype + "_breed"]) {
-            var run_time = parseInt(breed.run_time) * 36000;
-            if (breed.run_time != 0 && item.breed == breed.breed && item.run_time >= run_time) {
-              item.warn = true;
-              warn += 1;
+        var warnDeviceList = ["light", "ac", "led"];
+        if (warnDeviceList.indexOf(item.devicetype) != -1) {
+          if (item.on_off == "on") {
+            for (var breed of this.$store.state[item.devicetype + "_breed"]) {
+              var run_time = parseInt(breed.run_time) * 36000;
+              if (
+                breed.run_time != 0 &&
+                item.breed == breed.breed &&
+                item.run_time >= run_time
+              ) {
+                item.warn = true;
+                warn += 1;
+              }
             }
           }
         }
@@ -547,6 +558,7 @@ export default {
   },
   components: {
     leftMenu,
+    topMenu,
     changePwd
   },
   computed: {

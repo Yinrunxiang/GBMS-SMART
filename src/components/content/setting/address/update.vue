@@ -26,8 +26,8 @@
                 <el-input v-model.trim="form.lng" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="add('form')" :loading="isLoading">Commit</el-button>
-                <el-button @click="goback()">Back</el-button>
+                <el-button type="primary" @click="add('form')" :loading="isLoading">Save</el-button>
+                <el-button @click="goback()">Cancel</el-button>
             </el-form-item>
         </el-form>
     </div>

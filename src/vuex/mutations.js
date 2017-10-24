@@ -61,6 +61,15 @@ const mutations = {
   },
   setMaxid(state, maxid) {
     state.maxid = maxid
+  },
+  setShowHotel(state, showHotel) {
+    state.showHotel = showHotel
+  },
+  setShowFloor(state, showFloor) {
+    state.showFloor = showFloor
+  },
+  setShowRoom(state, showRoom) {
+    state.showRoom = showRoom
   }
 }
 

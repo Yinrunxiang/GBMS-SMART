@@ -2,9 +2,14 @@
     <div class="p-20">
         <div class="m-b-20 ovf-hd">
             <div class="fl">
-                <router-link class="btn-link-large add-btn" to="led/add">
-                    <i class="el-icon-plus"></i>&nbsp;&nbsp;Add Mode
+               <router-link  to="led/add">
+                <el-button type="info">
+                      <i class="el-icon-plus"></i>&nbsp;&nbsp;Add
+                    </el-button>
                 </router-link>
+                    <el-button type="warning" class="" @click="deleteBtn">
+                        <i class="el-icon-minus"></i>&nbsp;&nbsp;Delete
+                    </el-button>
             </div>
             <div class="fl w-300 m-l-30">
                 <el-input placeholder="Please enter the model" v-model="keywords">
@@ -26,9 +31,9 @@
         </el-table>
         <div class="pos-rel p-t-20">
             <div>
-                <el-button size="small" type="success" @click="setStatusBtn('enabled')">Enabled</el-button>
+                <!-- <el-button size="small" type="success" @click="setStatusBtn('enabled')">Enabled</el-button>
                 <el-button size="small" type="warning" @click="setStatusBtn('disabled')">Disabled</el-button>
-                <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button>
+                <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button> -->
             </div>
             <div class="block pages">
                 <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">

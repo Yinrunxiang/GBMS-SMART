@@ -19,9 +19,9 @@
             <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
-                <el-table-column label="Country" prop="country" width="150">
+                <el-table-column label="Floor Name" prop="floor" width="150">
                 </el-table-column>
-                <el-table-column label="Address" prop="address" width="150">
+                <el-table-column label="Room Number" prop="room_num" width="150">
                 </el-table-column>
                 <el-table-column label="IP" prop="ip" width="150">
                 </el-table-column>
@@ -146,7 +146,7 @@ export default {
                         selections: this.multipleSelection
                     }
                 }
-                this.apiGet('device/address.php?action=delete', data).then((res) => {
+                this.apiGet('device/floor.php?action=delete', data).then((res) => {
                     if (res[0]) {
 
                         var address = this.$store.state.address

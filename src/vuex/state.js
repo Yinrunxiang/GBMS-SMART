@@ -20,6 +20,9 @@ const state = {
   warn:0,
   recordLoading:true,
   maxid:"",
+  showHotel:false,
+  showFloor:false,
+  showRoom:false,
 }
 
 export default state

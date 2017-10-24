@@ -40,7 +40,7 @@ import lightApi from "../../content/devices/light/light.js"
 import acApi from "../../content/devices/ac/ac.js"
 import ledApi from "../../content/devices/led/led.js"
 import musicApi from "../../content/devices/music/music.js"
-import cutainApi from "../../content/devices/cutain/cutain.js"
+import curtainApi from "../../content/devices/curtain/curtain.js"
 export default {
     data() {
         return {
@@ -89,12 +89,12 @@ export default {
                 case "music":
                     // musicApi.switch_change(this.device)
                     break
-                case "cutain":
+                case "curtain":
                     var deviceProperty = {
                         on_off: false,
                         brightness: 0,
                     }
-                    cutainApi.switch_change(val, this.device, deviceProperty)
+                    curtainApi.switch_change(val, this.device, deviceProperty)
                     break
             }
         },
@@ -121,9 +121,9 @@ export default {
                     // this.device.on_off = false
                     // musicApi.readOpen(this.device)
                     break
-                case "cutain":
+                case "curtain":
                     this.device.on_ff = false
-                    cutainApi.readOpen(this.device)
+                    curtainApi.readOpen(this.device)
                     break
             }
             console.log('OK')
@@ -143,7 +143,7 @@ export default {
                 case 'music':
                     return 'fa-music'
                     break
-                case 'cutain':
+                case 'curtain':
                     return 'fa-columns'
                     break
             }
