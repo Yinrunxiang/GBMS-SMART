@@ -9,10 +9,10 @@
 					<span class="p-l-20">SMART GBMS</span>
 				</template>
 			</el-col>
-      <el-col :span="16">
+      <el-col :span="18" class="h-60">
         <topMenu ref="topMenu"></topMenu>
       </el-col>
-			<el-col  :span="4" class="pos-rel">
+			<el-col  :span="2" class="pos-rel">
 				<el-dropdown @command="handleMenu" class="user-menu">
 
 					<p class="el-dropdown-link c-gra user-ground" style="cursor: default">
@@ -276,6 +276,7 @@ export default {
       this.apiGet("device/index.php", data).then(res => {
         var records = res;
         var newRecords = [];
+        var addresss = this.$store.state.address;
         var ac_breeds = this.$store.state.ac_breed;
         var light_breeds = this.$store.state.light_breed;
         var led_breeds = this.$store.state.led_breed;
@@ -307,6 +308,13 @@ export default {
                 break;
             }
             if (record.watts) {
+              record.usd = 0;
+              for (var address of addresss) {
+                if (address.address == record.address && address.kw_usd) {
+                  record.usd =
+                    parseInt(record.watts) / 1000 * parseFloat(address.kw_usd);
+                }
+              }
               newRecords.push(record);
             }
           }
@@ -352,7 +360,7 @@ export default {
         // }
       });
     },
-    countryArr(devices) {
+    countryArr() {
       var countryArr = [];
       var countryList = [];
       var warn = 0;
@@ -361,7 +369,7 @@ export default {
       // var initRoom = this.$store.state.room
       //this.devices原始设备数据
 
-      for (var item of devices) {
+      for (var item of this.devices) {
         item.warn = false;
         var warnDeviceList = ["light", "ac", "led"];
         if (warnDeviceList.indexOf(item.devicetype) != -1) {
@@ -527,6 +535,9 @@ export default {
       }, 1500);
       return;
     }
+    // this.$store.dispatch("setShowHotel", true);
+    // this.$store.dispatch("setShowFloor", false);
+    // this.$store.dispatch("setShowRoom", false);
   },
   mounted() {
     this.getAcBreed();
@@ -543,16 +554,16 @@ export default {
     };
     this.apiGet("device/index.php", data).then(res => {
       this.$store.dispatch("setDevices", res);
-      var devices = [];
+      // var devices = [];
       var maxid = res[0].maxid;
       this.$store.dispatch("setMaxid", maxid);
-      for (var device of res) {
-        if (device.status == "enabled") {
-          devices.push(device);
-        }
-      }
+      // for (var device of res) {
+      //   if (device.status == "enabled") {
+      //     devices.push(device);
+      //   }
+      // }
       // this.devices = devices
-      this.countryArr(devices);
+      this.countryArr();
     });
     this.getRecordCount();
   },
@@ -563,18 +574,20 @@ export default {
   },
   computed: {
     devices() {
-      var devices = [];
-      for (var device of this.$store.state.devices) {
-        if (device.status == "enabled") {
-          devices.push(device);
-        }
-      }
-      return devices;
+      return this.$store.state.devices;
     },
     globalLoading() {
       return store.state.globalLoading;
     }
   },
+  // watch: {
+  //   devices: {
+  //     handler: function(val, oldVal) {
+  //       this.countryArr();
+  //     },
+  //     deep: true
+  //   }
+  // },
   mixins: [http]
 };
 </script>

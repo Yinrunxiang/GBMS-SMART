@@ -5,7 +5,7 @@
         <i class="el-icon-menu"></i>Global</el-menu-item>
       <el-menu-item index="contral">
         <el-badge :value="deviceWarn" class="badge-div">
-          <i class="el-icon-menu"></i>Contral
+          <i class="el-icon-menu"></i>Center
         </el-badge>
       </el-menu-item>
       <el-menu-item index="plan">

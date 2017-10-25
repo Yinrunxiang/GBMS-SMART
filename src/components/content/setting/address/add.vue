@@ -28,6 +28,9 @@
             <el-form-item label="Longitude">
                 <el-input v-model.trim="form.lng" class="h-40 w-200"></el-input>
             </el-form-item>
+            <el-form-item label="KW/USD">
+                <el-input v-model.trim="form.kw_usd" class="h-40 w-200"></el-input>
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
                 <el-button @click="goback()">Cancel</el-button>

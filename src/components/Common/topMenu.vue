@@ -1,14 +1,10 @@
 <template>
   <div>
-    <el-menu mode="horizontal" default-active="1" @open="handleOpen" @close="handleClose" theme="dark" @select="change" style="background-color:#1f2d3d;">
-      <el-menu-item index="global">
-        <i class="el-icon-menu"></i>Global</el-menu-item>
-        <el-menu-item index="Hotel">
-        <i class="el-icon-menu"></i>Build</el-menu-item>
-         <el-menu-item index="Floor">
-        <i class="el-icon-menu"></i>Floor</el-menu-item>
-         <el-menu-item index="Room">
-        <i class="el-icon-menu"></i>Room</el-menu-item>
+    <el-menu v-if="showHotel || showFloor || showRoom"  mode="horizontal" default-active="1" @open="handleOpen" @close="handleClose" theme="dark" @select="change" style="background-color:#1f2d3d;">
+      <el-menu-item index="global">Global</el-menu-item>
+        <el-menu-item index="Hotel">Build</el-menu-item>
+         <el-menu-item v-show="showFloor || showRoom" index="Floor"></i>Floor</el-menu-item>
+         <el-menu-item v-show="showRoom" index="Room"></i>Room</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -22,10 +18,12 @@
 export default {
   data() {
     return {
-        // showBuild:false,
-        // showFloor:false,
-        // showRoom:false,
-    }
+      // showBuild:false,
+      // showFloor:false,
+      // showRoom:false,
+      // show:false
+      active: "Global"
+    };
   },
   methods: {
     handleOpen(key, keyPath) {
@@ -35,26 +33,37 @@ export default {
       // console.log(key, keyPath);
     },
     change(key, keyPath) {
-      this.showHotel = false
-      this.showFloor = false
-      this.showRoom = false
-      this['show'+key] = true
+      if (key == "global") {
+        let url = "/home/global";
+        router.push(url);
+      } else {
+        this.$store.dispatch("setShowHotel", false);
+        this.$store.dispatch("setShowFloor", false);
+        this.$store.dispatch("setShowRoom", false);
+        // this.showHotel = false
+        // this.showFloor = false
+        // this.showRoom = false
+        // this['show'+key] = true
+        this.$store.dispatch("setShow" + key, true);
+      }
     }
   },
   created() {
-    console.log('topmeun')
-
+    console.log("topmeun");
   },
   computed: {
-   showHotel() {
-      return this.$route.query.showHotel;
+    showHotel() {
+      this.active = "Hotel";
+      return this.$store.state.showHotel;
     },
     showFloor() {
-      return this.$route.query.showFloor;
+      this.active = "Floor";
+      return this.$store.state.showFloor;
     },
     showRoom() {
-      return this.$route.query.showRoom;
-    },
-  },
-}
+      this.active = "Room";
+      return this.$store.state.showRoom;
+    }
+  }
+};
 </script>

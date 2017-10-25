@@ -188,13 +188,7 @@ export default {
     computed: {
 
         devices() {
-            var devices = []
-            for (var device of this.$store.state.devices) {
-                if (device.status == 'enabled') {
-                    devices.push(device)
-                }
-            }
-            return devices
+            return this.$store.state.devices
         },
         countryArr() {
             var countryArr = this.$store.state.countryArr

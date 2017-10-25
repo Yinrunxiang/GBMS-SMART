@@ -120,10 +120,10 @@ export default {
   data() {
     return {
       showChange: false,
-    //   showHotel: true,
+      //   showHotel: true,
       showAll: true,
-    //   showFloor: false,
-    //   showRoom: false,
+      //   showFloor: false,
+      //   showRoom: false,
       hotelName: "",
       floorName: "",
       roomName: "",
@@ -156,12 +156,12 @@ export default {
     },
     changeUpdate(data) {
       this.showDeviceUpdate = data;
-      this.showRoom = !data;
+      this.$store.dispatch("setShowRoom", !data);
       this.showAll = !data;
     },
     changeContral(data) {
       this.showDevicePage = data;
-      this.showRoom = !data;
+      this.$store.dispatch("setShowRoom", !data);
       this.showAll = !data;
     },
     settingStatusClick() {
@@ -192,7 +192,7 @@ export default {
     },
     deviceDbclick(showRoom, showDeviceUpdate, device) {
       this.showAll = showRoom;
-      this.showRoom = showRoom;
+      this.$store.dispatch("setShowRoom", showRoom);
       this.showDeviceUpdate = showDeviceUpdate;
       this.showDevicePage = !showDeviceUpdate;
       this.thisdevice = device;
@@ -213,22 +213,26 @@ export default {
     },
     settingClick() {
       this.showHotelUpdate = true;
-      this.showHotel = false;
+      this.$store.dispatch("setShowHotel", false);
       this.showAll = false;
     },
     addressBack(bool) {
       this.showHotelUpdate = bool;
-      this.showHotel = !bool;
+      this.$store.dispatch("setShowHotel", !bool);
       this.showAll = !bool;
     },
     hotelBack() {
+      this.$store.dispatch("setShowHotel", false);
+      this.$store.dispatch("setShowFloor", false);
+      this.$store.dispatch("setShowRoom", false);
       let url = "/home/global";
       router.push(url);
     },
     floorClick(val) {
-      this.showFloor = true;
-      this.showHotel = false;
-      this.showRoom = false;
+      // this.showFloor = true;
+      this.$store.dispatch("setShowHotel", false);
+      this.$store.dispatch("setShowFloor", true);
+      this.$store.dispatch("setShowRoom", false);
       this.showTypeList = false;
       this.floorName = val;
       var deviceList = [];
@@ -260,14 +264,14 @@ export default {
       }
     },
     floorBack() {
-      this.showHotel = true;
-      this.showFloor = false;
+      this.$store.dispatch("setShowHotel", true);
+      this.$store.dispatch("setShowFloor", false);
     },
     roomClick(val) {
       window.socketio.removeAllListeners("new_msg");
-      this.showFloor = false;
-      this.showHotel = false;
-      this.showRoom = true;
+      this.$store.dispatch("setShowFloor", false);
+      this.$store.dispatch("setShowHotel", false);
+      this.$store.dispatch("setShowRoom", true);
       this.showTypeList = false;
       this.roomName = val;
       // for (var room of this.roomList) {
@@ -327,8 +331,8 @@ export default {
       }
     },
     roomBack() {
-      this.showFloor = true;
-      this.showRoom = false;
+      this.$store.dispatch("setShowFloor", true);
+      this.$store.dispatch("setShowRoom", false);
     },
     initMode(value) {
       if (value == "auto") {
@@ -355,7 +359,13 @@ export default {
   },
   created() {
     console.log("report");
+    this.$store.dispatch("setShowHotel", true);
     _g.closeGlobalLoading();
+  },
+  destroyed() {
+    this.$store.dispatch("setShowHotel", false);
+    this.$store.dispatch("setShowFloor", false);
+    this.$store.dispatch("setShowRoom", false);
   },
   mounted() {
     this.roomWatts = echarts.init(this.$refs.roomWatts);
@@ -404,15 +414,15 @@ export default {
       return this.$route.query.address;
     },
     showHotel() {
-      return this.$route.query.showHotel;
+      return this.$store.state.showHotel;
     },
     showFloor() {
-      return this.$route.query.showFloor;
+      return this.$store.state.showFloor;
     },
     showRoom() {
-      return this.$route.query.showRoom;
+      return this.$store.state.showRoom;
     },
-    
+
     //获取酒店信息
     addressProperty() {
       var initAddress = {
