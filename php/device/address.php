@@ -33,6 +33,7 @@ switch ($action)
         $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
         $country = isset($_REQUEST["country"]) ? $_REQUEST["country"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
+        $oldAddress = isset($_REQUEST["oldAddress"]) ? $_REQUEST["oldAddress"] : '';
         $ip = isset($_REQUEST["ip"]) ? $_REQUEST["ip"] : '';
         $port = isset($_REQUEST["port"]) ? $_REQUEST["port"] : '';
         $mac = isset($_REQUEST["mac"]) ? $_REQUEST["mac"] : '';
@@ -41,7 +42,8 @@ switch ($action)
         $kw_usd = isset($_REQUEST["kw_usd"]) ? $_REQUEST["kw_usd"] : '';
         $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
         $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."',kw_usd = '".$kw_usd."' where id = '".$id."'";
-        if (!mysqli_query($con,$sql))
+        $updateDevice = "update device set address = '".$address."' where address = ".$oldAddress."'";
+        if (!mysqli_query($con,$sql) ||  !mysqli_query($con,$updateDevice))
         {
             $message = [];
             $message[0] = false;

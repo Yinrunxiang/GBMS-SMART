@@ -646,8 +646,9 @@ export default {
   position: absolute;
   right: 50px;
   bottom: 75px;
-  width: 200px;
-  height: 300px;
+  width: 250px;
+  height: 400px;
+  overflow: auto;
   margin: 0 30px 0 100px;
 }
 

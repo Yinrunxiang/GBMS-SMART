@@ -367,72 +367,53 @@ export default {
     countryArr() {
       var countryArr = [];
       var countryList = [];
-      var typeList = ['light','ac','led']
-      for (let address of this.$store.state.address) {
-        if (countryList.indexOf(address.country) == -1) {
-          countryList.push(address.country);
-          var mapIportCountryObject = {};
-          mapIportCountryObject.name = address.country;
-          mapIportCountryObject.selected = true;
-          mapIportCountryObject.deviceList = [];
-          mapIportCountryObject.deviceTypeNumber = {};
-          mapIportCountryObject.warn = 0;
-          mapIportCountryObject.addressList = [];
-          for (let address2 of this.$store.state.address) {
-            if (address.country == address2.country) {
-              var addressObject = {};
-              addressObject.name = address2.address;
-              addressObject.id = address2.addressid;
-              addressObject.country = address2.country;
-              addressObject.address = address2.address;
-              addressObject.lat = address2.lat;
-              addressObject.lng = address2.lng;
-              addressObject.ip = address2.ip;
-              addressObject.port = address2.port;
-              addressObject.mac = address2.mac;
-              addressObject.floorList = [];
-              addressObject.deviceList = [];
-              addressObject.warn = 0;
-              addressObject.deviceTypeNumber = {};
-              for (var floor of this.$store.state.floor) {
-                if (floor.address == address2.address) {
-                  var floorObject = {};
-                  floorObject.name = floor.floor;
-                  floorObject.roomList = [];
-                  floorObject.roomArr = [];
-                  floorObject.deviceList = [];
-                  floorObject.deviceTypeNumber = {};
-                  floorObject.warn = 0;
-                  for (var room of this.$store.state.room) {
-                    if (room.floor == floor.floor) {
-                      var roomObject = {};
-                      roomObject.name = room.room;
-                      roomObject.room_name = room.room_name;
-                      roomObject.typeList = [];
-                      roomObject.typeArr = [];
-                      roomObject.deviceList = [];
-                      roomObject.deviceTypeNumber = {};
-                      roomObject.warn = 0;
-                      // for(var type of typeList){
-                      //     var typeObject = {};
-                      //     typeObject.name = type;
-                      //     typeObject.deviceList = [];
-                      //     roomObject.typeList.push(typeObject);
+      // for (let address of this.$store.state.address) {
+      //   if (countryList.indexOf(address.country) == -1) {
+      //     countryList.push(address.country);
+      //     var mapIportCountryObject = {};
+      //     mapIportCountryObject.name = address.country;
+      //     mapIportCountryObject.selected = true;
+      //     mapIportCountryObject.addressList = [];
+      //     mapIportCountryObject.addressArr = [];
+      //     mapIportCountryObject.deviceList = [];
+      //     mapIportCountryObject.deviceTypeNumber = {};
+      //     mapIportCountryObject.warn = 0;
+      //     // mapIportCountryObject.deviceList = {}
+      //     countryArr.push(mapIportCountryObject);
+      //   }
+      // }
+      // for (let address of this.$store.state.address) {
+      //   if (country.addressArr.indexOf(item.address) == -1) {
+      //     country.addressArr.push(item.address);
+      //     var addressObject = {};
 
-                      // }
-                      floorObject.roomList.push(roomObject);
-                    }
-                  }
-                  addressObject.floorList.push(floorObject);
-                }
-              }
-              mapIportCountryObject.addressList.push(addressObject);
-            }
-          }
-          countryArr.push(mapIportCountryObject);
-        }
-      }
-      console.log(countryArr);
+      //     addressObject.name = item.address;
+      //     addressObject.id = item.addressid;
+      //     addressObject.country = item.country;
+      //     addressObject.address = item.address;
+      //     addressObject.lat = item.lat;
+      //     addressObject.lng = item.lng;
+      //     addressObject.ip = item.ip;
+      //     addressObject.port = item.port;
+      //     addressObject.mac = item.mac;
+      //     addressObject.floorList = [];
+      //     addressObject.floorArr = [];
+      //     addressObject.deviceList = [];
+      //     addressObject.warn = 0;
+      //     // addressObject.typeList = []
+      //     // addressObject.typeArr = []
+      //     addressObject.deviceTypeNumber = {};
+      //     //设置楼层数组长度
+      //     // let floor_num = 0
+      //     // for(let address of initAddress){
+      //     // 	if(address.address == item.address){
+      //     // 		floor_num = address.floor_num
+      //     // 	}
+      //     // }
+      //     // addressObject.floorList = Array.apply(null, {length: floor_num});
+      //     country.addressList.push(addressObject);
+      //   }
+      // }
       var warn = 0;
       // var initAddress = this.$store.state.address
       // var initFloor = this.$store.state.floor
@@ -458,52 +439,52 @@ export default {
           }
         }
         //筛选重复国家
-        // if (countryList.indexOf(item.country) == -1) {
-        //   countryList.push(item.country);
-        //   var mapIportCountryObject = {};
-        //   mapIportCountryObject.name = item.country;
-        //   mapIportCountryObject.selected = true;
-        //   mapIportCountryObject.addressList = [];
-        //   mapIportCountryObject.addressArr = [];
-        //   mapIportCountryObject.deviceList = [];
-        //   mapIportCountryObject.deviceTypeNumber = {};
-        //   mapIportCountryObject.warn = 0;
-        //   // mapIportCountryObject.deviceList = {}
-        //   countryArr.push(mapIportCountryObject);
-        // }
+        if (countryList.indexOf(item.country) == -1) {
+          countryList.push(item.country);
+          var mapIportCountryObject = {};
+          mapIportCountryObject.name = item.country;
+          mapIportCountryObject.selected = true;
+          mapIportCountryObject.addressList = [];
+          mapIportCountryObject.addressArr = [];
+          mapIportCountryObject.deviceList = [];
+          mapIportCountryObject.deviceTypeNumber = {};
+          mapIportCountryObject.warn = 0;
+          // mapIportCountryObject.deviceList = {}
+          countryArr.push(mapIportCountryObject);
+        }
         for (var country of countryArr) {
           //筛选重复类型
           if (item.country == country.name) {
-            // if (country.addressArr.indexOf(item.address) == -1) {
-            //   country.addressArr.push(item.address);
-            //   var addressObject = {};
+            if (country.addressArr.indexOf(item.address) == -1) {
+              country.addressArr.push(item.address);
+              var addressObject = {};
 
-            //   addressObject.name = item.address;
-            //   addressObject.id = item.addressid;
-            //   addressObject.country = item.country;
-            //   addressObject.address = item.address;
-            //   addressObject.lat = item.lat;
-            //   addressObject.lng = item.lng;
-            //   addressObject.ip = item.ip;
-            //   addressObject.port = item.port;
-            //   addressObject.mac = item.mac;
-            //   addressObject.floorList = [];
-            //   addressObject.floorArr = [];
-            //   addressObject.deviceList = [];
-            //   addressObject.warn = 0;
-            //   // addressObject.typeList = []
-            //   // addressObject.typeArr = []
-            //   addressObject.deviceTypeNumber = {};
-            //   //设置楼层数组长度
-            //   // let floor_num = 0
-            //   // for(let address of initAddress){
-            //   // 	if(address.address == item.address){
-            //   // 		floor_num = address.floor_num
-            //   // 	}
-            //   // }
-            //   // addressObject.floorList = Array.apply(null, {length: floor_num});
-            //   country.addressList.push(addressObject);
-            // }
+              addressObject.name = item.address;
+              addressObject.id = item.addressid;
+              addressObject.country = item.country;
+              addressObject.address = item.address;
+              addressObject.lat = item.lat;
+              addressObject.lng = item.lng;
+              addressObject.ip = item.ip;
+              addressObject.port = item.port;
+              addressObject.mac = item.mac;
+              addressObject.floorList = [];
+              addressObject.floorArr = [];
+              addressObject.deviceList = [];
+              addressObject.warn = 0;
+              // addressObject.typeList = []
+              // addressObject.typeArr = []
+              addressObject.deviceTypeNumber = {};
+              //设置楼层数组长度
+              // let floor_num = 0
+              // for(let address of initAddress){
+              // 	if(address.address == item.address){
+              // 		floor_num = address.floor_num
+              // 	}
+              // }
+              // addressObject.floorList = Array.apply(null, {length: floor_num});
+              country.addressList.push(addressObject);
+            }
             country.deviceList.push(item);
             if (item.warn) {
               country.warn += 1;
@@ -515,17 +496,17 @@ export default {
             for (var address of country.addressList) {
               //筛选重复类型
               if (item.address == address.name) {
-                // if (address.floorArr.indexOf(item.floor) == -1) {
-                //   address.floorArr.push(item.floor);
-                //   var floorObject = {};
-                //   floorObject.name = item.floor;
-                //   floorObject.roomList = [];
-                //   floorObject.roomArr = [];
-                //   floorObject.deviceList = [];
-                //   floorObject.deviceTypeNumber = {};
-                //   floorObject.warn = 0;
-                //   address.floorList.push(floorObject);
-                // }
+                if (address.floorArr.indexOf(item.floor) == -1) {
+                  address.floorArr.push(item.floor);
+                  var floorObject = {};
+                  floorObject.name = item.floor;
+                  floorObject.roomList = [];
+                  floorObject.roomArr = [];
+                  floorObject.deviceList = [];
+                  floorObject.deviceTypeNumber = {};
+                  floorObject.warn = 0;
+                  address.floorList.push(floorObject);
+                }
                 address.deviceList.push(item);
                 if (item.warn) {
                   address.warn += 1;
@@ -536,18 +517,18 @@ export default {
                 for (var floor of address.floorList) {
                   //筛选重复类型
                   if (item.floor == floor.name) {
-                    // if (floor.roomArr.indexOf(item.room) == -1) {
-                    //   floor.roomArr.push(item.room);
-                    //   var roomObject = {};
-                    //   roomObject.name = item.room;
-                    //   roomObject.room_name = item.room_name;
-                    //   roomObject.typeList = [];
-                    //   roomObject.typeArr = [];
-                    //   roomObject.deviceList = [];
-                    //   roomObject.deviceTypeNumber = {};
-                    //   roomObject.warn = 0;
-                    //   floor.roomList.push(roomObject);
-                    // }
+                    if (floor.roomArr.indexOf(item.room) == -1) {
+                      floor.roomArr.push(item.room);
+                      var roomObject = {};
+                      roomObject.name = item.room;
+                      roomObject.room_name = item.room_name;
+                      roomObject.typeList = [];
+                      roomObject.typeArr = [];
+                      roomObject.deviceList = [];
+                      roomObject.deviceTypeNumber = {};
+                      roomObject.warn = 0;
+                      floor.roomList.push(roomObject);
+                    }
                     floor.deviceList.push(item);
                     if (item.warn) {
                       floor.warn += 1;
