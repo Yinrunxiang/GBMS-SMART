@@ -31,7 +31,7 @@ switch ($action)
         $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
         $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
-        $sql="update room set room = '".$room."',room_name = '".$room_name."',image = '".$image."',floor = '".$floor."',address = '".$address."')";
+        $sql="update room set room_name = '".$room_name."',image = '".$image."',floor = '".$floor."',address = '".$address."' where room = '".$room."'";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -51,7 +51,7 @@ switch ($action)
         $re_str = "";
         for ($i = 0; $i  < count($selections); $i++) {
             $selection = json_decode($selections[$i]);
-            $sql = " delete from room where id = '".$selection->room."'";
+            $sql = " delete from room where room = '".$selection->room."'";
             if (!mysqli_query($con,$sql))
             {
                 $re = false;

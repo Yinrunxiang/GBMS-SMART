@@ -120,6 +120,7 @@ export default {
       // this.form.channel = _g.toHex(this.form.channel)
       // this.form.channel_spare = _g.toHex(this.form.channel_spare ? this.form.channel_spare : 0)
       this.isLoading = !this.isLoading;
+      var vm = this;
       const data = {
         params: this.form
       };
@@ -135,9 +136,9 @@ export default {
                 devices[i] = this.form;
               }
             }
-            this.$store.dispatch("setDevices", devices);
+            vm.$store.dispatch("setDevices", devices);
             _g.toastMsg("success", res[1]);
-            this.goback();
+            vm.goback();
           } else {
             _g.toastMsg("error", res[1]);
           }
@@ -152,20 +153,26 @@ export default {
           console.log(res);
 
           if (res[0]) {
-            var devices = this.$store.state.devices;
-            console.log("maxid:" + this.$store.state.maxid);
-            this.form.id = parseInt(this.$store.state.maxid) + 1;
-            devices.push(this.form);
-            this.$store.dispatch("setDevices", devices);
+            var devices = vm.$store.state.devices;
+            var addressList = vm.$store.state.address;
+            for (var address of addressList) {
+              if (vm.form.address == address.address) {
+                vm.form.country = address.country;
+              }
+            }
+            console.log("maxid:" + vm.$store.state.maxid);
+            vm.form.id = parseInt(vm.$store.state.maxid) + 1;
+            devices.push(vm.form);
+            vm.$store.dispatch("setDevices", devices);
             _g.toastMsg("success", res[1]);
-            this.goback();
+            vm.goback();
           } else {
             _g.toastMsg("error", res[1]);
           }
           // for (var key in this.form) {
           //     this.form[key] = ""
           // }
-          this.isLoading = !this.isLoading;
+          vm.isLoading = !vm.isLoading;
         });
       }
     },
@@ -236,13 +243,11 @@ export default {
     address() {
       var address = [];
       for (var item of this.$store.state.address) {
-        if (item.status == "enabled") {
-          var addressObj = {};
-          addressObj.label = item.address;
-          addressObj.value = item.address;
-          addressObj.address = item;
-          address.push(addressObj);
-        }
+        var addressObj = {};
+        addressObj.label = item.address;
+        addressObj.value = item.address;
+        addressObj.address = item;
+        address.push(addressObj);
       }
       return address;
     },
@@ -273,7 +278,7 @@ export default {
           ) {
             //   if (item.status == "enabled") {
             var roomObj = {};
-            roomObj.label = item.room;
+            roomObj.label = item.room_name;
             roomObj.value = item.room;
             roomObj.room = item;
             room.push(roomObj);

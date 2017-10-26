@@ -35,8 +35,8 @@ $port = 6000;
 //广播地址
 // $dest_address = '192.168.1.255';
 // $dest_port = 6000;
-$dest_address = $_REQUEST["dest_address"]? $_REQUEST["dest_address"] : '192.168.1.255';
-$dest_port = $_REQUEST["dest_port"]? $_REQUEST["dest_port"] : 6000;
+$dest_address = $_REQUEST["dest_address"]? $_REQUEST["dest_address"] : '255.255.255.255';
+$dest_port = $_REQUEST["dest_port"]? $_REQUEST["dest_port"] : 8888;
 // echo $dest_address;
 // echo $dest_port;
 // $dest_address = '162.144.66.131';

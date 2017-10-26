@@ -19,28 +19,17 @@
             <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
-                <el-table-column label="Country" prop="country" width="150">
+                <el-table-column label="Room" prop="room" width="150">
                 </el-table-column>
-                <el-table-column label="Address" prop="address" width="150">
+                <el-table-column label="Room Name" prop="room_name" width="150">
                 </el-table-column>
-                <el-table-column label="IP" prop="ip" width="150">
+                <el-table-column label="Floor" prop="floor" width="150">
                 </el-table-column>
-                <el-table-column label="Port" prop="port" width="150">
-                </el-table-column>
-                <el-table-column label="MAC" prop="mac" width="200">
-                </el-table-column>
-                <el-table-column label="Latitude" prop="lat" width="200">
-                </el-table-column>
-                <el-table-column label="Longitude" prop="lng" width="200">
-                </el-table-column>
-                <el-table-column label="Status" prop="status">
+                <el-table-column label="Address" prop="address">
                 </el-table-column>
             </el-table>
             <div class="pos-rel p-t-20">
                 <div>
-                    <!-- <el-button size="small" type="success" @click="setStatusBtn('enabled')">Enabled</el-button>
-                    <el-button size="small" type="warning" @click="setStatusBtn('disabled')">Disabled</el-button>
-                    <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button> -->
                 </div>
                 <div class="block pages">
                     <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">
@@ -49,7 +38,7 @@
             </div>
         </div>
         <div v-show="setting">
-            <add :add="add" :address="address" @goback="goback"></add>
+            <add :add="add" :room="room" @goback="goback"></add>
         </div>
     </div>
 </template>
@@ -72,7 +61,7 @@ export default {
             limit: 15,
             add: true,
             setting: false,
-            address:{},
+            room:{},
         }
     },
     methods: {
@@ -82,23 +71,20 @@ export default {
         addressSetting() {
             this.add = true
             this.setting = true
-            var address= {
-                country: '',
+            var room= {
+                room: '',
+                room_num: '',
+                floor: '',
                 address: '',
-                ip: '',
-                port: '',
-                mac: '',
-                lat: '',
-                lng: '',
                 status: 'enabled',
             }
-            this.address = address
+            this.room = room
         },
         rowDblclick(row) {
             this.add = false
             this.setting = true
-            this.address = row
-            console.log(this.address)
+            this.room = row
+            console.log(this.room)
         },
         //搜索关键字
         search() {
@@ -122,7 +108,7 @@ export default {
                     status: status
                 }
             }
-            this.apiGet('device/address.php?action=setStatus', data).then((res) => {
+            this.apiGet('device/room.php?action=setStatus', data).then((res) => {
                 if (res[0]) {
                     for (var selection of this.multipleSelection) {
                         selection.status = status
@@ -136,6 +122,7 @@ export default {
         },
         //删除按钮事件
         deleteBtn() {
+            var vm = this
             this.$confirm('Are you sure to delete the selected data?', 'Tips', {
                 confirmButtonText: 'Yse',
                 cancelButtonText: 'No',
@@ -146,18 +133,18 @@ export default {
                         selections: this.multipleSelection
                     }
                 }
-                this.apiGet('device/address.php?action=delete', data).then((res) => {
+                this.apiGet('device/room.php?action=delete', data).then((res) => {
                     if (res[0]) {
 
-                        var address = this.$store.state.address
-                        for (var i = 0; i < address.length; i++) {
-                            for (var selection of this.multipleSelection) {
-                                if (address[i].address == selection.address) {
-                                    address.splice(i, 1)
+                        var room = vm.$store.state.room
+                        for (var i = 0; i < room.length; i++) {
+                            for (var selection of vm.multipleSelection) {
+                                if (room[i].room == selection.room) {
+                                    room.splice(i, 1)
                                 }
                             }
                         }
-                        this.$store.dispatch('setAddress', address)
+                        this.$store.dispatch('setRoom', room)
                         _g.toastMsg('success', res[1])
                     } else {
                         _g.toastMsg('error', res[1])
@@ -198,7 +185,7 @@ export default {
         }
     },
     created() {
-        console.log('ac')
+        console.log('room')
         this.init()
     },
     components: {
@@ -207,12 +194,12 @@ export default {
     computed: {
         //从vuex中获取设备数据
         tableData() {
-            console.log(this.$store.state.address)
-            return this.$store.state.address
+            console.log(this.$store.state.room)
+            return this.$store.state.room
         },
         //从vuex中获取设备数据条数
         dataCount() {
-            return this.$store.state.address.length
+            return this.$store.state.room.length
         }
     },
     mixins: [http]

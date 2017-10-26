@@ -1,7 +1,7 @@
 <template>
 	<el-row class="panel m-w-1280">
 		<el-col :span="24" class="panel-top">
-			<el-col class="w-180">
+			<el-col class="w-180" @click="homeClick()">
 				<template v-if="logo_type == '1'">
 					<!-- <img :src="img" class="logo"> -->
 				</template>
@@ -173,6 +173,10 @@ export default {
     };
   },
   methods: {
+    homeClick() {
+      let url = "/home/global";
+      router.push(url);
+    },
     showChangePage(val) {
       this.showChange = val;
     },
@@ -363,6 +367,53 @@ export default {
     countryArr() {
       var countryArr = [];
       var countryList = [];
+      // for (let address of this.$store.state.address) {
+      //   if (countryList.indexOf(address.country) == -1) {
+      //     countryList.push(address.country);
+      //     var mapIportCountryObject = {};
+      //     mapIportCountryObject.name = address.country;
+      //     mapIportCountryObject.selected = true;
+      //     mapIportCountryObject.addressList = [];
+      //     mapIportCountryObject.addressArr = [];
+      //     mapIportCountryObject.deviceList = [];
+      //     mapIportCountryObject.deviceTypeNumber = {};
+      //     mapIportCountryObject.warn = 0;
+      //     // mapIportCountryObject.deviceList = {}
+      //     countryArr.push(mapIportCountryObject);
+      //   }
+      // }
+      // for (let address of this.$store.state.address) {
+      //   if (country.addressArr.indexOf(item.address) == -1) {
+      //     country.addressArr.push(item.address);
+      //     var addressObject = {};
+
+      //     addressObject.name = item.address;
+      //     addressObject.id = item.addressid;
+      //     addressObject.country = item.country;
+      //     addressObject.address = item.address;
+      //     addressObject.lat = item.lat;
+      //     addressObject.lng = item.lng;
+      //     addressObject.ip = item.ip;
+      //     addressObject.port = item.port;
+      //     addressObject.mac = item.mac;
+      //     addressObject.floorList = [];
+      //     addressObject.floorArr = [];
+      //     addressObject.deviceList = [];
+      //     addressObject.warn = 0;
+      //     // addressObject.typeList = []
+      //     // addressObject.typeArr = []
+      //     addressObject.deviceTypeNumber = {};
+      //     //设置楼层数组长度
+      //     // let floor_num = 0
+      //     // for(let address of initAddress){
+      //     // 	if(address.address == item.address){
+      //     // 		floor_num = address.floor_num
+      //     // 	}
+      //     // }
+      //     // addressObject.floorList = Array.apply(null, {length: floor_num});
+      //     country.addressList.push(addressObject);
+      //   }
+      // }
       var warn = 0;
       // var initAddress = this.$store.state.address
       // var initFloor = this.$store.state.floor
@@ -580,14 +631,14 @@ export default {
       return store.state.globalLoading;
     }
   },
-  // watch: {
-  //   devices: {
-  //     handler: function(val, oldVal) {
-  //       this.countryArr();
-  //     },
-  //     deep: true
-  //   }
-  // },
+  watch: {
+    devices: {
+      handler: function(val, oldVal) {
+        this.countryArr();
+      },
+      deep: true
+    }
+  },
   mixins: [http]
 };
 </script>

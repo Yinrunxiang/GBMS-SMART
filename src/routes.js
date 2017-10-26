@@ -27,6 +27,10 @@ import settingTypeLedUpdate from "./components/content/setting/type/led/update.v
 import address from "./components/content/setting/address/address.vue";
 import addressAdd from "./components/content/setting/address/add.vue";
 import addressUpdate from "./components/content/setting/address/update.vue";
+import floorSetting from "./components/content/setting/floor/floor.vue";
+import floorAdd from "./components/content/setting/floor/add.vue";
+import roomSetting from "./components/content/setting/room/room.vue";
+import roomAdd from "./components/content/setting/room/add.vue";
 /**
  * meta参数解析
  * hideLeft: 是否隐藏左侧菜单，单页菜单为true
@@ -100,6 +104,10 @@ const routes = [
       { path: "setting/address", component: address, name: "address" },
       { path: "setting/address/add", component: addressAdd, name: "addressAdd" },
       { path: "setting/address/update", component: addressUpdate, name: "addressUpdate" },
+      { path: "setting/floor", component: floorSetting, name: "floorSetting" },
+      { path: "setting/floor/add", component: floorAdd, name: "floorAdd" },
+      { path: "setting/room", component: roomSetting, name: "roomSetting" },
+      { path: "setting/room/add", component: roomAdd, name: "roomAdd" },
     ]
   },
   { path: "/", redirect: { name: "global" } }

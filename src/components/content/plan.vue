@@ -63,7 +63,7 @@
                     <!-- <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button> -->
                 </div>
                 <div class="block pages">
-                    <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="15" :current-page="currentPage" :total="dataCount">
+                    <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">
                     </el-pagination>
                 </div>
             </div>
@@ -230,6 +230,7 @@ export default {
     },
     //删除按钮事件
     deleteBtn() {
+      var vm = this
       this.$confirm("Are you sure to delete the selected data?", "Tips", {
         confirmButtonText: "Yse",
         cancelButtonText: "No",
@@ -238,20 +239,20 @@ export default {
         .then(() => {
           const data = {
             params: {
-              selections: this.multipleSelection
+              selections: vm.multipleSelection
             }
           };
           this.apiGet("device/index.php?action=delete", data).then(res => {
             if (res[0]) {
-              var devices = this.$store.state.devices;
+              var devices = vm.$store.state.devices;
               for (var i = 0; i < devices.length; i++) {
-                for (var selection of this.multipleSelection) {
-                  if (devices[i].device == selection.device) {
+                for (var selection of vm.multipleSelection) {
+                  if (devices[i].id == selection.id) {
                     devices.splice(i, 1);
                   }
                 }
               }
-              this.$store.dispatch("setDevices", devices);
+              vm.$store.dispatch("setDevices", devices);
               _g.toastMsg("success", res[1]);
             } else {
               _g.toastMsg("error", res[1]);
@@ -340,6 +341,12 @@ export default {
   watch: {
     $route(to, from) {
       this.init();
+    },
+    devices: {
+      handler: function(val, oldVal) {
+        this.init();
+      },
+      deep: true
     }
   },
   mixins: [http]

@@ -23,17 +23,7 @@
                 </el-table-column>
                 <el-table-column label="Room Number" prop="room_num" width="150">
                 </el-table-column>
-                <el-table-column label="IP" prop="ip" width="150">
-                </el-table-column>
-                <el-table-column label="Port" prop="port" width="150">
-                </el-table-column>
-                <el-table-column label="MAC" prop="mac" width="200">
-                </el-table-column>
-                <el-table-column label="Latitude" prop="lat" width="200">
-                </el-table-column>
-                <el-table-column label="Longitude" prop="lng" width="200">
-                </el-table-column>
-                <el-table-column label="Status" prop="status">
+                <el-table-column label="Address" prop="address">
                 </el-table-column>
             </el-table>
             <div class="pos-rel p-t-20">
@@ -49,7 +39,7 @@
             </div>
         </div>
         <div v-show="setting">
-            <add :add="add" :address="address" @goback="goback"></add>
+            <add :add="add" :floor="floor" @goback="goback"></add>
         </div>
     </div>
 </template>
@@ -72,7 +62,7 @@ export default {
             limit: 15,
             add: true,
             setting: false,
-            address:{},
+            floor:{},
         }
     },
     methods: {
@@ -82,23 +72,19 @@ export default {
         addressSetting() {
             this.add = true
             this.setting = true
-            var address= {
-                country: '',
+            var floor= {
+                floor: '',
+                room_num: '',
                 address: '',
-                ip: '',
-                port: '',
-                mac: '',
-                lat: '',
-                lng: '',
                 status: 'enabled',
             }
-            this.address = address
+            this.floor = floor
         },
         rowDblclick(row) {
             this.add = false
             this.setting = true
-            this.address = row
-            console.log(this.address)
+            this.floor = row
+            console.log(this.floor)
         },
         //搜索关键字
         search() {
@@ -122,7 +108,7 @@ export default {
                     status: status
                 }
             }
-            this.apiGet('device/address.php?action=setStatus', data).then((res) => {
+            this.apiGet('device/floor.php?action=setStatus', data).then((res) => {
                 if (res[0]) {
                     for (var selection of this.multipleSelection) {
                         selection.status = status
@@ -149,15 +135,15 @@ export default {
                 this.apiGet('device/floor.php?action=delete', data).then((res) => {
                     if (res[0]) {
 
-                        var address = this.$store.state.address
-                        for (var i = 0; i < address.length; i++) {
+                        var floor = this.$store.state.floor
+                        for (var i = 0; i < floor.length; i++) {
                             for (var selection of this.multipleSelection) {
-                                if (address[i].address == selection.address) {
-                                    address.splice(i, 1)
+                                if (floor[i].floor == selection.floor) {
+                                    floor.splice(i, 1)
                                 }
                             }
                         }
-                        this.$store.dispatch('setAddress', address)
+                        this.$store.dispatch('setFloor', floor)
                         _g.toastMsg('success', res[1])
                     } else {
                         _g.toastMsg('error', res[1])
@@ -207,12 +193,12 @@ export default {
     computed: {
         //从vuex中获取设备数据
         tableData() {
-            console.log(this.$store.state.address)
-            return this.$store.state.address
+            console.log(this.$store.state.floor)
+            return this.$store.state.floor
         },
         //从vuex中获取设备数据条数
         dataCount() {
-            return this.$store.state.address.length
+            return this.$store.state.floor.length
         }
     },
     mixins: [http]

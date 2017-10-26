@@ -16,6 +16,8 @@
         <template slot="title">
           <i class="el-icon-setting"></i>Setting</template>
         <el-menu-item index="address">Address</el-menu-item>
+        <el-menu-item index="floor">Floor</el-menu-item>
+        <el-menu-item index="room">Room</el-menu-item>
         <el-submenu index="222">
           <template slot="title">Device Type</template>
           <el-menu-item index="settingTypeAc">AC</el-menu-item>
@@ -86,6 +88,16 @@ export default {
           title: 'address',
           url: '/home/setting/address',
           name: 'address'
+        },
+        {
+          title: 'floor',
+          url: '/home/setting/floor',
+          name: 'floor'
+        },
+        {
+          title: 'room',
+          url: '/home/setting/room',
+          name: 'room'
         }
 
       ],
