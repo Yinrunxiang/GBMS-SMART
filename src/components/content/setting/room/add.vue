@@ -2,19 +2,19 @@
     <div class="m-l-50 m-t-30 w-500">
         <el-form ref="form" :model="form" label-width="150px">
             <el-form-item label="Room">
-                <el-input  :disabled="true" v-model.trim="form.room" class="h-40 w-200"></el-input>
+                <el-input  :disabled="!this.add" v-model.trim="form.room" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Room Name">
                 <el-input v-model.trim="form.room_name" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item  label="Address">
-                <el-select v-model="form.address" filterable placeholder="Select Address" class="h-40 w-200">
+                <el-select  :disabled="!this.add" v-model="form.address" filterable placeholder="Select Address" class="h-40 w-200">
                     <el-option v-for="item in address" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="Floor">
-                <el-select v-model="form.floor" filterable placeholder="Select Floor" class="h-40 w-200">
+                <el-select  :disabled="!this.add" v-model="form.floor" filterable placeholder="Select Floor" class="h-40 w-200">
                     <el-option v-for="item in floor" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -45,7 +45,8 @@ export default {
       //     lng: '',
       //     status: 'enabled',
       // },
-      addressOptions: []
+      addressOptions: [],
+      oldRoom:"",
     };
   },
   methods: {
@@ -55,6 +56,7 @@ export default {
     addAddress(form) {
       console.log(this.form);
       this.isLoading = !this.isLoading;
+      this.form.oldRoom = this.oldRoom;
       const data = {
         params: this.form
       };
@@ -100,6 +102,7 @@ export default {
   props: ["add", "room"],
   mounted() {
     console.log("room add");
+    this.oldRoom = this.room.room;
   },
   computed: {
     form() {

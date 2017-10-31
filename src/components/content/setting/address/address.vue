@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <div v-show="setting">
+        <div v-if="setting">
             <add :add="add" :address="address" @goback="goback"></add>
         </div>
     </div>

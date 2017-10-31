@@ -27,7 +27,8 @@ $con = mysqli_connect('localhost','root','root');
         {
             die('Could not connect: ' . mysqli_error($con));
         }
-        mysqli_select_db($con,"udp");
+        // mysqli_select_db($con,"udp");
+        mysqli_select_db($con,"admin");
         mysqli_set_charset($con, "utf8");
 
 // PHPSocketIO服务

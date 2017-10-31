@@ -31,7 +31,7 @@ switch ($action)
         $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
         $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
-        $sql="update room set room_name = '".$room_name."',image = '".$image."',floor = '".$floor."',address = '".$address."' where room = '".$room."'";
+        $sql="update room set room_name = '".$room_name."',image = '".$image."' where room = '".$room."' and floor = '".$floor."' and address = '".$address."'";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -108,7 +108,7 @@ switch ($action)
     }
     break;
     case "search":
-        $sql="SELECT * FROM room  order by room+0";
+        $sql="SELECT * FROM room  order by address,floor+0,room+0";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {

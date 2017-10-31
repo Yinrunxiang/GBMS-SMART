@@ -103,7 +103,7 @@ export default {
             var vm = this
             var i = 0;
             var interval = setInterval(function() {
-                if(!vm.$refs.devicelist){
+                if(!vm.$refs.devicelist || !vm.$refs.devicelist[val]){
                     clearInterval(interval);
                     return
                 }

@@ -245,7 +245,7 @@ export default {
       for (var item of this.$store.state.address) {
         var addressObj = {};
         addressObj.label = item.address;
-        addressObj.value = item.address;
+        addressObj.value = item.id;
         addressObj.address = item;
         address.push(addressObj);
       }
@@ -259,7 +259,7 @@ export default {
             //   if (item.status == "enabled") {
             var floorObj = {};
             floorObj.label = item.floor;
-            floorObj.value = item.floor;
+            floorObj.value = item.id;
             floorObj.floor = item;
             floor.push(floorObj);
           }
@@ -279,7 +279,7 @@ export default {
             //   if (item.status == "enabled") {
             var roomObj = {};
             roomObj.label = item.room_name;
-            roomObj.value = item.room;
+            roomObj.value = item.id;
             roomObj.room = item;
             room.push(roomObj);
           }

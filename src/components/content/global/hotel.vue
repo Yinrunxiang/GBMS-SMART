@@ -38,11 +38,15 @@
                     </div>
                 </div>
             </div>
-            <div v-show="showFloor" class="floor-content">
+            <div v-show="showFloor" >
+              <div class="floor-content">
                 <div class="icon-list">
                     <div @click="floorBack">
                         <i class="fa fa-reply"></i>
                     </div>
+                    <!-- <div @click="floorSetting">
+                        <i class="el-icon-setting"></i>
+                    </div> -->
                 </div>
                 <div class="floorImga">
                     <div v-for="(room, room_key, room_index) in room_num">
@@ -55,6 +59,8 @@
                         </el-tooltip>
                     </div>
                 </div>
+                </div>
+                <floor-update v-if="showFloor && showFloorUpdate" :floor="this.floor" :add="false"></floor-update>
             </div>
             <div v-if="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
                 <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
@@ -87,13 +93,13 @@
                                                                                                                                                                                                                                                                                 </div> -->
             </div>
         </div>
-        <div v-show="showDeviceUpdate">
+        <div v-if="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
         </div>
         <div v-if="showDevicePage">
             <devicePage :device="thisdevice" @changeContral="changeContral"></devicePage>
         </div>
-        <div v-show="showHotelUpdate">
+        <div v-if="showHotelUpdate">
             <addressUpdate :add="addressAdd" :address="addressUpdateData" @goback="addressBack"></addressUpdate>
         </div>
         <!-- <changeName ref="changeName" :showChange = 'showChange' @change = 'showChangePage'></changeName> -->
@@ -110,6 +116,8 @@ import deviceTap from "../../Common/device/deviceTap";
 import devicePage from "../../Common/device/devicePage";
 import deviceUpdate from "../plan/update";
 import addressUpdate from "../setting/address/add";
+import floorUpdate from "../setting/floor/add";
+import roomUpdate from "../setting/room/add";
 // import changeName from "../setting/room/changeName";
 // import $ from 'jquery'
 // import '../../../assets/css/drag.css'
@@ -143,7 +151,11 @@ export default {
       addressUpdateData: {},
       floorTypeNumber: {},
       roomTypeNumber: {},
-      room_num: 13
+      room_num: 13,
+      showFloorUpdate:false,
+      showRoomUpdate:false,
+      floor:{},
+      room:{},
     };
   },
   // prop:[address],
@@ -238,6 +250,7 @@ export default {
       var deviceList = [];
       for (let floor of this.floorProperty) {
         if (floor.floor == val) {
+          this.floor = floor
           this.room_num = floor.room_num ? parseInt(floor.room_num) : 0;
         }
       }
@@ -333,6 +346,7 @@ export default {
     roomBack() {
       this.$store.dispatch("setShowFloor", true);
       this.$store.dispatch("setShowRoom", false);
+      this.roomList= []
     },
     initMode(value) {
       if (value == "auto") {
@@ -371,6 +385,7 @@ export default {
     this.roomWatts = echarts.init(this.$refs.roomWatts);
     this.hotelName = this.address.name;
     this.floorList = this.address.floorList;
+    console.log(this.address)
     for (var address of this.$store.state.address) {
       if (this.address.name == address.address) {
         this.addressUpdateData = address;
@@ -404,7 +419,9 @@ export default {
     deviceTap,
     deviceUpdate,
     addressUpdate,
-    devicePage
+    devicePage,
+    floorUpdate,
+    roomUpdate,
   },
   computed: {
     //获取酒店

@@ -41,20 +41,29 @@ switch ($action)
         $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
         $kw_usd = isset($_REQUEST["kw_usd"]) ? $_REQUEST["kw_usd"] : '';
         $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
-        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."',kw_usd = '".$kw_usd."' where id = '".$id."'";
-        $updateDevice = "update device set address = '".$address."' where address = ".$oldAddress."'";
-        if (!mysqli_query($con,$sql) ||  !mysqli_query($con,$updateDevice))
+        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."',kw_usd = '".$kw_usd."' where address = '".$oldAddress."' ; ";
+        if (!mysqli_query($con,$sql))
         {
             $message = [];
             $message[0] = false;
             $message[1] = "update failed: " . mysqli_error($con);
             echo(json_encode($message)); 
         }else{
+            $updateDevice = " update device set address = '".$address."' where address = '".$oldAddress."'";
+            mysqli_query($con,$updateDevice);
+            $updateFloor = " update floor set address = '".$address."' where address = '".$oldAddress."'";
+            mysqli_query($con,$updateFloor);
+            $updateRoom = " update room set address = '".$address."' where address = '".$oldAddress."'";
+            mysqli_query($con,$updateRoom);
             $message = [];
             $message[0] = true;
             $message[1] = "update successfully";
             echo(json_encode($message)); 
         }
+       
+        
+        // $sql = $sql + $updateDevice;
+       
     break;
     case "delete":
         

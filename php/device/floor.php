@@ -29,7 +29,7 @@ switch ($action)
         $room_num = isset($_REQUEST["room_num"]) ? $_REQUEST["room_num"] : '';
         $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
-        $sql="update floor set room_num = '".$room_num."',image = '".$image."',address = '".$address."' where floor = '".$floor."'";
+        $sql="update floor set room_num = '".$room_num."',image = '".$image."' where floor = '".$floor."' and address = '".$address."'";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
