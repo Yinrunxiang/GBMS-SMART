@@ -163,6 +163,7 @@ export default {
             console.log("maxid:" + vm.$store.state.maxid);
             vm.form.id = parseInt(vm.$store.state.maxid) + 1;
             devices.push(vm.form);
+            this.$emit("newDevice", vm.form);
             vm.$store.dispatch("setDevices", devices);
             _g.toastMsg("success", res[1]);
             vm.goback();
@@ -245,7 +246,7 @@ export default {
       for (var item of this.$store.state.address) {
         var addressObj = {};
         addressObj.label = item.address;
-        addressObj.value = item.id;
+        addressObj.value = item.address;
         addressObj.address = item;
         address.push(addressObj);
       }
@@ -259,7 +260,7 @@ export default {
             //   if (item.status == "enabled") {
             var floorObj = {};
             floorObj.label = item.floor;
-            floorObj.value = item.id;
+            floorObj.value = item.floor;
             floorObj.floor = item;
             floor.push(floorObj);
           }
@@ -279,7 +280,7 @@ export default {
             //   if (item.status == "enabled") {
             var roomObj = {};
             roomObj.label = item.room_name;
-            roomObj.value = item.id;
+            roomObj.value = item.room;
             roomObj.room = item;
             room.push(roomObj);
           }

@@ -94,7 +94,7 @@
             </div>
         </div>
         <div v-if="showDeviceUpdate">
-            <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate"></deviceUpdate>
+            <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate" @newDevice="addNewDevice"></deviceUpdate>
         </div>
         <div v-if="showDevicePage">
             <devicePage :device="thisdevice" @changeContral="changeContral"></devicePage>
@@ -180,6 +180,9 @@ export default {
       this.setting = !this.setting;
     },
     addDeviceListClick(device) {
+      this.showAll = false;
+      this.$store.dispatch("setShowRoom", false);
+      this.showDeviceUpdate = true;
       var deviceObj = {};
       deviceObj.id = "";
       deviceObj.device = "";
@@ -200,7 +203,11 @@ export default {
       deviceObj.breed = "";
       deviceObj.x_axis = 0;
       deviceObj.y_axis = 0;
-      this.deviceList.push(deviceObj);
+      this.thisdevice = deviceObj;
+      // this.deviceList.push(deviceObj);
+    },
+    addNewDevice(device) {
+      this.deviceList.push(device);
     },
     deviceDbclick(showRoom, showDeviceUpdate, device) {
       this.showAll = showRoom;
