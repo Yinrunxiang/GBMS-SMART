@@ -33,6 +33,8 @@
                 </el-table-column>
                 <el-table-column label="Longitude" prop="lng" width="200">
                 </el-table-column>
+                <el-table-column label="KW/USD" prop="kw_usd" width="200">
+                </el-table-column>
                 <el-table-column label="Status" prop="status">
                 </el-table-column>
             </el-table>
@@ -98,7 +100,6 @@ export default {
             this.add = false
             this.setting = true
             this.address = row
-            console.log(this.address)
         },
         //搜索关键字
         search() {
@@ -107,7 +108,6 @@ export default {
         //获取被选中的数据
         selectItem(val) {
             this.multipleSelection = val
-            console.log(this.multipleSelection)
         },
         //换页事件
         handleCurrentChange(page) {
@@ -198,7 +198,7 @@ export default {
         }
     },
     created() {
-        console.log('ac')
+        console.log('address')
         this.init()
     },
     components: {
@@ -207,7 +207,6 @@ export default {
     computed: {
         //从vuex中获取设备数据
         tableData() {
-            console.log(this.$store.state.address)
             return this.$store.state.address
         },
         //从vuex中获取设备数据条数

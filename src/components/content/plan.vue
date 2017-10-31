@@ -168,7 +168,7 @@ export default {
       this.thisdevice.channel_spare = this.thisdevice.channel_spare
         ? parseInt("0x" + this.thisdevice.channel_spare)
         : "";
-      console.log(this.thisdevice);
+      // console.log(this.thisdevice);
       // let url = '/home/plan/update'
       // this.$store.dispatch('setDevice', row)
       // router.push(url)
@@ -182,7 +182,7 @@ export default {
           // status: status
         }
       };
-      console.log(row);
+      // console.log(row);
       this.apiGet("device/index.php?action=setTime", data).then(res => {
         if (res[0]) {
           _g.toastMsg("success", res[1]);
@@ -200,7 +200,7 @@ export default {
           // status: status
         }
       };
-      console.log(row);
+      // console.log(row);
       this.apiGet("device/index.php?action=setTime", data).then(res => {
         if (res[0]) {
           _g.toastMsg("success", res[1]);

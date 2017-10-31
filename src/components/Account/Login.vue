@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @keyup.enter="handleSubmit2(form)">
     <el-form :model="form" :rules="rules2" ref="form" label-position="left" label-width="0px" class="demo-ruleForm card-box loginform">
       <h3 class="title">{{systemName}}</h3>
       <el-form-item prop="username" class="m-b-20">

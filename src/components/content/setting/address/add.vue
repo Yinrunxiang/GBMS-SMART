@@ -100,6 +100,27 @@ export default {
               }
             }
             this.$store.dispatch("setAddress", address);
+            var devices = this.$store.state.devices;
+            for (var device of devices) {
+              if (device.address == this.oldAddress) {
+                device.address = this.form.address;
+              }
+            }
+            this.$store.dispatch("setDevices", devices);
+             var floors = this.$store.state.floor;
+            for (var floor of floors) {
+              if (floor.address == this.oldAddress) {
+                floor.address = this.form.address;
+              }
+            }
+            this.$store.dispatch("setFloor", floors);
+             var rooms = this.$store.state.room;
+            for (var room of rooms) {
+              if (room.address == this.oldAddress) {
+                room.address = this.form.address;
+              }
+            }
+            this.$store.dispatch("setRoom", rooms);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
               this.goback();

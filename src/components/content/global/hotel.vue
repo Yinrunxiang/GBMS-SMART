@@ -39,14 +39,14 @@
                 </div>
             </div>
             <div v-show="showFloor" >
-              <div class="floor-content">
+              <div v-show="!showFloorUpdate" class="floor-content">
                 <div class="icon-list">
                     <div @click="floorBack">
                         <i class="fa fa-reply"></i>
                     </div>
-                    <!-- <div @click="floorSetting">
+                    <div @click="floorSetting">
                         <i class="el-icon-setting"></i>
-                    </div> -->
+                    </div>
                 </div>
                 <div class="floorImga">
                     <div v-for="(room, room_key, room_index) in room_num">
@@ -60,9 +60,10 @@
                     </div>
                 </div>
                 </div>
-                <floor-update v-if="showFloor && showFloorUpdate" :floor="this.floor" :add="false"></floor-update>
+                <floorUpdate v-if="showFloorUpdate" :floor="this.floor" :add="false" @goback="floorUpdateback"></floorUpdate>
             </div>
             <div v-if="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
+              <div v-show="!showRoomUpdate">
                 <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
                     <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
                 </el-popover>
@@ -73,12 +74,12 @@
                     <div v-popover:addDevice>
                         <i class="fa fa-plus"></i>
                     </div>
-                    <div @click="settingStatusClick">
-                        <i class="el-icon-setting"></i>
-                    </div>
-                    <!-- <div @click="changeRoomName">
+                    <!-- <div @click="settingStatusClick">
                         <i class="el-icon-setting"></i>
                     </div> -->
+                    <div @click="roomSetting">
+                        <i class="el-icon-setting"></i>
+                    </div>
                     <div @click="roomClose">
                         <i class="fa fa-pause"></i>
                     </div>
@@ -88,9 +89,8 @@
                     <deviceTap ref="device" v-for="device in deviceList" :device="device" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
 
                 </div>
-                <!-- <div class="device-list">
-                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                </div> -->
+                </div>
+                <room-update v-if="showRoomUpdate" :room="this.room" :add="false" @goback="roomUpdateback"></room-update>
             </div>
         </div>
         <div v-if="showDeviceUpdate">
@@ -152,10 +152,10 @@ export default {
       floorTypeNumber: {},
       roomTypeNumber: {},
       room_num: 13,
-      showFloorUpdate:false,
-      showRoomUpdate:false,
-      floor:{},
-      room:{},
+      showFloorUpdate: false,
+      showRoomUpdate: false,
+      floor: {},
+      room: {}
     };
   },
   // prop:[address],
@@ -250,7 +250,7 @@ export default {
       var deviceList = [];
       for (let floor of this.floorProperty) {
         if (floor.floor == val) {
-          this.floor = floor
+          this.floor = floor;
           this.room_num = floor.room_num ? parseInt(floor.room_num) : 0;
         }
       }
@@ -280,6 +280,12 @@ export default {
       this.$store.dispatch("setShowHotel", true);
       this.$store.dispatch("setShowFloor", false);
     },
+    floorSetting() {
+      this.showFloorUpdate = true;
+    },
+    floorUpdateback(val) {
+      this.showFloorUpdate = val;
+    },
     roomClick(val) {
       window.socketio.removeAllListeners("new_msg");
       this.$store.dispatch("setShowFloor", false);
@@ -296,8 +302,19 @@ export default {
       //     }
       // }
       var deviceList = [];
+      // for (let roomPro of this.roomProperty) {
+      //   if (roomPro.room == val) {
+      //     this.room = roomPro;
+      //   }
+      // }
       for (var room of this.roomList) {
         if (room.name == val) {
+          this.room.id = room.id;
+          this.room.image = room.image;
+          this.room.room = room.room;
+          this.room.room_name = room.room_name;
+          this.room.floor = room.floor;
+          this.room.address = room.address;
           for (var type of room.typeList) {
             for (var device of type.deviceList) {
               deviceList.push(device);
@@ -335,6 +352,12 @@ export default {
         }
       }
     },
+    roomSetting() {
+      this.showRoomUpdate = true;
+    },
+    roomUpdateback(val) {
+      this.showRoomUpdate = val;
+    },
     roomClose() {
       var deviceList = this.$refs.device;
       console.log(deviceList);
@@ -346,7 +369,7 @@ export default {
     roomBack() {
       this.$store.dispatch("setShowFloor", true);
       this.$store.dispatch("setShowRoom", false);
-      this.roomList= []
+      // this.roomList = [];
     },
     initMode(value) {
       if (value == "auto") {
@@ -385,7 +408,7 @@ export default {
     this.roomWatts = echarts.init(this.$refs.roomWatts);
     this.hotelName = this.address.name;
     this.floorList = this.address.floorList;
-    console.log(this.address)
+    console.log(this.address);
     for (var address of this.$store.state.address) {
       if (this.address.name == address.address) {
         this.addressUpdateData = address;
@@ -421,7 +444,7 @@ export default {
     addressUpdate,
     devicePage,
     floorUpdate,
-    roomUpdate,
+    roomUpdate
   },
   computed: {
     //获取酒店

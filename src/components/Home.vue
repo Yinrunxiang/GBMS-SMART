@@ -1,12 +1,13 @@
 <template>
 	<el-row class="panel m-w-1280">
+    <span class="version">ver 1.0.3</span>
 		<el-col :span="24" class="panel-top">
-			<el-col class="w-180" @click="homeClick()">
+			<el-col class="w-180">
 				<template v-if="logo_type == '1'">
 					<!-- <img :src="img" class="logo"> -->
 				</template>
 				<template v-else>
-					<span class="p-l-20">SMART GBMS</span>
+					<a class="p-l-20"  style="cursor:pointer"  @click="homeClick()">SMART GBMS</a>
 				</template>
 			</el-col>
       <el-col :span="18" class="h-60">
@@ -23,6 +24,7 @@
 						<el-dropdown-item command="logout">Sign out</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
+        
 			</el-col>
 		</el-col>
 		<el-col :span="24" class="panel-center">
@@ -101,6 +103,13 @@
   width: 150px;
   float: left;
   margin: 10px 10px 10px 18px;
+}
+.version{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 10px;
+  color:#c0ccda;
 }
 
 .user-ground {
@@ -407,7 +416,13 @@ export default {
                     if (room.floor == floor.floor) {
                       var roomObject = {};
                       roomObject.name = room.room;
+                      roomObject.id = room.id
+                      roomObject.image = room.image
+                      roomObject.room = room.room
                       roomObject.room_name = room.room_name;
+                      roomObject.floor = room.floor
+                      roomObject.address = room.address
+                      
                       roomObject.typeList = [];
                       roomObject.typeArr = [];
                       roomObject.deviceList = [];
@@ -432,7 +447,7 @@ export default {
           countryArr.push(mapIportCountryObject);
         }
       }
-      console.log(countryArr);
+      // console.log(countryArr);
       var warn = 0;
       // var initAddress = this.$store.state.address
       // var initFloor = this.$store.state.floor
@@ -586,7 +601,7 @@ export default {
           }
         }
       }
-      console.log(countryArr);
+      // console.log(countryArr);
       this.$store.dispatch("setWarn", warn);
       this.$store.dispatch("setCountryArr", countryArr);
       this.dataReady = true;

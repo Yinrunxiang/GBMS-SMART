@@ -55,6 +55,8 @@ switch ($action)
             mysqli_query($con,$updateFloor);
             $updateRoom = " update room set address = '".$address."' where address = '".$oldAddress."'";
             mysqli_query($con,$updateRoom);
+            $updateRecord = " update record set address = '".$address."' where address = '".$oldAddress."'";
+            mysqli_query($con,$updateRecord);
             $message = [];
             $message[0] = true;
             $message[1] = "update successfully";

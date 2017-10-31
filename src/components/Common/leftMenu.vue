@@ -13,12 +13,15 @@
       <el-menu-item index="report">
         <i class="el-icon-menu"></i>Report</el-menu-item>
       <el-submenu index="111">
-        <template slot="title">
+         <template slot="title">
           <i class="el-icon-setting"></i>Setting</template>
+        <el-submenu index="AddressType">
+        <template slot="title">Address Type</template>
         <el-menu-item index="address">Address</el-menu-item>
         <el-menu-item index="floor">Floor</el-menu-item>
         <el-menu-item index="room">Room</el-menu-item>
-        <el-submenu index="222">
+        </el-submenu>
+        <el-submenu index="DeviceType">
           <template slot="title">Device Type</template>
           <el-menu-item index="settingTypeAc">AC</el-menu-item>
           <el-menu-item index="settingTypeLight">Light</el-menu-item>
