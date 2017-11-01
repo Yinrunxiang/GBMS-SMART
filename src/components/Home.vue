@@ -7,7 +7,7 @@
 					<!-- <img :src="img" class="logo"> -->
 				</template>
 				<template v-else>
-					<a class="p-l-20"  style="cursor:pointer"  @click="homeClick()">SMART GBMS</a>
+					<a class="p-l-10"  style="cursor:pointer"  @click="homeClick()"><img src="../assets/images/applog.png" class="logo">SMART GBMS</a>
 				</template>
 			</el-col>
       <el-col :span="18" class="h-60">
@@ -100,9 +100,12 @@
 }
 
 .logo {
-  width: 150px;
+   margin: 10px 0 10px 10px;
+  height:40px;
+  width: 40px;
   float: left;
-  margin: 10px 10px 10px 18px;
+  border-radius: 10px;
+ 
 }
 .version{
   position: absolute;
@@ -413,7 +416,7 @@ export default {
                   floorObject.deviceTypeNumber = {};
                   floorObject.warn = 0;
                   for (var room of this.$store.state.room) {
-                    if (room.floor == floor.floor) {
+                    if (room.floor == floor.floor && room.address == floor.address) {
                       var roomObject = {};
                       roomObject.name = room.room;
                       roomObject.id = room.id

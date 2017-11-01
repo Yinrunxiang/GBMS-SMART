@@ -256,7 +256,7 @@ export default {
       this.floorName = val;
       var deviceList = [];
       for (let floor of this.floorProperty) {
-        if (floor.floor == val) {
+        if (floor.floor == val && floor.address == this.address.name) {
           this.floor = floor;
           this.room_num = floor.room_num ? parseInt(floor.room_num) : 0;
         }
@@ -534,7 +534,7 @@ export default {
                     );
                     windWatts = windWatts ? windWatts : 0;
                     device.watts = modeWatts + windWatts;
-                    wattsTotal += device.watts;
+                    wattsTotal += device.watts ? parseFloat((device.watts/1000).toFixed(2)) : 0;
                   }
                 }
                 break;
@@ -542,7 +542,7 @@ export default {
                 for (var light_breed of light_breeds) {
                   if (device.breed == light_breed.breed) {
                     device.watts = parseInt(light_breed.watts);
-                    wattsTotal += device.watts ? device.watts : 0;
+                     wattsTotal += device.watts ? parseFloat((device.watts/1000).toFixed(2)) : 0;
                   }
                 }
                 break;
@@ -550,7 +550,7 @@ export default {
                 for (var led_breed of led_breeds) {
                   if (device.breed == led_breed.breed) {
                     device.watts = parseInt(led_breed.watts);
-                    wattsTotal += device.watts ? device.watts : 0;
+                       wattsTotal += device.watts ? parseFloat((device.watts/1000).toFixed(2)) : 0;
                   }
                 }
                 break;
@@ -561,7 +561,7 @@ export default {
         // var roomWatts = echarts.init(this.$refs.roomWatts);
         var roomWattsOption = {
           tooltip: {
-            formatter: "{b} : {c}w"
+            formatter: "{c}kw"
           },
           backgroundColor: new echarts.graphic.RadialGradient(0.5, 0.5, 0.4, [
             {
@@ -585,7 +585,7 @@ export default {
               name: "",
               type: "gauge",
               min: 0,
-              max: 3000,
+              max: 10,
               radius: "99%",
               //分割单位
               splitNumber: 10,
@@ -602,10 +602,10 @@ export default {
                 width: 6
               },
               detail: {
-                formatter: "{value}w",
+                formatter: "{value}kw",
                 fontSize: 24
               },
-              data: [{ value: wattsTotal }]
+              data: [{ value:  parseFloat(wattsTotal.toFixed(2)) }]
               // data: [{ value: wattsTotal, name: 'Watts' }]
             }
           ]

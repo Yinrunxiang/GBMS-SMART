@@ -43,15 +43,12 @@ const routes = [
   {
     path: "/home",
     component: Home,
-    children: [{ path: "refresh", component: refresh, name: "refresh" }]
-  },
-  {
-    path: "/home",
-    component: Home,
-    children: [{ path: "global", component: global, name: "global" },
-    { path: "global/hotel", component: hotel, name: "hotel" },
-    { path: "global/floor", component: floor, name: "floor" },
-    { path: "global/room", component: room, name: "room" },]
+    children: [
+      { path: "refresh", component: refresh, name: "refresh" },
+      { path: "global", component: global, name: "global" },
+      { path: "global/hotel", component: hotel, name: "hotel" },
+      { path: "global/floor", component: floor, name: "floor" },
+      { path: "global/room", component: room, name: "room" },]
 
   },
   {

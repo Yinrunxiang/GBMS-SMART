@@ -18,6 +18,11 @@ switch ($action)
             $message[1] = "insert failed: " . mysqli_error($con);
             echo(json_encode($message)); 
         }else{
+            $room_num = intval($room_num);
+            for($i = 1;$i<=$room_num;$i++){
+                $insertRoom="insert into room (room,room_name,floor,address,status) values ('".$i."','".$i."','".$floor."','".$address."','enabled')";
+                mysqli_query($con,$insertRoom);
+            }
             $message = [];
             $message[0] = true;
             $message[1] = "insert successfully";
@@ -37,6 +42,17 @@ switch ($action)
             $message[1] = "update failed: " . mysqli_error($con);
             echo(json_encode($message)); 
         }else{
+            $getCount = "select count(room) as count from room where address = '".$address."' and floor = '".$floor."'";
+            $count = mysqli_query($con,$getCount);
+            $count = mysqli_fetch_assoc($count);
+            $count = intval($count["count"]);
+            $room_num = intval($room_num);
+            if($room_num > $count){
+                for($i = $count+1;$i<=$room_num;$i++){
+                    $insertRoom="insert into room (room,room_name,floor,address,status) values ('".$i."','".$i."','".$floor."','".$address."','enabled')";
+                    mysqli_query($con,$insertRoom);
+                }
+            }
             $message = [];
             $message[0] = true;
             $message[1] = "update successfully";
@@ -106,7 +122,7 @@ switch ($action)
     }
     break;
     case "search":
-        $sql="SELECT * FROM floor order by floor+0 ";
+        $sql="SELECT * FROM floor order by address,floor+0 ";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {

@@ -2,14 +2,14 @@
     <div>
         <div v-show="!setting" class="p-20">
             <div class="m-b-20 ovf-hd">
-                <div class="fl">
+                <!-- <div class="fl">
                     <el-button type="info" class="" @click="addressSetting">
                         <i class="el-icon-plus"></i>&nbsp;&nbsp;Add
                     </el-button>
                     <el-button type="warning" class="" @click="deleteBtn">
                         <i class="el-icon-minus"></i>&nbsp;&nbsp;Delete
                     </el-button>
-                </div>
+                </div> -->
                 <div class="fl w-300 m-l-30">
                     <el-input placeholder="Please enter the model" v-model="keywords">
                         <el-button slot="append" icon="search" @click="search()"></el-button>
@@ -185,10 +185,21 @@ export default {
       this.getKeywords();
       this.getCurrentPage();
       // this.getAllDevices()
-    }
+    },
+    getRoom() {
+      const data = {
+        params: {
+          action: "search"
+        }
+      };
+      this.apiGet("device/room.php", data).then(res => {
+        this.$store.dispatch("setRoom", res);
+      });
+    },
   },
   created() {
     console.log("room");
+    this.getRoom()
     this.init();
   },
   components: {
@@ -210,6 +221,14 @@ export default {
     //从vuex中获取设备数据条数
     dataCount() {
       return this.$store.state.room.length;
+    }
+  },
+  watch: {
+    tableData: {
+      handler: function(val, oldVal) {
+        this.init();
+      },
+      deep: true
     }
   },
   mixins: [http]

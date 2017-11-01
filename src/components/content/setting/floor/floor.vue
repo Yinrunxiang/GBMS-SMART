@@ -2,14 +2,14 @@
     <div>
         <div v-show="!setting" class="p-20">
             <div class="m-b-20 ovf-hd">
-                <div class="fl">
+                <!-- <div class="fl">
                     <el-button type="info" class="" @click="addressSetting">
                         <i class="el-icon-plus"></i>&nbsp;&nbsp;Add
                     </el-button>
                     <el-button type="warning" class="" @click="deleteBtn">
                         <i class="el-icon-minus"></i>&nbsp;&nbsp;Delete
                     </el-button>
-                </div>
+                </div> -->
                 <div class="fl w-300 m-l-30">
                     <el-input placeholder="Please enter the model" v-model="keywords">
                         <el-button slot="append" icon="search" @click="search()"></el-button>
@@ -184,10 +184,22 @@ export default {
       this.getKeywords();
       this.getCurrentPage();
       // this.getAllDevices()
-    }
+    },
+    getFloor() {
+      const data = {
+        params: {
+          action: "search"
+        }
+      };
+      this.apiGet("device/floor.php", data).then(res => {
+        this.$store.dispatch("setFloor", res);
+      });
+    },
   },
   created() {
     console.log("floor");
+    this.getFloor()
+    
     this.init();
   },
   components: {
@@ -203,14 +215,14 @@ export default {
       return this.$store.state.floor.length;
     }
   },
-  // watch: {
-  //   tableData: {
-  //     handler: function(val, oldVal) {
-  //       this.countryArr();
-  //     },
-  //     deep: true
-  //   }
-  // },
+  watch: {
+    tableData: {
+      handler: function(val, oldVal) {
+        this.init();
+      },
+      deep: true
+    }
+  },
   mixins: [http]
 };
 </script>

@@ -80,6 +80,7 @@ export default {
             var address = this.$store.state.address;
             address.push(this.form);
             this.$store.dispatch("setAddress", address);
+            
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
               this.goback();

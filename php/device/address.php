@@ -16,6 +16,7 @@ switch ($action)
         $kw_usd = isset($_REQUEST["kw_usd"]) ? $_REQUEST["kw_usd"] : '';
         $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
         $sql="insert into address (country,address,ip,port,mac,lat,lng,floor_num,kw_usd,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','".$lat."','".$lng."','".$floor_num."','".$kw_usd."','enabled')";
+        
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -23,6 +24,11 @@ switch ($action)
             $message[1] = "insert failed: " . mysqli_error($con);
             echo(json_encode($message)); 
         }else{
+            $floor_num = intval($floor_num);
+            for($i = 1;$i<=$floor_num;$i++){
+                $insertFloor="insert into floor (floor,room_num,address,status) values ('".$i."',0,'".$address."','enabled')";
+                mysqli_query($con,$insertFloor);
+            }
             $message = [];
             $message[0] = true;
             $message[1] = "insert successfully";
@@ -57,6 +63,17 @@ switch ($action)
             mysqli_query($con,$updateRoom);
             $updateRecord = " update record set address = '".$address."' where address = '".$oldAddress."'";
             mysqli_query($con,$updateRecord);
+            $getFloor = "select count(floor) as count from floor where address = '".$address."'";
+            $floor_count = mysqli_query($con,$getFloor);
+            $floor_count = mysqli_fetch_assoc($floor_count);
+            $floor_count = intval($floor_count["count"]);
+            $floor_num = intval($floor_num);
+            if($floor_num > $floor_count){
+                for($i = $floor_count+1;$i<=$floor_num;$i++){
+                    $insertFloor="insert into floor (floor,room_num,address,status) values ('".$i."',0,'".$address."','enabled')";
+                    mysqli_query($con,$insertFloor);
+                }
+            }
             $message = [];
             $message[0] = true;
             $message[1] = "update successfully";
