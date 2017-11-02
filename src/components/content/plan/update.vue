@@ -157,7 +157,10 @@ export default {
             var addressList = vm.$store.state.address;
             for (var address of addressList) {
               if (vm.form.address == address.address) {
-                vm.form.country = address.country;
+                vm.form.country = address.country
+                vm.form.ip = address.ip
+                vm.form.port = address.port
+                vm.form.mac = address.mac
               }
             }
             console.log("maxid:" + vm.$store.state.maxid);

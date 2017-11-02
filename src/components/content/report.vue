@@ -194,16 +194,9 @@ export default {
         //   }
         // }
         for (var h = 0; h < 24; h++) {
-            var date =
-              year +
-              "-" +
-              month +
-              "-" +
-              day +
-              " " +
-              formatDate(h)
-              
-            dateList.push(date);
+          var date = year + "-" + month + "-" + day + " " + formatDate(h);
+
+          dateList.push(date);
         }
 
         startTime.setDate(startTime.getDate() + 1);
@@ -504,11 +497,14 @@ export default {
         var typeWattsArr = {};
         var typeUsdArr = {};
         for (var record of this.selectRecord) {
-        //   var date = record.record_date.substr(0, 15) + "0";
+          //   var date = record.record_date.substr(0, 15) + "0";
           var date = record.record_date.substr(0, 13);
           var index = allRecord.dateArr.indexOf(date);
           allRecord.recordArr[index] += parseInt(record.watts);
           allRecord.usdArr[index] += parseFloat(record.usd);
+          allRecord.usdArr[index] = parseFloat(
+            allRecord.usdArr[index].toFixed(2)
+          );
           //   if (allRecord.dateArr.indexOf(date) == -1) {
           //     allRecord.dateArr.push(date);
           //     allRecord.recordArr.push(parseInt(record.watts));
@@ -525,6 +521,9 @@ export default {
           typeUsdArr[record.devicetype]
             ? (typeUsdArr[record.devicetype] += parseFloat(record.usd))
             : (typeUsdArr[record.devicetype] = parseFloat(record.usd));
+          typeUsdArr[record.devicetype] = parseFloat(
+            typeUsdArr[record.devicetype].toFixed(2)
+          );
           // if (typeArr.indexOf(record.devicetype) == -1){
           //     typeArr[record.devicetype] = parseInt(record.watts)
           // }else{
