@@ -47,6 +47,16 @@ export default {
     goback() {
       this.$emit("goback", false);
     },
+    getRoom() {
+      const data = {
+        params: {
+          action: "search"
+        }
+      };
+      this.apiGet("device/room.php", data).then(res => {
+        this.$store.dispatch("setRoom", res);
+      });
+    },
     addAddress(form) {
       console.log(this.form);
       this.isLoading = !this.isLoading;
@@ -63,6 +73,7 @@ export default {
             this.$store.dispatch("setFloor", floor);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
+              this.getRoom()
               this.goback();
             }, 500);
           } else {
@@ -83,6 +94,7 @@ export default {
             this.$store.dispatch("setFloor", floor);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
+              this.getRoom()
               this.goback();
             }, 500);
           } else {

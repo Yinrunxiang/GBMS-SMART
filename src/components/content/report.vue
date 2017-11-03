@@ -246,7 +246,7 @@ export default {
           position: function(pt) {
             return [pt[0], "10%"];
           },
-          formatter: this.type == "watts" ? "{b} : {c}w" : "{b} : {c}usd"
+          formatter: this.type == "watts" ? "{b} : {c}kw" : "{b} : {c}usd"
         },
         title: {
           left: "center",
@@ -324,7 +324,7 @@ export default {
         tooltip: {
           trigger: "item",
           formatter:
-            this.type == "watts" ? "{b} : {c}w ({d}%)" : "{b} : {c}usd ({d}%)"
+            this.type == "watts" ? "{b} : {c}kw ({d}%)" : "{b} : {c}usd ({d}%)"
         },
         // legend: {
         //   orient: "vertical",
@@ -384,7 +384,7 @@ export default {
         tooltip: {
           trigger: "item",
           formatter:
-            this.type == "watts" ? "{b} : {c}w ({d}%)" : "{b} : {c}usd ({d}%)"
+            this.type == "watts" ? "{b} : {c}kw ({d}%)" : "{b} : {c}usd ({d}%)"
         },
 
         visualMap: {
@@ -500,7 +500,10 @@ export default {
           //   var date = record.record_date.substr(0, 15) + "0";
           var date = record.record_date.substr(0, 13);
           var index = allRecord.dateArr.indexOf(date);
-          allRecord.recordArr[index] += parseInt(record.watts);
+          allRecord.recordArr[index] += parseFloat(record.watts);
+          allRecord.recordArr[index] = parseFloat(
+            allRecord.recordArr[index].toFixed(2)
+          );
           allRecord.usdArr[index] += parseFloat(record.usd);
           allRecord.usdArr[index] = parseFloat(
             allRecord.usdArr[index].toFixed(2)
@@ -516,8 +519,11 @@ export default {
           //   }
 
           typeWattsArr[record.devicetype]
-            ? (typeWattsArr[record.devicetype] += parseInt(record.watts))
-            : (typeWattsArr[record.devicetype] = parseInt(record.watts));
+            ? (typeWattsArr[record.devicetype] += parseFloat(record.watts))
+            : (typeWattsArr[record.devicetype] = parseFloat(record.watts));
+          typeWattsArr[record.devicetype] = parseFloat(
+            typeWattsArr[record.devicetype].toFixed(2)
+          );
           typeUsdArr[record.devicetype]
             ? (typeUsdArr[record.devicetype] += parseFloat(record.usd))
             : (typeUsdArr[record.devicetype] = parseFloat(record.usd));

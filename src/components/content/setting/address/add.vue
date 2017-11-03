@@ -65,6 +65,16 @@ export default {
     goback() {
       this.$emit("goback", false);
     },
+    getFloor() {
+      const data = {
+        params: {
+          action: "search"
+        }
+      };
+      this.apiGet("device/floor.php", data).then(res => {
+        this.$store.dispatch("setFloor", res);
+      });
+    },
     addAddress(form) {
       console.log(this.form);
       this.isLoading = !this.isLoading;
@@ -83,6 +93,7 @@ export default {
             
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
+              this.getFloor()
               this.goback();
             }, 500);
           } else {
@@ -105,6 +116,10 @@ export default {
             for (var device of devices) {
               if (device.address == this.oldAddress) {
                 device.address = this.form.address;
+                device.ip = this.form.ip;
+                device.port = this.form.port;
+                device.mac = this.form.mac;
+                device.country = this.form.country;
               }
             }
             this.$store.dispatch("setDevices", devices);
@@ -124,6 +139,7 @@ export default {
             this.$store.dispatch("setRoom", rooms);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
+              this.getFloor()
               this.goback();
             }, 500);
           } else {

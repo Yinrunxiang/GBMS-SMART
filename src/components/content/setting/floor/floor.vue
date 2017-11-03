@@ -185,20 +185,20 @@ export default {
       this.getCurrentPage();
       // this.getAllDevices()
     },
-    getFloor() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/floor.php", data).then(res => {
-        this.$store.dispatch("setFloor", res);
-      });
-    },
+    // getFloor() {
+    //   const data = {
+    //     params: {
+    //       action: "search"
+    //     }
+    //   };
+    //   this.apiGet("device/floor.php", data).then(res => {
+    //     this.$store.dispatch("setFloor", res);
+    //   });
+    // },
   },
   created() {
     console.log("floor");
-    this.getFloor()
+    // this.getFloor()
     
     this.init();
   },

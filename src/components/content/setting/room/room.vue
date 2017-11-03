@@ -186,20 +186,20 @@ export default {
       this.getCurrentPage();
       // this.getAllDevices()
     },
-    getRoom() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/room.php", data).then(res => {
-        this.$store.dispatch("setRoom", res);
-      });
-    },
+    // getRoom() {
+    //   const data = {
+    //     params: {
+    //       action: "search"
+    //     }
+    //   };
+    //   this.apiGet("device/room.php", data).then(res => {
+    //     this.$store.dispatch("setRoom", res);
+    //   });
+    // },
   },
   created() {
     console.log("room");
-    this.getRoom()
+    // this.getRoom()
     this.init();
   },
   components: {

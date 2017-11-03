@@ -100,19 +100,18 @@
 }
 
 .logo {
-   margin: 10px 0 10px 10px;
-  height:40px;
+  margin: 10px 0 10px 10px;
+  height: 40px;
   width: 40px;
   float: left;
   border-radius: 10px;
- 
 }
-.version{
+.version {
   position: absolute;
   top: 5px;
   right: 5px;
   font-size: 10px;
-  color:#c0ccda;
+  color: #c0ccda;
 }
 
 .user-ground {
@@ -324,11 +323,11 @@ export default {
                 break;
             }
             if (record.watts) {
+              record.watts = parseFloat(record.watts / 1000);
               record.usd = 0;
               for (var address of addresss) {
                 if (address.address == record.address && address.kw_usd) {
-                  record.usd =
-                    parseInt(record.watts) / 1000 * parseFloat(address.kw_usd);
+                  record.usd = record.watts * parseFloat(address.kw_usd);
                 }
               }
               newRecords.push(record);
@@ -379,7 +378,7 @@ export default {
     countryArr() {
       var countryArr = [];
       var countryList = [];
-      var typeList = ['light','ac','led']
+      var typeList = ["light", "ac", "led"];
       for (let address of this.$store.state.address) {
         if (countryList.indexOf(address.country) == -1) {
           countryList.push(address.country);
@@ -416,16 +415,19 @@ export default {
                   floorObject.deviceTypeNumber = {};
                   floorObject.warn = 0;
                   for (var room of this.$store.state.room) {
-                    if (room.floor == floor.floor && room.address == floor.address) {
+                    if (
+                      room.floor == floor.floor &&
+                      room.address == floor.address
+                    ) {
                       var roomObject = {};
                       roomObject.name = room.room;
-                      roomObject.id = room.id
-                      roomObject.image = room.image
-                      roomObject.room = room.room
+                      roomObject.id = room.id;
+                      roomObject.image = room.image;
+                      roomObject.room = room.room;
                       roomObject.room_name = room.room_name;
-                      roomObject.floor = room.floor
-                      roomObject.address = room.address
-                      
+                      roomObject.floor = room.floor;
+                      roomObject.address = room.address;
+
                       roomObject.typeList = [];
                       roomObject.typeArr = [];
                       roomObject.deviceList = [];
