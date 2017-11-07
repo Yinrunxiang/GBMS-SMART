@@ -21,15 +21,18 @@ function toHex($num) {
     }
     return $num ;
 }
+function connect_sql(){
+    $con = mysqli_connect('localhost','root','root');
+    if (!$con)
+    {
+        die('Could not connect: ' . mysqli_error($con));
+    }
+    // mysqli_select_db($con,"udp");
+    mysqli_select_db($con,"admin");
+    mysqli_set_charset($con, "utf8");
+    return $con;
+}
 
-$con = mysqli_connect('localhost','root','root');
-        if (!$con)
-        {
-            die('Could not connect: ' . mysqli_error($con));
-        }
-        // mysqli_select_db($con,"udp");
-        mysqli_select_db($con,"admin");
-        mysqli_set_charset($con, "utf8");
 
 // PHPSocketIO服务
 $sender_io = new SocketIO(2120);
@@ -71,8 +74,9 @@ $sender_io->on('workerStart', function(){
             }else{
                 $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',run_date = null where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
             }
-            
+            $con = connect_sql();
             mysqli_query($con,$sql);
+            mysqli_close($con);
         break;
             case "0034":
                 // $channel = substr($msg,52, 2);
@@ -104,8 +108,9 @@ $sender_io->on('workerStart', function(){
                         $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."' and  channel = '".$channel."'";
                     }
                     
+                    $con = connect_sql();
                     mysqli_query($con,$sql);
-                    // echo $sql;
+                    mysqli_close($con);
                 }
                 // $sql="insert into record (deviceid,channel,devicetype,on_off,record_date) values ('".$deviceid."','".$channel."','".$devicetype."','".$on_off."',now())";
                 
@@ -177,7 +182,9 @@ $sender_io->on('workerStart', function(){
             // echo $sql;
             // $sql="insert into record (deviceid,devicetype,on_off,record_date) values ('".$deviceid."','".$devicetype."','".$on_off."',now())";
             // echo $sql;
+            $con = connect_sql();
             mysqli_query($con,$sql);
+            mysqli_close($con);
             break;
             case "e0ed":
                 $on_off = substr($msg,50, 2);
@@ -232,7 +239,9 @@ $sender_io->on('workerStart', function(){
                 // echo $sql;
                 // $sql="insert into record (deviceid,devicetype,on_off,record_date) values ('".$deviceid."','".$devicetype."','".$on_off."',now())";
                 // echo $sql;
+                $con = connect_sql();
                 mysqli_query($con,$sql);
+                mysqli_close($con);
             break;
         }
         
@@ -305,7 +314,9 @@ $sender_io->on('workerStart', function(){
         //延迟3秒后，将设备运行状态记录到record表
         // sleep(3);
         $sql="insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,floor,room,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,floor,room,now() from device left join address on device.address = address.address where on_off = 'on' and (devicetype = 'light' or devicetype = 'led' or devicetype = 'ac') ";
-        $result = mysqli_query($con,$sql);
+        $con = connect_sql();
+        mysqli_query($con,$sql);
+        mysqli_close($con);
         // global $uidConnectionMap, $sender_io, $last_online_count, $last_online_page_count;
         // $online_count_now = count($uidConnectionMap);
         // $online_page_count_now = array_sum($uidConnectionMap);
