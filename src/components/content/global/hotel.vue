@@ -294,7 +294,7 @@ export default {
       this.showFloorUpdate = val;
     },
     roomClick(val) {
-      window.socketio.removeAllListeners("new_msg");
+      // window.socketio.removeAllListeners("new_msg");
       this.$store.dispatch("setShowFloor", false);
       this.$store.dispatch("setShowHotel", false);
       this.$store.dispatch("setShowRoom", true);
@@ -332,7 +332,7 @@ export default {
       this.deviceList = deviceList;
 
       clearInterval(interval);
-      window.socketio.removeAllListeners("new_msg");
+      // window.socketio.removeAllListeners("new_msg");
       // console.log(val)
       var vm = this;
       var i = 0;
@@ -349,7 +349,7 @@ export default {
         }
         deviceList[i].readOpen();
         i = i + 1;
-      }, 300);
+      }, 100);
       // this.roomWatts = echarts.init(this.$refs.roomWatts);
     },
     roomOver(val) {

@@ -98,7 +98,7 @@ export default {
                 
                 return
             }
-            window.socketio.removeAllListeners("new_msg");
+            // window.socketio.removeAllListeners("new_msg");
             // console.log(val)
             var vm = this
             var i = 0;
@@ -119,7 +119,7 @@ export default {
                 }
                 deviceList[i].readOpen()
                 i = i + 1
-            }, 300);
+            }, 100);
 
             // for (var device of deviceList) {
             //     // setTimeout(device.readOpen(),2000)

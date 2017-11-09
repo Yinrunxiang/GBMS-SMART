@@ -222,7 +222,7 @@ const musicApi = {
       device.ip,
       device.port
     );
-    window.socketio.removeAllListeners("new_msg");
+    // window.socketio.removeAllListeners("new_msg");
     window.socketio.on("new_msg", function (msg) {
       var msglen = msg.length;
       var stop = msglen - 4;
