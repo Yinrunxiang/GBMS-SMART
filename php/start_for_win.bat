@@ -1,2 +1,2 @@
-php start_io.php  php start_web.php
+php start_io.php  php test_6001.php  php admin_6002.php
 pause

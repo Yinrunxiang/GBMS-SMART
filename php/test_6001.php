@@ -21,11 +21,11 @@ $con = mysqli_connect('localhost','root','root');
             die('Could not connect: ' . mysqli_error($con));
         }
         // mysqli_select_db($con,"udp");
-        mysqli_select_db($con,"admin");
+        mysqli_select_db($con,"udp");
         mysqli_set_charset($con, "utf8");
 
 // PHPSocketIO服务
-$sender_io = new SocketIO(2120);
+$sender_io = new SocketIO(6001);
 $udpProtocol = new UdpProtocol();
 $udpSocket = new UdpSocket();
 $devices = array();

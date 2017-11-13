@@ -114,6 +114,7 @@ const apiMethods = {
       Lockr.set('username', data.username)            // 用户信息
       Lockr.set('password', data.password)            // 记住密码的加密字符串 
       Lockr.set('database_name', data.database_name)            // 数据库名 
+      Lockr.set('port', data.port)            // UDP端口号 
       // setTimeout(() => {
         router.replace('/home/global')
       // }, 500)

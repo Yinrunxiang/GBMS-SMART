@@ -25,7 +25,7 @@ $con = mysqli_connect('localhost','root','root');
         mysqli_set_charset($con, "utf8");
 
 // PHPSocketIO服务
-$sender_io = new SocketIO(2120);
+$sender_io = new SocketIO(6002);
 $udpProtocol = new UdpProtocol();
 $udpSocket = new UdpSocket();
 $devices = array();

@@ -33,7 +33,7 @@ const router = new VueRouter({
   base: __dirname,
   routes
 })
-var socketio = socket('http://' + document.domain + ':2120')
+// var socketio = socket('http://' + document.domain + ':2120')
 
 router.beforeEach((to, from, next) => {
   const hideLeft = to.meta.hideLeft
@@ -57,7 +57,7 @@ window.store = store
 window.HOST = HOST
 window.axios = axios
 window.socket = socket
-window.socketio = socketio
+// window.socketio = socketio
 window._ = _
 window.moment = moment
 window.Lockr = Lockr

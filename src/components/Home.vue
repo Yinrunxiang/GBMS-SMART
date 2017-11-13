@@ -1,6 +1,6 @@
 <template>
 	<el-row class="panel m-w-1280">
-    <span class="version">ver 1.0.4</span>
+    <span class="version">ver 1.0.5</span>
 		<el-col :span="24" class="panel-top">
 			<el-col class="w-180">
 				<template v-if="logo_type == '1'">
@@ -625,6 +625,9 @@ export default {
       }, 1500);
       return;
     }
+    let port = Lockr.get("port");
+    var socketio = socket('http://' + document.domain + ':'+port)
+    window.socketio = socketio
     // this.$store.dispatch("setShowHotel", true);
     // this.$store.dispatch("setShowFloor", false);
     // this.$store.dispatch("setShowRoom", false);
