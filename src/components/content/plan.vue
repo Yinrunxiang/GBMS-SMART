@@ -122,7 +122,6 @@ export default {
     //获取被选中的数据
     selectItem(val) {
       this.multipleSelection = val;
-      console.log(this.multipleSelection);
     },
     //换页事件
     handleCurrentChange(page) {

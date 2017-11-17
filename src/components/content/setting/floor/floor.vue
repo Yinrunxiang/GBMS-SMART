@@ -46,6 +46,7 @@
 
 <script>
 import http from "../../../../assets/js/http";
+import list from "../../../../assets/js/list";
 import add from "./add";
 export default {
   //  currentPage        页码
@@ -54,12 +55,12 @@ export default {
   //  limit              每页最大行数
   data() {
     return {
-      // tableData: [],
+      tableData: [],
       // dataCount: null,
       currentPage: null,
       keywords: "",
       multipleSelection: [],
-      limit: 15,
+      limit: 10,
       add: true,
       setting: false,
       floor: {}
@@ -85,25 +86,10 @@ export default {
       this.setting = true;
       this.floor = row;
     },
-    //搜索关键字
-    search() {
-      router.push({
-        path: this.$route.path,
-        query: { keywords: this.keywords, page: 1 }
-      });
-    },
     //获取被选中的数据
     selectItem(val) {
       this.multipleSelection = val;
     },
-    //换页事件
-    handleCurrentChange(page) {
-      router.push({
-        path: this.$route.path,
-        query: { keywords: this.keywords, page: page }
-      });
-    },
-
     //保存状态点击事件
     setStatusBtn(status) {
       const data = {
@@ -157,34 +143,32 @@ export default {
           // catch error
         });
     },
-    //获取页码
-    getCurrentPage() {
-      let data = this.$route.query;
-      if (data) {
-        if (data.page) {
-          this.currentPage = parseInt(data.page);
-        } else {
-          this.currentPage = 1;
+    getAllData() {
+      // var pages = Math.ceil(this.dataCount/this.limit)
+      var data = [];
+      //   var devices = [];
+      //   devices = devcice.cancat(this.devices);
+      if (this.keywords != "") {
+        for (var floor of this.floors) {
+          if (floor.floor == this.keywords) {
+            data.push(floor);
+          }
         }
+      } else {
+        data = this.floors;
       }
-    },
-    //获取关键值
-    getKeywords() {
-      let data = this.$route.query;
-      if (data) {
-        if (data.keywords) {
-          this.keywords = data.keywords;
-        } else {
-          this.keywords = "";
-        }
-      }
+
+      // var data = this.devices
+      var start = this.limit * (this.currentPage - 1);
+      var end = start + this.limit - 1;
+      this.tableData = data.slice(start, end);
     },
     //初始化时统一加载
     init() {
       this.getKeywords();
       this.getCurrentPage();
-      // this.getAllDevices()
-    },
+      this.getAllData();
+    }
     // getFloor() {
     //   const data = {
     //     params: {
@@ -199,15 +183,18 @@ export default {
   created() {
     console.log("floor");
     // this.getFloor()
-    
+
     this.init();
+  },
+  mounted() {
+    
   },
   components: {
     add
   },
   computed: {
     //从vuex中获取设备数据
-    tableData() {
+    floors() {
       return this.$store.state.floor;
     },
     //从vuex中获取设备数据条数
@@ -216,13 +203,16 @@ export default {
     }
   },
   watch: {
-    tableData: {
+    $route(to, from) {
+      this.init();
+    },
+    floors: {
       handler: function(val, oldVal) {
         this.init();
       },
       deep: true
     }
   },
-  mixins: [http]
+  mixins: [http,list]
 };
 </script>

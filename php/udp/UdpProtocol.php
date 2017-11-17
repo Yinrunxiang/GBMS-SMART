@@ -11,7 +11,7 @@ class UdpProtocol
         return $num ;
     }
     
-    function UdpProtocol($operatorCodefst = '',$operatorCodesec = '',$targetDeviceID = '',$additionalContentData = [],$macAddress = [])
+    function UdpProtocol($operatorCodefst = '',$operatorCodesec = '',$targetSubnetID = '',$targetDeviceID = '',$additionalContentData = [],$macAddress = [])
     {
         //根据是否传入macaddress判断远程还是本地
         if(count($macAddress) == 0){
@@ -106,7 +106,7 @@ class UdpProtocol
     // 2.3.7 目标设备的子网ID与设备ID
     
     // 目标设备的子网ID
-    $maraySendUDPBuf[$index++] = '01';
+    $maraySendUDPBuf[$index++] = $targetSubnetID;
     // 目标设备的设备ID
     $maraySendUDPBuf[$index++] = $targetDeviceID;
     

@@ -59,7 +59,7 @@
 
 <script>
 import http from "../../../../../assets/js/http";
-
+import list from "../../../../../assets/js/list";
 export default {
   //  currentPage        页码
   //  keywords           关键字
@@ -67,7 +67,7 @@ export default {
   //  limit              每页最大行数
   data() {
     return {
-      // tableData: [],
+      tableData: [],
       // dataCount: null,
       currentPage: null,
       keywords: "",
@@ -76,13 +76,6 @@ export default {
     };
   },
   methods: {
-    //搜索关键字
-    search() {
-      router.push({
-        path: this.$route.path,
-        query: { keywords: this.keywords, page: 1 }
-      });
-    },
     rowDblclick(row) {
       var url = "ac/update";
       router.push({ path: url, query: row });
@@ -90,14 +83,6 @@ export default {
     //获取被选中的数据
     selectItem(val) {
       this.multipleSelection = val;
-      console.log(this.multipleSelection);
-    },
-    //换页事件
-    handleCurrentChange(page) {
-      router.push({
-        path: this.$route.path,
-        query: { keywords: this.keywords, page: page }
-      });
     },
 
     //保存状态点击事件
@@ -153,33 +138,31 @@ export default {
           // catch error
         });
     },
-    //获取页码
-    getCurrentPage() {
-      let data = this.$route.query;
-      if (data) {
-        if (data.page) {
-          this.currentPage = parseInt(data.page);
-        } else {
-          this.currentPage = 1;
+    getAllData() {
+      // var pages = Math.ceil(this.dataCount/this.limit)
+      var data = [];
+      //   var devices = [];
+      //   devices = devcice.cancat(this.devices);
+      if (this.keywords != "") {
+        for (var ac_breed of this.ac_breeds) {
+          if (ac_breed.breed == this.keywords) {
+            data.push(ac_breed);
+          }
         }
+      } else {
+        data = this.ac_breeds;
       }
-    },
-    //获取关键值
-    getKeywords() {
-      let data = this.$route.query;
-      if (data) {
-        if (data.keywords) {
-          this.keywords = data.keywords;
-        } else {
-          this.keywords = "";
-        }
-      }
+
+      // var data = this.devices
+      var start = this.limit * (this.currentPage - 1);
+      var end = start + this.limit - 1;
+      this.tableData = data.slice(start, end);
     },
     //初始化时统一加载
     init() {
       this.getKeywords();
       this.getCurrentPage();
-      // this.getAllDevices()
+      this.getAllData()
     }
   },
   created() {
@@ -189,7 +172,7 @@ export default {
   components: {},
   computed: {
     //从vuex中获取设备数据
-    tableData() {
+    ac_breeds() {
       console.log(this.$store.state.ac_breed);
       return this.$store.state.ac_breed;
     },
@@ -198,6 +181,17 @@ export default {
       return this.$store.state.ac_breed.length;
     }
   },
-  mixins: [http]
+  watch: {
+    $route(to, from) {
+      this.init();
+    },
+    ac_breeds: {
+      handler: function(val, oldVal) {
+        this.init();
+      },
+      deep: true
+    }
+  },
+  mixins: [http, list]
 };
 </script>

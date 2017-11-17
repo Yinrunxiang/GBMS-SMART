@@ -57,163 +57,163 @@
 </template>
 
 <script>
-import http from '../../../../assets/js/http'
-import add from './add'
+import http from "../../../../assets/js/http";
+import list from "../../../../assets/js/list";
+import add from "./add";
 export default {
-    //  currentPage        页码
-    //  keywords           关键字
-    //  multipleSelection  被选中的数据
-    //  limit              每页最大行数
-    data() {
-        return {
-            // tableData: [],
-            // dataCount: null,
-            currentPage: null,
-            keywords: '',
-            multipleSelection: [],
-            limit: 15,
-            add: true,
-            setting: false,
-            address:{},
+  //  currentPage        页码
+  //  keywords           关键字
+  //  multipleSelection  被选中的数据
+  //  limit              每页最大行数
+  data() {
+    return {
+      tableData: [],
+      // dataCount: null,
+      currentPage: null,
+      keywords: "",
+      multipleSelection: [],
+      limit: 15,
+      add: true,
+      setting: false,
+      address: {}
+    };
+  },
+  methods: {
+    goback(bool) {
+      this.setting = bool;
+    },
+    addressSetting() {
+      this.add = true;
+      this.setting = true;
+      var address = {
+        country: "",
+        address: "",
+        ip: "",
+        port: "",
+        mac: "",
+        lat: "",
+        lng: "",
+        status: "enabled"
+      };
+      this.address = address;
+    },
+    rowDblclick(row) {
+      this.add = false;
+      this.setting = true;
+      this.address = row;
+    },
+    //获取被选中的数据
+    selectItem(val) {
+      this.multipleSelection = val;
+    },
+    //保存状态点击事件
+    setStatusBtn(status) {
+      const data = {
+        params: {
+          selections: this.multipleSelection,
+          status: status
         }
-    },
-    methods: {
-        goback(bool){
-            this.setting = bool
-        },
-        addressSetting() {
-            this.add = true
-            this.setting = true
-            var address= {
-                country: '',
-                address: '',
-                ip: '',
-                port: '',
-                mac: '',
-                lat: '',
-                lng: '',
-                status: 'enabled',
-            }
-            this.address = address
-        },
-        rowDblclick(row) {
-            this.add = false
-            this.setting = true
-            this.address = row
-        },
-        //搜索关键字
-        search() {
-            router.push({ path: this.$route.path, query: { keywords: this.keywords, page: 1 } })
-        },
-        //获取被选中的数据
-        selectItem(val) {
-            this.multipleSelection = val
-        },
-        //换页事件
-        handleCurrentChange(page) {
-            router.push({ path: this.$route.path, query: { keywords: this.keywords, page: page } })
-        },
-
-        //保存状态点击事件
-        setStatusBtn(status) {
-            const data = {
-                params: {
-                    selections: this.multipleSelection,
-                    status: status
-                }
-            }
-            this.apiGet('device/address.php?action=setStatus', data).then((res) => {
-                if (res[0]) {
-                    for (var selection of this.multipleSelection) {
-                        selection.status = status
-                    }
-                    _g.toastMsg('success', res[1])
-                } else {
-                    _g.toastMsg('error', res[1])
-                }
-
-            })
-        },
-        //删除按钮事件
-        deleteBtn() {
-            this.$confirm('Are you sure to delete the selected data?', 'Tips', {
-                confirmButtonText: 'Yse',
-                cancelButtonText: 'No',
-                type: 'warning'
-            }).then(() => {
-                const data = {
-                    params: {
-                        selections: this.multipleSelection
-                    }
-                }
-                this.apiGet('device/address.php?action=delete', data).then((res) => {
-                    if (res[0]) {
-
-                        var address = this.$store.state.address
-                        for (var i = 0; i < address.length; i++) {
-                            for (var selection of this.multipleSelection) {
-                                if (address[i].address == selection.address) {
-                                    address.splice(i, 1)
-                                }
-                            }
-                        }
-                        this.$store.dispatch('setAddress', address)
-                        _g.toastMsg('success', res[1])
-                    } else {
-                        _g.toastMsg('error', res[1])
-                    }
-
-                })
-            }).catch(() => {
-                // catch error
-            })
-        },
-        //获取页码
-        getCurrentPage() {
-            let data = this.$route.query
-            if (data) {
-                if (data.page) {
-                    this.currentPage = parseInt(data.page)
-                } else {
-                    this.currentPage = 1
-                }
-            }
-        },
-        //获取关键值
-        getKeywords() {
-            let data = this.$route.query
-            if (data) {
-                if (data.keywords) {
-                    this.keywords = data.keywords
-                } else {
-                    this.keywords = ''
-                }
-            }
-        },
-        //初始化时统一加载
-        init() {
-            this.getKeywords()
-            this.getCurrentPage()
-            // this.getAllDevices()
+      };
+      this.apiGet("device/address.php?action=setStatus", data).then(res => {
+        if (res[0]) {
+          for (var selection of this.multipleSelection) {
+            selection.status = status;
+          }
+          _g.toastMsg("success", res[1]);
+        } else {
+          _g.toastMsg("error", res[1]);
         }
+      });
     },
-    created() {
-        console.log('address')
-        this.init()
+    //删除按钮事件
+    deleteBtn() {
+      this.$confirm("Are you sure to delete the selected data?", "Tips", {
+        confirmButtonText: "Yse",
+        cancelButtonText: "No",
+        type: "warning"
+      })
+        .then(() => {
+          const data = {
+            params: {
+              selections: this.multipleSelection
+            }
+          };
+          this.apiGet("device/address.php?action=delete", data).then(res => {
+            if (res[0]) {
+              var address = this.$store.state.address;
+              for (var i = 0; i < address.length; i++) {
+                for (var selection of this.multipleSelection) {
+                  if (address[i].address == selection.address) {
+                    address.splice(i, 1);
+                  }
+                }
+              }
+              this.$store.dispatch("setAddress", address);
+              _g.toastMsg("success", res[1]);
+            } else {
+              _g.toastMsg("error", res[1]);
+            }
+          });
+        })
+        .catch(() => {
+          // catch error
+        });
     },
-    components: {
-        add
-    },
-    computed: {
-        //从vuex中获取设备数据
-        tableData() {
-            return this.$store.state.address
-        },
-        //从vuex中获取设备数据条数
-        dataCount() {
-            return this.$store.state.address.length
+     getAllData() {
+      // var pages = Math.ceil(this.dataCount/this.limit)
+      var data = [];
+      //   var devices = [];
+      //   devices = devcice.cancat(this.devices);
+      if (this.keywords != "") {
+        for (var address of this.addresss) {
+          if (address.address == this.keywords) {
+            data.push(address);
+          }
         }
+      } else {
+        data = this.addresss;
+      }
+
+      // var data = this.devices
+      var start = this.limit * (this.currentPage - 1);
+      var end = start + this.limit - 1;
+      this.tableData = data.slice(start, end);
     },
-    mixins: [http]
-}
+    //初始化时统一加载
+    init() {
+      this.getKeywords();
+      this.getCurrentPage();
+      this.getAllData()
+    }
+  },
+  created() {
+    console.log("address");
+    this.init();
+  },
+  components: {
+    add
+  },
+  computed: {
+    //从vuex中获取设备数据
+    addresss() {
+      return this.$store.state.address;
+    },
+    //从vuex中获取设备数据条数
+    dataCount() {
+      return this.$store.state.address.length;
+    }
+  },
+  watch: {
+    $route(to, from) {
+      this.init();
+    },
+    addresss: {
+      handler: function(val, oldVal) {
+        this.init();
+      },
+      deep: true
+    }
+  },
+  mixins: [http,list]
+};
 </script>

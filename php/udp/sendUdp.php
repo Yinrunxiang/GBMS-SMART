@@ -16,6 +16,7 @@ require_once '/UdpProtocol.php';
 // echo $data;
 $operatorCodefst = isset($_REQUEST["operatorCodefst"]) ? $_REQUEST["operatorCodefst"] : '';
 $operatorCodesec = isset($_REQUEST["operatorCodesec"]) ? $_REQUEST["operatorCodesec"] : '';
+$targetSubnetID = isset($_REQUEST["targetSubnetID"]) ? $_REQUEST["targetSubnetID"] : '';
 $targetDeviceID = isset($_REQUEST["targetDeviceID"]) ? $_REQUEST["targetDeviceID"] : '';
 $additionalContentData = isset($_REQUEST["additionalContentData"]) ? $_REQUEST["additionalContentData"] : [];
 
@@ -25,7 +26,7 @@ $macAddress = $_REQUEST["macAddress"]? $_REQUEST["macAddress"] : [];
 // echo $operatorCodefst = "123";
 //调用UDP协议类，生成UDP协议
 $udpProtocol = new UdpProtocol();
-$msg  = $udpProtocol->UdpProtocol($operatorCodefst,$operatorCodesec,$targetDeviceID,$additionalContentData,$macAddress);
+$msg  = $udpProtocol->UdpProtocol($operatorCodefst,$operatorCodesec,$targetSubnetID,$targetDeviceID,$additionalContentData,$macAddress);
 // echo $msg;
 
 

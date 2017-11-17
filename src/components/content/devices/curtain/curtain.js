@@ -7,6 +7,7 @@ const cutainApi = {
         params: {
           operatorCodefst: "00",
           operatorCodesec: "31",
+          targetSubnetID: device.subnetid,
           targetDeviceID: device.deviceid,
           additionalContentData: (device.channel +
             // "," +
@@ -28,6 +29,7 @@ const cutainApi = {
         params: {
           operatorCodefst: "00",
           operatorCodesec: "31",
+          targetSubnetID: device.subnetid,
           targetDeviceID: device.deviceid,
           additionalContentData: (device.channel_spare + ",64,00,00").split(","),
           macAddress: device.mac ? device.mac.split(".") : "",
@@ -47,6 +49,7 @@ const cutainApi = {
       params: {
         operatorCodefst: "00",
         operatorCodesec: "31",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         additionalContentData: (device.channel +
           "," +
@@ -67,6 +70,7 @@ const cutainApi = {
       params: {
         operatorCodefst: "00",
         operatorCodesec: "33",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         macAddress: device.mac ? device.mac.split(".") : "",
         dest_address: device.ip ? device.ip : "",
@@ -120,6 +124,7 @@ const cutainApi = {
       params: {
         operatorCodefst: "00",
         operatorCodesec: "33",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         macAddress: device.mac ? device.mac.split(".") : "",
         dest_address: device.ip ? device.ip : "",

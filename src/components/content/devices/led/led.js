@@ -16,6 +16,7 @@ const ledApi = {
         params: {
           operatorCodefst: "F0",
           operatorCodesec: "80",
+          targetSubnetID: device.subnetid,
           targetDeviceID: device.deviceid,
           additionalContentData: (red +
             "," +
@@ -37,6 +38,7 @@ const ledApi = {
         params: {
           operatorCodefst: "F0",
           operatorCodesec: "80",
+          targetSubnetID: device.subnetid,
           targetDeviceID: device.deviceid,
           additionalContentData: "00,00,00,00,00,00".split(","),
           macAddress: device.mac ? device.mac.split(".") : "",
@@ -66,6 +68,7 @@ const ledApi = {
         params: {
           operatorCodefst: "F0",
           operatorCodesec: "80",
+          targetSubnetID: device.subnetid,
           targetDeviceID: device.deviceid,
           additionalContentData: (red +
             "," +
@@ -90,6 +93,7 @@ const ledApi = {
       params: {
         operatorCodefst: "00",
         operatorCodesec: "33",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         macAddress: device.mac ? device.mac.split(".") : "",
         dest_address: device.ip ? device.ip : "",
@@ -157,6 +161,7 @@ const ledApi = {
       params: {
         operatorCodefst: "00",
         operatorCodesec: "33",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         macAddress: device.mac ? device.mac.split(".") : "",
         dest_address: device.ip ? device.ip : "",

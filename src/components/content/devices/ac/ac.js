@@ -6,6 +6,7 @@ const acApi = {
                 params: {
                     operatorCodefst: "E3",
                     operatorCodesec: "D8",
+                    targetSubnetID: device.subnetid,
                     targetDeviceID: device.deviceid,
                     additionalContentData: ("03,01").split(","),
                     macAddress: device.mac ? device.mac.split(".") : "",
@@ -22,6 +23,7 @@ const acApi = {
                 params: {
                     operatorCodefst: "E3",
                     operatorCodesec: "D8",
+                    targetSubnetID: device.subnetid,
                     targetDeviceID: device.deviceid,
                     additionalContentData: ("03,00").split(","),
                     macAddress: device.mac ? device.mac.split(".") : "",
@@ -42,6 +44,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E3",
                 operatorCodesec: "D8",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("08," + _g.toHex(val)).split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",
@@ -61,6 +64,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E3",
                 operatorCodesec: "D8",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("04," + _g.toHex(val)).split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",
@@ -80,6 +84,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E3",
                 operatorCodesec: "D8",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("07," + _g.toHex(val)).split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",
@@ -99,6 +104,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E3",
                 operatorCodesec: "D8",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("05," + _g.toHex(val)).split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",
@@ -132,6 +138,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E3",
                 operatorCodesec: "D8",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("06,03").split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",
@@ -149,6 +156,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E3",
                 operatorCodesec: "D8",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("06,02").split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",
@@ -166,6 +174,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E3",
                 operatorCodesec: "D8",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("06,00").split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",
@@ -183,6 +192,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E3",
                 operatorCodesec: "D8",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("06,01").split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",
@@ -200,6 +210,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E0",
                 operatorCodesec: "EC",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("00").split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",
@@ -356,6 +367,7 @@ const acApi = {
             params: {
                 operatorCodefst: "E0",
                 operatorCodesec: "EC",
+                targetSubnetID: device.subnetid,
                 targetDeviceID: device.deviceid,
                 additionalContentData: ("00").split(","),
                 macAddress: device.mac ? device.mac.split(".") : "",

@@ -46,6 +46,7 @@ const musicApi = {
       params: {
         operatorCodefst: "02",
         operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         // additionalContentData: ("05,01,03," + val).split(","),
         additionalContentData: ("05,01,03," + _g.toHex(val)).split(","),
@@ -64,6 +65,7 @@ const musicApi = {
       params: {
         operatorCodefst: "02",
         operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         additionalContentData: "04,01,00,00".split(","),
         macAddress: device.mac ? device.mac.split(".") : "",
@@ -81,6 +83,7 @@ const musicApi = {
       params: {
         operatorCodefst: "02",
         operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         additionalContentData: "04,02,00,00".split(","),
         macAddress: device.mac ? device.mac.split(".") : "",
@@ -99,6 +102,7 @@ const musicApi = {
       params: {
         operatorCodefst: "02",
         operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         additionalContentData: "04,03,00,00".split(","),
         macAddress: device.mac ? device.mac.split(".") : "",
@@ -117,6 +121,7 @@ const musicApi = {
       params: {
         operatorCodefst: "02",
         operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         additionalContentData: "06,04".split(","),
         macAddress: device.mac ? device.mac.split(".") : "",
@@ -134,6 +139,7 @@ const musicApi = {
       params: {
         operatorCodefst: "02",
         operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         additionalContentData: "02,01".split(","),
         macAddress: device.mac ? device.mac.split(".") : "",
@@ -151,6 +157,7 @@ const musicApi = {
       params: {
         operatorCodefst: "02",
         operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         additionalContentData: "02,02".split(","),
         macAddress: device.mac ? device.mac.split(".") : "",
@@ -168,6 +175,7 @@ const musicApi = {
       params: {
         operatorCodefst: "02",
         operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         additionalContentData: "02,04".split(","),
         macAddress: device.mac ? device.mac.split(".") : "",
@@ -190,6 +198,7 @@ const musicApi = {
       params: {
         operatorCodefst: "02",
         operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
         // additionalContentData: ("06," + song.albumNo+',' +songNoHigh+',' +songNoLow).split(","),
         additionalContentData: ("06," + song.albumNo + ',' + song.songNoHigh + ',' + song.songNoLow).split(","),

@@ -119,7 +119,7 @@ export default {
           acApi.switch_change(val, this.device);
           break;
         case "led":
-          this.device.on_off = false;
+          // this.device.on_off = false;
           var deviceProperty = {
             on_off: false,
             brightness: 0,
@@ -193,7 +193,7 @@ export default {
     }
   },
   created() {
-    // console.log('device list device')
+    console.log('device list device')
     // this.readOpen()
   },
   props: ["device"],
