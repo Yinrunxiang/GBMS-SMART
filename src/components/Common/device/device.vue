@@ -123,10 +123,7 @@ export default {
           var deviceProperty = {
             on_off: false,
             brightness: 0,
-            color: "#c0ccda",
-            red: "c0",
-            green: "cc",
-            blue: "da"
+            color: this.device.mode?this.device.mode:'#ffffff',
           };
           ledApi.switch_change(val, this.device, deviceProperty);
           break;

@@ -7,11 +7,12 @@ const ledApi = {
   switch_change(val, device,deviceProperty) {
     if (val) {
       //255色转100色
-      var red = _g.toHex(Math.round(parseInt("0x" + deviceProperty.red) / 255 * 100));
+      var color = deviceProperty.color
+      var red = _g.toHex(Math.round(parseInt("0x" + color.substr(1,2)) / 255 * 100));
       var green = _g.toHex(
-        Math.round(parseInt("0x" + deviceProperty.green) / 255 * 100)
+        Math.round(parseInt("0x" + color.substr(3,2)) / 255 * 100)
       );
-      var blue = _g.toHex(Math.round(parseInt("0x" + deviceProperty.blue) / 255 * 100));
+      var blue = _g.toHex(Math.round(parseInt("0x" + color.substr(5,2)) / 255 * 100));
       const data = {
         params: {
           operatorCodefst: "F0",
@@ -57,12 +58,13 @@ const ledApi = {
     // var color = val.hex
     // color = color.substring(1)
     // color = _g.strToarr(color)
-    // console.log(deviceProperty.color);
-    var color = val.hex;
+    var color = deviceProperty.color;
     $(".led-light").css("color", color);
-    var red = _g.toHex(Math.round(val.rgb[0] / 255 * 100));
-    var green = _g.toHex(Math.round(val.rgb[1] / 255 * 100));
-    var blue = _g.toHex(Math.round(val.rgb[2] / 255 * 100));
+    var red = _g.toHex(Math.round(parseInt("0x" + color.substr(1,2)) / 255 * 100));
+    var green = _g.toHex(
+      Math.round(parseInt("0x" + color.substr(3,2)) / 255 * 100)
+    );
+    var blue = _g.toHex(Math.round(parseInt("0x" + color.substr(5,2)) / 255 * 100));
     if (deviceProperty.on_off) {
       const data = {
         params: {
@@ -128,9 +130,9 @@ const ledApi = {
 
           if (color != "#000000") {
             deviceProperty.on_off = true;
-            deviceProperty.red = red;
-            deviceProperty.green = green;
-            deviceProperty.blue = blue;
+            // deviceProperty.red = red;
+            // deviceProperty.green = green;
+            // deviceProperty.blue = blue;
             deviceProperty.color = color;
             $(".led-light").css("color", color);
           } else {
@@ -144,9 +146,9 @@ const ledApi = {
 
           if (color != "#000000") {
             deviceProperty.on_off = true;
-            deviceProperty.red = red;
-            deviceProperty.green = green;
-            deviceProperty.blue = blue;
+            // deviceProperty.red = red;
+            // deviceProperty.green = green;
+            // deviceProperty.blue = blue;
             deviceProperty.color = color;
             $(".led-light").css("color", color);
           } else {

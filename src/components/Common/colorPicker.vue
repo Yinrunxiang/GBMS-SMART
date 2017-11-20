@@ -7,10 +7,13 @@
       v-bind:class="{ disabled: disabled }"
     ></div>
     <!-- 用以激活HTML5颜色面板 -->
-    <input type="color"
+    <!-- <input type="color"
       ref="html5Color"
       v-model="html5Color"
-      v-on:change="updataValue(html5Color)">
+      v-on:change="updataValue(html5Color)"> -->
+      <input type="color"
+      ref="html5Color"
+      v-model="html5Color">
     <!-- 颜色色盘 -->
     <div class="box" v-bind:class="{ open: openStatus }">
       <div class="hd">
@@ -29,7 +32,7 @@
             v-bind:style="{ backgroundColor: color }"
             v-on:mouseover="hoveColor = color"
             v-on:mouseout="hoveColor = null"
-            v-on:click="updataValue(color)"
+            <!-- v-on:click="updataValue(color)" -->
           ></li>
         </ul>
         <ul class="bColor">
@@ -40,7 +43,7 @@
                 v-bind:style="{ backgroundColor: color }"
                 v-on:mouseover="hoveColor = color"
                 v-on:mouseout="hoveColor = null"
-                v-on:click="updataValue(color)"
+                <!-- v-on:click="updataValue(color)" -->
               ></li>
             </ul>
           </li>
@@ -52,7 +55,7 @@
             v-bind:style="{ backgroundColor: color }"
             v-on:mouseover="hoveColor = color"
             v-on:mouseout="hoveColor = null"
-            v-on:click="updataValue(color)"
+            <!-- v-on:click="updataValue(color)" -->
           ></li>
         </ul>
         <h3 v-on:click="triggerHtml5Color">更多颜色...</h3>
