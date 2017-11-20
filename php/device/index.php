@@ -170,6 +170,25 @@ switch ($action)
         echo(json_encode($message)); 
     }
     break;
+
+    case "setColor":
+    $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
+    $color = isset($_REQUEST["color"]) ? $_REQUEST["color"] : '';
+    $sql="update device set mode = '".$color."' where id = '".$id."'";
+    if (!mysqli_query($con,$sql))
+    {
+        $message = [];
+        $message[0] = false;
+        $message[1] = "update failed: " . mysqli_error($con);
+        echo(json_encode($message)); 
+    }else{
+        $message = [];
+        $message[0] = true;
+        $message[1] = "update successfully";
+        echo(json_encode($message)); 
+    }
+    break;
+
     case "setTime":
     $selection = isset($_REQUEST["selection"]) ? $_REQUEST["selection"] : '';
     $type = isset($_REQUEST["type"]) ? $_REQUEST["type"] : '';

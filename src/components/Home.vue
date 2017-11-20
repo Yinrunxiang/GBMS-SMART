@@ -388,6 +388,8 @@ export default {
           mapIportCountryObject.deviceList = [];
           mapIportCountryObject.deviceTypeNumber = {};
           mapIportCountryObject.warn = 0;
+          mapIportCountryObject.watts = 0;
+          mapIportCountryObject.usd = 0;
           mapIportCountryObject.addressList = [];
           for (let address2 of this.$store.state.address) {
             if (address.country == address2.country) {
@@ -404,6 +406,8 @@ export default {
               addressObject.floorList = [];
               addressObject.deviceList = [];
               addressObject.warn = 0;
+              addressObject.watts = 0;
+              addressObject.usd = 0;
               addressObject.deviceTypeNumber = {};
               for (var floor of this.$store.state.floor) {
                 if (floor.address == address2.address) {
@@ -414,6 +418,8 @@ export default {
                   floorObject.deviceList = [];
                   floorObject.deviceTypeNumber = {};
                   floorObject.warn = 0;
+                  floorObject.watts = 0;
+                  floorObject.usd = 0;
                   for (var room of this.$store.state.room) {
                     if (
                       room.floor == floor.floor &&
@@ -433,6 +439,8 @@ export default {
                       roomObject.deviceList = [];
                       roomObject.deviceTypeNumber = {};
                       roomObject.warn = 0;
+                      roomObject.watts = 0;
+                      roomObject.usd = 0;
                       // for(var type of typeList){
                       //     var typeObject = {};
                       //     typeObject.name = type;
@@ -458,7 +466,10 @@ export default {
       // var initFloor = this.$store.state.floor
       // var initRoom = this.$store.state.room
       //this.devices原始设备数据
-
+      var addresss = this.$store.state.address;
+      var ac_breeds = this.$store.state.ac_breed;
+      var light_breeds = this.$store.state.light_breed;
+      var led_breeds = this.$store.state.led_breed;
       for (var item of this.devices) {
         item.warn = false;
         var warnDeviceList = ["light", "ac", "led"];
@@ -473,6 +484,44 @@ export default {
               ) {
                 item.warn = true;
                 warn += 1;
+              }
+            }
+          }
+        }
+        item.watts = 0;
+        item.usd = 0;
+        if (item.on_off == "on") {
+          switch (item.devicetype) {
+            case "ac":
+              for (var ac_breed of ac_breeds) {
+                if (item.breed == ac_breed.breed) {
+                  item.watts =
+                    parseInt(ac_breed[item.mode]) +
+                    parseInt(ac_breed[item.grade]);
+                }
+              }
+              break;
+            case "light":
+              for (var light_breed of light_breeds) {
+                if (item.breed == light_breed.breed) {
+                  item.watts = parseInt(light_breed.watts);
+                }
+              }
+              break;
+            case "led":
+              for (var led_breed of led_breeds) {
+                if (item.breed == led_breed.breed) {
+                  item.watts = parseInt(led_breed.watts);
+                }
+              }
+              break;
+          }
+          if (item.watts) {
+            item.watts = parseFloat(item.watts / 1000);
+            item.usd = 0;
+            for (var address of addresss) {
+              if (address.address == item.address && address.kw_usd) {
+                item.usd = item.watts * parseFloat(address.kw_usd);
               }
             }
           }
@@ -528,6 +577,12 @@ export default {
             if (item.warn) {
               country.warn += 1;
             }
+            if (item.watts) {
+              country.watts += item.watts;
+            }
+            if (item.usd) {
+              country.usd += item.usd;
+            }
             //计算各种设备类型的数量
             country.deviceTypeNumber[item.devicetype]
               ? (country.deviceTypeNumber[item.devicetype] += 1)
@@ -549,6 +604,12 @@ export default {
                 address.deviceList.push(item);
                 if (item.warn) {
                   address.warn += 1;
+                }
+                if (item.watts) {
+                  address.watts += item.watts;
+                }
+                if (item.usd) {
+                  address.usd += item.usd;
                 }
                 address.deviceTypeNumber[item.devicetype]
                   ? (address.deviceTypeNumber[item.devicetype] += 1)
@@ -572,6 +633,12 @@ export default {
                     if (item.warn) {
                       floor.warn += 1;
                     }
+                    if (item.watts) {
+                      floor.watts += item.watts;
+                    }
+                    if (item.usd) {
+                      floor.usd += item.usd;
+                    }
                     floor.deviceTypeNumber[item.devicetype]
                       ? (floor.deviceTypeNumber[item.devicetype] += 1)
                       : (floor.deviceTypeNumber[item.devicetype] = 1);
@@ -587,6 +654,12 @@ export default {
                         room.deviceList.push(item);
                         if (item.warn) {
                           room.warn += 1;
+                        }
+                        if (item.watts) {
+                          room.watts += item.watts;
+                        }
+                        if (item.usd) {
+                          room.usd += item.usd;
                         }
                         room.deviceTypeNumber[item.devicetype]
                           ? (room.deviceTypeNumber[item.devicetype] += 1)
@@ -626,8 +699,8 @@ export default {
       return;
     }
     let port = Lockr.get("port");
-    var socketio = socket('http://' + document.domain + ':'+port)
-    window.socketio = socketio
+    var socketio = socket("http://" + document.domain + ":" + port);
+    window.socketio = socketio;
     // this.$store.dispatch("setShowHotel", true);
     // this.$store.dispatch("setShowFloor", false);
     // this.$store.dispatch("setShowRoom", false);

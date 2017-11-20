@@ -25,6 +25,10 @@
                 </el-table-column>
                 <el-table-column label="Address" prop="address" width="150">
                 </el-table-column>
+                <el-table-column label="Floor" prop="floor" width="150">
+                </el-table-column>
+                <el-table-column label="Room" prop="room_name" width="150">
+                </el-table-column>
                 <!-- <el-table-column label="status" prop="status" width="150">
                 </el-table-column> -->
                 <el-table-column label="IP" prop="ip" width="150">
