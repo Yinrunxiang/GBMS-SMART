@@ -100,7 +100,10 @@ export default {
       deviceTypeOptions: [
         { label: "AC", value: "ac" },
         { label: "Light", value: "light" },
-        { label: "LED", value: "led" }
+        { label: "LED", value: "led" },
+        { label: "Curtain", value: "curtain" },
+        { label: "Music", value: "music" },
+        { label: "IR", value: "ir" }
       ]
     };
   },

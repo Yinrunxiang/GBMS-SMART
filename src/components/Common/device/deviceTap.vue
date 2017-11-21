@@ -167,6 +167,9 @@ export default {
         case "curtain":
           return "fa-columns";
           break;
+        case "ir":
+          return "fa-life-ring";
+          break;
       }
     }
   },

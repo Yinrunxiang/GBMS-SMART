@@ -188,6 +188,24 @@ switch ($action)
         echo(json_encode($message)); 
     }
     break;
+    case "setIr":
+    $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
+    $key = isset($_REQUEST["key"]) ? $_REQUEST["key"] : '';
+    $value = isset($_REQUEST["value"]) ? $_REQUEST["value"] : '';
+    $sql="update device set ".$key." = '".$value."' where id = '".$id."'";
+    if (!mysqli_query($con,$sql))
+    {
+        $message = [];
+        $message[0] = false;
+        $message[1] = "update failed: " . mysqli_error($con);
+        echo(json_encode($message)); 
+    }else{
+        $message = [];
+        $message[0] = true;
+        $message[1] = "update successfully";
+        echo(json_encode($message)); 
+    }
+    break;
 
     case "setTime":
     $selection = isset($_REQUEST["selection"]) ? $_REQUEST["selection"] : '';
@@ -223,7 +241,7 @@ switch ($action)
     }
     break;
     case "search":
-        $sql=" SELECT a.id,maxid,device,subnetid,deviceid,channel,channel_spare,b.id as addressid,mac,ip,port,lat,lng,a.floor,a.room,devicetype,case when on_off = 'on' then now() - run_date else null end as run_time,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,a.floor,a.room,room_name,x_axis,y_axis FROM device as a left join address as b on a.address = b.address left join room as r on a.address = r.address and a.floor = r.floor and a.room = r.room left join (select max(id) as maxid from device) as c on 1=1  order by a.address,a.floor,a.room + 0,devicetype,breed,id ";
+        $sql=" SELECT a.id,maxid,device,subnetid,deviceid,channel,channel_spare,b.id as addressid,mac,ip,port,lat,lng,a.floor,a.room,devicetype,case when on_off = 'on' then now() - run_date else null end as run_time,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,a.floor,a.room,room_name,x_axis,y_axis,operation_1,operation_2,operation_3,operation_4,operation_5,operation_6,operation_7,operation_8,operation_9,operation_10,operation_11,operation_12,operation_13,operation_14,operation_15,operation_16,operation_17,operation_18,operation_19,operation_20,operation_21 FROM device as a left join address as b on a.address = b.address left join room as r on a.address = r.address and a.floor = r.floor and a.room = r.room left join (select max(id) as maxid from device) as c on 1=1  order by a.address,a.floor,a.room + 0,devicetype,breed,id ";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {

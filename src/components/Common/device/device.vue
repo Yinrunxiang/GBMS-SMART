@@ -78,10 +78,9 @@ export default {
             if (res[0]) {
               var devices = this.$store.state.devices;
               for (var i = 0; i < devices.length; i++) {
-    
-                  if (devices[i].id == this.device.id) {
-                    devices.splice(i, 1);
-                  }
+                if (devices[i].id == this.device.id) {
+                  devices.splice(i, 1);
+                }
               }
               this.$store.dispatch("setDevices", devices);
               _g.toastMsg("success", res[1]);
@@ -123,7 +122,7 @@ export default {
           var deviceProperty = {
             on_off: false,
             brightness: 0,
-            color: this.device.mode?this.device.mode:'#ffffff',
+            color: this.device.mode ? this.device.mode : "#ffffff"
           };
           ledApi.switch_change(val, this.device, deviceProperty);
           break;
@@ -131,6 +130,9 @@ export default {
           // musicApi.switch_change(this.device)
           break;
         case "curtain":
+          curtainApi.switch_change(val, this.device);
+          break;
+        case "ir":
           var deviceProperty = {
             on_off: false,
             brightness: 0
@@ -186,11 +188,14 @@ export default {
         case "curtain":
           return "fa-columns";
           break;
+        case "ir":
+          return "fa-life-ring";
+          break;
       }
     }
   },
   created() {
-    console.log('device list device')
+    console.log("device list device");
     // this.readOpen()
   },
   props: ["device"],

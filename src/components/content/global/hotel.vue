@@ -142,7 +142,7 @@ export default {
       showDevicePage: false,
       notHotel: false,
       thisdevice: {},
-      typeList: ["light", "ac", "led", "music"],
+      typeList: ["light", "ac", "led","curtain", "music","ir"],
       showTypeList: false,
       setting: false,
       roomWatts: {},

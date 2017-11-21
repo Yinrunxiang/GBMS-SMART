@@ -13,6 +13,7 @@ import ac from "./components/content/devices/ac.vue";
 import music from "./components/content/devices/music.vue";
 import led from "./components/content/devices/led.vue";
 import curtain from "./components/content/devices/curtain.vue";
+import ir from "./components/content/devices/ir.vue";
 // import planAdd from "./components/content/plan/add.vue";
 import planUpdate from "./components/content/plan/update.vue";
 import settingTypeAc from "./components/content/setting/type/ac/ac.vue";
@@ -65,6 +66,7 @@ const routes = [
           {path: "music", component: music, name: "music" },
           {path: "led", component: led, name: "led" },
           {path: "curtain", component: curtain, name: "curtain" },
+          {path: "ir", component: ir, name: "ir" },
         ]
       }
     ]
