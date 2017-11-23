@@ -352,6 +352,7 @@ export default {
                 obj.select = false
             }
             song.select = true
+            this.deviceProperty.on_off = true
             musicApi.selectSong(this.device, this.deviceProperty, song)
         }
     },

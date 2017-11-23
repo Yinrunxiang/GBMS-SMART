@@ -2,7 +2,6 @@ import api from "../../../../assets/js/api";
 const cutainApi = {
   switch_change(val, device, deviceProperty) {
     if (val) {
-      if (deviceProperty.brightness == 0) deviceProperty.brightness = 100;
       const data = {
         params: {
           operatorCodefst: "00",
@@ -24,7 +23,6 @@ const cutainApi = {
         // _g.closeGlobalLoading()
       });
     } else {
-      deviceProperty.brightness == 0;
       const data = {
         params: {
           operatorCodefst: "00",

@@ -10,7 +10,7 @@
             </el-switch>
             <template>
                 <div class="block">
-                    <el-slider v-model="deviceProperty.brightness" :min='0' :max='100' :step="1" @change="slider_change">
+                    <el-slider v-show="false" v-model="deviceProperty.brightness" :min='0' :max='100' :step="1" @change="slider_change">
                     </el-slider>
                 </div>
             </template>

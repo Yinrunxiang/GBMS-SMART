@@ -33,7 +33,7 @@
                                 ]">
                 <el-input type="channel" v-model="form.channel" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item v-show="form.devicetype == 'cutain'" label="Channel Spare" prop="channel_spare" :rules="[
+            <el-form-item v-show="form.devicetype == 'curtain'" label="Channel Spare" prop="channel_spare" :rules="[
                                   { required: true, message: 'The Channel Spare must not be null'}
                                 ]">
                 <el-input type="channel_spare" v-model="form.channel_spare" class="h-40 w-200"></el-input>

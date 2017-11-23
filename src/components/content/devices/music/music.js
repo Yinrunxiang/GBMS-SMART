@@ -123,7 +123,7 @@ const musicApi = {
         operatorCodesec: "18",
         targetSubnetID: device.subnetid,
         targetDeviceID: device.deviceid,
-        additionalContentData: "06,04".split(","),
+        additionalContentData: "04,04,00,00".split(","),
         macAddress: device.mac ? device.mac.split(".") : "",
         dest_address: device.ip ? device.ip : "",
         dest_port: device.port ? device.port : ""
@@ -225,6 +225,7 @@ const musicApi = {
     _g.sendUdp(
       "02",
       "E0",
+      device.subnetid,
       device.deviceid,
       additionalContentData,
       device.mac,
@@ -255,13 +256,14 @@ const musicApi = {
           _g.sendUdp(
             "02",
             "E2",
+            device.subnetid,
             device.deviceid,
             additionalContentData,
             device.mac,
             device.ip,
             device.port
           );
-          // console.log("02E1");
+          console.log("02E1");
         }
         if (operationcode.toLowerCase() == "02e3") {
           var source = _g.getadditional(msg, 2);
@@ -302,6 +304,7 @@ const musicApi = {
             _g.sendUdp(
               "02",
               "E4",
+              device.subnetid,
               device.deviceid,
               additionalContentData,
               device.mac,
@@ -318,6 +321,7 @@ const musicApi = {
                 _g.sendUdp(
                   "02",
                   "E4",
+                  device.subnetid,
                   device.deviceid,
                   additionalContentData,
                   device.mac,
@@ -333,6 +337,7 @@ const musicApi = {
                 return parseInt(a.albumNo) - parseInt(b.albumNo)
               });
               deviceProperty.albumlist = albumList
+              console.log(deviceProperty.albumlist)
             }
           }, 500)
           // setInterval(albumInterval, 100)
@@ -344,6 +349,7 @@ const musicApi = {
           //   _g.sendUdp(
           //     "02",
           //     "E4",
+          //device.subnetid,
           //     device.deviceid,
           //     additionalContentData,
           //     device.mac,
@@ -376,6 +382,7 @@ const musicApi = {
               _g.sendUdp(
                 "02",
                 "E6",
+                device.subnetid,
                 device.deviceid,
                 additionalContentData,
                 device.mac,
@@ -392,6 +399,7 @@ const musicApi = {
                   _g.sendUdp(
                     "02",
                     "E6",
+                    device.subnetid,
                     device.deviceid,
                     additionalContentData,
                     device.mac,
@@ -409,24 +417,24 @@ const musicApi = {
                 deviceProperty.songList = songList
                 deviceProperty.songListAll = songList
                 deviceProperty.musicLoading = false
-                var song = {
-                  albumNo: "03",
-                  select: true,
-                  songName: "09-California.mp3",
-                  songNo: 71,
-                  songNoHigh: "00",
-                  songNoLow: "47",
-                }
-                for (var obj of deviceProperty.songList) {
-                  obj.select = false
-                  if (obj.albumNo == song.albumNo && obj.songNoHigh == song.songNoHigh && obj.songNoLow == song.songNoLow) {
-                    obj.select = true
-                  }
+                // var song = {
+                //   albumNo: "03",
+                //   select: true,
+                //   songName: "09-California.mp3",
+                //   songNo: 71,
+                //   songNoHigh: "00",
+                //   songNoLow: "47",
+                // }
+                // for (var obj of deviceProperty.songList) {
+                //   obj.select = false
+                //   if (obj.albumNo == song.albumNo && obj.songNoHigh == song.songNoHigh && obj.songNoLow == song.songNoLow) {
+                //     obj.select = true
+                //   }
 
-                }
-                deviceProperty.music_name = song.songName
-                musicApi.selectSong(device, deviceProperty, song)
-                musicApi.pause(device, deviceProperty)
+                // }
+                // deviceProperty.music_name = song.songName
+                // musicApi.selectSong(device, deviceProperty, song)
+                // musicApi.pause(device, deviceProperty)
               }
             }, 1000)
           }

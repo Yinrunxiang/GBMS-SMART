@@ -157,17 +157,27 @@ $sender_io->on('workerStart', function(){
                             break;
                     }
                     break;
+                    case "04":
+                    $type = 'operation_1';
+                    break;
+                case "07":
+                    $type = 'operation_2';
+                    break;
+                case "08":
+                    $type = 'operation_3';
+                    break;
                 }
+               
             
             if($type == 'on_off'){
                 if($value == 'on'){
-                    $sql = "update device as a left join address as b on a.address = b.address set $type = '".$value."',run_date = now() where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                    $sql = "update device as a left join address as b on a.address = b.address set ".$type." = '".$value."',run_date = now() where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
                 }else{
-                    $sql = "update device as a left join address as b on a.address = b.address set $type = '".$value."',run_date = null where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                    $sql = "update device as a left join address as b on a.address = b.address set ".$type." = '".$value."',run_date = null where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
                 }
             }
             else{
-                $sql = "update device as a left join address as b on a.address = b.address set '.$type.' = '".$value."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                $sql = "update device as a left join address as b on a.address = b.address set ".$type." = '".$value."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
             }
            
             // echo $type.$value;
@@ -212,6 +222,9 @@ $sender_io->on('workerStart', function(){
                         $grade = "low";
                         break;
                 }
+                $coolTmp = substr($msg,52, 2);
+                $heatTmp = substr($msg,60, 2);
+                $autoTmp = substr($msg,64, 2);
                 // $mac = "";
                 // $remote = substr($msg,66, 2);
                 // if($remote == "02"){
@@ -221,9 +234,9 @@ $sender_io->on('workerStart', function(){
                 //     }
                 // }
                 if($on_off == 'on'){
-                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."',operation_1 = '".$coolTmp."',operation_2 = '".$heatTmp."',operation_3 = '".$autoTmp."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
                 }else{
-                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '".$on_off."',mode = '".$mode."',grade = '".$grade."',operation_1 = '".$coolTmp."',operation_2 = '".$heatTmp."',operation_3 = '".$autoTmp."' where subnetid = '".$subnetid."' and  deviceid = '".$deviceid."'";
                 }
                 
                 // echo $sql;

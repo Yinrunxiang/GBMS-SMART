@@ -83,6 +83,9 @@
                     <div @click="roomClose">
                         <i class="fa fa-pause"></i>
                     </div>
+                    <div @click="clickToShowMoodSetting">
+                        <i class="fa fa-heart"></i>
+                    </div>
                     
                 </div>
                 <div class="roomImga">
@@ -102,6 +105,9 @@
         <div v-if="showHotelUpdate">
             <addressUpdate :add="addressAdd" :address="addressUpdateData" @goback="addressBack"></addressUpdate>
         </div>
+         <el-dialog title="Configure Mood" :visible.sync="showMoodSetting">
+          
+        </el-dialog>
         <!-- <changeName ref="changeName" :showChange = 'showChange' @change = 'showChangePage'></changeName> -->
     </div>
 </template>
@@ -127,6 +133,7 @@ import echarts from "echarts";
 export default {
   data() {
     return {
+      showMoodSetting: false,
       showChange: false,
       //   showHotel: true,
       showAll: true,
@@ -142,7 +149,7 @@ export default {
       showDevicePage: false,
       notHotel: false,
       thisdevice: {},
-      typeList: ["light", "ac", "led","curtain", "music","ir"],
+      typeList: ["light", "ac", "led", "curtain", "music", "ir"],
       showTypeList: false,
       setting: false,
       roomWatts: {},
@@ -399,6 +406,9 @@ export default {
           return "low";
           break;
       }
+    },
+    clickToShowMoodSetting() {
+      this.showMoodSetting = true;
     }
   },
   created() {
@@ -534,7 +544,9 @@ export default {
                     );
                     windWatts = windWatts ? windWatts : 0;
                     device.watts = modeWatts + windWatts;
-                    wattsTotal += device.watts ? parseFloat((device.watts/1000).toFixed(2)) : 0;
+                    wattsTotal += device.watts
+                      ? parseFloat((device.watts / 1000).toFixed(2))
+                      : 0;
                   }
                 }
                 break;
@@ -542,7 +554,9 @@ export default {
                 for (var light_breed of light_breeds) {
                   if (device.breed == light_breed.breed) {
                     device.watts = parseInt(light_breed.watts);
-                     wattsTotal += device.watts ? parseFloat((device.watts/1000).toFixed(2)) : 0;
+                    wattsTotal += device.watts
+                      ? parseFloat((device.watts / 1000).toFixed(2))
+                      : 0;
                   }
                 }
                 break;
@@ -550,7 +564,9 @@ export default {
                 for (var led_breed of led_breeds) {
                   if (device.breed == led_breed.breed) {
                     device.watts = parseInt(led_breed.watts);
-                       wattsTotal += device.watts ? parseFloat((device.watts/1000).toFixed(2)) : 0;
+                    wattsTotal += device.watts
+                      ? parseFloat((device.watts / 1000).toFixed(2))
+                      : 0;
                   }
                 }
                 break;
@@ -605,7 +621,7 @@ export default {
                 formatter: "{value}kw",
                 fontSize: 24
               },
-              data: [{ value:  parseFloat(wattsTotal.toFixed(2)) }]
+              data: [{ value: parseFloat(wattsTotal.toFixed(2)) }]
               // data: [{ value: wattsTotal, name: 'Watts' }]
             }
           ]

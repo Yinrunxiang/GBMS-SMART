@@ -30,11 +30,12 @@ const commonFn = {
       msg = msg.substr((50+num*2), 2 * (len + 1))
       return msg
   },
-  sendUdp(operatorCodefst,operatorCodesec,targetDeviceID,additionalContentData,macAddress,dest_address,dest_port) {
+  sendUdp(operatorCodefst,operatorCodesec,targetSubnetID,targetDeviceID,additionalContentData,macAddress,dest_address,dest_port) {
     let data = {
       params: {
         operatorCodefst: operatorCodefst,
         operatorCodesec: operatorCodesec,
+        targetSubnetID:targetSubnetID,
         targetDeviceID: targetDeviceID,
         additionalContentData: additionalContentData,
         macAddress: macAddress ? macAddress.split(".") : "",
