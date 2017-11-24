@@ -105,8 +105,8 @@
         <div v-if="showHotelUpdate">
             <addressUpdate :add="addressAdd" :address="addressUpdateData" @goback="addressBack"></addressUpdate>
         </div>
-         <el-dialog title="Configure Mood" :visible.sync="showMoodSetting">
-          
+         <el-dialog title="Configure Mood" :visible.sync="showMoodSetting" v-if="showMoodSetting">
+          <mood :room = "this.room" @close="showMoodSetting=false"></mood>
         </el-dialog>
         <!-- <changeName ref="changeName" :showChange = 'showChange' @change = 'showChangePage'></changeName> -->
     </div>
@@ -124,6 +124,7 @@ import deviceUpdate from "../plan/update";
 import addressUpdate from "../setting/address/add";
 import floorUpdate from "../setting/floor/add";
 import roomUpdate from "../setting/room/add";
+import mood from "./mood"
 // import changeName from "../setting/room/changeName";
 // import $ from 'jquery'
 // import '../../../assets/css/drag.css'
@@ -461,7 +462,8 @@ export default {
     addressUpdate,
     devicePage,
     floorUpdate,
-    roomUpdate
+    roomUpdate,
+    mood,
   },
   computed: {
     //获取酒店
