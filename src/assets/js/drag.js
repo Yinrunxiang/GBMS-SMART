@@ -87,8 +87,9 @@
 						fun.dragStart(parseInt(element.css('left')),parseInt(element.css('top')));
 						return false;
 					});
-					$(document).mouseup(function(e){fun.dragEnd(parseInt(element.css('left')),parseInt(element.css('top')));element.removeClass('on');isDown = false;});
-					$(document).mousemove(function(e){
+					element.parent().mouseup(function(e){fun.dragEnd(parseInt(element.css('left')),parseInt(element.css('top')));element.removeClass('on');isDown = false;e.stopPropagation();});
+					element.parent().mousemove(function(e){
+						e.stopPropagation();
 						moveX = $this.x+e.pageX-X;
 						moveY = $this.y+e.pageY-Y;
 						function thisXMove(){ //x轴移动

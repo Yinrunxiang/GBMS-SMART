@@ -1,6 +1,6 @@
 import api from "../../../../assets/js/api";
 const acApi = {
-    switch_change(val,device,deviceProperty) {
+    get_switch_change(val, device, deviceProperty) {
         if (val) {
             const data = {
                 params: {
@@ -14,10 +14,7 @@ const acApi = {
                     dest_port: device.port ? device.port : "",
                 }
             }
-            api.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
+            return data
         } else {
             const data = {
                 params: {
@@ -31,15 +28,10 @@ const acApi = {
                     dest_port: device.port ? device.port : "",
                 }
             }
-            api.apiGet('udp/sendUdp.php', data).then((res) => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-            })
+            return data
         }
     },
-    autotmp_change(val,device,deviceProperty) {
-
-        deviceProperty.autotmp = val;
+    get_autotmp_change(val, device, deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -52,14 +44,9 @@ const acApi = {
                 dest_port: device.port ? device.port : "",
             }
         }
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        return data
     },
-    cooltmp_change(val,device,deviceProperty) {
-
-        deviceProperty.cooltmp = val;
+    get_cooltmp_change(val, device, deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -72,14 +59,9 @@ const acApi = {
                 dest_port: device.port ? device.port : "",
             }
         }
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        return data
     },
-    heattmp_change(val,device,deviceProperty) {
-
-        deviceProperty.heattmp = val;
+    get_heattmp_change(val, device, deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -92,14 +74,9 @@ const acApi = {
                 dest_port: device.port ? device.port : "",
             }
         }
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        return data
     },
-    wind_change(val,device,deviceProperty) {
-
-        deviceProperty.wind = val;
+    get_wind_change(val, device, deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -112,28 +89,9 @@ const acApi = {
                 dest_port: device.port ? device.port : "",
             }
         }
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        return data
     },
-    formatwind(wind) {
-        switch (wind) {
-            case 0:
-                return "Auto";
-                break;
-            case 1:
-                return "Hign";
-                break;
-            case 2:
-                return "Medial";
-                break;
-            case 3:
-                return "Low";
-                break;
-        }
-    },
-    autobtn(device,deviceProperty) {
+    get_autobtn(device, deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -146,12 +104,9 @@ const acApi = {
                 dest_port: device.port ? device.port : "",
             }
         }
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        return data
     },
-    fanbtn(device,deviceProperty) {
+    get_fanbtn(device, deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -164,12 +119,9 @@ const acApi = {
                 dest_port: device.port ? device.port : "",
             }
         }
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        return data
     },
-    coolbtn(device,deviceProperty) {
+    get_coolbtn(device, deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -182,12 +134,9 @@ const acApi = {
                 dest_port: device.port ? device.port : "",
             }
         }
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        return data
     },
-    heatbtn(device,deviceProperty) {
+    get_heatbtn(device, deviceProperty) {
         const data = {
             params: {
                 operatorCodefst: "E3",
@@ -200,12 +149,76 @@ const acApi = {
                 dest_port: device.port ? device.port : "",
             }
         }
+        return data
+    },
+    switch_change(val, device, deviceProperty) {
+        const data = get_switch_change(val, device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    autotmp_change(val, device, deviceProperty) {
+
+        const data = get_autotmp_change(val, device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
         })
     },
-    readStatus(device,deviceProperty) {
+    cooltmp_change(val, device, deviceProperty) {
+
+        const data = get_cooltmp_change(val, device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    heattmp_change(val, device, deviceProperty) {
+
+        const data = get_heattmp_change(val, device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    wind_change(val, device, deviceProperty) {
+
+        const data = get_wind_change(val, device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    autobtn(device, deviceProperty) {
+        const data = get_autobtn(val, device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    fanbtn(device, deviceProperty) {
+        const data = get_fanbtn(val, device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    coolbtn(device, deviceProperty) {
+        const data = get_coolbtn(val, device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    heatbtn(device, deviceProperty) {
+        const data = get_heatbtn(val, device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    readStatus(device, deviceProperty) {
         let data = {
             params: {
                 operatorCodefst: "E0",
@@ -329,33 +342,33 @@ const acApi = {
                             }
                             break;
                         case "04":
-                        deviceProperty.cooltmp = parseInt("0x" + value);
+                            deviceProperty.cooltmp = parseInt("0x" + value);
                             break;
                         case "05":
-                        deviceProperty.wind = parseInt("0x" + value);
+                            deviceProperty.wind = parseInt("0x" + value);
                             break;
                         case "06":
                             value = parseInt("0x" + value);
                             switch (value) {
                                 case 0:
-                                deviceProperty.mode = "cool"
+                                    deviceProperty.mode = "cool"
                                     break;
                                 case 1:
-                                deviceProperty.mode = "heat"
+                                    deviceProperty.mode = "heat"
                                     break;
                                 case 2:
-                                deviceProperty.mode = "fan"
+                                    deviceProperty.mode = "fan"
                                     break;
                                 case 3:
-                                deviceProperty.mode = "auto"
+                                    deviceProperty.mode = "auto"
                                     break;
                             }
                             break;
                         case "07":
-                        deviceProperty.heattemp = parseInt("0x" + value);
+                            deviceProperty.heattemp = parseInt("0x" + value);
                             break;
                         case "08":
-                        deviceProperty.autotemp = parseInt("0x" + value);
+                            deviceProperty.autotemp = parseInt("0x" + value);
                             break;
                     }
                 }
@@ -486,33 +499,33 @@ const acApi = {
                             }
                             break;
                         case "04":
-                        device.cooltmp = parseInt("0x" + value);
+                            device.cooltmp = parseInt("0x" + value);
                             break;
                         case "05":
-                        device.wind = parseInt("0x" + value);
+                            device.wind = parseInt("0x" + value);
                             break;
                         case "06":
                             value = parseInt("0x" + value);
                             switch (value) {
                                 case 0:
-                                device.mode = "cool"
+                                    device.mode = "cool"
                                     break;
                                 case 1:
-                                device.mode = "heat"
+                                    device.mode = "heat"
                                     break;
                                 case 2:
-                                device.mode = "fan"
+                                    device.mode = "fan"
                                     break;
                                 case 3:
-                                device.mode = "auto"
+                                    device.mode = "auto"
                                     break;
                             }
                             break;
                         case "07":
-                        device.heattemp = parseInt("0x" + value);
+                            device.heattemp = parseInt("0x" + value);
                             break;
                         case "08":
-                        device.autotemp = parseInt("0x" + value);
+                            device.autotemp = parseInt("0x" + value);
                             break;
                     }
                 }

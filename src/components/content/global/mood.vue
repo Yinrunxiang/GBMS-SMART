@@ -4,11 +4,11 @@
             <div v-show="!mood.add">
               <span>{{mood.mood}}</span>
               <a  class="fa fa-close fr m-l-10" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>
-                  <el-switch class="fr" v-model="mood.on_off" @change="switch_change(mood.deviceList)">
+                  <el-switch class="fr" v-model="mood.on_off" @change="switch_change(mood.on_off,mood.deviceList)">
                   </el-switch>
             </div>
            <div v-show="mood.add" >
-            <el-input  v-model="mood.mood" style="width:100px; "></el-input>
+            <el-input  v-model="mood.mood" style="width:100px;" placeholder="Mood name"></el-input>
             <el-select v-model="devicetypes" multiple placeholder="Please choose">
             <el-option
               v-for="item in deviceTypeOptions"
@@ -55,24 +55,97 @@ export default {
   },
   // props: ['device'],
   methods: {
-    switch_change(deviceList) {
-      for(var device of deviceList){
-        switch(device.devicetype){
-          case "ac":
-          break
-          case "light":
-          break
-          case "led":
-          break
-          case "curtain":
-          break
-          case "music":
-          break
+    switch_change(val, deviceList) {
+      var funArr = [];
+      if (val) {
+        for (var device of deviceList) {
+          switch (device.devicetype) {
+            case "ac":
+              if (device.status_1 == "on") {
+                var fun = function() {
+                  return ac.switch_change(true, device);
+                };
+                funArr.push(fun);
+              }
+              switch (device.status_2) {
+                case "cool":
+                  var fun = function() {
+                    ac.coolbtn(device);
+                  };
+                  funArr.push(fun);
+                  break;
+                case "fan":
+                  var fun = function() {
+                    ac.fanbtn(device);
+                  };
+                  funArr.push(fun);
+                  break;
+                case "heat":
+                  var fun = function() {
+                    ac.heatbtn(device);
+                  };
+                  funArr.push(fun);
+                  break;
+                case "auto":
+                  var fun = function() {
+                    ac.autobtn(device);
+                  };
+                  funArr.push(fun);
+                  break;
+              }
+              switch (device.status_3) {
+                case "wind_auto":
+                  var fun = function() {
+                    ac.wind_change("0", device);
+                  };
+                  funArr.push(fun);
+                  break;
+                case "high":
+                  var fun = function() {
+                    ac.wind_change("1", device);
+                  };
+                  funArr.push(fun);
+                  break;
+                case "middle":
+                  var fun = function() {
+                    ac.wind_change("2", device);
+                  };
+                  funArr.push(fun);
+                  break;
+                case "low":
+                  var fun = function() {
+                    ac.wind_change("3", device);
+                  };
+                  funArr.push(fun);
+                  break;
+              }
+              // funArr.push(ac.cooltmp_change(device.status_4, device));
+              // funArr.push(ac.heattmp_change(device.status_5, device));
+              // funArr.push(ac.autotmp_change(device.status_6, device));
+              break;
+            case "light":
+              break;
+            case "led":
+              break;
+            case "curtain":
+              break;
+            case "music":
+              break;
+          }
         }
       }
+      var len = funArr.length;
+      var i = 0;
+      var forFunArr = setInterval(function() {
+        funArr[i];
+        i++;
+        if (i >= len) {
+          clearInterval(forFunArr);
+        }
+      }, 100);
     },
-    closeDialog(){
-      this.$emit("close",false)
+    closeDialog() {
+      this.$emit("close", false);
     },
     getMood() {
       this.moodLoading = true;
@@ -114,6 +187,14 @@ export default {
       //     return
       //   }
       // }
+      if (mood.mood == "" || !mood.mood) {
+        _g.toastMsg("error", "Mood name cannot be empty");
+        return;
+      }
+      if (!this.devicetypes.length > 0) {
+        _g.toastMsg("error", "Select at least one device type");
+        return;
+      }
       var data = {
         params: {
           mood: mood.mood,
@@ -135,12 +216,12 @@ export default {
     },
     addMood() {
       var newMood = {
-        mood: "mood",
+        mood: "",
         on_off: false,
         add: true,
         deviceList: []
       };
-      this.$set(this.moodList, "mood", newMood);
+      this.$set(this.moodList, "new_mood", newMood);
     },
     deleteMood(mood) {
       this.$confirm("Are you sure to delete this mood?", "Tips", {
@@ -171,8 +252,7 @@ export default {
     this.getMood();
   },
   mounted() {},
-  components: {
-  },
+  components: {},
   computed: {
     device() {
       var device = this.$store.state.device;

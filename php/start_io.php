@@ -222,9 +222,9 @@ $sender_io->on('workerStart', function(){
                         $grade = "low";
                         break;
                 }
-                $coolTmp = substr($msg,52, 2);
-                $heatTmp = substr($msg,60, 2);
-                $autoTmp = substr($msg,64, 2);
+                $coolTmp = hexdec(substr($msg,52, 2));
+                $heatTmp = hexdec(substr($msg,60, 2));
+                $autoTmp = hexdec(substr($msg,64, 2));
                 // $mac = "";
                 // $remote = substr($msg,66, 2);
                 // if($remote == "02"){

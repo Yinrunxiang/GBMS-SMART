@@ -76,7 +76,7 @@ switch ($action)
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
         $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
         $room = isset($_REQUEST["room"]) ? $_REQUEST["room"] : '';
-        $sql="SELECT a.id,a.mood,a.device,a.address,a.floor,a.room,subnetid,deviceid,status_1,status_2,status_3,status_4,status_5 FROM mood as a left join device as b on a.device = b.id where a.address = '".$address."' and a.floor = '".$floor."' and a.room  = '".$room."'";
+        $sql="SELECT a.id,a.mood,a.device,a.address,a.floor,a.room,subnetid,deviceid,devicetype,mac,ip,port,status_1,status_2,status_3,status_4,status_5 FROM mood as a left join device as b on a.device = b.id left join address as c on b.address = c.address where a.address = '".$address."' and a.floor = '".$floor."' and a.room  = '".$room."'";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {
