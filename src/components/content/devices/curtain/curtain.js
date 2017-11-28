@@ -1,6 +1,6 @@
 import api from "../../../../assets/js/api";
 const cutainApi = {
-  switch_change(val, device, deviceProperty) {
+  get_switch_change(val, device, deviceProperty) {
     if (val) {
       const data = {
         params: {
@@ -17,11 +17,7 @@ const cutainApi = {
           dest_port: device.port ? device.port : ""
         }
       };
-      // console.log(data)
-      api.apiGet("udp/sendUdp.php", data).then(res => {
-        // console.log("res = ", _g.j2s(res));
-        // _g.closeGlobalLoading()
-      });
+      return data
     } else {
       const data = {
         params: {
@@ -35,14 +31,10 @@ const cutainApi = {
           dest_port: device.port ? device.port : ""
         }
       };
-      api.apiGet("udp/sendUdp.php", data).then(res => {
-        // console.log("res = ", _g.j2s(res));
-        // _g.closeGlobalLoading()
-      });
+      return data
     }
   },
-  slider_change(val, device, deviceProperty) {
-    deviceProperty.brightness = val;
+  get_slider_change(val, device, deviceProperty) {
     const data = {
       params: {
         operatorCodefst: "00",
@@ -58,6 +50,18 @@ const cutainApi = {
         dest_port: device.port ? device.port : ""
       }
     };
+    return data
+  },
+  switch_change(val, device, deviceProperty) {
+      const data = this.get_switch_change(val, device, deviceProperty)
+      // console.log(data)
+      api.apiGet("udp/sendUdp.php", data).then(res => {
+        // console.log("res = ", _g.j2s(res));
+        // _g.closeGlobalLoading()
+      });
+  },
+  slider_change(val, device, deviceProperty) {
+    const data = this.get_slider_change(val, device, deviceProperty)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()

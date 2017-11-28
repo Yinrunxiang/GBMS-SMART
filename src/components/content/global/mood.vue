@@ -48,84 +48,71 @@ export default {
         { label: "AC", value: "ac" },
         { label: "Light", value: "light" },
         { label: "LED", value: "led" },
-        { label: "Curtain", value: "curtain" },
-        { label: "Music", value: "music" }
+        { label: "Curtain", value: "curtain" }
+        // { label: "Music", value: "music" }
       ]
     };
   },
   // props: ['device'],
   methods: {
     switch_change(val, deviceList) {
-      var funArr = [];
+      var udpArr = [];
       if (val) {
         for (var device of deviceList) {
           switch (device.devicetype) {
             case "ac":
               if (device.status_1 == "on") {
-                var fun = function() {
-                  return ac.switch_change(true, device);
-                };
-                funArr.push(fun);
+                udpArr.push(ac.get_switch_change(true, device));
+                switch (device.status_2) {
+                  case "cool":
+                    udpArr.push(ac.get_coolbtn(device));
+                    break;
+                  case "fan":
+                    udpArr.push(ac.get_fanbtn(device));
+                    break;
+                  case "heat":
+                    udpArr.push(ac.get_heatbtn(device));
+                    break;
+                  case "auto":
+                    udpArr.push(ac.get_autobtn(device));
+                    break;
+                }
+                switch (device.status_3) {
+                  case "wind_auto":
+                    udpArr.push(ac.get_wind_change("0", device));
+                    break;
+                  case "high":
+                    udpArr.push(ac.get_wind_change("1", device));
+                    break;
+                  case "middle":
+                    udpArr.push(ac.get_wind_change("2", device));
+                    break;
+                  case "low":
+                    udpArr.push(ac.get_wind_change("3", device));
+                    break;
+                }
+                udpArr.push(ac.get_cooltmp_change(device.status_4, device));
+                udpArr.push(ac.get_heattmp_change(device.status_5, device));
+                udpArr.push(ac.get_autotmp_change(device.status_6, device));
               }
-              switch (device.status_2) {
-                case "cool":
-                  var fun = function() {
-                    ac.coolbtn(device);
-                  };
-                  funArr.push(fun);
-                  break;
-                case "fan":
-                  var fun = function() {
-                    ac.fanbtn(device);
-                  };
-                  funArr.push(fun);
-                  break;
-                case "heat":
-                  var fun = function() {
-                    ac.heatbtn(device);
-                  };
-                  funArr.push(fun);
-                  break;
-                case "auto":
-                  var fun = function() {
-                    ac.autobtn(device);
-                  };
-                  funArr.push(fun);
-                  break;
-              }
-              switch (device.status_3) {
-                case "wind_auto":
-                  var fun = function() {
-                    ac.wind_change("0", device);
-                  };
-                  funArr.push(fun);
-                  break;
-                case "high":
-                  var fun = function() {
-                    ac.wind_change("1", device);
-                  };
-                  funArr.push(fun);
-                  break;
-                case "middle":
-                  var fun = function() {
-                    ac.wind_change("2", device);
-                  };
-                  funArr.push(fun);
-                  break;
-                case "low":
-                  var fun = function() {
-                    ac.wind_change("3", device);
-                  };
-                  funArr.push(fun);
-                  break;
-              }
-              // funArr.push(ac.cooltmp_change(device.status_4, device));
-              // funArr.push(ac.heattmp_change(device.status_5, device));
-              // funArr.push(ac.autotmp_change(device.status_6, device));
               break;
             case "light":
+              if (device.status_1 == "on") {
+                var deviceProperty = {
+                  brightness:100
+                }
+                udpArr.push(light.get_switch_change(true, device,deviceProperty));
+                // udpArr.push(light.get_slider_change(true, device));
+              }
               break;
             case "led":
+              if (device.status_1 == "on") {
+                var deviceProperty = {
+                  color:device.status_2
+                }
+                udpArr.push(led.get_switch_change(true, device,deviceProperty));
+                // udpArr.push(light.get_slider_change(true, device));
+              }
               break;
             case "curtain":
               break;
@@ -134,13 +121,17 @@ export default {
           }
         }
       }
-      var len = funArr.length;
+      var len = udpArr.length;
       var i = 0;
-      var forFunArr = setInterval(function() {
-        funArr[i];
+      var vm = this;
+      var forudpArr = setInterval(function() {
+        vm.apiGet("udp/sendUdp.php", udpArr[i]).then(res => {
+          // console.log("res = ", _g.j2s(res));
+          // _g.closeGlobalLoading()
+        });
         i++;
         if (i >= len) {
-          clearInterval(forFunArr);
+          clearInterval(forudpArr);
         }
       }, 100);
     },

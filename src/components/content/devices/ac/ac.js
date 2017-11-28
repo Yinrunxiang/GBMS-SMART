@@ -152,7 +152,7 @@ const acApi = {
         return data
     },
     switch_change(val, device, deviceProperty) {
-        const data = get_switch_change(val, device, deviceProperty)
+        const data = this.get_switch_change(val, device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
@@ -160,7 +160,7 @@ const acApi = {
     },
     autotmp_change(val, device, deviceProperty) {
 
-        const data = get_autotmp_change(val, device, deviceProperty)
+        const data = this.get_autotmp_change(val, device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
@@ -168,7 +168,7 @@ const acApi = {
     },
     cooltmp_change(val, device, deviceProperty) {
 
-        const data = get_cooltmp_change(val, device, deviceProperty)
+        const data = this.get_cooltmp_change(val, device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
@@ -176,7 +176,7 @@ const acApi = {
     },
     heattmp_change(val, device, deviceProperty) {
 
-        const data = get_heattmp_change(val, device, deviceProperty)
+        const data = this.get_heattmp_change(val, device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
@@ -184,35 +184,35 @@ const acApi = {
     },
     wind_change(val, device, deviceProperty) {
 
-        const data = get_wind_change(val, device, deviceProperty)
+        const data = this.get_wind_change(val, device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
         })
     },
     autobtn(device, deviceProperty) {
-        const data = get_autobtn(val, device, deviceProperty)
+        const data = this.get_autobtn(device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
         })
     },
     fanbtn(device, deviceProperty) {
-        const data = get_fanbtn(val, device, deviceProperty)
+        const data = this.get_fanbtn(device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
         })
     },
     coolbtn(device, deviceProperty) {
-        const data = get_coolbtn(val, device, deviceProperty)
+        const data = this.get_coolbtn(device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
         })
     },
     heatbtn(device, deviceProperty) {
-        const data = get_heatbtn(val, device, deviceProperty)
+        const data = this.get_heatbtn( device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()

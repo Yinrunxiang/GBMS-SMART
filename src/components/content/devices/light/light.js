@@ -1,8 +1,8 @@
 import api from "../../../../assets/js/api";
 const lightApi = {
-  switch_change(val,device,deviceProperty) {
+  get_switch_change(val,device,deviceProperty) {
     if (val) {
-      if (deviceProperty.brightness == 0) deviceProperty.brightness = 100;
+      deviceProperty.brightness = 100;
       const data = {
         params: {
           operatorCodefst: "00",
@@ -10,18 +10,13 @@ const lightApi = {
           targetSubnetID: device.subnetid,
           targetDeviceID: device.deviceid,
           additionalContentData: (device.channel +
-            "," +
-            _g.toHex(deviceProperty.brightness) +
-            ",00,00").split(","),
+            ",64,00,00").split(","),
           macAddress: device.mac ? device.mac.split(".") : "",
           dest_address: device.ip ? device.ip : "",
           dest_port: device.port ? device.port : ""
         }
       };
-      api.apiGet("udp/sendUdp.php", data).then(res => {
-        // console.log("res = ", _g.j2s(res));
-        // _g.closeGlobalLoading()
-      });
+      return data
     } else {
       deviceProperty.brightness == 0;
       const data = {
@@ -36,14 +31,10 @@ const lightApi = {
           dest_port: device.port ? device.port : ""
         }
       };
-      api.apiGet("udp/sendUdp.php", data).then(res => {
-        // console.log("res = ", _g.j2s(res));
-        // _g.closeGlobalLoading()
-      });
+      return data
     }
   },
-  slider_change(val,device,deviceProperty) {
-    deviceProperty.brightness = val;
+  get_slider_change(val,device,deviceProperty) {
     const data = {
       params: {
         operatorCodefst: "00",
@@ -59,6 +50,17 @@ const lightApi = {
         dest_port: device.port ? device.port : ""
       }
     };
+    return data
+  },
+  switch_change(val,device,deviceProperty) {
+      const data = this.get_switch_change(val,device,deviceProperty)
+      api.apiGet("udp/sendUdp.php", data).then(res => {
+        // console.log("res = ", _g.j2s(res));
+        // _g.closeGlobalLoading()
+      });
+  },
+  slider_change(val,device,deviceProperty) {
+    const data = this.get_slider_change(val,device,deviceProperty)    
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
