@@ -31,13 +31,13 @@ function toHex($num) {
     return $num ;
 }
 function tocolor($str) {
-    echo $str.'\n';
-    echo intval("0x" + $str).' \n';
-    echo (intval("0x" + $str) / 100 * 255).' \n';
-    echo round(intval("0x" + $str) / 100 * 255).' \n';
-    $color  = toHex(round(intval("0x" + $str) / 100 * 255));
+    // echo $str.'\n';
+    // echo hexdec("0x" + $str).' \n';
+    // echo (hexdec("0x" + $str) / 100 * 255).' \n';
+    // echo round(hexdec("0x" + $str) / 100 * 255).' \n';
+    $color  = toHex(round(hexdec("0x" + $str) / 100 * 255));
     return $color;
-  };
+};
 
 // PHPSocketIO服务
 $sender_io = new SocketIO(2120);

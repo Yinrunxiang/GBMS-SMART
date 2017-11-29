@@ -106,7 +106,7 @@
             <addressUpdate :add="addressAdd" :address="addressUpdateData" @goback="addressBack"></addressUpdate>
         </div>
          <el-dialog title="Configure Mood" :visible.sync="showMoodSetting" v-if="showMoodSetting">
-          <mood :room = "this.room" @close="showMoodSetting=false"></mood>
+          <mood :room = "this.room" @close="showMoodSetting=false" @off="roomClose"></mood>
         </el-dialog>
         <!-- <changeName ref="changeName" :showChange = 'showChange' @change = 'showChangePage'></changeName> -->
     </div>
@@ -124,7 +124,7 @@ import deviceUpdate from "../plan/update";
 import addressUpdate from "../setting/address/add";
 import floorUpdate from "../setting/floor/add";
 import roomUpdate from "../setting/room/add";
-import mood from "./mood"
+import mood from "./mood";
 // import changeName from "../setting/room/changeName";
 // import $ from 'jquery'
 // import '../../../assets/css/drag.css'
@@ -375,11 +375,18 @@ export default {
     },
     roomClose() {
       var deviceList = this.$refs.device;
-      console.log(deviceList);
-      for (var device of deviceList) {
-        device.device.on_off = false;
-        device.switch_change(false);
-      }
+      var i = 0;
+      var len = deviceList.length;
+      var forDevice = setInterval(function() {
+        if (deviceList[i].device.on_off == true) {
+          deviceList[i].device.on_off = false;
+          deviceList[i].switch_change(false);
+        }
+        i++;
+        if (i >= len) {
+          clearInterval(forDevice);
+        }
+      }, 100);
     },
     roomBack() {
       this.$store.dispatch("setShowFloor", true);
@@ -463,7 +470,7 @@ export default {
     devicePage,
     floorUpdate,
     roomUpdate,
-    mood,
+    mood
   },
   computed: {
     //获取酒店

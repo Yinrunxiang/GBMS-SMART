@@ -34,6 +34,40 @@ const cutainApi = {
       return data
     }
   },
+  get_stop(val, device, deviceProperty) {
+    if (val) {
+      const data = {
+        params: {
+          operatorCodefst: "00",
+          operatorCodesec: "31",
+          targetSubnetID: device.subnetid,
+          targetDeviceID: device.deviceid,
+          additionalContentData: (device.channel +
+            // "," +
+            // _g.toHex(deviceProperty.brightness) +
+            ",00,00,00").split(","),
+          macAddress: device.mac ? device.mac.split(".") : "",
+          dest_address: device.ip ? device.ip : "",
+          dest_port: device.port ? device.port : ""
+        }
+      };
+      return data
+    } else {
+      const data = {
+        params: {
+          operatorCodefst: "00",
+          operatorCodesec: "31",
+          targetSubnetID: device.subnetid,
+          targetDeviceID: device.deviceid,
+          additionalContentData: (device.channel_spare + ",00,00,00").split(","),
+          macAddress: device.mac ? device.mac.split(".") : "",
+          dest_address: device.ip ? device.ip : "",
+          dest_port: device.port ? device.port : ""
+        }
+      };
+      return data
+    }
+  },
   get_slider_change(val, device, deviceProperty) {
     const data = {
       params: {
@@ -53,12 +87,17 @@ const cutainApi = {
     return data
   },
   switch_change(val, device, deviceProperty) {
-      const data = this.get_switch_change(val, device, deviceProperty)
-      // console.log(data)
-      api.apiGet("udp/sendUdp.php", data).then(res => {
-        // console.log("res = ", _g.j2s(res));
-        // _g.closeGlobalLoading()
-      });
+    const data = this.get_switch_change(val, device, deviceProperty)
+    // console.log(data)
+    api.apiGet("udp/sendUdp.php", data).then(res => {
+      // console.log("res = ", _g.j2s(res));
+      // _g.closeGlobalLoading()
+    });
+  },
+  stop(val, device, deviceProperty) {
+    const data = this.get_stop(val, device, deviceProperty)
+    api.apiGet("udp/sendUdp.php", data).then(res => {
+    });
   },
   slider_change(val, device, deviceProperty) {
     const data = this.get_slider_change(val, device, deviceProperty)

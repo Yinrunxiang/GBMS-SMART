@@ -32,10 +32,10 @@
 <script>
 import http from "../../../assets/js/http";
 import ac from "../devices/ac/ac";
-import ight from "../devices/ac/ac";
-import led from "../devices/ac/ac";
-import curtain from "../devices/ac/ac";
-import music from "../devices/ac/ac";
+import light from "../devices/light/light";
+import led from "../devices/led/led";
+import curtain from "../devices/curtain/curtain";
+import music from "../devices/music/music";
 export default {
   data() {
     return {
@@ -115,11 +115,15 @@ export default {
               }
               break;
             case "curtain":
+
               break;
             case "music":
+
               break;
           }
         }
+      }else{
+        this.$emit('off',true)
       }
       var len = udpArr.length;
       var i = 0;
