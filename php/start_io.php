@@ -88,7 +88,6 @@ $sender_io->on('workerStart', function () {
                 $green = tocolor(substr($msg,54, 2));
                 $blue = tocolor(substr($msg,56, 2));
                 $color = "#" . $red . $green . $blue;
-                echo $color."f081\n";
                 if ($color != "#000000") {
                     $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
                 } else {
@@ -103,7 +102,6 @@ $sender_io->on('workerStart', function () {
                     $green = tocolor(substr($msg,54, 2));
                     $blue = tocolor(substr($msg,56, 2));
                     $color = "#" . $red . $green . $blue;
-                     echo $color."0382\n";
                     if ($color != "#000000") {
                         $on_off = true;
                         $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";

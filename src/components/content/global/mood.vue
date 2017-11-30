@@ -1,20 +1,32 @@
 <template>
     <div  v-loading="moodLoading">
     <el-card v-for="mood in moodList" class="box-card m-b-15" :span="24">
-            <div v-show="!mood.add">
+            <div v-show="!mood.add" style="line-height:36px" >
               <span>{{mood.mood}}</span>
-              <a  class="fa fa-close fr m-l-10" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>
-                  <el-switch class="fr" v-model="mood.on_off" @change="switch_change(mood.on_off,mood.deviceList)">
-                  </el-switch>
+              <a  class="fa fa-close fr m-l-10 m-t-5" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>
+              <el-button type="primary" @click="switch_change(true,mood.deviceList)" class="fr">Run</el-button>
+                  <!-- <el-switch class="fr" v-model="mood.on_off" @change="switch_change(mood.on_off,mood.deviceList)">
+                  </el-switch> -->
             </div>
            <div v-show="mood.add" >
             <el-input  v-model="mood.mood" style="width:100px;" placeholder="Mood name"></el-input>
-            <el-select v-model="devicetypes" multiple placeholder="Please choose">
+            <el-select  v-model="devicetypes" style="width:200px;" multiple placeholder="Please choose">
             <el-option
               v-for="item in deviceTypeOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value">
+            </el-option>
+          </el-select>
+          <el-select  v-if="devicetypes.indexOf('curtain') != -1" style="width:200px;" v-model="curtains" multiple placeholder="Please choose">
+            <el-option
+              v-for="curtain in allCurtains"
+              :key="curtain.id"
+              :label="curtain.device"
+              :value="curtain.id">
+              <span class="fl">{{ curtain.device }}</span>
+               <el-switch  class="fr mood-curtain-switch" v-model="curtain.on_off">
+                  </el-switch>
             </el-option>
           </el-select>
             <el-button class="fr" type="primary" round  @click="saveMood(mood)">save</el-button>
@@ -28,6 +40,12 @@
         </div>
     </div>
 </template>
+<style>
+.mood-curtain-switch {
+  margin-right: 20px;
+  line-height: 1 !important;
+}
+</style>
 
 <script>
 import http from "../../../assets/js/http";
@@ -44,6 +62,8 @@ export default {
       moodLoading: true,
       mood_name: "",
       devicetypes: [],
+      curtains: [],
+      allCurtains: [],
       deviceTypeOptions: [
         { label: "AC", value: "ac" },
         { label: "Light", value: "light" },
@@ -94,36 +114,60 @@ export default {
                 udpArr.push(ac.get_cooltmp_change(device.status_4, device));
                 udpArr.push(ac.get_heattmp_change(device.status_5, device));
                 udpArr.push(ac.get_autotmp_change(device.status_6, device));
+              } else {
+                udpArr.push(ac.get_switch_change(false, device));
               }
               break;
             case "light":
               if (device.status_1 == "on") {
                 var deviceProperty = {
-                  brightness:100
-                }
-                udpArr.push(light.get_switch_change(true, device,deviceProperty));
+                  brightness: 100
+                };
+                udpArr.push(
+                  light.get_switch_change(true, device, deviceProperty)
+                );
                 // udpArr.push(light.get_slider_change(true, device));
+              } else {
+                var deviceProperty = {
+                  brightness: 0
+                };
+                udpArr.push(
+                  light.get_switch_change(false, device, deviceProperty)
+                );
               }
               break;
             case "led":
               if (device.status_1 == "on") {
                 var deviceProperty = {
-                  color:device.status_2
-                }
-                udpArr.push(led.get_switch_change(true, device,deviceProperty));
+                  color: device.status_2
+                };
+                udpArr.push(
+                  led.get_switch_change(true, device, deviceProperty)
+                );
                 // udpArr.push(light.get_slider_change(true, device));
+              } else {
+                var deviceProperty = {
+                  color: "#000000"
+                };
+                udpArr.push(
+                  led.get_switch_change(false, device, deviceProperty)
+                );
               }
               break;
             case "curtain":
-
+              if (device.status_1 == "on") {
+                udpArr.push(curtain.get_switch_change(true, device));
+                // udpArr.push(light.get_slider_change(true, device));
+              } else {
+                udpArr.push(curtain.get_switch_change(false, device));
+              }
               break;
             case "music":
-
               break;
           }
         }
-      }else{
-        this.$emit('off',true)
+      } else {
+        this.$emit("off", true);
       }
       var len = udpArr.length;
       var i = 0;
@@ -170,7 +214,7 @@ export default {
           this.oldMoodList = moodList;
           this.moodList = moodList;
           this.moodLoading = false;
-          console.log(this.moodList);
+          // console.log(this.moodList);
         }
       });
     },
@@ -190,16 +234,25 @@ export default {
         _g.toastMsg("error", "Select at least one device type");
         return;
       }
+      var curtains = [];
+      for (var curtain_key of this.curtains) {
+        for (var curtain of this.allCurtains) {
+          if (curtain.id == curtain_key) {
+            curtains.push(curtain);
+          }
+        }
+      }
       var data = {
         params: {
           mood: mood.mood,
           address: this.room.address,
           floor: this.room.floor,
           room: this.room.room,
-          devicetypes: this.devicetypes
+          devicetypes: this.devicetypes,
+          curtains: curtains
         }
       };
-      console.log(this.devicetypes);
+      console.log(data);
       this.apiGet("device/mood.php?action=insert", data).then(res => {
         if (res[0]) {
           _g.toastMsg("success", res[1]);
@@ -246,14 +299,17 @@ export default {
   created() {
     this.getMood();
   },
-  mounted() {},
-  components: {},
-  computed: {
-    device() {
-      var device = this.$store.state.device;
-      return device;
+  mounted() {
+    var allCurtains = [];
+    for (var type of this.room.typeList) {
+      if (type.name == "curtain") {
+        allCurtains = type.deviceList;
+      }
     }
+    this.allCurtains = allCurtains;
   },
+  components: {},
+  computed: {},
   props: ["room"],
   mixins: [http]
 };

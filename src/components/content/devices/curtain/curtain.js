@@ -96,6 +96,7 @@ const cutainApi = {
   },
   stop(val, device, deviceProperty) {
     const data = this.get_stop(val, device, deviceProperty)
+    console.log(data)
     api.apiGet("udp/sendUdp.php", data).then(res => {
     });
   },

@@ -56,7 +56,7 @@ export default {
       curtainApi.switch_change(val, this.device, this.deviceProperty);
     },
     stop() {
-      curtainApi.close(this.status, this.device, this.deviceProperty);
+      curtainApi.stop(this.status, this.device, this.deviceProperty);
     }
   },
   mounted() {

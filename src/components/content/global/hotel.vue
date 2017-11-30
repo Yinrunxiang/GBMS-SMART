@@ -330,6 +330,7 @@ export default {
           this.room.room_name = room.room_name;
           this.room.floor = room.floor;
           this.room.address = room.address;
+          this.room.typeList = room.typeList
           for (var type of room.typeList) {
             for (var device of type.deviceList) {
               deviceList.push(device);

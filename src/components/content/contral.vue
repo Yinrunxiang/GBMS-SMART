@@ -59,7 +59,7 @@
                                                     <el-badge :value="room.warn">
                                                     </el-badge>
                                                     <div v-show='room_key == room.address+","+room.floor+","+room.room' class="fr">
-                                                        <i class="fa fa-heart contral-mood-icon" @click.stop="clickToShowMoodSetting"></i>
+                                                        <i class="fa fa-heart contral-mood-icon" @click.stop="clickToShowMoodSetting(room)"></i>
                                                     </div>
                                                 </template>
                                                 <transition name="fade" mode="out-in" appear>
@@ -117,8 +117,9 @@ export default {
     };
   },
   methods: {
-    clickToShowMoodSetting() {
+    clickToShowMoodSetting(room) {
       this.showMoodSetting = true;
+      this.room = room
     },
     roomClose() {
         var vm =this
@@ -137,14 +138,6 @@ export default {
     },
     roomChange(val) {
       this.room_key = val;
-      var roomStrArr = val.split(",");
-      var roomObj = {
-        address: roomStrArr[0],
-        floor: roomStrArr[1],
-        room: roomStrArr[2]
-      };
-      console.log(roomObj);
-      this.room = roomObj;
       clearInterval(interval);
       if (typeof val == "string" && val == "") {
         return;

@@ -11,6 +11,7 @@ switch ($action)
         $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
         $room = isset($_REQUEST["room"]) ? $_REQUEST["room"] : '';
         $devicetypes = isset($_REQUEST["devicetypes"]) ? $_REQUEST["devicetypes"] : '';
+        $curtains = isset($_REQUEST["curtains"]) ? $_REQUEST["curtains"] : '';
         $re = 1;
         $re_str = "";
         $checkMood = "select id from mood where mood = '".$mood."' and address = '".$address."' and floor = '".$floor."' and room  = '".$room."'";
@@ -37,6 +38,24 @@ switch ($action)
             else{
                 
             }
+            
+        }
+        for ($i = 0; $i  < count($curtains); $i++) {
+            
+            if(isset($curtains[$i])){
+                $curtain = json_decode($curtains[$i]);
+            
+            $on_off = $curtain->on_off?'on':'off';
+            $updateMood = "update mood set status_1 = '".$on_off."' where mood = '".$mood."' and  address = '".$address."' and floor = '".$floor."' and room  = '".$room."' and device = '".$curtain->id."'";
+            if (!mysqli_query($con,$updateMood))
+            {
+                $re = $re * -1;
+                $re_str = $re_str." Save failed: " .$curtain->device;
+            }
+            else{
+                
+            }
+        }
             
         }
         if ($re == -1)
