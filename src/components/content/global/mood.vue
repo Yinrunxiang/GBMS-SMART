@@ -86,15 +86,19 @@ export default {
                 switch (device.status_2) {
                   case "cool":
                     udpArr.push(ac.get_coolbtn(device));
+                    udpArr.push(ac.get_cooltmp_change(device.status_4, device));
                     break;
                   case "fan":
                     udpArr.push(ac.get_fanbtn(device));
+                    udpArr.push(ac.get_cooltmp_change(device.status_4, device));
                     break;
                   case "heat":
                     udpArr.push(ac.get_heatbtn(device));
+                    udpArr.push(ac.get_heattmp_change(device.status_5, device));
                     break;
                   case "auto":
                     udpArr.push(ac.get_autobtn(device));
+                    udpArr.push(ac.get_autotmp_change(device.status_6, device));
                     break;
                 }
                 switch (device.status_3) {
@@ -111,9 +115,9 @@ export default {
                     udpArr.push(ac.get_wind_change("3", device));
                     break;
                 }
-                udpArr.push(ac.get_cooltmp_change(device.status_4, device));
-                udpArr.push(ac.get_heattmp_change(device.status_5, device));
-                udpArr.push(ac.get_autotmp_change(device.status_6, device));
+                // udpArr.push(ac.get_cooltmp_change(device.status_4, device));
+                // udpArr.push(ac.get_heattmp_change(device.status_5, device));
+                // udpArr.push(ac.get_autotmp_change(device.status_6, device));
               } else {
                 udpArr.push(ac.get_switch_change(false, device));
               }
@@ -170,6 +174,7 @@ export default {
         this.$emit("off", true);
       }
       var len = udpArr.length;
+      // console.log(udpArr)
       var i = 0;
       var vm = this;
       var forudpArr = setInterval(function() {
@@ -252,7 +257,7 @@ export default {
           curtains: curtains
         }
       };
-      console.log(data);
+      // console.log(data);
       this.apiGet("device/mood.php?action=insert", data).then(res => {
         if (res[0]) {
           _g.toastMsg("success", res[1]);
@@ -298,6 +303,7 @@ export default {
   },
   created() {
     this.getMood();
+    console.log('mood')
   },
   mounted() {
     var allCurtains = [];

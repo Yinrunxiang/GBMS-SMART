@@ -95,7 +95,7 @@ export default {
     // },
     //悬浮提示数据
     itCounteyTooltip(params) {
-      var itCounteyTooltip = "Hotel : " + params.name + "<br/>";
+      var itCounteyTooltip = "Building : " + params.name + "<br/>";
       for (var country of this.countryArr) {
         for (var address of country.addressList) {
           if (address.name == params.name) {

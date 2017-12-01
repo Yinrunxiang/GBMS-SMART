@@ -10,11 +10,15 @@
                         <i class="el-icon-minus"></i>&nbsp;&nbsp;Delete
                     </el-button>
                 </div>
-                <div class="fl w-300 m-l-30">
+                <div class="fl m-l-30">
+                <el-cascader :options="allAddress" change-on-select @change="addressChange"></el-cascader>
+                </div>
+                <div class="fl w-300  m-l-30">
                     <el-input placeholder="Please enter the device name" v-model="keywords">
                         <el-button slot="append" icon="search" @click="search()"></el-button>
                     </el-input>
                 </div>
+                
             </div>
             <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
                 <el-table-column type="selection" width="50">
@@ -31,7 +35,7 @@
                 </el-table-column>
                 <!-- <el-table-column label="status" prop="status" width="150">
                 </el-table-column> -->
-                <el-table-column label="IP" prop="ip" width="150">
+                <el-table-column label="Breed" prop="breed" width="150">
                 </el-table-column>
                 <el-table-column label="Time" prop="start" >
                     <template scope="scope">
@@ -93,9 +97,12 @@ export default {
   data() {
     return {
       tableData: [],
-      // dataCount: null,
+      dataCount: null,
       currentPage: null,
       keywords: "",
+      address: "",
+      floor: "",
+      room: "",
       thisdevice: {},
       notHotel: true,
       multipleSelection: [],
@@ -116,11 +123,38 @@ export default {
     changeUpdate(data) {
       this.showDeviceUpdate = data;
     },
+    addressChange(value) {
+      var len = value.length;
+      switch (len) {
+        case 1:
+          this.address = value[0];
+          this.floor = "";
+          this.room = "";
+          break;
+        case 2:
+          this.address = value[0];
+          this.floor = value[1];
+          this.room = "";
+          break;
+        case 3:
+          this.address = value[0];
+          this.floor = value[1];
+          this.room = value[2];
+          break;
+      }
+      this.search()
+    },
     //搜索关键字
     search() {
       router.push({
         path: this.$route.path,
-        query: { keywords: this.keywords, page: 1 }
+        query: {
+          address: this.address,
+          floor: this.floor,
+          room: this.room,
+          keywords: this.keywords,
+          page: 1
+        }
       });
     },
     //获取被选中的数据
@@ -131,7 +165,13 @@ export default {
     handleCurrentChange(page) {
       router.push({
         path: this.$route.path,
-        query: { keywords: this.keywords, page: page }
+        query: {
+          address: this.address,
+          floor: this.floor,
+          room: this.room,
+          keywords: this.keywords,
+          page: page
+        }
       });
     },
     addDevice() {
@@ -144,8 +184,8 @@ export default {
         channel: "",
         country: "",
         address: "",
-        floor:"",
-        room:"",
+        floor: "",
+        room: "",
         breed: "",
         ip: "",
         port: "",
@@ -233,7 +273,7 @@ export default {
     },
     //删除按钮事件
     deleteBtn() {
-      var vm = this
+      var vm = this;
       this.$confirm("Are you sure to delete the selected data?", "Tips", {
         confirmButtonText: "Yse",
         cancelButtonText: "No",
@@ -266,18 +306,7 @@ export default {
           // catch error
         });
     },
-    //获取页码
-    getCurrentPage() {
-      let data = this.$route.query;
-      if (data) {
-        if (data.page) {
-          this.currentPage = parseInt(data.page);
-        } else {
-          this.currentPage = 1;
-        }
-      }
-      _g.closeGlobalLoading();
-    },
+
     //获取关键值
     getKeywords() {
       let data = this.$route.query;
@@ -290,25 +319,43 @@ export default {
       }
       _g.closeGlobalLoading();
     },
+    //获取页码
+    getCurrentPage() {
+      let data = this.$route.query;
+      if (data) {
+        if (data.page) {
+          this.currentPage = parseInt(data.page);
+        } else {
+          this.currentPage = 1;
+        }
+      }
+      _g.closeGlobalLoading();
+    },
     getAllDevices() {
-      // var pages = Math.ceil(this.dataCount/this.limit)
       var data = [];
-      //   var devices = [];
-      //   devices = devcice.cancat(this.devices);
-      if (this.keywords != "") {
-        for (var device of this.devices) {
-          if (device.device == this.keywords) {
-            data.push(device);
+      let query = this.$route.query;
+      if (query) {
+        this.address = query.address ? query.address : "";
+        this.floor = query.floor ? query.floor : "";
+        this.room = query.room ? query.room : "";
+      }
+      for (var device of this.devices) {
+        if (this.address == "" || device.address == this.address) {
+          if (this.floor == "" || device.floor == this.floor) {
+            if (this.room == "" || device.room == this.room) {
+              if (this.keywords == "" || device.device == this.keywords) {
+                data.push(device);
+              }
+            }
           }
         }
-      } else {
-        data = this.devices;
       }
-
+      // console.log(data);
       // var data = this.devices
       var start = this.limit * (this.currentPage - 1);
-      var end = start + this.limit -1;
+      var end = start + this.limit - 1;
       this.tableData = data.slice(start, end);
+      this.dataCount = data.length
     },
     //初始化时统一加载
     init() {
@@ -318,7 +365,7 @@ export default {
     }
   },
   created() {
-    console.log("Plan");
+    // console.log("Plan");
     this.init();
 
     _g.closeGlobalLoading();
@@ -334,11 +381,46 @@ export default {
       return this.$store.state.devices;
     },
     //从vuex中获取设备数据条数
-    dataCount() {
-      return this.$store.state.devices.length;
-    },
+    // dataCount() {
+    //   return this.$store.state.devices.length;
+    // },
     globalLoading() {
       return store.state.globalLoading;
+    },
+    allAddress() {
+      var allAddress = [];
+      for (var address of this.$store.state.address) {
+        var addressObj = {
+          value: address.address,
+          label: address.address,
+          children: []
+        };
+        for (var floor of this.$store.state.floor) {
+          if (floor.address == address.address) {
+            var floorObj = {
+              value: floor.floor,
+              label: "floor " + floor.floor,
+              children: []
+            };
+            for (var room of this.$store.state.room) {
+              if (
+                room.floor == floor.floor &&
+                room.address == address.address
+              ) {
+                var roomObj = {
+                  value: room.room,
+                  label: room.room_name
+                };
+                floorObj.children.push(roomObj);
+              }
+            }
+            addressObj.children.push(floorObj);
+          }
+        }
+        allAddress.push(addressObj);
+      }
+      // console.log(allAddress)
+      return allAddress;
     }
   },
   watch: {

@@ -169,7 +169,7 @@ export default {
           curtainApi.readOpen(this.device);
           break;
       }
-      console.log("OK");
+      // console.log("OK");
     },
     iconstyle(type) {
       switch (type) {
@@ -195,7 +195,7 @@ export default {
     }
   },
   created() {
-    console.log("device list device");
+    // console.log("device list device");
     // this.readOpen()
   },
   props: ["device"],

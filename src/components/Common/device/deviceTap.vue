@@ -148,7 +148,7 @@ export default {
           // musicApi.readOpen(this.device)
           break;
       }
-      console.log("OK");
+      // console.log("OK");
     },
     iconstyle(type) {
       switch (type) {

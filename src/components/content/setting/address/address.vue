@@ -21,7 +21,7 @@
                 </el-table-column>
                 <el-table-column label="Country" prop="country" width="150">
                 </el-table-column>
-                <el-table-column label="Address" prop="address" width="150">
+                <el-table-column label="Building" prop="address" width="150">
                 </el-table-column>
                 <el-table-column label="IP" prop="ip" width="150">
                 </el-table-column>

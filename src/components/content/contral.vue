@@ -89,8 +89,8 @@
   right: 4px;
   width: 36px;
   height: 36px;
-  line-height: 36px;
-  font-size: 16px;
+  line-height: 36px !important;
+  font-size: 16px !important;
   text-align: center;
   border-radius: 36px;
   color: #fff;

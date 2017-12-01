@@ -7,7 +7,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="Address">
+            <el-form-item label="Building">
                 <el-input v-model.trim="form.address" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="IP">

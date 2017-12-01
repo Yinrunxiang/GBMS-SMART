@@ -2,7 +2,7 @@
   <div>
     <el-menu v-if="showHotel || showFloor || showRoom"  mode="horizontal" default-active="1" @open="handleOpen" @close="handleClose" theme="dark" @select="change" style="background-color:#1f2d3d;">
       <el-menu-item index="global">Global</el-menu-item>
-        <el-menu-item index="Hotel">Build</el-menu-item>
+        <el-menu-item index="Hotel">Building</el-menu-item>
          <el-menu-item v-show="showFloor || showRoom" index="Floor"></i>Floor</el-menu-item>
          <el-menu-item v-show="showRoom" index="Room"></i>Room</el-menu-item>
     </el-menu>
