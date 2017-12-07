@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     rowDblclick(row) {
-      var url = "light/update";
+      var url = "led/update";
       router.push({ path: url, query: row });
     },
     //获取被选中的数据

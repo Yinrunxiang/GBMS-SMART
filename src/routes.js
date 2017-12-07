@@ -6,6 +6,7 @@ import hotel from "./components/content/global/hotel.vue";
 import floor from "./components/content/global/floor.vue";
 import room from "./components/content/global/room.vue";
 import plan from "./components/content/plan.vue";
+import schedule from "./components/content/schedule.vue";
 import report from "./components/content/report.vue";
 import contral from "./components/content/contral.vue";
 import light from "./components/content/devices/light.vue";
@@ -16,6 +17,7 @@ import curtain from "./components/content/devices/curtain.vue";
 import ir from "./components/content/devices/ir.vue";
 // import planAdd from "./components/content/plan/add.vue";
 import planUpdate from "./components/content/plan/update.vue";
+import scheduleAdd from "./components/content/schedule/add.vue";
 import settingTypeAc from "./components/content/setting/type/ac/ac.vue";
 import settingTypeAcAdd from "./components/content/setting/type/ac/add.vue";
 import settingTypeAcUpdate from "./components/content/setting/type/ac/update.vue";
@@ -69,6 +71,15 @@ const routes = [
           {path: "ir", component: ir, name: "ir" },
         ]
       }
+    ]
+  },
+  {
+    path: "/home",
+    component: Home,
+    children: [
+      { path: "schedule", component: plan, name: "schedule" },
+      // { path: "plan/add", component: planAdd, name: "planAdd" },
+      { path: "schedule/add", component: scheduleAdd, name: "scheduleAdd" },
     ]
   },
   {
