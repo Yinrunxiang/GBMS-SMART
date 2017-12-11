@@ -71,7 +71,7 @@ export default {
         },
         {
           title: 'schedule',
-          url: '/home/Schedule',
+          url: '/home/schedule',
           name: 'schedule'
         },
         {

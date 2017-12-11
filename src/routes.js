@@ -77,7 +77,7 @@ const routes = [
     path: "/home",
     component: Home,
     children: [
-      { path: "schedule", component: plan, name: "schedule" },
+      { path: "schedule", component: schedule, name: "schedule" },
       // { path: "plan/add", component: planAdd, name: "planAdd" },
       { path: "schedule/add", component: scheduleAdd, name: "scheduleAdd" },
     ]

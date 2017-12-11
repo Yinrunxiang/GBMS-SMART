@@ -39,7 +39,9 @@
                 <el-input type="channel_spare" v-model="form.channel_spare" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item v-show="notHotel" label="Building">
+              <template slot="prepend">Http://</template>
                 <el-select v-model="form.address" filterable placeholder="Select Building" class="h-40 w-200">
+                  
                     <el-option v-for="item in address" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>

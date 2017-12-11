@@ -81,11 +81,11 @@ export default {
       this.add = true;
       this.setting = true;
       var data = {
-        name: "",
-        sex: "",
-        age: "",
-        title: "",
-        tel: "",
+        schedule: "",
+        address: "",
+        floor: "",
+        room: "",
+        type: "",
       };
       this.selectData = data;
     },
@@ -137,15 +137,9 @@ export default {
           limit:this.limit
         }
       };
-      this.apiPost("device/schedule?action=schedule", data).then(res => {
-        if (res.code == 200) {
-          this.tableData = res.data.list
-          this.dataCount = res.data.dataCount
-          // this.$store.dispatch("setAddress", address);
-          // _g.toastMsg("success", res[1]);
-        } else {
-          // _g.toastMsg("error", res[1]);
-        }
+      this.apiGet("device/schedule.php?action=search", data).then(res => {
+        console.log(res)
+        // this.tableData = res
       });
     },
     //初始化时统一加载

@@ -108,7 +108,17 @@ switch ($action)
     }
     break;
     case "search":
-        $sql="SELECT * FROM schedule";
+        $schedule = isset($_REQUEST["schedule"]) ? " and schedule = '".$_REQUEST["schedule"]."'" : '';
+        $keywords = isset($_REQUEST["schedule"]) ? " and schedule like '%".$_REQUEST["schedule"]."%'" : '';
+        $page = intval(isset($_REQUEST["page"]) ? $_REQUEST["page"] : 0);
+        $limit = intval(isset($_REQUEST["limit"]) ? $_REQUEST["limit"] : 0);
+        $start = $limit*($page-1) +1;
+        $end = $limit*($page);
+        // $getDataCount = "select count(id) as count from schedule";
+        // $getDataCount = mysqli_query($con,$getDataCount);
+        // $getDataCount = mysqli_fetch_assoc($getDataCount);
+        // $getDataCount = $getDataCount["count"];
+        $sql="SELECT * FROM schedule where 1=1  ".$schedule." ".$keywords." limit ".$start.",".$end."";
         // $sql="SELECT * FROM schedule as a left join schedule_command as b on a.id = b.schedule left join device as c on b.device =c.id";
         $result = mysqli_query($con,$sql);
         $results = array();
@@ -119,8 +129,10 @@ switch ($action)
         echo $json_results;
     break;    
     case "search_command":
-        $schedule = isset($_REQUEST["schedule"]) ? $_REQUEST["schedule"] : '';
-        $sql="SELECT schedule,a.device,a.on_off,a.mode,a.grade,a.operation_1,a.operation_2,a.operation_3,a.operation_4,a.operation_5,subnetid,deviceid,channel,channel_spare FROM  schedule_command as a  left join device as b on a.device =b.id where schedule = '".$schedule."'";
+    $schedule = isset($_REQUEST["schedule"]) ? $_REQUEST["schedule"] : '';
+
+        $sql="SELECT schedule,a.device,a.on_off,a.mode,a.grade,a.operation_1,a.operation_2,a.operation_3,a.operation_4,a.operation_5,subnetid,deviceid,channel,channel_spare FROM  schedule_command as a  left join device as b on a.device =b.id where  schedule = '".$schedule."'";
+        
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {
