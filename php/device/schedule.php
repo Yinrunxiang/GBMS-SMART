@@ -76,37 +76,6 @@ switch ($action)
             echo(json_encode($message)); 
         }
         break;
-    case "setStatus":
-    $selections = isset($_REQUEST["selections"]) ? $_REQUEST["selections"] : '';
-    $status = isset($_REQUEST["status"]) ? $_REQUEST["status"] : '';
-    $re_str = "";
-    for ($i = 0; $i  < count($selections); $i++) {
-        $selection = json_decode($selections[$i]);
-        $sql = " update room set status = '".$status."' where room = '".$selection->room."'";
-        if (!mysqli_query($con,$sql))
-        {
-            $re = false;
-            $re_str = $re_str."Failed: " .$selection->room;
-        }
-        else{
-            $re = true;
-        }
-        
-    }
-    if (!$re)
-    {
-        $message = [];
-        $message[0] = false;
-        $message[1] = $re_str;
-        echo(json_encode($message)); 
-    }
-    else{
-        $message = [];
-        $message[0] = true;
-        $message[1] = "Successfully";
-        echo(json_encode($message)); 
-    }
-    break;
     case "search":
         $schedule = isset($_REQUEST["schedule"]) ? " and schedule = '".$_REQUEST["schedule"]."'" : '';
         $keywords = isset($_REQUEST["schedule"]) ? " and schedule like '%".$_REQUEST["schedule"]."%'" : '';
@@ -130,7 +99,16 @@ switch ($action)
     break;    
     case "search_command":
     $schedule = isset($_REQUEST["schedule"]) ? $_REQUEST["schedule"] : '';
+    $devices = isset($_REQUEST["devices"]) ? $_REQUEST["devices"] : '';
+    $deleteCommand = "delete from schedule_command where schedule = '".$schedule."'";
+    mysqli_query($con,$deleteCommand);
 
+    
+    for ($i = 0; $i  < count($devices); $i++) {
+        $selection = json_decode($devices[$i]);
+        $insertCommand = "insert into schedule_command (schedule,device,on_off,mode,grade,status_1,status_2,status_3) values ('".$schedule."','".$devices->id."','".$devices->on_off."','".$devices->mode."','".$devices->grade."','".$devices->operation_1."','".$devices->operation_2."','".$devices->operation_3."')";
+        mysqli_query($con,$deleteCommand);
+    }
         $sql="SELECT schedule,a.device,a.on_off,a.mode,a.grade,a.operation_1,a.operation_2,a.operation_3,a.operation_4,a.operation_5,subnetid,deviceid,channel,channel_spare FROM  schedule_command as a  left join device as b on a.device =b.id where  schedule = '".$schedule."'";
         
         $result = mysqli_query($con,$sql);
@@ -140,7 +118,20 @@ switch ($action)
         }
         $json_results = str_replace("\/","/",json_encode($results)); 
         echo $json_results;
-    break;     
+    break; 
+    case "insert_command":
+    $schedule = isset($_REQUEST["schedule"]) ? $_REQUEST["schedule"] : '';
+
+    $sql="SELECT schedule,a.device,a.on_off,a.mode,a.grade,a.operation_1,a.operation_2,a.operation_3,a.operation_4,a.operation_5,subnetid,deviceid,channel,channel_spare FROM  schedule_command as a  left join device as b on a.device =b.id where  schedule = '".$schedule."'";
+        
+        $result = mysqli_query($con,$sql);
+        $results = array();
+        while ($row = mysqli_fetch_assoc($result)) {
+            $results[] = $row;
+        }
+        $json_results = str_replace("\/","/",json_encode($results)); 
+        echo $json_results;
+    break; 
 };
 mysqli_close($con);
 

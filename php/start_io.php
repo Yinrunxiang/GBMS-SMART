@@ -173,16 +173,16 @@ $sender_io->on('workerStart', function () {
                         $type = 'grade';
                         switch ($value) {
                             case '00':
-                                $value = "Auto";
+                                $value = "auto";
                                 break;
                             case '01':
-                                $value = "Hign";
+                                $value = "hign";
                                 break;
                             case '02':
-                                $value = "Medial";
+                                $value = "medial";
                                 break;
                             case '03':
-                                $value = "Low";
+                                $value = "low";
                                 break;
                         }
                         break;

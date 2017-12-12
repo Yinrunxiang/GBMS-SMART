@@ -20,31 +20,74 @@
             <el-table :data="selectData" :height="400" style="width: 75%;display: inline-block" class=" m-l-20">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
-                <el-table-column label="Device" prop="device" width="150">
+                <el-table-column label="Device" prop="device" width="120" align="center">
                 </el-table-column>
-                <el-table-column label="Type" prop="devicetype" width="150">
+                <el-table-column label="Type" prop="devicetype" width="120" align="center">
                 </el-table-column>
-                <el-table-column label="Open" width="150" >
+                <el-table-column label="Switch" prop="on_off" width="120"  align="center">
                     <template scope="scope">
-                        <el-switch v-model="selectData[scope.$index].status_1" @change="switch_change(selectData[scope.$index].status_1)" >
+                        <el-switch  v-model="selectData[scope.$index].on_off" @change="switch_change(selectData[scope.$index])" >
                         </el-switch>
                     </template>
                 </el-table-column>
-                <el-table-column label="Address" prop="address" width="150">
+                <el-table-column label="Slider" prop="device" width="200" align="center" >
+                    <template scope="scope">
+                        <div v-if="selectData[scope.$index].devicetype == 'ac'">
+                          <el-slider v-if="selectData[scope.$index].mode == 'cool' || selectData[scope.$index].mode == 'fan'" v-model="selectData[scope.$index].operation_1" :min='0' :max='32' :step="1">
+                          </el-slider>
+                          <el-slider v-if="selectData[scope.$index].mode == 'heat'" v-model="selectData[scope.$index].operation_2" :min='0' :max='32' :step="1" >
+                          </el-slider>
+                          <el-slider v-if="selectData[scope.$index].mode == 'auto'" v-model="selectData[scope.$index].operation_3" :min='0' :max='32' :step="1">
+                          </el-slider>
+                        </div>
+                        <div v-if="selectData[scope.$index].devicetype == 'light'">
+                          <el-slider v-model="selectData[scope.$index].mode" :min='0' :max='100' :step="1">
+                          </el-slider>
+                        </div>
+                        <div v-if="selectData[scope.$index].devicetype == 'led'">
+                          <colorPicker  v-model="selectData[scope.$index].mode" v-on:accept="headleChangeColor"></colorPicker>
+                        </div>
+                    </template>
                 </el-table-column>
-                <el-table-column label="Floor" prop="floor" width="150">
+                <el-table-column label="Mode" width="120" prop="mode" align="center" >
+                    <template scope="scope">
+                      <el-select v-if="selectData[scope.$index].devicetype == 'ac'" v-model="selectData[scope.$index].mode" placeholder="">
+                        <el-option
+                          v-for="item in modes"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </template>
                 </el-table-column>
-                <el-table-column label="Room" prop="room_name" width="150">
+                <el-table-column label="Grade"  prop="grade" width="120"  align="center">
+                    <template scope="scope">
+                      <el-select v-if="selectData[scope.$index].devicetype == 'ac'" v-model="selectData[scope.$index].grade" placeholder="">
+                        <el-option
+                          v-for="item in grades"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </template>
                 </el-table-column>
-                <el-table-column label="status_1" prop="status_1" width="150">
+                <el-table-column label="Address" prop="address" width="150" align="center">
                 </el-table-column>
-                <el-table-column label="status_2" prop="status_2" width="150">
+                <el-table-column label="Floor" prop="floor" width="150" align="center">
                 </el-table-column>
-                <el-table-column label="status_3" prop="status_3" width="150">
+                <el-table-column label="Room" prop="room_name" width="150" align="center">
                 </el-table-column>
-                <el-table-column label="status_4" prop="status_4" width="150">
+                <el-table-column label="status_1" prop="operation_1" width="150" align="center">
                 </el-table-column>
-                <el-table-column label="status_5" prop="status_5" width="150">
+                <el-table-column label="status_2" prop="operation_2" width="150" align="center">
+                </el-table-column>
+                <el-table-column label="status_3" prop="operation_3" width="150" align="center">
+                </el-table-column>
+                <el-table-column label="status_4" prop="operation_4" width="150" align="center">
+                </el-table-column>
+                <el-table-column label="status_5" prop="operation_5" width="150" align="center">
                 </el-table-column>
             </el-table>
             <div class="pos-rel p-t-20">
@@ -63,12 +106,17 @@
     </div>
 </template>
 
+<style>
+.vc-container{
+  z-index: 9999;
+}
+</style>
 
 <script>
 import setting from "./setting";
 import http from "../../../assets/js/http.js";
 import list from "../../../assets/js/list.js";
-
+import colorPicker from "vue-color-picker";
 export default {
   //  currentPage        页码
   //  keywords           关键字
@@ -87,10 +135,46 @@ export default {
       add: true,
       deviceSetting: false,
       settingDevice: {},
-      address : "",
-      floor : "",
-      room : "",
-    }
+      address: "",
+      floor: "",
+      room: "",
+      modes: [
+        {
+          value: "cool",
+          label: "Cool"
+        },
+        {
+          value: "heat",
+          label: "Heat"
+        },
+        {
+          value: "fan",
+          label: "Fan"
+        },
+        {
+          value: "auto",
+          label: "Auto"
+        }
+      ],
+      grades: [
+        {
+          value: "low",
+          label: "Low"
+        },
+        {
+          value: "medial",
+          label: "Medial"
+        },
+        {
+          value: "hign",
+          label: "Hign"
+        },
+        {
+          value: "auto",
+          label: "Auto"
+        }
+      ]
+    };
   },
   methods: {
     goback(bool) {
@@ -99,12 +183,13 @@ export default {
     closeDeviceSetting() {
       this.deviceSetting = false;
     },
+    headleChangeColor(){},
     rowDblclick(row) {
-      this.settingDevice = row
-      this.deviceSetting = true
+      this.settingDevice = row;
+      this.deviceSetting = true;
     },
-    switch_change(row){
-     console.log(row)
+    switch_change(row) {
+      console.log(row);
     },
     addressChange(value) {
       var len = value.length;
@@ -131,11 +216,14 @@ export default {
     selectItem(val) {
       for (var device of val) {
         if (this.selectDataId.indexOf(device.id) == -1) {
-          device.status_1 = device.on_off
-          device.status_2 = device.mode
-          device.status_3 = device.grade
-          device.status_4 = device.operation_1
-          device.status_5 = device.operation_2
+          if (device.devicetype == "ac") {
+            device.operation_1 = parseInt(device.operation_1);
+            device.operation_2 = parseInt(device.operation_2);
+            device.operation_3 = parseInt(device.operation_3);
+          }
+          if (device.devicetype == "light") {
+            device.mode = parseInt(device.mode);
+          }
           this.selectData.push(device);
           this.selectDataId.push(device.id);
         }
@@ -199,7 +287,8 @@ export default {
     this.init();
   },
   components: {
-    setting
+    setting,
+    colorPicker
   },
   computed: {
     devices() {
@@ -244,13 +333,13 @@ export default {
   watch: {
     $route(to, from) {
       this.init();
-    },
-    devices: {
-      handler: function(val, oldVal) {
-        this.init();
-      },
-      deep: true
     }
+    // devices: {
+    //   handler: function(val, oldVal) {
+    //     this.init();
+    //   },
+    //   deep: true
+    // }
   },
   mixins: [http, list]
 };
