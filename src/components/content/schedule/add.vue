@@ -1,7 +1,53 @@
 <template>
     <div>
-        <div class="p-20">
-            <div class="m-b-20 ovf-hd">
+        <div class="p-20 schedule-add">
+          <el-row class="m-b-10">
+                   <el-input  class="fl w-300" placeholder="Please enter the schedule" v-model="schedule.id">
+                        <template slot="prepend">Schedule</template>
+                    </el-input>
+                <div class="fl " style="margin-left:23px;">
+                   <el-select  v-model="schedule.type" placeholder="">
+                        <el-option
+                          v-for="item in timeTypeArr"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                </div>
+                <div v-if="schedule.type == 'week'" class="fl week-select-div" style="margin-left:23px;">
+                        <el-select class="week-select"
+                          v-model="schedule.week"
+                          multiple
+                          placeholder="Please choose">
+                          <el-option
+                            v-for="item in weekArr"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                </div>
+                <div  v-if="schedule.type == 'once'" class="fl" style="margin-left:23px;">
+                   <el-date-picker
+                    v-model="time"
+                    type="datetime"
+                    placeholder="Please choose">
+                  </el-date-picker>
+                </div>
+                <div  v-if="schedule.type == 'day' || schedule.type == 'week'" class="fl" style="margin-left:23px;">
+                   <el-time-select
+                    v-model="schedule.time"
+                    :picker-options="{
+                      start: '00:00',
+                      step: '00:01',
+                      end: '23:59'
+                    }"
+                    placeholder="Please choose">
+                  </el-time-select>
+                </div>
+            </el-row>
+            <div class="m-b-10 ovf-hd">
                 <div class="fl" >
                   <el-cascader :options="allAddress" change-on-select @change="addressChange" style="width:230px;"></el-cascader>
                 </div>
@@ -91,15 +137,14 @@
                 </el-table-column>
             </el-table>
             <div class="pos-rel p-t-20">
-                <div>
-                    <!-- <el-button size="small" type="success" @click="setStatusBtn('enabled')">Enabled</el-button>
-                    <el-button size="small" type="warning" @click="setStatusBtn('disabled')">Disabled</el-button>
-                    <el-button size="small" type="danger" @click="deleteBtn()">Delete</el-button> -->
+                <div class="fr" style="margin-right:35px;">
+                    <el-button type="primary" @click="save()" >Save</el-button>
+                <el-button @click="goback()">Cancel</el-button>
                 </div>
-                <div class="block pages">
+                <!-- <div class="block pages">
                     <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-size="limit" :current-page="currentPage" :total="dataCount">
                     </el-pagination>
-                </div>
+                </div> -->
             </div>
         </div>
         <setting v-if='deviceSetting'  :open = "deviceSetting" :device = "settingDevice" @change="closeDeviceSetting"></setting>
@@ -107,8 +152,18 @@
 </template>
 
 <style>
-.vc-container{
+.schedule-add .vc-container {
   z-index: 9999;
+}
+.schedule-add .week-select-div{
+  position: relative;
+  width:200px;
+  height:40px;
+}
+.schedule-add .week-select-div .week-select{
+  position: absolute;
+  top: 0;
+  left:0;
 }
 </style>
 
@@ -125,7 +180,6 @@ export default {
   data() {
     return {
       tableData: [],
-      selectData: [],
       selectDataId: [],
       dataCount: null,
       currentPage: null,
@@ -138,6 +192,7 @@ export default {
       address: "",
       floor: "",
       room: "",
+      time:"",
       modes: [
         {
           value: "cool",
@@ -173,17 +228,63 @@ export default {
           value: "auto",
           label: "Auto"
         }
+      ],
+      timeType: "",
+      timeTypeArr: [
+        {
+          value: "once",
+          label: "once"
+        },
+        {
+          value: "day",
+          label: "day"
+        },
+        {
+          value: "week",
+          label: "week"
+        }
+      ],
+      week: [],
+      weekArr: [
+        {
+          value: "sun",
+          label: "Sun"
+        },
+        {
+          value: "mon",
+          label: "Mon"
+        },
+        {
+          value: "tues",
+          label: "Tues"
+        },
+        {
+          value: "wed",
+          label: "Wed"
+        },
+        {
+          value: "thur",
+          label: "Thur"
+        },
+        {
+          value: "fri",
+          label: "Fri"
+        },
+        {
+          value: "sat",
+          label: "Sat"
+        }
       ]
     };
   },
   methods: {
-    goback(bool) {
-      this.deviceSetting = bool;
+    goback() {
+      this.$emit('goback',false)
     },
     closeDeviceSetting() {
       this.deviceSetting = false;
     },
-    headleChangeColor(){},
+    headleChangeColor() {},
     rowDblclick(row) {
       this.settingDevice = row;
       this.deviceSetting = true;
@@ -260,6 +361,9 @@ export default {
           // catch error
         });
     },
+    save(){
+      
+    },
     getAllDevices() {
       var data = [];
       for (var device of this.devices) {
@@ -283,7 +387,7 @@ export default {
     }
   },
   created() {
-    console.log("doctor");
+    console.log("schedule-add");
     this.init();
   },
   components: {
@@ -293,6 +397,9 @@ export default {
   computed: {
     devices() {
       return this.$store.state.devices;
+    },
+    schedule(){
+      return this.selectData
     },
     allAddress() {
       var allAddress = [];
@@ -330,6 +437,7 @@ export default {
       return allAddress;
     }
   },
+  props:["selectData"],
   watch: {
     $route(to, from) {
       this.init();
