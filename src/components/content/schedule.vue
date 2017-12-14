@@ -45,7 +45,7 @@
             </div>
         </div>
         <div v-if="setting">
-            <add :add="add" :selectData="selectData" @goback="goback"></add>
+            <add :add="add" :data="selectData" @goback="goback"></add>
         </div>
     </div>
 </template>
@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       tableData: [],
-      selectData:{},
+      selectData: {},
       dataCount: null,
       currentPage: null,
       keywords: "",
@@ -82,10 +82,17 @@ export default {
       this.setting = true;
       var data = {
         schedule: "",
-        address: "",
-        floor: "",
-        room: "",
         type: "",
+        time: "",
+        mon: "0",
+        tues: "0",
+        wed: "0",
+        thur: "0",
+        fri: "0",
+        sat: "0",
+        sun: "0",
+        week:[],
+        devices:[],
       };
       this.selectData = data;
     },
@@ -100,16 +107,16 @@ export default {
     },
     //删除按钮事件
     deleteBtn() {
-      var vm = this
+      var vm = this;
       this.$confirm("Are you sure to delete the selected data?", "Tips", {
         confirmButtonText: "Yse",
         cancelButtonText: "No",
         type: "warning"
       })
         .then(() => {
-          var ids = []
-          for(var selection of vm.multipleSelection ){
-            ids.push(selection.Id)
+          var ids = [];
+          for (var selection of vm.multipleSelection) {
+            ids.push(selection.Id);
           }
           const data = {
             params: {
@@ -118,7 +125,7 @@ export default {
           };
           this.apiPost("admin/record/deletes", data).then(res => {
             if (res[0]) {
-              this.getAllData()
+              this.getAllData();
               _g.toastMsg("success", res[1]);
             } else {
               _g.toastMsg("error", res[1]);
@@ -133,13 +140,45 @@ export default {
       const data = {
         params: {
           keywords: this.keywords,
-          page:this.currentPage,
-          limit:this.limit
+          page: this.currentPage,
+          limit: this.limit
         }
       };
       this.apiGet("device/schedule.php?action=search", data).then(res => {
         console.log(res)
-        // this.tableData = res
+        var schedules = res[0];
+        var commands = res[1];
+        for (var schedule of schedules) {
+          schedule.devices = []
+          schedule.week = []
+          if(schedule.mon = '1'){
+            schedule.week.push('mon')
+          }
+          if(schedule.tues = '1'){
+            schedule.week.push('tues')
+          }
+          if(schedule.wed = '1'){
+            schedule.week.push('wed')
+          }
+          if(schedule.thur = '1'){
+            schedule.week.push('thur')
+          }
+          if(schedule.fri = '1'){
+            schedule.week.push('fri')
+          }
+          if(schedule.sat = '1'){
+            schedule.week.push('sat')
+          }
+          if(schedule.sun = '1'){
+            schedule.week.push('sun')
+          }
+          for (var command of commands) {
+            if (schedule.id == command.schedule) {
+              schedule.devices.push[command];
+            }
+          }
+        }
+        this.tableData = schedules;
       });
     },
     //初始化时统一加载
@@ -147,7 +186,7 @@ export default {
       this.getKeywords();
       this.getCurrentPage();
       this.getAllData();
-    },
+    }
   },
   created() {
     console.log("doctor");

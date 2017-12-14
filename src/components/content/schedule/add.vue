@@ -2,11 +2,11 @@
     <div>
         <div class="p-20 schedule-add">
           <el-row class="m-b-10">
-                   <el-input  class="fl w-300" placeholder="Please enter the schedule" v-model="schedule.id">
+                   <el-input  class="fl w-230" placeholder="Please enter the schedule" v-model="schedule.schedule">
                         <template slot="prepend">Schedule</template>
                     </el-input>
                 <div class="fl " style="margin-left:23px;">
-                   <el-select  v-model="schedule.type" placeholder="">
+                   <el-select class=" w-230" v-model="schedule.type" placeholder="">
                         <el-option
                           v-for="item in timeTypeArr"
                           :key="item.value"
@@ -16,7 +16,7 @@
                       </el-select>
                 </div>
                 <div v-if="schedule.type == 'week'" class="fl week-select-div" style="margin-left:23px;">
-                        <el-select class="week-select"
+                        <el-select class="week-select "
                           v-model="schedule.week"
                           multiple
                           placeholder="Please choose">
@@ -29,8 +29,8 @@
                         </el-select>
                 </div>
                 <div  v-if="schedule.type == 'once'" class="fl" style="margin-left:23px;">
-                   <el-date-picker
-                    v-model="time"
+                   <el-date-picker class=" w-230"
+                    v-model="schedule.time"
                     type="datetime"
                     placeholder="Please choose">
                   </el-date-picker>
@@ -51,7 +51,7 @@
                 <div class="fl" >
                   <el-cascader :options="allAddress" change-on-select @change="addressChange" style="width:230px;"></el-cascader>
                 </div>
-                <div class="fl w-300" style="margin-left:23px;">
+                <div class="fl w-230" style="margin-left:23px;">
                     <el-input placeholder="Please enter the model" v-model="keywords">
                         <el-button slot="append" icon="search" @click="search()"></el-button>
                     </el-input>
@@ -63,7 +63,7 @@
                 <el-table-column label="Device" prop="device">
                 </el-table-column>
             </el-table>
-            <el-table :data="selectData" :height="400" style="width: 75%;display: inline-block" class=" m-l-20">
+            <el-table :data="schedule.devices" :height="400" style="width: 75%;display: inline-block" class=" m-l-20">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
                 <el-table-column label="Device" prop="device" width="120" align="center">
@@ -72,32 +72,32 @@
                 </el-table-column>
                 <el-table-column label="Switch" prop="on_off" width="120"  align="center">
                     <template scope="scope">
-                        <el-switch  v-model="selectData[scope.$index].on_off" @change="switch_change(selectData[scope.$index])" >
+                        <el-switch  v-model="schedule.devices[scope.$index].on_off" @change="switch_change(schedule.devices[scope.$index])" >
                         </el-switch>
                     </template>
                 </el-table-column>
                 <el-table-column label="Slider" prop="device" width="200" align="center" >
                     <template scope="scope">
-                        <div v-if="selectData[scope.$index].devicetype == 'ac'">
-                          <el-slider v-if="selectData[scope.$index].mode == 'cool' || selectData[scope.$index].mode == 'fan'" v-model="selectData[scope.$index].operation_1" :min='0' :max='32' :step="1">
+                        <div v-if="schedule.devices[scope.$index].devicetype == 'ac'">
+                          <el-slider v-if="schedule.devices[scope.$index].mode == 'cool' || schedule.devices[scope.$index].mode == 'fan'" v-model="schedule.devices[scope.$index].operation_1" :min='0' :max='32' :step="1">
                           </el-slider>
-                          <el-slider v-if="selectData[scope.$index].mode == 'heat'" v-model="selectData[scope.$index].operation_2" :min='0' :max='32' :step="1" >
+                          <el-slider v-if="schedule.devices[scope.$index].mode == 'heat'" v-model="schedule.devices[scope.$index].operation_2" :min='0' :max='32' :step="1" >
                           </el-slider>
-                          <el-slider v-if="selectData[scope.$index].mode == 'auto'" v-model="selectData[scope.$index].operation_3" :min='0' :max='32' :step="1">
-                          </el-slider>
-                        </div>
-                        <div v-if="selectData[scope.$index].devicetype == 'light'">
-                          <el-slider v-model="selectData[scope.$index].mode" :min='0' :max='100' :step="1">
+                          <el-slider v-if="schedule.devices[scope.$index].mode == 'auto'" v-model="schedule.devices[scope.$index].operation_3" :min='0' :max='32' :step="1">
                           </el-slider>
                         </div>
-                        <div v-if="selectData[scope.$index].devicetype == 'led'">
-                          <colorPicker  v-model="selectData[scope.$index].mode" v-on:accept="headleChangeColor"></colorPicker>
+                        <div v-if="schedule.devices[scope.$index].devicetype == 'light'">
+                          <el-slider v-model="schedule.devices[scope.$index].mode" :min='0' :max='100' :step="1">
+                          </el-slider>
+                        </div>
+                        <div v-if="schedule.devices[scope.$index].devicetype == 'led'">
+                          <colorPicker  v-model="schedule.devices[scope.$index].mode" v-on:accept="headleChangeColor"></colorPicker>
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="Mode" width="120" prop="mode" align="center" >
                     <template scope="scope">
-                      <el-select v-if="selectData[scope.$index].devicetype == 'ac'" v-model="selectData[scope.$index].mode" placeholder="">
+                      <el-select v-if="schedule.devices[scope.$index].devicetype == 'ac'" v-model="schedule.devices[scope.$index].mode" placeholder="">
                         <el-option
                           v-for="item in modes"
                           :key="item.value"
@@ -109,7 +109,7 @@
                 </el-table-column>
                 <el-table-column label="Grade"  prop="grade" width="120"  align="center">
                     <template scope="scope">
-                      <el-select v-if="selectData[scope.$index].devicetype == 'ac'" v-model="selectData[scope.$index].grade" placeholder="">
+                      <el-select v-if="schedule.devices[scope.$index].devicetype == 'ac'" v-model="schedule.devices[scope.$index].grade" placeholder="">
                         <el-option
                           v-for="item in grades"
                           :key="item.value"
@@ -157,7 +157,7 @@
 }
 .schedule-add .week-select-div{
   position: relative;
-  width:200px;
+  width:230px;
   height:40px;
 }
 .schedule-add .week-select-div .week-select{
@@ -180,7 +180,7 @@ export default {
   data() {
     return {
       tableData: [],
-      selectDataId: [],
+      devicesId: [],
       dataCount: null,
       currentPage: null,
       keywords: "",
@@ -316,7 +316,7 @@ export default {
     //获取被选中的数据
     selectItem(val) {
       for (var device of val) {
-        if (this.selectDataId.indexOf(device.id) == -1) {
+        if (this.devicesId.indexOf(device.id) == -1) {
           if (device.devicetype == "ac") {
             device.operation_1 = parseInt(device.operation_1);
             device.operation_2 = parseInt(device.operation_2);
@@ -325,8 +325,8 @@ export default {
           if (device.devicetype == "light") {
             device.mode = parseInt(device.mode);
           }
-          this.selectData.push(device);
-          this.selectDataId.push(device.id);
+          this.schedule.devices.push(device);
+          this.devicesId.push(device.id);
         }
       }
     },
@@ -362,7 +362,59 @@ export default {
         });
     },
     save(){
-      
+      for(var week of this.schedule.week){
+        if(week == "mon"){
+          this.schedule.mon = '1'
+        }else{
+          this.schedule.mon = '0'
+        }
+        if(week == "tues"){
+          this.schedule.tues = '1'
+        }else{
+          this.schedule.tues = '0'
+        }
+        if(week == "wed"){
+          this.schedule.wed = '1'
+        }else{
+          this.schedule.wed = '0'
+        }
+        if(week == "thur"){
+          this.schedule.thur = '1'
+        }else{
+          this.schedule.thur = '0'
+        }
+        if(week == "fri"){
+          this.schedule.fri = '1'
+        }else{
+          this.schedule.fri = '0'
+        }
+        if(week == "sat"){
+          this.schedule.sat = '1'
+        }else{
+          this.schedule.sat = '0'
+        }
+        if(week == "sun"){
+          this.schedule.sun = '1'
+        }else{
+          this.schedule.sun = '0'
+        }
+      }
+      const data = {
+        params: this.schedule
+      };
+      console.log(data)
+      this.apiGet("device/schedule.php?action=insert_command", data).then(res => {
+          if (res[0]) {
+            _g.toastMsg("success", res[1]);
+            vm.goback();
+          } else {
+            _g.toastMsg("error", res[1]);
+          }
+          // for (var key in this.form) {
+          //     this.form[key] = ""
+          // }
+          // this.isLoading = !this.isLoading;
+        });
     },
     getAllDevices() {
       var data = [];
@@ -399,7 +451,7 @@ export default {
       return this.$store.state.devices;
     },
     schedule(){
-      return this.selectData
+      return this.data
     },
     allAddress() {
       var allAddress = [];
@@ -437,7 +489,7 @@ export default {
       return allAddress;
     }
   },
-  props:["selectData"],
+  props:["data"],
   watch: {
     $route(to, from) {
       this.init();

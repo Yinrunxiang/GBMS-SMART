@@ -85,17 +85,19 @@ switch ($action)
         $end = $limit*($page);
         $getSchedule="SELECT * FROM schedule where 1=1  ".$schedule." ".$keywords." limit ".$start.",".$end."";
         $getCommand="SELECT * FROM (SELECT * FROM  schedule where 1=1  ".$schedule." ".$keywords." limit ".$start.",".$end.") as a left join schedule_command as b on a.id = b.schedule";
-        $schedule = array();
-        $command = array();
+        $schedule = mysqli_query($con,$getSchedule);
+        $command = mysqli_query($con,$getCommand);
+        $schedules = array();
+        $commands = array();
         $results =array();
-        while ($row = mysqli_fetch_assoc(mysqli_query($con,$getSchedule))) {
-            $schedule[] = $row;
+        while ($row = mysqli_fetch_assoc($schedule)) {
+            $schedules[] = $row;
         }
-        while ($row = mysqli_fetch_assoc(mysqli_query($con,mysqli_query($con,$getCommand)))) {
-            $command[] = $row;
+        while ($row = mysqli_fetch_assoc($command)) {
+            $commands[] = $row;
         }
-        $results[0] = $schedule;
-        $results[1] = $command;
+        $results[0] = $schedules;
+        $results[1] = $commands;
         $json_results = str_replace("\/","/",json_encode($results)); 
         echo $json_results;
     break;    
@@ -112,30 +114,46 @@ switch ($action)
     $sat = isset($_REQUEST["sat"]) ? $_REQUEST["sat"] : '';
     $sun = isset($_REQUEST["sun"]) ? $_REQUEST["sun"] : '';
     $devices = isset($_REQUEST["devices"]) ? $_REQUEST["devices"] : '';
-    if($id == ""){
-        $insertSchedule = "insert into schedule (schedule,type,time,mon,tues,wed,thur,fri,sat,sun) values ('".$schedule."','".$type."','".$time."','".$mon."','".$tues."','".$wed."','".$thur."','".$fri."','".$sat."','".$sun."')";
-        mysqli_query($con,$insertSchedule);
+    if($id == ''){
+        $updateSchedule = "insert into schedule (schedule,type,time,mon,tues,wed,thur,fri,sat,sun) values ('".$schedule."','".$type."','".$time."','".$mon."','".$tues."','".$wed."','".$thur."','".$fri."','".$sat."','".$sun."')";
+        mysqli_query($con,$updateSchedule);
+        $id = "select max(id) as id from schedule";
+        $id = mysqli_query($con,$id);
+        $id = mysqli_fetch_assoc($id);
+        $id = $id['id'];
     }
     else{
         $updateSchedule = "update schedule set schedule = '".$schedule."',type = '".$type."',time = '".$time."',mon = '".$mon."',tues = '".$tues."',wed = '".$wed."',thur = '".$thur."',fri = '".$fri."',sat = '".$sat."',sun = '".$sun."' where id = '".$id."'";
         mysqli_query($con,$updateSchedule);
     }
+    echo($updateSchedule);
     $deleteCommand = "delete from schedule_command where schedule = '".$schedule."'";
     mysqli_query($con,$deleteCommand);
+    $re = true;
+    $re_str = "";
     for ($i = 0; $i  < count($devices); $i++) {
-        $selection = json_decode($devices[$i]);
-        $insertCommand = "insert into schedule_command (schedule,device,on_off,mode,grade,status_1,status_2,status_3) values ('".$schedule."','".$devices->id."','".$devices->on_off."','".$devices->mode."','".$devices->grade."','".$devices->operation_1."','".$devices->operation_2."','".$devices->operation_3."')";
-        mysqli_query($con,$insertCommand);
-    }
-        $sql="SELECT schedule,a.device,a.on_off,a.mode,a.grade,a.operation_1,a.operation_2,a.operation_3,a.operation_4,a.operation_5,subnetid,deviceid,channel,channel_spare FROM  schedule_command as a  left join device as b on a.device =b.id where  schedule = '".$schedule."'";
-        
-        $result = mysqli_query($con,$sql);
-        $results = array();
-        while ($row = mysqli_fetch_assoc($result)) {
-            $results[] = $row;
+        $device = json_decode($devices[$i]);
+        $insertCommand = "insert into schedule_command (schedule,device,on_off,mode,grade,status_1,status_2,status_3) values ('".$id."','".$device->id."','".$device->on_off."','".$device->mode."','".$device->grade."','".$device->operation_1."','".$device->operation_2."','".$device->operation_3."')";
+        if (!mysqli_query($con,$insertCommand))
+        {
+            $re = false;
+            $re_str = $re_str." Delete failed: " .$device->device;
         }
-        $json_results = str_replace("\/","/",json_encode($results)); 
-        echo $json_results;
+    }
+        
+    if (!$re)
+    {
+        $message = [];
+        $message[0] = false;
+        $message[1] = $re_str;
+        echo(json_encode($message)); 
+    }
+    else{
+        $message = [];
+        $message[0] = true;
+        $message[1] = "Insert successfully";
+        echo(json_encode($message)); 
+    }
     break; 
     case "search_command":
     $schedule = isset($_REQUEST["schedule"]) ? $_REQUEST["schedule"] : '';
