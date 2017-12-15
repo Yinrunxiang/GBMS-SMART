@@ -30,14 +30,15 @@
                 </div>
                 <div  v-if="schedule.type == 'once'" class="fl" style="margin-left:23px;">
                    <el-date-picker class=" w-230"
-                    v-model="schedule.time"
+                    v-model="schedule.time_1"
                     type="datetime"
+                    @change = "dateChange()"
                     placeholder="Please choose">
                   </el-date-picker>
                 </div>
                 <div  v-if="schedule.type == 'day' || schedule.type == 'week'" class="fl" style="margin-left:23px;">
                    <el-time-select
-                    v-model="schedule.time"
+                    v-model="schedule.time_2"
                     :picker-options="{
                       start: '00:00',
                       step: '00:01',
@@ -225,7 +226,7 @@ export default {
           label: "Hign"
         },
         {
-          value: "auto",
+          value: "wind_auto",
           label: "Auto"
         }
       ],
@@ -278,6 +279,9 @@ export default {
     };
   },
   methods: {
+    dateChange(){
+      console.log(_g.formatDate(this.schedule.time_1))
+    },
     goback() {
       this.$emit('goback',false)
     },

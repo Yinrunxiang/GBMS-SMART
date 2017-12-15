@@ -1,6 +1,6 @@
 <?php
 header("Content-type: text/html; charset=utf-8");
-
+date_default_timezone_set('PRC');
 use Workerman\Worker;
 use Workerman\WebServer;
 use Workerman\Lib\Timer;
@@ -23,21 +23,26 @@ if (!$con) {
 // mysqli_select_db($con,"udp");
 mysqli_select_db($con, "admin");
 mysqli_set_charset($con, "utf8");
-function toHex($num) {
+function toHex($num)
+{
     $num = dechex($num);
-    if(strlen($num) < 2){
-        $num = '0'.$num;
+    if (strlen($num) < 2) {
+        $num = '0' . $num;
     }
-    return $num ;
+    return $num;
 }
-function tocolor($str) {
+
+function tocolor($str)
+{
     // echo $str.'\n';
     // echo hexdec("0x" + $str).' \n';
     // echo (hexdec("0x" + $str) / 100 * 255).' \n';
     // echo round(hexdec("0x" + $str) / 100 * 255).' \n';
-    $color  = toHex(round(hexdec("0x" + $str) / 100 * 255));
+    $color = toHex(round(hexdec("0x" + $str) / 100 * 255));
     return $color;
-};
+}
+
+;
 
 // PHPSocketIO服务
 $sender_io = new SocketIO(2120);
@@ -84,9 +89,9 @@ $sender_io->on('workerStart', function () {
                 mysqli_query($con, $sql);
                 break;
             case 'f081':
-                $red = tocolor(substr($msg,52, 2));
-                $green = tocolor(substr($msg,54, 2));
-                $blue = tocolor(substr($msg,56, 2));
+                $red = tocolor(substr($msg, 52, 2));
+                $green = tocolor(substr($msg, 54, 2));
+                $blue = tocolor(substr($msg, 56, 2));
                 $color = "#" . $red . $green . $blue;
                 if ($color != "#000000") {
                     $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
@@ -98,9 +103,9 @@ $sender_io->on('workerStart', function () {
             case "0034":
                 if ($deviceTypeId == '0382') {
                     // echo $msg.'\n'.'0382\n';
-                    $red = tocolor(substr($msg,52, 2));
-                    $green = tocolor(substr($msg,54, 2));
-                    $blue = tocolor(substr($msg,56, 2));
+                    $red = tocolor(substr($msg, 52, 2));
+                    $green = tocolor(substr($msg, 54, 2));
+                    $blue = tocolor(substr($msg, 56, 2));
                     $color = "#" . $red . $green . $blue;
                     if ($color != "#000000") {
                         $on_off = true;
@@ -371,6 +376,31 @@ $sender_io->on('workerStart', function () {
         //     $last_online_count = $online_count_now;
         //     $last_online_page_count = $online_page_count_now;
         // }
+    });
+    Timer::add(1, function () {
+        global $con;
+        $date_time = date("Y-m-d H:i:s");
+        $time = date("H:i");
+        $sql = "select * from schedule";
+        $schedule = array();
+        $result = mysqli_query($con, $sql);
+        while ($row = mysqli_fetch_assoc($result)) {
+            switch($row['type']){
+                case "once":
+                    if($row['time_1'] == $date_time){
+                        $command = "select subnetid,deviceid from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $row['id'] . "'";
+                        $command = mysqli_query($con, $command);
+                        while ($command_row = mysqli_fetch_assoc($command)) {
+                            $i = 123;
+                        }
+                    }
+                break;
+                case "day":
+                break;
+                case "week":
+                break;
+            }
+        }
     });
 
 });

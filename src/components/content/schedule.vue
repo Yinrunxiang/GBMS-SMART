@@ -83,7 +83,8 @@ export default {
       var data = {
         schedule: "",
         type: "",
-        time: "",
+        time_1: "",
+        time_2: "",
         mon: "0",
         tues: "0",
         wed: "0",

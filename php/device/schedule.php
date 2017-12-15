@@ -105,7 +105,8 @@ switch ($action)
     $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
     $schedule = isset($_REQUEST["schedule"]) ? $_REQUEST["schedule"] : '';
     $type = isset($_REQUEST["type"]) ? $_REQUEST["type"] : '';
-    $time = isset($_REQUEST["time"]) ? $_REQUEST["time"] : '';
+    $time_1 = isset($_REQUEST["time_1"]) ? $_REQUEST["time_1"] : '';
+    $time_2 = isset($_REQUEST["time_2"]) ? $_REQUEST["time_2"] : '';
     $mon = isset($_REQUEST["mon"]) ? $_REQUEST["mon"] : '';
     $tues = isset($_REQUEST["tues"]) ? $_REQUEST["tues"] : '';
     $wed = isset($_REQUEST["wed"]) ? $_REQUEST["wed"] : '';
@@ -113,9 +114,9 @@ switch ($action)
     $fri = isset($_REQUEST["fri"]) ? $_REQUEST["fri"] : '';
     $sat = isset($_REQUEST["sat"]) ? $_REQUEST["sat"] : '';
     $sun = isset($_REQUEST["sun"]) ? $_REQUEST["sun"] : '';
-    $devices = isset($_REQUEST["devices"]) ? $_REQUEST["devices"] : '';
+    $devices = isset($_REQUEST["devices"]) ? $_REQUEST["devices"] : [];
     if($id == ''){
-        $updateSchedule = "insert into schedule (schedule,type,time,mon,tues,wed,thur,fri,sat,sun) values ('".$schedule."','".$type."','".$time."','".$mon."','".$tues."','".$wed."','".$thur."','".$fri."','".$sat."','".$sun."')";
+        $updateSchedule = "insert into schedule (schedule,type,time_1,time_2,mon,tues,wed,thur,fri,sat,sun) values ('".$schedule."','".$type."','".$time_1."','".$time_2."','".$mon."','".$tues."','".$wed."','".$thur."','".$fri."','".$sat."','".$sun."')";
         mysqli_query($con,$updateSchedule);
         $id = "select max(id) as id from schedule";
         $id = mysqli_query($con,$id);
@@ -123,10 +124,9 @@ switch ($action)
         $id = $id['id'];
     }
     else{
-        $updateSchedule = "update schedule set schedule = '".$schedule."',type = '".$type."',time = '".$time."',mon = '".$mon."',tues = '".$tues."',wed = '".$wed."',thur = '".$thur."',fri = '".$fri."',sat = '".$sat."',sun = '".$sun."' where id = '".$id."'";
+        $updateSchedule = "update schedule set schedule = '".$schedule."',type = '".$type."',time_1 = '".$time_1."',time_2 = '".$time_2."',mon = '".$mon."',tues = '".$tues."',wed = '".$wed."',thur = '".$thur."',fri = '".$fri."',sat = '".$sat."',sun = '".$sun."' where id = '".$id."'";
         mysqli_query($con,$updateSchedule);
     }
-    echo($updateSchedule);
     $deleteCommand = "delete from schedule_command where schedule = '".$schedule."'";
     mysqli_query($con,$deleteCommand);
     $re = true;

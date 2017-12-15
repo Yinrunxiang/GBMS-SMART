@@ -10,32 +10,32 @@ const commonFn = {
     return num;
   },
   // 十六进制字符串 转 数组
-  strToarr (str){ 
-      var len = str.length / 2
-      var arr = []
-      for(var i = 0; i < len ;i++){
-          arr.push(str.substr(i*2,2))
-      }
-      return arr
+  strToarr(str) {
+    var len = str.length / 2
+    var arr = []
+    for (var i = 0; i < len; i++) {
+      arr.push(str.substr(i * 2, 2))
+    }
+    return arr
   },
   // 获取操作码
   getoperationcode(msg) {
-      msg = msg.substr(42, 4)
-      return msg
+    msg = msg.substr(42, 4)
+    return msg
   },
   // 获取可变参数
-  getadditional(msg,num,len) {
-      num = num ? num : 0
-      len = len ? len : 0
-      msg = msg.substr((50+num*2), 2 * (len + 1))
-      return msg
+  getadditional(msg, num, len) {
+    num = num ? num : 0
+    len = len ? len : 0
+    msg = msg.substr((50 + num * 2), 2 * (len + 1))
+    return msg
   },
-  sendUdp(operatorCodefst,operatorCodesec,targetSubnetID,targetDeviceID,additionalContentData,macAddress,dest_address,dest_port) {
+  sendUdp(operatorCodefst, operatorCodesec, targetSubnetID, targetDeviceID, additionalContentData, macAddress, dest_address, dest_port) {
     let data = {
       params: {
         operatorCodefst: operatorCodefst,
         operatorCodesec: operatorCodesec,
-        targetSubnetID:targetSubnetID,
+        targetSubnetID: targetSubnetID,
         targetDeviceID: targetDeviceID,
         additionalContentData: additionalContentData,
         macAddress: macAddress ? macAddress.split(".") : "",
@@ -98,6 +98,22 @@ const commonFn = {
       let authList = moduleRule + Lockr.get("authList");
       return _.includes(authList, val);
     }
+  },
+  formatDate(date) {
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+      month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+      strDate = "0" + strDate;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+      + " " + date.getHours() + seperator2 + date.getMinutes()
+      + seperator2 + date.getSeconds();
+    return currentdate;
   }
 };
 
