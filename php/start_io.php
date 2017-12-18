@@ -9,6 +9,7 @@ use PHPSocketIO\SocketIO;
 include __DIR__ . '/vendor/autoload.php';
 require_once './udp/UdpSocket.php';
 require_once './udp/UdpProtocol.php';
+require_once './command/ac.php';
 // 全局数组保存uid在线数据
 $uidConnectionMap = array();
 // 记录最后一次广播的在线用户数
@@ -40,10 +41,73 @@ function tocolor($str)
     // echo round(hexdec("0x" + $str) / 100 * 255).' \n';
     $color = toHex(round(hexdec("0x" + $str) / 100 * 255));
     return $color;
-}
-
-;
-
+};
+function sendCommand($schedule)
+{
+    $command = "select subnetid,deviceid,devicetype,ip,port,mac,on_off,mode,grade,status_1,status_2,status_3,status_4,status_5 from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $schedule . "'";
+    $command = mysqli_query($con, $command);
+    while ($command_row = mysqli_fetch_assoc($command)) {
+        $targetSubnetID = $command_row['subnetid']; 
+        $targetDeviceID = $command_row['deviceid']; 
+        $macAddress = $command_row['mac'];
+        $dest_address = $command_row['ip'];
+        $dest_port = $command_row['port'];
+        $devicetype = $command_row['devicetype'];
+        switch($devicetype){
+            case 'ac':
+                $coolTmp = $command_row['status_1'];
+                $heatTmp = $command_row['status_2'];
+                $autoTmp = $command_row['status_3'];
+                if($command_row['on_off'] == '1'){
+                    $ac->switch_change(true,$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                }else{
+                    $ac->switch_change(false,$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                };
+                switch($command_row['mode']){
+                    case "cool":
+                    $ac->coolbtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    $ac->cooltmp_change($coolTmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
+                    break;
+                  case "fan":
+                    $ac->fanbtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    $ac->cooltmp_change($coolTmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
+                    break;
+                  case "heat":
+                    $ac->heatbtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    $ac->heattmp_change($heatTmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
+                    break;
+                  case "auto":
+                    $ac->autobtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    $ac->autotmp_change($autoTmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
+                    break;
+                };
+                switch($command_row['grade']){
+                    case 'wind_auto':
+                        $ac->wind_change("0",$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    break;
+                    case 'high':
+                        $ac->wind_change("1",$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    break;
+                    case 'middle':
+                        $ac->wind_change("2",$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    break;
+                    case 'low':
+                        $ac->wind_change("3",$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    break;
+                }
+            break;
+            case 'light':
+            break;
+            case 'led':
+            break;
+            case 'curtain':
+            break;
+            case 'music':
+            break;
+        }
+    }
+};
+$ac = new Ac();
 // PHPSocketIO服务
 $sender_io = new SocketIO(2120);
 $udpProtocol = new UdpProtocol();
@@ -379,25 +443,31 @@ $sender_io->on('workerStart', function () {
     });
     Timer::add(1, function () {
         global $con;
-        $date_time = date("Y-m-d H:i:s");
-        $time = date("H:i");
+        $time_1 = date("Y-m-d H:i:s");
+        $time_2 = date("H:i");
+        $week = lcfirst(date("D"));
+        echo ( $time_1.'</br>'.$time_2.'</br>'.$week);
         $sql = "select * from schedule";
         $schedule = array();
         $result = mysqli_query($con, $sql);
         while ($row = mysqli_fetch_assoc($result)) {
             switch($row['type']){
                 case "once":
-                    if($row['time_1'] == $date_time){
-                        $command = "select subnetid,deviceid from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $row['id'] . "'";
-                        $command = mysqli_query($con, $command);
-                        while ($command_row = mysqli_fetch_assoc($command)) {
-                            $i = 123;
-                        }
+                    if($row['time_1'] == $time_1){
+                        sendCommand($row['id']);
                     }
                 break;
                 case "day":
+                    if($row['time_2'] == $time_2){
+                        sendCommand($row['id']);
+                    }
                 break;
                 case "week":
+                if($row[$week] == '1'){
+                    if($row['time_2'] == $time_2){
+                        sendCommand($row['id']);
+                    }
+                }
                 break;
             }
         }

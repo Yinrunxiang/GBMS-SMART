@@ -280,7 +280,7 @@ export default {
   },
   methods: {
     dateChange(){
-      console.log(_g.formatDate(this.schedule.time_1))
+      this.schedule.time_1 = _g.formatDate(this.schedule.time_1)
     },
     goback() {
       this.$emit('goback',false)
