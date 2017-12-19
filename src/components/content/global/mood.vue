@@ -108,7 +108,7 @@ export default {
                   case "high":
                     udpArr.push(ac.get_wind_change("1", device));
                     break;
-                  case "middle":
+                  case "medial":
                     udpArr.push(ac.get_wind_change("2", device));
                     break;
                   case "low":

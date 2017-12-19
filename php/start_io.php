@@ -10,6 +10,9 @@ include __DIR__ . '/vendor/autoload.php';
 require_once './udp/UdpSocket.php';
 require_once './udp/UdpProtocol.php';
 require_once './command/ac.php';
+require_once './command/light.php';
+require_once './command/led.php';
+require_once './command/curtain.php';
 // 全局数组保存uid在线数据
 $uidConnectionMap = array();
 // 记录最后一次广播的在线用户数
@@ -44,7 +47,12 @@ function tocolor($str)
 };
 function sendCommand($schedule)
 {
-    $command = "select subnetid,deviceid,devicetype,ip,port,mac,on_off,mode,grade,status_1,status_2,status_3,status_4,status_5 from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $schedule . "'";
+    global $con;
+    global $ac;
+    global $led;
+    global $light;
+    global $curtain;
+    $command = "select subnetid,deviceid,channel,channel_spare,devicetype,ip,port,mac,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5 from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $schedule . "'";
     $command = mysqli_query($con, $command);
     while ($command_row = mysqli_fetch_assoc($command)) {
         $targetSubnetID = $command_row['subnetid']; 
@@ -53,54 +61,72 @@ function sendCommand($schedule)
         $dest_address = $command_row['ip'];
         $dest_port = $command_row['port'];
         $devicetype = $command_row['devicetype'];
+        $channel = $command_row['channel'];
+        $channel_spare = $command_row['channel_spare'];
+        $mode = $command_row['mode'];
+        $grade = $command_row['grade'];
         switch($devicetype){
             case 'ac':
-                $coolTmp = $command_row['status_1'];
-                $heatTmp = $command_row['status_2'];
-                $autoTmp = $command_row['status_3'];
+                $tmp = $command_row['status_1'];
                 if($command_row['on_off'] == '1'){
-                    $ac->switch_change(true,$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    $ac->switch_change(true,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                    switch($command_row['mode']){
+                        case "cool":
+                        $ac->coolbtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                        $ac->cooltmp_change($tmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
+                        break;
+                      case "fan":
+                        $ac->fanbtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                        $ac->cooltmp_change($tmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
+                        break;
+                      case "heat":
+                        $ac->heatbtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                        $ac->heattmp_change($tmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
+                        break;
+                      case "auto":
+                        $ac->autobtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                        $ac->autotmp_change($tmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
+                        break;
+                    };
+                    switch($command_row['grade']){
+                        case 'wind_auto':
+                            $ac->wind_change("0",$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                        break;
+                        case 'high':
+                            $ac->wind_change("1",$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                        break;
+                        case 'medial':
+                            $ac->wind_change("2",$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                        break;
+                        case 'low':
+                            $ac->wind_change("3",$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                        break;
+                    }
                 }else{
-                    $ac->switch_change(false,$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
+                    $ac->switch_change(false,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
                 };
-                switch($command_row['mode']){
-                    case "cool":
-                    $ac->coolbtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
-                    $ac->cooltmp_change($coolTmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
-                    break;
-                  case "fan":
-                    $ac->fanbtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
-                    $ac->cooltmp_change($coolTmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
-                    break;
-                  case "heat":
-                    $ac->heatbtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
-                    $ac->heattmp_change($heatTmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
-                    break;
-                  case "auto":
-                    $ac->autobtn($targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
-                    $ac->autotmp_change($autoTmp, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port);
-                    break;
-                };
-                switch($command_row['grade']){
-                    case 'wind_auto':
-                        $ac->wind_change("0",$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
-                    break;
-                    case 'high':
-                        $ac->wind_change("1",$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
-                    break;
-                    case 'middle':
-                        $ac->wind_change("2",$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
-                    break;
-                    case 'low':
-                        $ac->wind_change("3",$targetSubnetID,$targetDeviceID,$macAddress,$dest_port);
-                    break;
-                }
+                
             break;
             case 'light':
+                if($command_row['on_off'] == '1'){
+                    $light->switch_change(true,$channel,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                }else{
+                    $light->switch_change(false,$channel,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                };
             break;
             case 'led':
+                if($command_row['on_off'] == '1'){
+                    $led->switch_change(true,$mode,$channel,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                }else{
+                    $led->switch_change(false,$mode,$channel,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                };
             break;
             case 'curtain':
+                if($command_row['on_off'] == '1'){
+                    $curtain->switch_change(true,$channel,$channel_spare,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                }else{
+                    $curtain->switch_change(false,$channel,$channel_spare,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                };
             break;
             case 'music':
             break;
@@ -108,6 +134,9 @@ function sendCommand($schedule)
     }
 };
 $ac = new Ac();
+$light = new Light();
+$led = new Led();
+$curtain = new Curtain();
 // PHPSocketIO服务
 $sender_io = new SocketIO(2120);
 $udpProtocol = new UdpProtocol();
@@ -446,7 +475,7 @@ $sender_io->on('workerStart', function () {
         $time_1 = date("Y-m-d H:i:s");
         $time_2 = date("H:i");
         $week = lcfirst(date("D"));
-        echo ( $time_1.'</br>'.$time_2.'</br>'.$week);
+        // echo ( $time_1.'</br>'.$time_2.'</br>'.$week);
         $sql = "select * from schedule";
         $schedule = array();
         $result = mysqli_query($con, $sql);

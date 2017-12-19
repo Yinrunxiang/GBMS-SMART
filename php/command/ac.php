@@ -5,17 +5,17 @@ class Ac
 {
     public static function switch_change($val, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
-        
+        global $sendCommand;
         if ($val) {
             $operatorCodefst = "E3";
             $operatorCodesec = "D8";
-            $additionalContentData = ["03,01"];
+            $additionalContentData = ["03","01"];
             $macAddress = $macAddress == "" ? [] : split(".", $macAddress);
             
         } else {
             $operatorCodefst = "E3";
             $operatorCodesec = "D8";
-            $additionalContentData = ["03,00"];
+            $additionalContentData = ["03","00"];
             $macAddress = $macAddress == "" ? [] : split(".", $macAddress);
             
         }
@@ -24,6 +24,7 @@ class Ac
     }
     public static function autotmp_change($val, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
+        global $sendCommand;
         $operatorCodefst = "E3";
         $operatorCodesec = "D8";
         $additionalContentData = ["08",$sendCommand->toHex($val)];
@@ -32,6 +33,7 @@ class Ac
     }
     public static function cooltmp_change($val, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
+        global $sendCommand;
         $operatorCodefst = "E3";
         $operatorCodesec = "D8";
         $additionalContentData = ["04",$sendCommand->toHex($val)];
@@ -40,6 +42,7 @@ class Ac
     }
     public static function heattmp_change($val, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
+        global $sendCommand;
         $operatorCodefst = "E3";
         $operatorCodesec = "D8";
         $additionalContentData = ["07",$sendCommand->toHex($val)];
@@ -48,6 +51,7 @@ class Ac
     }
     public static function wind_change($val, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
+        global $sendCommand;
         $operatorCodefst = "E3";
         $operatorCodesec = "D8";
         $additionalContentData = ["05",$sendCommand->toHex($val)];
@@ -56,6 +60,7 @@ class Ac
     }
     public static function autobtn($targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
+        global $sendCommand;
         $operatorCodefst = "E3";
         $operatorCodesec = "D8";
         $additionalContentData = ["06","03"];
@@ -64,6 +69,7 @@ class Ac
     }
     public static function fanbtn($targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
+        global $sendCommand;
         $operatorCodefst = "E3";
         $operatorCodesec = "D8";
         $additionalContentData = ["06","02"];
@@ -72,6 +78,7 @@ class Ac
     }
     public static function coolbtn($targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
+        global $sendCommand;
         $operatorCodefst = "E3";
         $operatorCodesec = "D8";
         $additionalContentData = ["06","00"];
@@ -80,6 +87,7 @@ class Ac
     }
     public static function heatbtn($targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
+        global $sendCommand;
         $operatorCodefst = "E3";
         $operatorCodesec = "D8";
         $additionalContentData = ["06","01"];
@@ -88,6 +96,7 @@ class Ac
     }
     public static function send($schedule)
     {
+        global $sendCommand;
         $operatorCodefst = "E3";
         $operatorCodesec = "D8";
         $additionalContentData = ["06","01"];
