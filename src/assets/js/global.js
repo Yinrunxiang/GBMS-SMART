@@ -106,7 +106,7 @@ const commonFn = {
     var strDate = date.getDate();
     var hour = date.getHours()
     var min = date.getMinutes()
-    var sec = date.getSeconds()
+    var sec = '00'
     if (month >= 1 && month <= 9) {
       month = "0" + month;
     }
@@ -119,9 +119,9 @@ const commonFn = {
     if (min >= 0 && min <= 9) {
       min = "0" + min;
     }
-    if (sec >= 0 && sec <= 9) {
-      sec = "0" + sec;
-    }
+    // if (sec >= 0 && sec <= 9) {
+    //   sec = "0" + sec;
+    // }
     var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
       + " " + hour + seperator2 + min
       + seperator2 + sec;

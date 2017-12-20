@@ -116,9 +116,9 @@ function sendCommand($schedule)
             break;
             case 'led':
                 if($command_row['on_off'] == '1'){
-                    $led->switch_change(true,$mode,$channel,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                    $led->switch_change(true,$mode,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
                 }else{
-                    $led->switch_change(false,$mode,$channel,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                    $led->switch_change(false,$mode,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
                 };
             break;
             case 'curtain':
@@ -472,32 +472,34 @@ $sender_io->on('workerStart', function () {
     });
     Timer::add(1, function () {
         global $con;
-        $time_1 = date("Y-m-d H:i:s");
-        $time_2 = date("H:i");
-        $week = lcfirst(date("D"));
-        // echo ( $time_1.'</br>'.$time_2.'</br>'.$week);
-        $sql = "select * from schedule";
-        $schedule = array();
-        $result = mysqli_query($con, $sql);
-        while ($row = mysqli_fetch_assoc($result)) {
-            switch($row['type']){
-                case "once":
-                    if($row['time_1'] == $time_1){
-                        sendCommand($row['id']);
+        if(date("s") == '00'){
+            $time_1 = date("Y-m-d H:i:s");
+            $time_2 = date("H:i");
+            $week = lcfirst(date("D"));
+            // echo ( $time_1.'</br>'.$time_2.'</br>'.$week);
+            $sql = "select * from schedule";
+            $schedule = array();
+            $result = mysqli_query($con, $sql);
+            while ($row = mysqli_fetch_assoc($result)) {
+                switch($row['type']){
+                    case "once":
+                        if($row['time_1']  == $time_1){
+                            sendCommand($row['id']);
+                        }
+                    break;
+                    case "day":
+                        if($row['time_2'] == $time_2){
+                            sendCommand($row['id']);
+                        }
+                    break;
+                    case "week":
+                    if($row[$week] == '1'){
+                        if($row['time_2'] == $time_2){
+                            sendCommand($row['id']);
+                        }
                     }
-                break;
-                case "day":
-                    if($row['time_2'] == $time_2){
-                        sendCommand($row['id']);
-                    }
-                break;
-                case "week":
-                if($row[$week] == '1'){
-                    if($row['time_2'] == $time_2){
-                        sendCommand($row['id']);
-                    }
+                    break;
                 }
-                break;
             }
         }
     });

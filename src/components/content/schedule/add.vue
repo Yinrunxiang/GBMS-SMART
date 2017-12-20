@@ -64,8 +64,12 @@
                 <el-table-column label="Device" prop="device">
                 </el-table-column>
             </el-table>
-            <el-table :data="schedule.devices" :height="400" style="width: 75%;display: inline-block" class=" m-l-20">
-                <el-table-column type="selection" width="50">
+            <el-table :data="commands" :height="400" style="width: 75%;display: inline-block" class=" m-l-20">
+                <el-table-column
+                  width="50">
+                  <template scope="scope">
+                    <el-button  size="small" class = "el-icon-close" style="color:#FF4949;" align="center" @click="deleteCommand(scope)"></el-button>
+                  </template>
                 </el-table-column>
                 <el-table-column label="Device" prop="device" width="120" align="center">
                 </el-table-column>
@@ -73,32 +77,32 @@
                 </el-table-column>
                 <el-table-column label="Switch" prop="on_off" width="120"  align="center">
                     <template scope="scope">
-                        <el-switch  v-model="schedule.devices[scope.$index].on_off" @change="switch_change(schedule.devices[scope.$index])" >
+                        <el-switch  v-model="commands[scope.$index].on_off" @change="switch_change(commands[scope.$index])" >
                         </el-switch>
                     </template>
                 </el-table-column>
                 <el-table-column label="Slider" prop="device" width="200" align="center" >
                     <template scope="scope">
-                        <div v-if="schedule.devices[scope.$index].devicetype == 'ac'">
-                          <el-slider v-if="schedule.devices[scope.$index].mode == 'cool' || schedule.devices[scope.$index].mode == 'fan'" v-model="schedule.devices[scope.$index].operation_1" :min='0' :max='32' :step="1">
+                        <div v-if="commands[scope.$index].devicetype == 'ac'">
+                          <el-slider v-if="commands[scope.$index].mode == 'cool' || commands[scope.$index].mode == 'fan'" v-model="commands[scope.$index].operation_1" :min='0' :max='32' :step="1">
                           </el-slider>
-                          <el-slider v-if="schedule.devices[scope.$index].mode == 'heat'" v-model="schedule.devices[scope.$index].operation_2" :min='0' :max='32' :step="1" >
+                          <!-- <el-slider v-if="commands[scope.$index].mode == 'heat'" v-model="commands[scope.$index].operation_2" :min='0' :max='32' :step="1" >
                           </el-slider>
-                          <el-slider v-if="schedule.devices[scope.$index].mode == 'auto'" v-model="schedule.devices[scope.$index].operation_3" :min='0' :max='32' :step="1">
+                          <el-slider v-if="commands[scope.$index].mode == 'auto'" v-model="commands[scope.$index].operation_3" :min='0' :max='32' :step="1">
+                          </el-slider> -->
+                        </div>
+                        <div v-if="commands[scope.$index].devicetype == 'light'">
+                          <el-slider v-model="commands[scope.$index].mode" :min='0' :max='100' :step="1">
                           </el-slider>
                         </div>
-                        <div v-if="schedule.devices[scope.$index].devicetype == 'light'">
-                          <el-slider v-model="schedule.devices[scope.$index].mode" :min='0' :max='100' :step="1">
-                          </el-slider>
-                        </div>
-                        <div v-if="schedule.devices[scope.$index].devicetype == 'led'">
-                          <colorPicker  v-model="schedule.devices[scope.$index].mode" v-on:accept="headleChangeColor"></colorPicker>
+                        <div v-if="commands[scope.$index].devicetype == 'led'">
+                          <colorPicker  v-model="commands[scope.$index].mode" v-on:accept="headleChangeColor"></colorPicker>
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column label="Mode" width="120" prop="mode" align="center" >
                     <template scope="scope">
-                      <el-select v-if="schedule.devices[scope.$index].devicetype == 'ac'" v-model="schedule.devices[scope.$index].mode" placeholder="">
+                      <el-select v-if="commands[scope.$index].devicetype == 'ac'" v-model="commands[scope.$index].mode" placeholder="">
                         <el-option
                           v-for="item in modes"
                           :key="item.value"
@@ -110,7 +114,7 @@
                 </el-table-column>
                 <el-table-column label="Grade"  prop="grade" width="120"  align="center">
                     <template scope="scope">
-                      <el-select v-if="schedule.devices[scope.$index].devicetype == 'ac'" v-model="schedule.devices[scope.$index].grade" placeholder="">
+                      <el-select v-if="commands[scope.$index].devicetype == 'ac'" v-model="commands[scope.$index].grade" placeholder="">
                         <el-option
                           v-for="item in grades"
                           :key="item.value"
@@ -136,6 +140,7 @@
                 </el-table-column>
                 <el-table-column label="status_5" prop="operation_5" width="150" align="center">
                 </el-table-column>
+                
             </el-table>
             <div class="pos-rel p-t-20">
                 <div class="fr" style="margin-right:35px;">
@@ -156,15 +161,15 @@
 .schedule-add .vc-container {
   z-index: 9999;
 }
-.schedule-add .week-select-div{
+.schedule-add .week-select-div {
   position: relative;
-  width:230px;
-  height:40px;
+  width: 230px;
+  height: 40px;
 }
-.schedule-add .week-select-div .week-select{
+.schedule-add .week-select-div .week-select {
   position: absolute;
   top: 0;
-  left:0;
+  left: 0;
 }
 </style>
 
@@ -180,6 +185,7 @@ export default {
   //  limit              每页最大行数
   data() {
     return {
+      commands: [],
       tableData: [],
       devicesId: [],
       dataCount: null,
@@ -193,7 +199,7 @@ export default {
       address: "",
       floor: "",
       room: "",
-      time:"",
+      time: "",
       modes: [
         {
           value: "cool",
@@ -279,11 +285,11 @@ export default {
     };
   },
   methods: {
-    dateChange(){
-      this.schedule.time_1 = _g.formatDate(this.schedule.time_1)
+    dateChange() {
+      this.schedule.time_1 = _g.formatDate(this.schedule.time_1);
     },
     goback() {
-      this.$emit('goback',false)
+      this.$emit("goback", false);
     },
     closeDeviceSetting() {
       this.deviceSetting = false;
@@ -321,6 +327,11 @@ export default {
     selectItem(val) {
       for (var device of val) {
         if (this.devicesId.indexOf(device.id) == -1) {
+          device.operation_1 = "";
+          device.operation_2 = "";
+          device.operation_3 = "";
+          device.operation_4 = "";
+          device.operation_5 = "";
           if (device.devicetype == "ac") {
             device.operation_1 = parseInt(device.operation_1);
             device.operation_2 = parseInt(device.operation_2);
@@ -329,96 +340,72 @@ export default {
           if (device.devicetype == "light") {
             device.mode = parseInt(device.mode);
           }
-          this.schedule.devices.push(device);
+          this.commands.push(device);
           this.devicesId.push(device.id);
         }
       }
     },
-    //删除按钮事件
-    deleteBtn() {
-      var vm = this;
-      this.$confirm("Are you sure to delete the selected data?", "Tips", {
-        confirmButtonText: "Yse",
-        cancelButtonText: "No",
-        type: "warning"
-      })
-        .then(() => {
-          var ids = [];
-          for (var selection of vm.multipleSelection) {
-            ids.push(selection.Id);
-          }
-          const data = {
-            params: {
-              ids: ids
-            }
-          };
-          this.apiPost("admin/record/deletes", data).then(res => {
-            if (res[0]) {
-              this.getAllData();
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
-          });
-        })
-        .catch(() => {
-          // catch error
-        });
+    deleteCommand(scope) {
+      console.log(scope);
     },
-    save(){
-      for(var week of this.schedule.week){
-        if(week == "mon"){
-          this.schedule.mon = '1'
-        }else{
-          this.schedule.mon = '0'
+    save() {
+      for (var week of this.schedule.week) {
+        if (week == "mon") {
+          this.schedule.mon = "1";
+        } else {
+          this.schedule.mon = "0";
         }
-        if(week == "tues"){
-          this.schedule.tues = '1'
-        }else{
-          this.schedule.tues = '0'
+        if (week == "tues") {
+          this.schedule.tues = "1";
+        } else {
+          this.schedule.tues = "0";
         }
-        if(week == "wed"){
-          this.schedule.wed = '1'
-        }else{
-          this.schedule.wed = '0'
+        if (week == "wed") {
+          this.schedule.wed = "1";
+        } else {
+          this.schedule.wed = "0";
         }
-        if(week == "thur"){
-          this.schedule.thur = '1'
-        }else{
-          this.schedule.thur = '0'
+        if (week == "thur") {
+          this.schedule.thur = "1";
+        } else {
+          this.schedule.thur = "0";
         }
-        if(week == "fri"){
-          this.schedule.fri = '1'
-        }else{
-          this.schedule.fri = '0'
+        if (week == "fri") {
+          this.schedule.fri = "1";
+        } else {
+          this.schedule.fri = "0";
         }
-        if(week == "sat"){
-          this.schedule.sat = '1'
-        }else{
-          this.schedule.sat = '0'
+        if (week == "sat") {
+          this.schedule.sat = "1";
+        } else {
+          this.schedule.sat = "0";
         }
-        if(week == "sun"){
-          this.schedule.sun = '1'
-        }else{
-          this.schedule.sun = '0'
+        if (week == "sun") {
+          this.schedule.sun = "1";
+        } else {
+          this.schedule.sun = "0";
         }
       }
+      this.schedule.devices = this.commands;
       const data = {
         params: this.schedule
       };
-      console.log(data)
-      this.apiGet("device/schedule.php?action=insert_command", data).then(res => {
-          if (res[0]) {
-            _g.toastMsg("success", res[1]);
-            vm.goback();
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
-          // for (var key in this.form) {
-          //     this.form[key] = ""
-          // }
-          // this.isLoading = !this.isLoading;
-        });
+      console.log(data);
+      this.apiGet(
+        "device/schedule.php?action=insert_command",
+        data
+      ).then(res => {
+        if (res[0]) {
+          _g.toastMsg("success", res[1]);
+          vm.goback();
+        } else {
+          _g.toastMsg("error", res[1]);
+        }
+        // for (var key in this.form) {
+        //     this.form[key] = ""
+        // }
+        // this.isLoading = !this.isLoading;
+      });
     },
     getAllDevices() {
       var data = [];
@@ -437,14 +424,34 @@ export default {
     },
     //初始化时统一加载
     init() {
-      this.getKeywords();
-      this.getCurrentPage();
+      // this.getKeywords();
+      // this.getCurrentPage();
       this.getAllDevices();
     }
   },
   created() {
     console.log("schedule-add");
     this.init();
+  },
+  mounted() {
+    const data = {
+      params: {
+        schedule: this.schedule.id
+      }
+    };
+    this.apiGet("device/schedule.php?action=search_command", data).then(res => {
+      for (var command of res) {
+        if (command.devicetype == "ac") {
+          command.operation_1 = parseInt(command.status_1);
+          command.operation_2 = parseInt(command.status_2);
+          command.operation_3 = parseInt(command.status_3);
+        }
+        if (command.devicetype == "light") {
+          command.mode = parseInt(command.mode);
+        }
+        this.commands.push(command);
+      }
+    });
   },
   components: {
     setting,
@@ -454,8 +461,8 @@ export default {
     devices() {
       return this.$store.state.devices;
     },
-    schedule(){
-      return this.data
+    schedule() {
+      return this.data;
     },
     allAddress() {
       var allAddress = [];
@@ -493,7 +500,7 @@ export default {
       return allAddress;
     }
   },
-  props:["data"],
+  props: ["data"],
   watch: {
     $route(to, from) {
       this.init();

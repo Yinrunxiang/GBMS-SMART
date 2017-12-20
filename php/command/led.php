@@ -7,9 +7,9 @@ class Led
     {
         global $sendCommand;
         if ($val) {
-            $red = $sendCommand->toHex(round(intval("0x".substr($mode,1,2))));
-            $green = $sendCommand->toHex(round(intval("0x".substr($mode,3,2))));
-            $blue = $sendCommand->toHex(round(intval("0x".substr($mode,5,2))));
+            $red = $sendCommand->toHex(round(hexdec(substr($mode,1,2))/255*100));
+            $green = $sendCommand->toHex(round(hexdec(substr($mode,3,2))/255*100));
+            $blue = $sendCommand->toHex(round(hexdec(substr($mode,5,2))/255*100));
             $operatorCodefst = "F0";
             $operatorCodesec = "80";
             $additionalContentData = [$red,$green,$blue,"00","00","00"];

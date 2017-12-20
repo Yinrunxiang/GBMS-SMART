@@ -84,21 +84,21 @@ switch ($action)
         $start = $limit*($page-1);
         $end = $limit*($page);
         $getSchedule="SELECT * FROM schedule where 1=1  ".$schedule." ".$keywords." limit ".$start.",".$end."";
-        $getCommand="SELECT * FROM (SELECT * FROM  schedule where 1=1  ".$schedule." ".$keywords." limit ".$start.",".$end.") as a left join schedule_command as b on a.id = b.schedule";
+        // $getCommand="SELECT * FROM (SELECT * FROM  schedule where 1=1  ".$schedule." ".$keywords." limit ".$start.",".$end.") as a left join schedule_command as b on a.id = b.schedule";
         $schedule = mysqli_query($con,$getSchedule);
-        $command = mysqli_query($con,$getCommand);
+        // $command = mysqli_query($con,$getCommand);
         $schedules = array();
-        $commands = array();
-        $results =array();
+        // $commands = array();
+        // $results =array();
         while ($row = mysqli_fetch_assoc($schedule)) {
             $schedules[] = $row;
         }
-        while ($row = mysqli_fetch_assoc($command)) {
-            $commands[] = $row;
-        }
-        $results[0] = $schedules;
-        $results[1] = $commands;
-        $json_results = str_replace("\/","/",json_encode($results)); 
+        // while ($row = mysqli_fetch_assoc($command)) {
+        //     $commands[] = $row;
+        // }
+        // $results[0] = $schedules;
+        // $results[1] = $commands;
+        $json_results = str_replace("\/","/",json_encode($schedules)); 
         echo $json_results;
     break;    
     case "insert_command":
@@ -133,7 +133,7 @@ switch ($action)
     $re_str = "";
     for ($i = 0; $i  < count($devices); $i++) {
         $device = json_decode($devices[$i]);
-        $insertCommand = "insert into schedule_command (schedule,device,on_off,mode,grade,status_1,status_2,status_3) values ('".$id."','".$device->id."','".$device->on_off."','".$device->mode."','".$device->grade."','".$device->operation_1."','".$device->operation_2."','".$device->operation_3."')";
+        $insertCommand = "insert into schedule_command (schedule,device,on_off,mode,grade,status_1,status_2,status_3,status_4,status_5) values ('".$id."','".$device->id."','".$device->on_off."','".$device->mode."','".$device->grade."','".$device->operation_1."','".$device->operation_2."','".$device->operation_3."','".$device->operation_4."','".$device->operation_5."')";
         if (!mysqli_query($con,$insertCommand))
         {
             $re = false;
@@ -158,8 +158,7 @@ switch ($action)
     case "search_command":
     $schedule = isset($_REQUEST["schedule"]) ? $_REQUEST["schedule"] : '';
 
-    $sql="SELECT schedule,a.device,a.on_off,a.mode,a.grade,a.operation_1,a.operation_2,a.operation_3,a.operation_4,a.operation_5,subnetid,deviceid,channel,channel_spare FROM  schedule_command as a  left join device as b on a.device =b.id where  schedule = '".$schedule."'";
-        
+    $sql="SELECT schedule,a.device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5 FROM  schedule_command as a left join device as b on a.device = b.id  where  schedule = '".$schedule."'";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {

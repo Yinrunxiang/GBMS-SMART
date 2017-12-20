@@ -92,8 +92,7 @@ export default {
         fri: "0",
         sat: "0",
         sun: "0",
-        week:[],
-        devices:[],
+        week: []
       };
       this.selectData = data;
     },
@@ -146,38 +145,36 @@ export default {
         }
       };
       this.apiGet("device/schedule.php?action=search", data).then(res => {
-        console.log(res)
-        var schedules = res[0];
-        var commands = res[1];
+        console.log(res);
+        var schedules = res;
         for (var schedule of schedules) {
-          schedule.devices = []
-          schedule.week = []
-          if(schedule.mon = '1'){
-            schedule.week.push('mon')
+          schedule.week = [];
+          if (schedule.mon == "1") {
+            schedule.week.push("mon");
           }
-          if(schedule.tues = '1'){
-            schedule.week.push('tues')
+          if (schedule.tues == "1") {
+            schedule.week.push("tues");
           }
-          if(schedule.wed = '1'){
-            schedule.week.push('wed')
+          if (schedule.wed == "1") {
+            schedule.week.push("wed");
           }
-          if(schedule.thur = '1'){
-            schedule.week.push('thur')
+          if (schedule.thur == "1") {
+            schedule.week.push("thur");
           }
-          if(schedule.fri = '1'){
-            schedule.week.push('fri')
+          if (schedule.fri == "1") {
+            schedule.week.push("fri");
           }
-          if(schedule.sat = '1'){
-            schedule.week.push('sat')
+          if (schedule.sat == "1") {
+            schedule.week.push("sat");
           }
-          if(schedule.sun = '1'){
-            schedule.week.push('sun')
+          if (schedule.sun == "1") {
+            schedule.week.push("sun");
           }
-          for (var command of commands) {
-            if (schedule.id == command.schedule) {
-              schedule.devices.push[command];
-            }
-          }
+          // for (var command of commands) {
+          //   if (schedule.id == command.schedule) {
+          //     schedule.devices.push[command];
+          //   }
+          // }
         }
         this.tableData = schedules;
       });
