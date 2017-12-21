@@ -45,22 +45,15 @@ switch ($action)
             echo(json_encode($message)); 
         }
     break;
-    case "delete":
+    case "delete_command":
         
-        $selections = isset($_REQUEST["selections"]) ? $_REQUEST["selections"] : '';
-        $re_str = "";
-        for ($i = 0; $i  < count($selections); $i++) {
-            $selection = json_decode($selections[$i]);
-            $sql = " delete from room where room = '".$selection->room."'";
-            if (!mysqli_query($con,$sql))
-            {
-                $re = false;
-                $re_str = $re_str." Delete failed: " .$selection->room;
-            }
-            else{
-                $re = true;
-            }
-            
+        $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
+        $re = true;
+        $sql = " delete from schedule_command where id = '".$id."'";
+        if (!mysqli_query($con,$sql))
+        {
+            $re = false;
+            $re_str = " Delete failed: " .$id;
         }
         if (!$re)
         {
@@ -115,6 +108,7 @@ switch ($action)
     $sat = isset($_REQUEST["sat"]) ? $_REQUEST["sat"] : '';
     $sun = isset($_REQUEST["sun"]) ? $_REQUEST["sun"] : '';
     $devices = isset($_REQUEST["devices"]) ? $_REQUEST["devices"] : [];
+    
     if($id == ''){
         $updateSchedule = "insert into schedule (schedule,type,time_1,time_2,mon,tues,wed,thur,fri,sat,sun) values ('".$schedule."','".$type."','".$time_1."','".$time_2."','".$mon."','".$tues."','".$wed."','".$thur."','".$fri."','".$sat."','".$sun."')";
         mysqli_query($con,$updateSchedule);
@@ -127,7 +121,7 @@ switch ($action)
         $updateSchedule = "update schedule set schedule = '".$schedule."',type = '".$type."',time_1 = '".$time_1."',time_2 = '".$time_2."',mon = '".$mon."',tues = '".$tues."',wed = '".$wed."',thur = '".$thur."',fri = '".$fri."',sat = '".$sat."',sun = '".$sun."' where id = '".$id."'";
         mysqli_query($con,$updateSchedule);
     }
-    $deleteCommand = "delete from schedule_command where schedule = '".$schedule."'";
+    $deleteCommand = "delete from schedule_command where schedule = '".$id."'";
     mysqli_query($con,$deleteCommand);
     $re = true;
     $re_str = "";
@@ -158,7 +152,7 @@ switch ($action)
     case "search_command":
     $schedule = isset($_REQUEST["schedule"]) ? $_REQUEST["schedule"] : '';
 
-    $sql="SELECT schedule,a.device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5 FROM  schedule_command as a left join device as b on a.device = b.id  where  schedule = '".$schedule."'";
+    $sql="SELECT schedule,a.id as schedule_id,a.device as id,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5 FROM  schedule_command as a left join device as b on a.device = b.id  where  schedule = '".$schedule."' order by devicetype";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {

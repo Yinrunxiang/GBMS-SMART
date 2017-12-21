@@ -58,7 +58,7 @@
                     </el-input>
                 </div>
             </div>
-            <el-table :data="tableData" :height="400" style="width: 20%;display: inline-block"  @selection-change="selectItem">
+            <el-table ref="deviceTable" :data="tableData"  :height="400" style="width: 20%;display: inline-block"  @selection-change="selectItem">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
                 <el-table-column label="Device" prop="device">
@@ -96,7 +96,9 @@
                           </el-slider>
                         </div>
                         <div v-if="commands[scope.$index].devicetype == 'led'">
-                          <colorPicker  v-model="commands[scope.$index].mode" v-on:accept="headleChangeColor"></colorPicker>
+                          <colorPicker  v-model="commands[scope.$index].mode" v-on:accept="(val)=>{
+                            commands[scope.$index].mode = val.hex
+                          }"></colorPicker>
                         </div>
                     </template>
                 </el-table-column>
@@ -130,7 +132,7 @@
                 </el-table-column>
                 <el-table-column label="Room" prop="room_name" width="150" align="center">
                 </el-table-column>
-                <el-table-column label="status_1" prop="operation_1" width="150" align="center">
+                <!-- <el-table-column label="status_1" prop="operation_1" width="150" align="center">
                 </el-table-column>
                 <el-table-column label="status_2" prop="operation_2" width="150" align="center">
                 </el-table-column>
@@ -139,7 +141,7 @@
                 <el-table-column label="status_4" prop="operation_4" width="150" align="center">
                 </el-table-column>
                 <el-table-column label="status_5" prop="operation_5" width="150" align="center">
-                </el-table-column>
+                </el-table-column> -->
                 
             </el-table>
             <div class="pos-rel p-t-20">
@@ -288,13 +290,24 @@ export default {
     dateChange() {
       this.schedule.time_1 = _g.formatDate(this.schedule.time_1);
     },
+    selectionChange(selection,row){
+      console.log(selection)
+      console.log(row)
+      for(var index in this.commands){
+        if(this.commands[index].id == selection.id){
+          this.commands.splice(index, 1)
+        }
+      }
+    },
     goback() {
       this.$emit("goback", false);
     },
     closeDeviceSetting() {
       this.deviceSetting = false;
     },
-    headleChangeColor() {},
+    headleChangeColor(val, index) {
+      // this.commands[index].mode =val
+    },
     rowDblclick(row) {
       this.settingDevice = row;
       this.deviceSetting = true;
@@ -326,6 +339,7 @@ export default {
     //获取被选中的数据
     selectItem(val) {
       for (var device of val) {
+        
         if (this.devicesId.indexOf(device.id) == -1) {
           device.operation_1 = "";
           device.operation_2 = "";
@@ -346,7 +360,26 @@ export default {
       }
     },
     deleteCommand(scope) {
-      console.log(scope);
+      const data = {
+        params: {
+          id: scope.row.schedule_id
+        }
+      };
+      this.apiGet(
+        "device/schedule.php?action=delete_command",
+        data
+      ).then(res => {
+        if (res[0]) {
+          _g.toastMsg("success", res[1]);
+          this.search_command()
+        } else {
+          _g.toastMsg("error", res[1]);
+        }
+        // for (var key in this.form) {
+        //     this.form[key] = ""
+        // }
+        // this.isLoading = !this.isLoading;
+      });
     },
     save() {
       for (var week of this.schedule.week) {
@@ -386,7 +419,11 @@ export default {
           this.schedule.sun = "0";
         }
       }
+      for(var command of this.commands){
+        command.on_off = command.on_off?"1":"0"
+      }
       this.schedule.devices = this.commands;
+      
       const data = {
         params: this.schedule
       };
@@ -397,7 +434,7 @@ export default {
       ).then(res => {
         if (res[0]) {
           _g.toastMsg("success", res[1]);
-          vm.goback();
+          this.search_command()
         } else {
           _g.toastMsg("error", res[1]);
         }
@@ -427,6 +464,45 @@ export default {
       // this.getKeywords();
       // this.getCurrentPage();
       this.getAllDevices();
+    },
+    search_command() {
+      this.commands=[]
+      this.devicesId=[]
+      // this.$refs.deviceTable.clearSelection()
+      const data = {
+        params: {
+          schedule: this.schedule.id
+        }
+      };
+      var vm = this
+      this.apiGet(
+        "device/schedule.php?action=search_command",
+        data
+      ).then(res => {
+        for (var command of res) {
+          vm.devicesId.push(command.id)
+          for(var index in vm.tableData){
+            if(vm.tableData[index].id == command.id){
+              vm.$refs.deviceTable.toggleRowSelection(vm.tableData[index],true)
+            }
+          }
+          command.on_off = command.on_off == '1'?true:false
+          command.operation_1 = parseInt(command.status_1);
+          command.operation_2 = parseInt(command.status_2);
+          command.operation_3 = parseInt(command.status_3);
+          command.operation_4 = parseInt(command.status_4);
+          command.operation_5 = parseInt(command.status_5);
+          if (command.devicetype == "ac") {
+            command.operation_1 = parseInt(command.status_1);
+            command.operation_2 = parseInt(command.status_2);
+            command.operation_3 = parseInt(command.status_3);
+          }
+          if (command.devicetype == "light") {
+            command.mode = parseInt(command.mode);
+          }
+          this.commands.push(command);
+        }
+      });
     }
   },
   created() {
@@ -434,24 +510,7 @@ export default {
     this.init();
   },
   mounted() {
-    const data = {
-      params: {
-        schedule: this.schedule.id
-      }
-    };
-    this.apiGet("device/schedule.php?action=search_command", data).then(res => {
-      for (var command of res) {
-        if (command.devicetype == "ac") {
-          command.operation_1 = parseInt(command.status_1);
-          command.operation_2 = parseInt(command.status_2);
-          command.operation_3 = parseInt(command.status_3);
-        }
-        if (command.devicetype == "light") {
-          command.mode = parseInt(command.mode);
-        }
-        this.commands.push(command);
-      }
-    });
+    this.search_command()
   },
   components: {
     setting,
