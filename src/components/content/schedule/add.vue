@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div  v-loading="isLoading">
         <div class="p-20 schedule-add">
           <el-row class="m-b-10">
                    <el-input  class="fl w-230" placeholder="Please enter the schedule" v-model="schedule.schedule">
@@ -96,7 +96,7 @@
                           </el-slider>
                         </div>
                         <div v-if="commands[scope.$index].devicetype == 'led'">
-                          <colorPicker  v-model="commands[scope.$index].mode" v-on:accept="(val)=>{
+                          <colorPicker  :color="commands[scope.$index].mode" v-on:accept="(val)=>{
                             commands[scope.$index].mode = val.hex
                           }"></colorPicker>
                         </div>
@@ -202,6 +202,7 @@ export default {
       floor: "",
       room: "",
       time: "",
+      isLoading:true,
       modes: [
         {
           value: "cool",
@@ -382,6 +383,7 @@ export default {
       });
     },
     save() {
+      this.isLoading = true
       for (var week of this.schedule.week) {
         if (week == "mon") {
           this.schedule.mon = "1";
@@ -434,8 +436,9 @@ export default {
       ).then(res => {
         if (res[0]) {
           _g.toastMsg("success", res[1]);
-          this.search_command()
+          this.goback()
         } else {
+          this.isLoading = true
           _g.toastMsg("error", res[1]);
         }
         // for (var key in this.form) {
@@ -466,9 +469,11 @@ export default {
       this.getAllDevices();
     },
     search_command() {
+      for (var device of this.tableData) {
+          this.$refs.deviceTable.toggleRowSelection(device, false);
+      }
       this.commands=[]
       this.devicesId=[]
-      // this.$refs.deviceTable.clearSelection()
       const data = {
         params: {
           schedule: this.schedule.id
@@ -500,8 +505,9 @@ export default {
           if (command.devicetype == "light") {
             command.mode = parseInt(command.mode);
           }
-          this.commands.push(command);
+          vm.commands.push(command);
         }
+        vm.isLoading = false
       });
     }
   },

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div  v-loading="isLoading">
         <div v-show="!setting" class="p-20">
             <div class="m-b-20 ovf-hd">
                 <div class="fl">
@@ -16,7 +16,7 @@
                     </el-input>
                 </div>
             </div>
-            <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
+            <el-table :data="tableData" style="width: 100%" :height="400" @selection-change="selectItem" @row-dblclick="rowDblclick" >
                 <el-table-column type="selection" width="50">
                 </el-table-column>
                <el-table-column label="Schedule" prop="schedule" width="150">
@@ -29,7 +29,7 @@
                 </el-table-column>
                 <el-table-column label="Time" prop="time" width="150">
                 </el-table-column>
-                <el-table-column label="Comment" prop="comment" width="150">
+                <el-table-column label="Comment" prop="comment">
                 </el-table-column>
             </el-table>
             <div class="pos-rel p-t-20">
@@ -70,11 +70,13 @@ export default {
       limit: 15,
       add: true,
       setting: false,
-      selectData: {}
+      selectData: {},
+      isLoading:true,
     };
   },
   methods: {
     goback(bool) {
+      this.init()
       this.setting = bool;
     },
     addressSetting() {
@@ -116,16 +118,16 @@ export default {
         .then(() => {
           var ids = [];
           for (var selection of vm.multipleSelection) {
-            ids.push(selection.Id);
+            ids.push(selection.id);
           }
           const data = {
             params: {
               ids: ids
             }
           };
-          this.apiPost("admin/record/deletes", data).then(res => {
+          this.apiGet("device/schedule.php?action=delete", data).then(res => {
             if (res[0]) {
-              this.getAllData();
+              this.init();
               _g.toastMsg("success", res[1]);
             } else {
               _g.toastMsg("error", res[1]);
@@ -177,6 +179,7 @@ export default {
           // }
         }
         this.tableData = schedules;
+        this.isLoading = false
       });
     },
     //初始化时统一加载
