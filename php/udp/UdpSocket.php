@@ -15,7 +15,7 @@ class UdpSocket
         // echo $dest_address.' ';
         // echo $dest_port;
         //发送广播
-        // $dest_address = gethostbyname("www.smartbuscloud.com");
+        $dest_address = gethostbyname($dest_address);
         while(socket_sendto($socket, $msg, strlen($msg), 0, $dest_address, $dest_port))
         {
             return $hear = '发送成功';
