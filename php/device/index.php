@@ -52,11 +52,20 @@ switch ($action)
             $message[1] = "insert failed: " . mysqli_error($con);
             echo(json_encode($message)); 
         }else{
+            $getMaxID = "select max(id) as id from device";
+            $getMaxID = mysqli_query($con,$getMaxID);
+        
+           
+            while ($row = mysqli_fetch_assoc($getMaxID)) {
+                $maxID = $row["id"];
+            }
             $message = [];
             $message[0] = true;
             $message[1] = "insert successfully";
+            $message[2] = $maxID;
             echo(json_encode($message)); 
         }
+        
         break;
     case "update":
         $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';

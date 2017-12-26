@@ -162,14 +162,14 @@ export default {
             var addressList = vm.$store.state.address;
             for (var address of addressList) {
               if (vm.form.address == address.address) {
-                vm.form.country = address.country
-                vm.form.ip = address.ip
-                vm.form.port = address.port
-                vm.form.mac = address.mac
+                vm.form.country = address.country;
+                vm.form.ip = address.ip;
+                vm.form.port = address.port;
+                vm.form.mac = address.mac;
               }
             }
-            console.log("maxid:" + vm.$store.state.maxid);
-            vm.form.id = parseInt(vm.$store.state.maxid) + 1;
+            console.log(res[2])
+            vm.form.id = res[2]
             devices.push(vm.form);
             this.$emit("newDevice", vm.form);
             vm.$store.dispatch("setDevices", devices);

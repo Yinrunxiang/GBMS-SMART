@@ -81,10 +81,10 @@
                         </el-switch>
                     </template>
                 </el-table-column>
-                <el-table-column label="Slider" prop="device" width="200" align="center" >
+                <el-table-column label="Operation" prop="device" width="200" align="center" >
                     <template scope="scope">
                         <div v-if="commands[scope.$index].devicetype == 'ac'">
-                          <el-slider v-if="commands[scope.$index].mode == 'cool' || commands[scope.$index].mode == 'fan'" v-model="commands[scope.$index].operation_1" :min='0' :max='32' :step="1">
+                          <el-slider v-model="commands[scope.$index].operation_1" :min='0' :max='32' :step="1">
                           </el-slider>
                           <!-- <el-slider v-if="commands[scope.$index].mode == 'heat'" v-model="commands[scope.$index].operation_2" :min='0' :max='32' :step="1" >
                           </el-slider>
@@ -202,7 +202,7 @@ export default {
       floor: "",
       room: "",
       time: "",
-      isLoading:true,
+      isLoading: true,
       modes: [
         {
           value: "cool",
@@ -291,12 +291,12 @@ export default {
     dateChange() {
       this.schedule.time_1 = _g.formatDate(this.schedule.time_1);
     },
-    selectionChange(selection,row){
-      console.log(selection)
-      console.log(row)
-      for(var index in this.commands){
-        if(this.commands[index].id == selection.id){
-          this.commands.splice(index, 1)
+    selectionChange(selection, row) {
+      console.log(selection);
+      console.log(row);
+      for (var index in this.commands) {
+        if (this.commands[index].id == selection.id) {
+          this.commands.splice(index, 1);
         }
       }
     },
@@ -340,19 +340,24 @@ export default {
     //获取被选中的数据
     selectItem(val) {
       for (var device of val) {
-        
         if (this.devicesId.indexOf(device.id) == -1) {
-          device.operation_1 = "";
-          device.operation_2 = "";
-          device.operation_3 = "";
-          device.operation_4 = "";
-          device.operation_5 = "";
+          this.$set(device,"operation_1", device.operation_1 ? device.operation_1 : "");
+          this.$set(device,"operation_2", device.operation_2 ? device.operation_2 : "");
+          this.$set(device,"operation_3", device.operation_3 ? device.operation_3 : "");
+          this.$set(device,"operation_4", device.operation_4 ? device.operation_4 : "");
+          this.$set(device,"operation_5", device.operation_5 ? device.operation_5 : "");
+          // device.operation_1 = "";
+          // device.operation_2 = "";
+          // device.operation_3 = "";
+          // device.operation_4 = "";
+          // device.operation_5 = "";
           if (device.devicetype == "ac") {
             device.operation_1 = parseInt(device.operation_1);
-            device.operation_2 = parseInt(device.operation_2);
-            device.operation_3 = parseInt(device.operation_3);
+            this.$set(device,"mode", device.mode ? device.mode : "auto");
+            this.$set(device,"grade", device.grade ? device.grade : "wind_auto");
           }
           if (device.devicetype == "light") {
+            this.$set(this.device,"operation_1", device.operation_1 ? device.operation_1 : 0);
             device.mode = parseInt(device.mode);
           }
           this.commands.push(device);
@@ -372,7 +377,7 @@ export default {
       ).then(res => {
         if (res[0]) {
           _g.toastMsg("success", res[1]);
-          this.search_command()
+          this.search_command();
         } else {
           _g.toastMsg("error", res[1]);
         }
@@ -383,7 +388,7 @@ export default {
       });
     },
     save() {
-      this.isLoading = true
+      this.isLoading = true;
       for (var week of this.schedule.week) {
         if (week == "mon") {
           this.schedule.mon = "1";
@@ -421,11 +426,11 @@ export default {
           this.schedule.sun = "0";
         }
       }
-      for(var command of this.commands){
-        command.on_off = command.on_off?"1":"0"
+      for (var command of this.commands) {
+        command.on_off = command.on_off ? "1" : "0";
       }
       this.schedule.devices = this.commands;
-      
+
       const data = {
         params: this.schedule
       };
@@ -436,9 +441,9 @@ export default {
       ).then(res => {
         if (res[0]) {
           _g.toastMsg("success", res[1]);
-          this.goback()
+          this.goback();
         } else {
-          this.isLoading = true
+          this.isLoading = true;
           _g.toastMsg("error", res[1]);
         }
         // for (var key in this.form) {
@@ -470,28 +475,31 @@ export default {
     },
     search_command() {
       for (var device of this.tableData) {
-          this.$refs.deviceTable.toggleRowSelection(device, false);
+        this.$refs.deviceTable.toggleRowSelection(device, false);
       }
-      this.commands=[]
-      this.devicesId=[]
+      this.commands = [];
+      this.devicesId = [];
       const data = {
         params: {
           schedule: this.schedule.id
         }
       };
-      var vm = this
+      var vm = this;
       this.apiGet(
         "device/schedule.php?action=search_command",
         data
       ).then(res => {
         for (var command of res) {
-          vm.devicesId.push(command.id)
-          for(var index in vm.tableData){
-            if(vm.tableData[index].id == command.id){
-              vm.$refs.deviceTable.toggleRowSelection(vm.tableData[index],true)
+          vm.devicesId.push(command.id);
+          for (var index in vm.tableData) {
+            if (vm.tableData[index].id == command.id) {
+              vm.$refs.deviceTable.toggleRowSelection(
+                vm.tableData[index],
+                true
+              );
             }
           }
-          command.on_off = command.on_off == '1'?true:false
+          command.on_off = command.on_off == "1" ? true : false;
           command.operation_1 = parseInt(command.status_1);
           command.operation_2 = parseInt(command.status_2);
           command.operation_3 = parseInt(command.status_3);
@@ -507,7 +515,7 @@ export default {
           }
           vm.commands.push(command);
         }
-        vm.isLoading = false
+        vm.isLoading = false;
       });
     }
   },
@@ -516,7 +524,7 @@ export default {
     this.init();
   },
   mounted() {
-    this.search_command()
+    this.search_command();
   },
   components: {
     setting,
