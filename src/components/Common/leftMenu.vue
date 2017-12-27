@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-menu default-active="1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" theme="dark" @select="routerChange">
+    <el-menu default-active="1" class="vertical-menu el-menu-vertical-demo" @open="handleOpen" @close="handleClose" background-color="#324057" text-color="#eee"  @select="routerChange">
       <el-menu-item index="global">
         <i class="el-icon-menu"></i>Global</el-menu-item>
       <el-menu-item index="contral">
@@ -35,6 +35,12 @@
 </template>
 
 <style>
+.vertical-menu{
+  width: 180px;
+}
+.vertical-menu i{
+  color:#eee;
+}
 .badge-div {
   position: relative;
   width: 100%;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-menu v-if="showHotel || showFloor || showRoom"  mode="horizontal" default-active="1" @open="handleOpen" @close="handleClose" theme="dark" @select="change" style="background-color:#1f2d3d;">
+    <el-menu class="horizontal-menu el-menu-vertical-demo"  v-if="showHotel || showFloor || showRoom"  mode="horizontal" default-active="1" @open="handleOpen" @close="handleClose" theme="dark" @select="change" background-color="#324057" text-color="#eee" active-text-color = "#409EFF">
       <el-menu-item index="global">Global</el-menu-item>
         <el-menu-item index="Hotel">Building</el-menu-item>
          <el-menu-item v-show="showFloor || showRoom" index="Floor"></i>Floor</el-menu-item>
@@ -10,7 +10,9 @@
 </template>
 
 <style>
-
+.horizontal-menu  i{
+  color:#eee;
+}
 </style>
 
 

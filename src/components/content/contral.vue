@@ -2,7 +2,7 @@
     <el-row class="panel m-w-1100">
         <el-col :span="24" class="contral-panel-center h-100p ">
             <aside class="w-180 h-100p ovf-hd" style="background: #eef1f6;">
-                <el-menu default-active="1" class="el-menu-vertical-demo" @select="selectCountry">
+                <el-menu default-active="1" class="el-menu-vertical-demo"  @select="selectCountry">
                     <div v-for="country in countryArr">
                         <el-submenu :index="country.name">
 
@@ -35,25 +35,16 @@
                             <div v-if="showContral">
                                 <router-view></router-view>
                             </div>
-                            <div v-if="!showContral">
-                                <!-- <el-collapse v-model="activeFloor" accordion>
-                                                                        <el-collapse-item v-for="(floor,floor_key) in address.floorList" :title='"Floor  "+floor.name' :name='floor_key'>
-                                                                            <el-collapse v-model="activeRoom" accordion>
-                                                                                <el-collapse-item v-for="(room,room_key) in floor.roomList" :title='"Room  "+room.room_name' :name='room_key'>
-                                                                                    <deviceList :typeList="room.typeList"></deviceList>
-                                                                                </el-collapse-item>
-                                                                            </el-collapse>
-                                                                        </el-collapse-item>
-                                                                    </el-collapse> -->
-                                <el-collapse v-model="activeFloor" accordion>
-                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList" :name='floor_key'>
+                            <div v-if="!showContral" style="background-color:#fff;">
+                                <el-collapse v-model="activeFloor" accordion >
+                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList" :name='floor_key' style="padding-left:15px;">
                                         <template slot="title">
                                             <span>Floor {{floor.name}}</span>
                                             <el-badge :value="floor.warn">
                                             </el-badge>
                                         </template>
                                         <el-collapse @change="roomChange"  accordion>
-                                            <el-collapse-item v-for="room in floor.roomList" :name='room.address+","+room.floor+","+room.room'  style="position: relative;">
+                                            <el-collapse-item v-for="room in floor.roomList" :name='room.address+","+room.floor+","+room.room'  style="position: relative;padding-left:15px;" >
                                                 <template slot="title">
                                                     <span>Room {{room.room_name}}</span>
                                                     <el-badge :value="room.warn">

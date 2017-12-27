@@ -168,8 +168,35 @@ export default {
                 vm.form.mac = address.mac;
               }
             }
-            console.log(res[2])
-            vm.form.id = res[2]
+            console.log(res[2]);
+            vm.form.id = res[2];
+            this.$set(
+              vm.form,
+              "operation_1",
+              vm.form.operation_1 ? vm.form.operation_1 : ""
+            );
+            this.$set(
+              vm.form,
+              "operation_2",
+              vm.form.operation_2 ? vm.form.operation_2 : ""
+            );
+            this.$set(
+              vm.form,
+              "operation_3",
+              vm.form.operation_3 ? vm.form.operation_3 : ""
+            );
+            this.$set(
+              vm.form,
+              "operation_4",
+              vm.form.operation_4 ? vm.form.operation_4 : ""
+            );
+            this.$set(
+              vm.form,
+              "operation_5",
+              vm.form.operation_5 ? vm.form.operation_5 : ""
+            );
+            this.$set(vm.form, "mode", vm.form.mode ? vm.form.mode : "");
+            this.$set(vm.form, "grade", vm.form.grade ? vm.form.grade : "");
             devices.push(vm.form);
             this.$emit("newDevice", vm.form);
             vm.$store.dispatch("setDevices", devices);

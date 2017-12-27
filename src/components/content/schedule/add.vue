@@ -341,23 +341,25 @@ export default {
     selectItem(val) {
       for (var device of val) {
         if (this.devicesId.indexOf(device.id) == -1) {
-          this.$set(device,"operation_1", device.operation_1 ? device.operation_1 : "");
-          this.$set(device,"operation_2", device.operation_2 ? device.operation_2 : "");
-          this.$set(device,"operation_3", device.operation_3 ? device.operation_3 : "");
-          this.$set(device,"operation_4", device.operation_4 ? device.operation_4 : "");
-          this.$set(device,"operation_5", device.operation_5 ? device.operation_5 : "");
+          // this.$set(device,"operation_1", device.operation_1 ? device.operation_1 : "");
+          // this.$set(device,"operation_2", device.operation_2 ? device.operation_2 : "");
+          // this.$set(device,"operation_3", device.operation_3 ? device.operation_3 : "");
+          // this.$set(device,"operation_4", device.operation_4 ? device.operation_4 : "");
+          // this.$set(device,"operation_5", device.operation_5 ? device.operation_5 : "");
           // device.operation_1 = "";
           // device.operation_2 = "";
           // device.operation_3 = "";
           // device.operation_4 = "";
           // device.operation_5 = "";
           if (device.devicetype == "ac") {
-            device.operation_1 = parseInt(device.operation_1);
-            this.$set(device,"mode", device.mode ? device.mode : "auto");
-            this.$set(device,"grade", device.grade ? device.grade : "wind_auto");
+            device.operation_1 = device.operation_1
+              ? parseInt(device.operation_1)
+              : 0;
+            device.mode = device.mode ? device.mode : "auto";
+            device.grade = device.grade ? device.grade : "wind_auto";
           }
           if (device.devicetype == "light") {
-            this.$set(this.device,"operation_1", device.operation_1 ? device.operation_1 : 0);
+            device.mode = device.mode ? device.mode : 0;
             device.mode = parseInt(device.mode);
           }
           this.commands.push(device);
@@ -389,41 +391,34 @@ export default {
     },
     save() {
       this.isLoading = true;
+      this.schedule.mon = "0";
+      this.schedule.tues = "0";
+      this.schedule.wed = "0";
+      this.schedule.thur = "0";
+      this.schedule.fri = "0";
+      this.schedule.sat = "0";
+      this.schedule.sun = "0";
       for (var week of this.schedule.week) {
         if (week == "mon") {
           this.schedule.mon = "1";
-        } else {
-          this.schedule.mon = "0";
         }
         if (week == "tues") {
           this.schedule.tues = "1";
-        } else {
-          this.schedule.tues = "0";
         }
         if (week == "wed") {
           this.schedule.wed = "1";
-        } else {
-          this.schedule.wed = "0";
         }
         if (week == "thur") {
           this.schedule.thur = "1";
-        } else {
-          this.schedule.thur = "0";
         }
         if (week == "fri") {
           this.schedule.fri = "1";
-        } else {
-          this.schedule.fri = "0";
         }
         if (week == "sat") {
           this.schedule.sat = "1";
-        } else {
-          this.schedule.sat = "0";
         }
         if (week == "sun") {
           this.schedule.sun = "1";
-        } else {
-          this.schedule.sun = "0";
         }
       }
       for (var command of this.commands) {
@@ -455,11 +450,13 @@ export default {
     getAllDevices() {
       var data = [];
       for (var device of this.devices) {
-        if (this.address == "" || device.address == this.address) {
-          if (this.floor == "" || device.floor == this.floor) {
-            if (this.room == "" || device.room == this.room) {
-              if (this.keywords == "" || device.device == this.keywords) {
-                data.push(device);
+        if (device.devicetype != "music" && device.devicetype != "ir") {
+          if (this.address == "" || device.address == this.address) {
+            if (this.floor == "" || device.floor == this.floor) {
+              if (this.room == "" || device.room == this.room) {
+                if (this.keywords == "" || device.device == this.keywords) {
+                  data.push(device);
+                }
               }
             }
           }
