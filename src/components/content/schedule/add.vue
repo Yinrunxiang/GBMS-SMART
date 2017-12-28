@@ -37,7 +37,16 @@
                   </el-date-picker>
                 </div>
                 <div  v-if="schedule.type == 'day' || schedule.type == 'week'" class="fl" style="margin-left:23px;">
-                   <el-time-select
+                  <el-time-picker
+                    v-model="schedule.time_2"
+                    value-format="HH:mm"
+                    :picker-options="{
+                      format:'HH:mm'
+                    }"
+                    
+                    placeholder="Please choose">
+                  </el-time-picker>
+                   <!-- <el-time-select
                     v-model="schedule.time_2"
                     :picker-options="{
                       start: '00:00',
@@ -45,7 +54,7 @@
                       end: '23:59'
                     }"
                     placeholder="Please choose">
-                  </el-time-select>
+                  </el-time-select> -->
                 </div>
             </el-row>
             <div class="m-b-10 ovf-hd">
@@ -54,7 +63,7 @@
                 </div>
                 <div class="fl w-230" style="margin-left:23px;">
                     <el-input placeholder="Please enter the model" v-model="keywords">
-                        <el-button slot="append" icon="search" @click="search()"></el-button>
+                        <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                     </el-input>
                 </div>
             </div>
@@ -390,6 +399,14 @@ export default {
       });
     },
     save() {
+      if(this.schedule.schedule == "" || this.schedule.type == ""){
+        _g.toastMsg("error", "Please enter the name, type, time of schedule")
+        return
+      }
+      if(this.schedule.time_1 == "" && this.schedule.time_ == ""){
+        _g.toastMsg("error", "Please enter the name, type, time of schedule")
+        return
+      }
       this.isLoading = true;
       this.schedule.mon = "0";
       this.schedule.tues = "0";

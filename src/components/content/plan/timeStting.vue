@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-if="ready" class="time-setting" ref="dialog" :visible="open" :before-close="handleClose" custom-class="w-500" title="Time Contral Center">
+    <el-dialog v-if="ready" class="time-setting" ref="dialog" :visible="open" :before-close="handleClose" custom-class="time-setting-width" title="Time Contral Center">
         <div>
             <div class="day-item" w-100p>
                 <day v-for="day in week" :day="day" :active="showing" :open="runtime[day.toLowerCase()].status" @change="dayChange" @select="daySelect" @click="dayClick(day.toLowerCase())"></day>
@@ -29,6 +29,9 @@
 .time-setting .day-item {
   height: 60px;
   background-color: #eef1f6;
+}
+.time-setting .time-setting-width{
+  width:530px;
 }
 
 .time-setting .day {

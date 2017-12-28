@@ -435,7 +435,9 @@ a {
 .fz-24 {
   font-size: 24px
 }
-
+.i-b{
+  display: inline-block;
+}
 .pointer {
   cursor: pointer
 }

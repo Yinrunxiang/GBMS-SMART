@@ -12,7 +12,7 @@
                 </div> -->
                 <div class="fl w-300 m-l-30">
                     <el-input placeholder="Please enter the model" v-model="keywords">
-                        <el-button slot="append" icon="search" @click="search()"></el-button>
+                        <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                     </el-input>
                 </div>
             </div>

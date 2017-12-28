@@ -16,7 +16,7 @@
   text-align: center;
 }
 .time-setting-day .time-setting-box {
-  padding: 0 5px;
+  margin: 0 20px;
   width: 50px;
   height: 35px;
   line-height: 30px;
@@ -34,9 +34,9 @@
 }
 
 .time-setting-day .time-setting-select {
-  margin-top: 2px;
-  padding-top: 3px;
-  width: 61px;
+  /* margin-top: 2px; */
+  margin: 2px 20px 0;
+  width: 50px;
   height: 15px;
   line-height: 15px;
   text-align: center;

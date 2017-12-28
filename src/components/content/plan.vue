@@ -3,7 +3,7 @@
         <div v-show="!showDeviceUpdate" class="p-20">
             <div class="m-b-20 ovf-hd">
                 <div class="fl">
-                    <el-button type="info" class="" @click="addDevice">
+                    <el-button type="primary" class="" @click="addDevice">
                         <i class="el-icon-plus"></i>&nbsp;&nbsp;Add
                     </el-button>
                     <el-button type="warning" class="" @click="deleteBtn">
@@ -15,7 +15,7 @@
                 </div>
                 <div class="fl w-300  m-l-30">
                     <el-input placeholder="Please enter the device name" v-model="keywords">
-                        <el-button slot="append" icon="search" @click="search()"></el-button>
+                        <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                     </el-input>
                 </div>
                 
@@ -39,7 +39,7 @@
                 </el-table-column>
                 <el-table-column label="Time" prop="start" >
                     <template scope="scope">
-                        <el-button  size="small" icon="time" @click="showTimeSetting(scope.row)"></el-button>
+                        <el-button  size="small" icon="el-icon-time" @click="showTimeSetting(scope.row)"></el-button>
                     </template>
                 </el-table-column>
                 <!-- <el-table-column label="Start Time" prop="start" width="220">
