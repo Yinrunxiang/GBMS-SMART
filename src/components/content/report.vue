@@ -159,8 +159,9 @@ export default {
     getDate(start, end) {
       var dateList = [];
       function initDate(datestr) {
-        var temp = datestr.split("-");
-        var date = new Date(temp[0], temp[1], temp[2]);
+        // var temp = datestr.split("-");
+        // var date = new Date(temp[0], temp[1], temp[2]);
+        var date = new Date(datestr);
         return date;
       }
       function formatDate(date) {
@@ -174,31 +175,14 @@ export default {
       var endTime = initDate(end);
       while (endTime.getTime() - startTime.getTime() >= 0) {
         var year = startTime.getFullYear();
-        var month = formatDate(startTime.getMonth());
+        var month = formatDate(startTime.getMonth()+1);
         var day = formatDate(startTime.getDate());
-        // alert(year + "-" + month + "-" + day);
-        // for (var h = 0; h < 24; h++) {
-        //   for (var m = 0; m < 6; m++) {
-        //     var date =
-        //       year +
-        //       "-" +
-        //       month +
-        //       "-" +
-        //       day +
-        //       " " +
-        //       formatDate(h) +
-        //       ":" +
-        //       m +
-        //       "0";
-        //     dateList.push(date);
-        //   }
-        // }
         for (var h = 0; h < 24; h++) {
           var date = year + "-" + month + "-" + day + " " + formatDate(h);
 
           dateList.push(date);
         }
-
+        // console.log(startTime)
         startTime.setDate(startTime.getDate() + 1);
       }
       this.dateList = dateList;
@@ -496,7 +480,9 @@ export default {
         allRecord.typeUsdArr = [];
         var typeWattsArr = {};
         var typeUsdArr = {};
+        // console.log(this.selectRecord)
         for (var record of this.selectRecord) {
+          
           //   var date = record.record_date.substr(0, 15) + "0";
           var date = record.record_date.substr(0, 13);
           var index = allRecord.dateArr.indexOf(date);

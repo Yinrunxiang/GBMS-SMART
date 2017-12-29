@@ -75,7 +75,7 @@
             </el-table>
             <el-table :data="commands" :height="400" style="width: 75%;display: inline-block" class=" m-l-20">
                 <el-table-column
-                  width="50">
+                  width="60">
                   <template scope="scope">
                     <el-button  size="small" class = "el-icon-close" style="color:#FF4949;" align="center" @click="deleteCommand(scope)"></el-button>
                   </template>
