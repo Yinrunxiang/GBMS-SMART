@@ -356,11 +356,18 @@ export default {
             musicApi.selectSong(this.device, this.deviceProperty, song)
         }
     },
-    mounted() {
+    created() {
         console.log('music')
-        musicApi.readStatus(this.device, this.deviceProperty)
-        
-        
+        var music= Lockr.get('music_'+this.device.id)
+        if(music){
+            this.deviceProperty.albumlist= music.albumlist
+            this.deviceProperty.songList= music.songList
+            this.deviceProperty.songListAll= music.songList
+            this.deviceProperty.musicLoading = false
+        }
+        else{
+            musicApi.readStatus(this.device, this.deviceProperty)
+        }
     },
     computed: {
 

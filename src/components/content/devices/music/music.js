@@ -340,32 +340,6 @@ const musicApi = {
               console.log(deviceProperty.albumlist)
             }
           }, 500)
-          // setInterval(albumInterval, 100)
-
-          // albumnum = parseInt("0x" + albumnum);
-
-          // for (var i = 1; i <= albumnum; i++) {
-          //   var additionalContentData = (source + "," + _g.toHex(i)).split(",");
-          //   _g.sendUdp(
-          //     "02",
-          //     "E4",
-          //device.subnetid,
-          //     device.deviceid,
-          //     additionalContentData,
-          //     device.mac,
-          //     device.ip,
-          //     device.port
-          //   );
-          // }
-          // device.albumlist = []
-          // for (i = 0; i < albumnum; i++) {
-          //     var albumname = _g.getadditional(msg, 7 + i,50)
-          //     device.albumlist.push(albumname)
-          // }
-          // console.log(albumlist)
-          // var additionalContentData = (source + ',' + device.albumno).split(",")
-          //     _g.sendUdp(e, "02", "E4", device.deviceid, additionalContentData, device.mac, device.ip, device.port)
-          // console.log("02E3")
         }
         if (operationcode.toLowerCase() == "02e5") {
           var source = _g.getadditional(msg, 0);
@@ -417,24 +391,7 @@ const musicApi = {
                 deviceProperty.songList = songList
                 deviceProperty.songListAll = songList
                 deviceProperty.musicLoading = false
-                // var song = {
-                //   albumNo: "03",
-                //   select: true,
-                //   songName: "09-California.mp3",
-                //   songNo: 71,
-                //   songNoHigh: "00",
-                //   songNoLow: "47",
-                // }
-                // for (var obj of deviceProperty.songList) {
-                //   obj.select = false
-                //   if (obj.albumNo == song.albumNo && obj.songNoHigh == song.songNoHigh && obj.songNoLow == song.songNoLow) {
-                //     obj.select = true
-                //   }
-
-                // }
-                // deviceProperty.music_name = song.songName
-                // musicApi.selectSong(device, deviceProperty, song)
-                // musicApi.pause(device, deviceProperty)
+                Lockr.set('music_'+device.id, deviceProperty)
               }
             }, 1000)
           }
@@ -445,7 +402,6 @@ const musicApi = {
           songNum = parseInt("0x" + songNum)
           var songCount = 0
           var songForNum = 0
-          // device.songno = _g.getadditional(msg, 6)
           var currentSonglist = msg.substring(62)
           var albumno = _g.getadditional(msg, 3)
           var packNo = _g.getadditional(msg, 4)
@@ -461,10 +417,8 @@ const musicApi = {
                 songNameList.push(String.fromCharCode("0x" + item));
               }
               songName = songNameList.join("");
-              // songList.push(songName)
               var songObj = {}
               songObj.albumNo = albumno
-              // songObj.songNo = currentSonglist.substr(songCount, 4)
               songObj.songNo = parseInt('0x' + currentSonglist.substr(songCount, 4))
               songObj.songNoHigh = currentSonglist.substr(songCount, 2);
               songObj.songNoLow = currentSonglist.substr(songCount + 2, 2);
@@ -473,23 +427,7 @@ const musicApi = {
               songList.push(songObj);
               songCount = songCount + songLength + 6
             }
-
-            // songList = songList.match(/[a-zA-Z0-9\u4e00-\u9fa5. ]+/g);
-            // // songList = songList.match(/[a-zA-Z0-9. ]+/g);
-            // // if (songList) {
-            // songList = songList ? songList.join("") : "";
-            // songList = songList.split(".mp3");
-            // for (var i = 0; i < songList.length; i++) {
-            //   if (songList[i] == "") {
-            //     songList.splice(i, 1);
-            //   }
-            // }
-
-            // console.log(deviceProperty.songList);
             albumNote = albumNote + 1;
-            // if (albumNote == albumnum - 1)
-            //   window.socketio.removeAllListeners("new_msg");
-            // }
           }
         }
       }

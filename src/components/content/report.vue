@@ -8,12 +8,14 @@
   <el-date-picker class="m-t-10 m-l-20"
       v-model="beginDate"
       type="date"
+      value-format = "yyyy-MM-dd"
       placeholder="Begin date" 
       @change="beginChange">
     </el-date-picker>
     <el-date-picker class="m-t-10 m-l-15"
       v-model="endDate"
       type="date"
+      value-format = "yyyy-MM-dd"
       placeholder="End date" 
       @change="endChange">
     </el-date-picker>
@@ -175,7 +177,7 @@ export default {
       var endTime = initDate(end);
       while (endTime.getTime() - startTime.getTime() >= 0) {
         var year = startTime.getFullYear();
-        var month = formatDate(startTime.getMonth()+1);
+        var month = formatDate(startTime.getMonth() + 1);
         var day = formatDate(startTime.getDate());
         for (var h = 0; h < 24; h++) {
           var date = year + "-" + month + "-" + day + " " + formatDate(h);
@@ -482,45 +484,46 @@ export default {
         var typeUsdArr = {};
         // console.log(this.selectRecord)
         for (var record of this.selectRecord) {
-          
           //   var date = record.record_date.substr(0, 15) + "0";
           var date = record.record_date.substr(0, 13);
           var index = allRecord.dateArr.indexOf(date);
-          allRecord.recordArr[index] += parseFloat(record.watts);
-          allRecord.recordArr[index] = parseFloat(
-            allRecord.recordArr[index].toFixed(2)
-          );
-          allRecord.usdArr[index] += parseFloat(record.usd);
-          allRecord.usdArr[index] = parseFloat(
-            allRecord.usdArr[index].toFixed(2)
-          );
-          //   if (allRecord.dateArr.indexOf(date) == -1) {
-          //     allRecord.dateArr.push(date);
-          //     allRecord.recordArr.push(parseInt(record.watts));
-          //     allRecord.usdArr.push(parseInt(record.usd));
-          //   } else {
-          //     var index = allRecord.dateArr.indexOf(date);
-          //     allRecord.recordArr[index] += parseInt(record.watts);
-          //     allRecord.usdArr[index] += parseInt(record.usd);
-          //   }
+          if (index != -1) {
+            allRecord.recordArr[index] += parseFloat(record.watts);
+            allRecord.recordArr[index] = parseFloat(
+              allRecord.recordArr[index].toFixed(2)
+            );
+            allRecord.usdArr[index] += parseFloat(record.usd);
+            allRecord.usdArr[index] = parseFloat(
+              allRecord.usdArr[index].toFixed(2)
+            );
+            //   if (allRecord.dateArr.indexOf(date) == -1) {
+            //     allRecord.dateArr.push(date);
+            //     allRecord.recordArr.push(parseInt(record.watts));
+            //     allRecord.usdArr.push(parseInt(record.usd));
+            //   } else {
+            //     var index = allRecord.dateArr.indexOf(date);
+            //     allRecord.recordArr[index] += parseInt(record.watts);
+            //     allRecord.usdArr[index] += parseInt(record.usd);
+            //   }
 
-          typeWattsArr[record.devicetype]
-            ? (typeWattsArr[record.devicetype] += parseFloat(record.watts))
-            : (typeWattsArr[record.devicetype] = parseFloat(record.watts));
-          typeWattsArr[record.devicetype] = parseFloat(
-            typeWattsArr[record.devicetype].toFixed(2)
-          );
-          typeUsdArr[record.devicetype]
-            ? (typeUsdArr[record.devicetype] += parseFloat(record.usd))
-            : (typeUsdArr[record.devicetype] = parseFloat(record.usd));
-          typeUsdArr[record.devicetype] = parseFloat(
-            typeUsdArr[record.devicetype].toFixed(2)
-          );
-          // if (typeArr.indexOf(record.devicetype) == -1){
-          //     typeArr[record.devicetype] = parseInt(record.watts)
-          // }else{
-          //     typeArr[record.devicetype] += parseInt(record.watts)
-          // }
+            typeWattsArr[record.devicetype]
+              ? (typeWattsArr[record.devicetype] += parseFloat(record.watts))
+              : (typeWattsArr[record.devicetype] = parseFloat(record.watts));
+            typeWattsArr[record.devicetype] = parseFloat(
+              typeWattsArr[record.devicetype].toFixed(2)
+            );
+            typeUsdArr[record.devicetype]
+              ? (typeUsdArr[record.devicetype] += parseFloat(record.usd))
+              : (typeUsdArr[record.devicetype] = parseFloat(record.usd));
+            typeUsdArr[record.devicetype] = parseFloat(
+              typeUsdArr[record.devicetype].toFixed(2)
+            );
+            // if (typeArr.indexOf(record.devicetype) == -1){
+            //     typeArr[record.devicetype] = parseInt(record.watts)
+            // }else{
+            //     typeArr[record.devicetype] += parseInt(record.watts)
+            // }
+          }
         }
         var wattSort = [];
         var usdSort = [];
@@ -561,7 +564,7 @@ export default {
       // return this.$store.state.recordLoading
       var recordLoading = this.$store.state.recordLoading;
       if (!recordLoading) {
-        this.selectRecord = this.record;
+        this.selectRecord = this.$store.state.record;;
         return false;
       }
       return true;
