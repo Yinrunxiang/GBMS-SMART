@@ -36,6 +36,24 @@ const musicApi = {
     //     // _g.closeGlobalLoading()
     // })
   },
+  source_change(device, deviceProperty) {
+    const data = {
+      params: {
+        operatorCodefst: "02",
+        operatorCodesec: "18",
+        targetSubnetID: device.subnetid,
+        targetDeviceID: device.deviceid,
+        additionalContentData: ["01",deviceProperty.source],
+        macAddress: device.mac ? device.mac.split(".") : "",
+        dest_address: device.ip ? device.ip : "",
+        dest_port: device.port ? device.port : ""
+      }
+    };
+    api.apiGet("udp/sendUdp.php", data).then(res => {
+      // console.log('res = ', _g.j2s(res))
+      // _g.closeGlobalLoading()
+    });
+  },
   vol_change(val, device, deviceProperty) {
     deviceProperty.vol = val;
     device.loading = true;
@@ -214,14 +232,13 @@ const musicApi = {
   },
 
   readStatus(device, deviceProperty) {
-    var source = "01";
     var albumnum = 0;
     var albumNote = 0;
     var albumNoList = {}
     var songNoList = {}
     var songList = []
     var albumList = []
-    let additionalContentData = "01".split(",");
+    let additionalContentData = [deviceProperty.source];
     _g.sendUdp(
       "02",
       "E0",
@@ -391,7 +408,7 @@ const musicApi = {
                 deviceProperty.songList = songList
                 deviceProperty.songListAll = songList
                 deviceProperty.musicLoading = false
-                Lockr.set('music_'+device.id, deviceProperty)
+                Lockr.set('music_'+device.id+'_'+deviceProperty.source, deviceProperty)
               }
             }, 1000)
           }
