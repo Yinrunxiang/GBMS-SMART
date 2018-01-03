@@ -494,6 +494,7 @@ $sender_io->on('workerStart', function () {
                     break;
                     case "week":
                     $week = $week == "tue"?"tues":$week;
+                    $week = $week == "thu"?"thur":$week;
                     if($row[$week] == '1'){
                         if($row['time_2'] == $time_2){
                             sendCommand($row['id']);
