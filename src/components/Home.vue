@@ -1,6 +1,6 @@
 <template>
 	<el-row class="panel m-w-1280">
-    <span class="version">ver 1.0.5</span>
+    <span class="version">ver 1.1.1</span>
 		<el-col :span="24" class="panel-top">
 			<el-col class="w-180">
 				<template v-if="logo_type == '1'">
