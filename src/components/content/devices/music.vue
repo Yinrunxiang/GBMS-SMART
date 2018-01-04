@@ -1,6 +1,7 @@
 <template>
     <el-col :span="24">
         <div class="music" style="width:350px;height:550px;padding:0;margin:20px auto;text-align: center;">
+          <div class="music-nav">
             <div class="fa fa-bars album-btn" @click="albumBtnClick"></div>
             <div v-show="albumShow" class="album">
                 <div class="fa fa-reply album-btn-back" @click="albumBtnClickBack"></div>
@@ -8,22 +9,11 @@
                     <el-menu-item-group>
                         <span slot="title">Album</span>
                         <el-menu-item class="album-list-li" :index="album.albumNo" v-for="album in deviceProperty.albumlist" @click="albumClick(album.albumNo)">
-                            </i>{{album.albumName}}</el-menu-item>
+                            {{album.albumName}}</el-menu-item>
                     </el-menu-item-group>
-                    <!-- <el-submenu index="1" class="album-btn">
-                                                    <template slot="title">
-                                                        <i class="el-icon-message"></i>
-                                                        <span slot="title">导航一</span>
-                                                    </template> -->
-                    <!-- <el-menu-item v-for="album in deviceProperty.albumlist" index="plan">
-                                                        <i class="el-icon-menu"></i>{{album.albumName}}</el-menu-item> -->
-
-                    <!-- </el-submenu> -->
                 </el-menu>
             </div>
-            <div class="music-title">
-                <p>{{deviceProperty.music_name}}</p>
-            </div>
+            
             <el-dropdown @command="sourceChange" class="source_list">
                 <span class="el-dropdown-link">
                     {{sourceList[parseInt(deviceProperty.source) -1]}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -33,6 +23,11 @@
                     <el-dropdown-item command = "02">FTP</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
+                <i class="el-icon-refresh el-dropdown-link" @click="refresh"></i>
+            </div>
+            <div class="music-title">
+            <p>{{deviceProperty.music_name}}</p>
+            </div>
             <div class="music-content" :span="24">
                 <div class="music-content-top">
                     <div v-show="!deviceProperty.on_off" class="fa fa-play content-icon mid" @click="play()"></div>
@@ -83,9 +78,26 @@
   background-color: #666666;
   color: #cccccc;
 }
+.music .music-nav{
+  position: relative;
+  width:100%;
+  height:35px;
+}
+.music .music-title p{
+  margin: 10px 0 0 0;
+}
 .music .el-dropdown-link {
   cursor: pointer;
   color: #cccccc;
+}
+.music .el-icon-refresh {
+  position: absolute;
+  right: 22px;
+  top: 15px;
+  font-size: 22px;
+}
+.music .el-icon-refresh:hover {
+  color:#20a0ff;
 }
 .music .album-btn {
   position: absolute;
@@ -98,7 +110,7 @@
 }
 .music .source_list {
   position: absolute;
-  right: 8px;
+  right: 42px;
   top: 18px;
   min-width: 95px;
 }
@@ -282,6 +294,15 @@ export default {
     };
   },
   methods: {
+    refresh(){
+      Lockr.rm('music_'+this.device.id+'_'+this.deviceProperty.source)
+      this.deviceProperty.albumlist = [];
+      this.deviceProperty.songList = [];
+      this.deviceProperty.songListAll = [];
+      this.deviceProperty.musicLoading = true;
+      console.log('music_test')
+      musicApi.readStatus(this.device, this.deviceProperty);
+    },
     sourceChange(command) {
       this.deviceProperty.source = command;
       musicApi.source_change(this.device, this.deviceProperty);
