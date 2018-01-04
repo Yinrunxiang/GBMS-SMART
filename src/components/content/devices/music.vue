@@ -1,9 +1,7 @@
 <template>
     <el-col :span="24">
         <div class="music" style="width:350px;height:550px;padding:0;margin:20px auto;text-align: center;">
-          <div class="music-nav">
-            <div class="fa fa-bars album-btn" @click="albumBtnClick"></div>
-            <div v-show="albumShow" class="album">
+          <div v-show="albumShow" class="album">
                 <div class="fa fa-reply album-btn-back" @click="albumBtnClickBack"></div>
                 <el-menu class="album-list">
                     <el-menu-item-group>
@@ -13,7 +11,8 @@
                     </el-menu-item-group>
                 </el-menu>
             </div>
-            
+          <div class="music-nav">
+            <div class="fa fa-bars album-btn" @click="albumBtnClick"></div>
             <el-dropdown @command="sourceChange" class="source_list">
                 <span class="el-dropdown-link">
                     {{sourceList[parseInt(deviceProperty.source) -1]}}<i class="el-icon-arrow-down el-icon--right"></i>
