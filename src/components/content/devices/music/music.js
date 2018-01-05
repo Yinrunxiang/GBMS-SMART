@@ -411,7 +411,7 @@ const musicApi = {
                   clearInterval(songInterval)
                   songList.sort(function (a, b) {
                     // return a.songNo - b.songNo
-                    return parseInt(a.albumNo + a.packNo + a.songNo) - parseInt(b.albumNo + b.packNo + b.songNo)
+                    return parseInt(a.albumNo + a.songNo) - parseInt(b.albumNo + b.songNo)
                   });
                   deviceProperty.songList = songList
                   deviceProperty.songListAll = songList
