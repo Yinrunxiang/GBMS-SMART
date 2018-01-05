@@ -23,6 +23,7 @@ const state = {
   showHotel:false,
   showFloor:false,
   showRoom:false,
+  showRightPage:false,
 }
 
 export default state

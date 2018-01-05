@@ -94,15 +94,18 @@ export default {
         });
     },
     deviceContral(device) {
-      this.$store.dispatch("showContral", true);
-      let url = "/home/contral/" + device.devicetype;
+      // this.$store.dispatch("showContral", true);
+      // let url = "/home/contral/" + device.devicetype;
       // console.log('typelist:' + url + '/n');
+      console.log('123')
       this.$store.dispatch("setDevice", device);
-      if (url != this.$route.path) {
-        router.push(url);
-      } else {
-        _g.shallowRefresh(this.$route.name);
-      }
+      this.$store.dispatch("setShowRightPage", false);
+      this.$store.dispatch("setShowRightPage", true);
+      // if (url != this.$route.path) {
+      //   router.push(url);
+      // } else {
+      //   _g.shallowRefresh(this.$route.name);
+      // }
     },
     switch_change(val) {
       switch (this.device.devicetype) {

@@ -70,6 +70,9 @@ const mutations = {
   },
   setShowRoom(state, showRoom) {
     state.showRoom = showRoom
+  },
+  setShowRightPage(state, showRightPage) {
+    state.showRightPage = showRightPage
   }
 }
 

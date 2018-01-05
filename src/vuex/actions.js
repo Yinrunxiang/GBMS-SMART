@@ -71,6 +71,9 @@ const actions = {
   setShowRoom({ commit }, showRoom) {
     commit("setShowRoom", showRoom);
   },
+  setShowRightPage({ commit }, showRightPage) {
+    commit("setShowRightPage", showRightPage);
+  },
 };
 
 export default actions;

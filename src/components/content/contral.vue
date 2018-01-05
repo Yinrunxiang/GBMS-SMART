@@ -70,10 +70,16 @@
         <el-dialog title="Configure Mood" :visible.sync="showMoodSetting" v-if="showMoodSetting">
           <mood :room = "room" @close="showMoodSetting=false"></mood>
         </el-dialog>
+        <right-page v-if="showRightPage">
+          
+        </right-page>
     </el-row>
     
 </template>
 <style>
+.contral{
+  position: relative;
+}
 .contral-mood-icon {
   position: absolute;
   top: 4px;
@@ -90,11 +96,17 @@
 .contral-mood-icon:hover {
   background-color: #73ccff;
 }
+/* .right-page{
+  position: absolute;
+  top:0;
+  right:0;
+} */
 </style>
 <script>
 import http from "../../assets/js/http";
 import deviceList from "../Common/device/deviceList";
 import mood from "./global/mood";
+import rightPage from "./contral/rightPage"
 export default {
   data() {
     return {
@@ -215,11 +227,15 @@ export default {
   mounted() {},
   components: {
     deviceList,
-    mood
+    mood,
+    rightPage,
   },
   computed: {
     devices() {
       return this.$store.state.devices;
+    },
+    showRightPage() {
+      return this.$store.state.showRightPage;
     },
     countryArr() {
       var countryArr = this.$store.state.countryArr;
@@ -265,6 +281,7 @@ export default {
       }
     },
     showContral() {
+      
       return this.$store.state.showContral;
     }
   },
