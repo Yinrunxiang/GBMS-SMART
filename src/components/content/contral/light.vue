@@ -1,5 +1,6 @@
 <template>
     <div class="right-page-content light">
+      <div>{{device.device}}</div>
         <div>
             <i class="fa fa-lightbulb-o icon"></i>
         </div>
@@ -58,13 +59,16 @@ export default {
     device() {
         
       var device = this.$store.state.device;
+      this.deviceProperty.brightness = 0
+      this.deviceProperty.on_off = false
       lightApi.readStatus(device, this.deviceProperty);
+      
       return device;
     },
     // watch: {
     //   device: {
     //     handler: function(val, oldVal) {
-          
+    //         lightApi.readStatus(this.device, this.deviceProperty);
     //     },
     //     deep: true
     //   }

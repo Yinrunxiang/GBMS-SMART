@@ -1,5 +1,5 @@
 <template>
-	<el-row class="panel m-w-1280">
+	<div class="panel m-w-1280" @click="hideRightPage()">
     <span class="version">ver 1.1.1</span>
 		<el-col :span="24" class="panel-top">
 			<el-col class="w-180">
@@ -44,7 +44,7 @@
 		</el-col>
 		<changePwd ref="changePwd" :showChange = 'showChange' @change = 'showChangePage'></changePwd>
 
-	</el-row>
+	</div>
 </template>
 <style>
 .fade-enter-active,
@@ -184,6 +184,10 @@ export default {
     };
   },
   methods: {
+    hideRightPage(){
+      console.log('123')
+      this.$store.dispatch("setShowRightPage", false);
+    },
     homeClick() {
       let url = "/home/global";
       router.push(url);

@@ -1,4 +1,5 @@
 <template>
+  <div @click.stop="stop()">
     <el-card class="contarl-right-page">
         <div class="right-page-content">
             <div class="left-collect" @click="hideRightPage">
@@ -8,10 +9,15 @@
             </div>
             <div class="content">
               <light v-if="devicetype == 'light'"></light>
+              <led v-if="devicetype == 'led'"></led>
+              <ac v-if="devicetype == 'ac'"></ac>
+              <music v-if="devicetype == 'music'"></music>
+              <ir v-if="devicetype == 'ir'"></ir>
             </div>
         </div>
         
     </el-card>
+  </div>
 </template>
 <style>
 .contarl-right-page {
@@ -19,7 +25,7 @@
   top: 0;
   right: 0;
   width: 350px;
-  height: 100%;
+  height: 99%;
   background-color: #fff;
 }
 .contarl-right-content {
@@ -29,7 +35,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 18px;
+  width: 30px;
   height: 100%;
 }
 .contarl-right-page .left-collect:hover {
@@ -50,6 +56,10 @@
 
 <script>
 import light from "./light";
+import led from "./led";
+import ac from "./ac";
+import music from "./music";
+import ir from "./ir";
 export default {
   data() {
     return {
@@ -58,13 +68,18 @@ export default {
   },
   // props: ['device'],
   methods: {
-    hideRightPage(){
+    stop(){},
+    hideRightPage() {
       this.$store.dispatch("setShowRightPage", false);
     }
   },
   mounted() {},
   components: {
-    light
+    light,
+    led,
+    ac,
+    music,
+    ir
   },
   computed: {
     devicetype() {
@@ -73,9 +88,8 @@ export default {
     },
     showRightPage() {
       return this.$store.state.showRightPage;
-    },
-    
-  },
+    }
+  }
   // watch: {
   //   devicetype: {
   //     handler: function(val, oldVal) {

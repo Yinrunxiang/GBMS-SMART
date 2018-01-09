@@ -4,7 +4,7 @@
         <i class="el-icon-close device-close" @click="deviceDelete"></i>
         <div class="device-box">
             
-            <div @click="deviceContral(device)">
+            <div @click.stop="deviceContral(device)">
                 <i class="fa" :class="iconstyle(device.devicetype)" style="font-size:80px;color:#ccc"></i>
             </div>
             <div style="margin-top:5px">
