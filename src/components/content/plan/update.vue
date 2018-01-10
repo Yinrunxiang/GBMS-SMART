@@ -105,7 +105,8 @@ export default {
         { label: "LED", value: "led" },
         { label: "Curtain", value: "curtain" },
         { label: "Music", value: "music" },
-        { label: "IR", value: "ir" }
+        { label: "IR", value: "ir" },
+        { label: "Security", value: "security" }
       ]
     };
   },

@@ -13,6 +13,7 @@
               <ac v-if="devicetype == 'ac'"></ac>
               <music v-if="devicetype == 'music'"></music>
               <ir v-if="devicetype == 'ir'"></ir>
+              <security v-if="devicetype == 'security'"></security>
             </div>
         </div>
         
@@ -60,6 +61,7 @@ import led from "./led";
 import ac from "./ac";
 import music from "./music";
 import ir from "./ir";
+import security from "./security";
 export default {
   data() {
     return {
@@ -79,7 +81,8 @@ export default {
     led,
     ac,
     music,
-    ir
+    ir,
+    security,
   },
   computed: {
     devicetype() {

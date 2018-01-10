@@ -29,8 +29,12 @@
             </div>
             <div class="music-content" :span="24">
                 <div class="music-content-top">
-                    <div v-show="!deviceProperty.on_off" class="fa fa-play-circle-o content-icon mid" @click="play()"></div>
-                    <div v-show="deviceProperty.on_off" class="fa fa-pause-circle-o content-icon mid" @click="pause()"></div>
+                    <div v-show="!deviceProperty.on_off" class=" content-icon mid" @click="play()">
+                      <i class="fa fa-play" style="margin-left:3px;"></i>
+                    </div>
+                    <div v-show="deviceProperty.on_off" class=" content-icon mid" @click="pause()">
+                      <i class="fa fa-pause"></i>
+                    </div>
                     <div class="fa fa-step-backward content-icon left" @click="pre()"></div>
                     <div class="fa fa-step-forward content-icon right" @click="next()"></div>
                 </div>
@@ -178,9 +182,9 @@
   position: absolute;
   top: 30px;
   left: 128px;
-  font-size:20px;
-  /* border: 2px solid #cccccc;
-  border-radius: 38px; */
+  font-size:18px;
+  border: 2px solid #999;
+  border-radius: 38px;
 }
 
 .music-content .right {

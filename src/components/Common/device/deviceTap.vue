@@ -170,6 +170,9 @@ export default {
         case "ir":
           return "fa-life-ring";
           break;
+        case "security":
+          return "fa-lock";
+          break;
       }
     }
   },
