@@ -2,15 +2,18 @@
     <div class="right-page-content light security">
         <!-- <div>{{device.device}}</div> -->
         <div>
-            <div style="margin-bottom:15px;">
-            <el-dropdown>
+            <div style="margin-bottom:20px;">
+            <el-dropdown @command="areaClick">
                 <el-button  style="width:120px;" ><span>{{area}}</span>
                     <i  class="el-icon-arrow-down el-icon--right fr"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown" style="width:120px;">
-                    <el-dropdown-item @click="areaClick(area.key)" v-for="area in areaList">{{area.name}}</el-dropdown-item>
+                    <el-dropdown-item  :command="area.key" v-for="area in areaList">{{area.name}}</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
+            <div class="fr m-r-15 " style="margin-left:-65px">
+              <!-- <el-button icon="el-icon-setting"></el-button> -->
+            </div>
             </div>
             <div>
             <el-button class="security-btn"  @click="sendCommand('02')">Away</el-button>
@@ -28,10 +31,22 @@
             <el-button class="security-btn"  @click="sendCommand('04')">Police Panic</el-button>
             <el-button class="security-btn"  @click="sendCommand('08')">Ambulance</el-button>
             </div>
+            <!-- <div>
+              
+              <el-input style="width:270px;margin: 0 15px" placeholder="Please input a password" v-model="password">
+                <el-button slot="append">Login</el-button>
+              </el-input>
+            </div> -->
+            
         </div>
-        <div>
-
-        </div>
+        <!-- <div>
+            <el-input style="width:270px;margin: 0 15px" placeholder="Please input a password" v-model="password">
+                <template slot="prepend" style="width:80px;" width="80">Old Password</template>
+              </el-input>
+              <el-input style="width:270px;margin: 0 15px" placeholder="Please input a password" v-model="password">
+                <template slot="prepend" style="width:80px;" width="80">New Password</template>
+              </el-input>
+        </div> -->
     </div>
 </template>
 <style>
@@ -40,7 +55,7 @@
   text-align: center;
   width: 300px;
   height: 100%;
-  color:#999;
+  color: #999;
 }
 .right-page-content .icon {
   display: inline-block;
@@ -52,7 +67,7 @@
 }
 .security-btn {
   width: 120px;
-  margin: 5px 15px;
+  margin: 0 15px 10px 15px;
 }
 </style>
 <script>
@@ -100,11 +115,12 @@ export default {
   // props: ['device'],
   methods: {
     areaClick(val) {
-        this.area = val
+      // console.log(val)
+      this.area = val;
     },
     sendCommand(type) {
       var val = {};
-      val.area = this.area
+      val.area = this.area;
       val.type = type;
       securityApi.send_command(val, this.device);
     }
