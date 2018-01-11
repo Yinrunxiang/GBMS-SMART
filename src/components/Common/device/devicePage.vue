@@ -17,6 +17,9 @@
         <div v-if="device.devicetype=='music'">
             <music></music>
         </div>
+        <div v-if="device.devicetype=='security'">
+            <security></security>
+        </div>
     </div>
 </template>
 
@@ -25,6 +28,7 @@ import ac from "../../content/devices/ac"
 import light from "../../content/devices/light"
 import led from "../../content/devices/led"
 import music from "../../content/devices/music"
+import security from "../../content/devices/security"
 
 export default {
     data() {
@@ -47,7 +51,8 @@ export default {
         ac,
         light,
         led,
-        music
+        music,
+        security
     },
 }
 </script>

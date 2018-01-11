@@ -104,6 +104,10 @@
                           <el-slider v-model="commands[scope.$index].mode" :min='0' :max='100' :step="1">
                           </el-slider>
                         </div>
+                        <div v-if="commands[scope.$index].devicetype == 'music'">
+                          <el-slider v-model="commands[scope.$index].operation_1" :min='0' :max='100' :step="1">
+                          </el-slider>
+                        </div>
                         <div v-if="commands[scope.$index].devicetype == 'led'">
                           <colorPicker  :color="commands[scope.$index].mode" v-on:accept="(val)=>{
                             commands[scope.$index].mode = val.hex
@@ -116,6 +120,14 @@
                       <el-select v-if="commands[scope.$index].devicetype == 'ac'" v-model="commands[scope.$index].mode" placeholder="">
                         <el-option
                           v-for="item in modes"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                      <el-select v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_2" placeholder="">
+                        <el-option
+                          v-for="item in musicSource"
                           :key="item.value"
                           :label="item.label"
                           :value="item.value">
@@ -295,6 +307,16 @@ export default {
         }
       ]
     };
+    musicSource: [
+      {
+        value: "01",
+        label: "SD card"
+      },
+      {
+        value: "02",
+        label: "FTP"
+      }
+    ];
   },
   methods: {
     dateChange() {
@@ -399,13 +421,13 @@ export default {
       });
     },
     save() {
-      if(this.schedule.schedule == "" || this.schedule.type == ""){
-        _g.toastMsg("error", "Please enter the name, type, time of schedule")
-        return
+      if (this.schedule.schedule == "" || this.schedule.type == "") {
+        _g.toastMsg("error", "Please enter the name, type, time of schedule");
+        return;
       }
-      if(this.schedule.time_1 == "" && this.schedule.time_ == ""){
-        _g.toastMsg("error", "Please enter the name, type, time of schedule")
-        return
+      if (this.schedule.time_1 == "" && this.schedule.time_ == "") {
+        _g.toastMsg("error", "Please enter the name, type, time of schedule");
+        return;
       }
       this.isLoading = true;
       this.schedule.mon = "0";
@@ -467,7 +489,7 @@ export default {
     getAllDevices() {
       var data = [];
       for (var device of this.devices) {
-        if (device.devicetype != "music" && device.devicetype != "ir") {
+        if (device.devicetype != "security" && device.devicetype != "ir") {
           if (this.address == "" || device.address == this.address) {
             if (this.floor == "" || device.floor == this.floor) {
               if (this.room == "" || device.room == this.room) {
@@ -523,6 +545,11 @@ export default {
             command.operation_1 = parseInt(command.status_1);
             command.operation_2 = parseInt(command.status_2);
             command.operation_3 = parseInt(command.status_3);
+          }
+          if (command.devicetype == "music") {
+            command.operation_1 = command.status_1?parseInt(command.status_1):0;
+            command.operation_2 = command.status_2?command.status_2:'01';
+            command.operation_3 = command.status_3;
           }
           if (command.devicetype == "light") {
             command.mode = parseInt(command.mode);
