@@ -190,7 +190,7 @@ export default {
     }
   },
   created() {
-    console.log("doctor");
+    console.log("schedeule");
     this.init();
   },
   components: {

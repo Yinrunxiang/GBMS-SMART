@@ -44,7 +44,7 @@ const commonFn = {
       }
     };
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
   },

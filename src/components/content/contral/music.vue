@@ -429,7 +429,7 @@ export default {
         this.deviceProperty.songListAll = music.songList;
         this.deviceProperty.musicLoading = false;
       } else {
-        musicApi.readStatus(this.device, this.deviceProperty);
+        musicApi.readStatus(device, this.deviceProperty);
       }
     }
   },

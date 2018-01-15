@@ -37,7 +37,7 @@ const musicApi = {
     // })
   },
   source_change(device, deviceProperty) {
-    var source = deviceProperty.source == '02'? '03': deviceProperty.source
+    var source = deviceProperty.source == '02' ? '03' : deviceProperty.source
     const data = {
       params: {
         operatorCodefst: "02",
@@ -75,7 +75,7 @@ const musicApi = {
       }
     };
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
   },
@@ -130,7 +130,7 @@ const musicApi = {
       }
     };
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
   },
@@ -282,7 +282,7 @@ const musicApi = {
               device.ip,
               device.port
             );
-            console.log("02E1");
+            // console.log("02E1");
           }
 
         }
@@ -359,7 +359,7 @@ const musicApi = {
                   return parseInt(a.albumNo) - parseInt(b.albumNo)
                 });
                 deviceProperty.albumlist = albumList
-                console.log(deviceProperty.albumlist)
+                // console.log(deviceProperty.albumlist)
               }
             }, 500)
           }
@@ -411,7 +411,7 @@ const musicApi = {
                   clearInterval(songInterval)
                   songList.sort(function (a, b) {
                     // return a.songNo - b.songNo
-                    return parseInt(a.albumNo + a.songNo) - parseInt(b.albumNo + b.songNo)
+                    return parseInt(a.albumNo + a.No) - parseInt(b.albumNo + b.No)
                   });
                   deviceProperty.songList = songList
                   deviceProperty.songListAll = songList
@@ -448,7 +448,8 @@ const musicApi = {
                 songName = songNameList.join("");
                 var songObj = {}
                 songObj.albumNo = albumno
-                songObj.songNo = parseInt('0x' + currentSonglist.substr(songCount, 4))
+                songObj.No = parseInt('0x' + currentSonglist.substr(songCount, 4))
+                songObj.songNo = source+currentSonglist.substr(songCount, 4)
                 songObj.songNoHigh = currentSonglist.substr(songCount, 2);
                 songObj.songNoLow = currentSonglist.substr(songCount + 2, 2);
                 songObj.songName = songName

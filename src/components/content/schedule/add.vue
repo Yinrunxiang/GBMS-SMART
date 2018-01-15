@@ -90,7 +90,7 @@
                         </el-switch>
                     </template>
                 </el-table-column>
-                <el-table-column label="Operation" prop="device" width="200" align="center" >
+                <el-table-column  prop="device" width="200" align="center" >
                     <template scope="scope">
                         <div v-if="commands[scope.$index].devicetype == 'ac'">
                           <el-slider v-model="commands[scope.$index].operation_1" :min='0' :max='32' :step="1">
@@ -115,7 +115,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="Mode" width="120" prop="mode" align="center" >
+                <el-table-column width="120" prop="mode" align="center" >
                     <template scope="scope">
                       <el-select v-if="commands[scope.$index].devicetype == 'ac'" v-model="commands[scope.$index].mode" placeholder="">
                         <el-option
@@ -135,7 +135,7 @@
                       </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column label="Grade"  prop="grade" width="120"  align="center">
+                <el-table-column  prop="grade" width="120"  align="center">
                     <template scope="scope">
                       <el-select v-if="commands[scope.$index].devicetype == 'ac'" v-model="commands[scope.$index].grade" placeholder="">
                         <el-option
@@ -143,6 +143,26 @@
                           :key="item.value"
                           :label="item.label"
                           :value="item.value">
+                        </el-option>
+                      </el-select>
+                      <el-select v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_3" placeholder="">
+                        <el-option
+                          v-for="album in commands[scope.$index].deviceProperty.albumlist"
+                          :key="album.albumNo"
+                          :label="album.albumName"
+                          :value="album.albumNo">
+                        </el-option>
+                      </el-select>
+                    </template>
+                </el-table-column>
+                <el-table-column  width="120"  align="center">
+                    <template scope="scope">
+                      <el-select v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_4" placeholder="">
+                        <el-option
+                          v-for="song in commands[scope.$index].deviceProperty.songList"
+                          :key="song.songNo"
+                          :label="song.songName"
+                          :value="song.songNo">
                         </el-option>
                       </el-select>
                     </template>
@@ -201,6 +221,7 @@ import setting from "./setting";
 import http from "../../../assets/js/http.js";
 import list from "../../../assets/js/list.js";
 import colorPicker from "vue-color-picker";
+import musicApi from "../devices/music/music";
 export default {
   //  currentPage        页码
   //  keywords           关键字
@@ -305,18 +326,18 @@ export default {
           value: "sat",
           label: "Sat"
         }
+      ],
+      musicSource: [
+        {
+          value: "01",
+          label: "SD card"
+        },
+        {
+          value: "02",
+          label: "FTP"
+        }
       ]
     };
-    musicSource: [
-      {
-        value: "01",
-        label: "SD card"
-      },
-      {
-        value: "02",
-        label: "FTP"
-      }
-    ];
   },
   methods: {
     dateChange() {
@@ -389,6 +410,28 @@ export default {
             device.mode = device.mode ? device.mode : "auto";
             device.grade = device.grade ? device.grade : "wind_auto";
           }
+          if (device.devicetype == "music") {
+            device.operation_1 = device.operation_1
+              ? parseInt(device.operation_1)
+              : 80;
+            device.operation_2 = device.operation_2 ? device.operation_2 : "01";
+            device.operation_3 = device.operation_3;
+            device.operation_4 = device.operation_4;
+            var musicObj = Lockr.get(
+              "music_" + device.id + "_" + device.operation_2
+            );
+            device.deviceProperty = {}
+            if(musicObj){
+              device.deviceProperty = musicObj;
+            }
+            else{
+              device.deviceProperty.source = device.operation_2
+              device.deviceProperty.albumlist = []
+              device.deviceProperty.songList = []
+              device.deviceProperty.songListAll = []
+              musicApi.readStatus(device,device.deviceProperty);
+            }
+          }
           if (device.devicetype == "light") {
             device.mode = device.mode ? device.mode : 0;
             device.mode = parseInt(device.mode);
@@ -460,10 +503,21 @@ export default {
           this.schedule.sun = "1";
         }
       }
+      var devices = []
       for (var command of this.commands) {
-        command.on_off = command.on_off ? "1" : "0";
+        var device= {}
+        device.id = command.id
+        device.on_off = command.on_off ? "1" : "0";
+        device.mode = command.mode
+        device.grade = command.grade
+        device.operation_1 = command.operation_1
+        device.operation_2 = command.operation_2
+        device.operation_3 = command.operation_3
+        device.operation_4 = command.operation_4
+        device.operation_5 = command.operation_5
+        devices.push(device)
       }
-      this.schedule.devices = this.commands;
+      this.schedule.devices = devices
 
       const data = {
         params: this.schedule
@@ -547,9 +601,25 @@ export default {
             command.operation_3 = parseInt(command.status_3);
           }
           if (command.devicetype == "music") {
-            command.operation_1 = command.status_1?parseInt(command.status_1):0;
-            command.operation_2 = command.status_2?command.status_2:'01';
+            command.operation_1 = command.status_1
+              ? parseInt(command.status_1)
+              : 0;
+            command.operation_2 = command.status_2 ? command.status_2 : "01";
             command.operation_3 = command.status_3;
+            command.operation_4 = command.status_4;
+            var musicObj = Lockr.get(
+              "music_" + command.id + "_" + command.operation_2
+            );
+            command.deviceProperty = {}
+            if (musicObj) {
+              command.deviceProperty = musicObj;
+            } else {
+              command.deviceProperty.source = command.status_2;
+              command.deviceProperty.albumlist = [];
+              command.deviceProperty.songList = [];
+              command.deviceProperty.songListAll = [];
+              musicApi.readStatus(command, command.deviceProperty);
+            }
           }
           if (command.devicetype == "light") {
             command.mode = parseInt(command.mode);
