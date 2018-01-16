@@ -13,6 +13,7 @@ require_once './command/ac.php';
 require_once './command/light.php';
 require_once './command/led.php';
 require_once './command/curtain.php';
+require_once './command/music.php';
 // 全局数组保存uid在线数据
 $uidConnectionMap = array();
 // 记录最后一次广播的在线用户数
@@ -52,6 +53,7 @@ function sendCommand($schedule)
     global $led;
     global $light;
     global $curtain;
+    global $music;
     $command = "select subnetid,deviceid,channel,channel_spare,devicetype,ip,port,mac,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5 from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $schedule . "'";
     $command = mysqli_query($con, $command);
     while ($command_row = mysqli_fetch_assoc($command)) {
@@ -129,6 +131,18 @@ function sendCommand($schedule)
                 };
             break;
             case 'music':
+                if($command_row['on_off'] == '1'){
+                    $val = $command_row['status_1'];
+                    $val = 79 - intval($val);
+                    $musicKey = $command_row['status_4'];
+                    $music->vol_change($val,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                    $music->selectSong($musicKey,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                    $music->switch_change(true,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                    
+                }else{
+                    $music->switch_change(false,$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
+                };
+
             break;
         }
     }
@@ -137,6 +151,7 @@ $ac = new Ac();
 $light = new Light();
 $led = new Led();
 $curtain = new Curtain();
+$music = new Music();
 // PHPSocketIO服务
 $sender_io = new SocketIO(2120);
 $udpProtocol = new UdpProtocol();

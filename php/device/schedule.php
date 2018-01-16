@@ -180,7 +180,7 @@ switch ($action)
     case "search_command":
     $schedule = isset($_REQUEST["schedule"]) ? $_REQUEST["schedule"] : '';
 
-    $sql="SELECT schedule,a.id as schedule_id,a.device as id,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name  FROM  schedule_command as a left join device as b on a.device = b.id left join room as c on b.room = c.room and b.address = c.address and b.floor = c.floor  where  schedule = '".$schedule."' order by devicetype";
+    $sql="SELECT schedule,a.id as schedule_id,a.device as id,subnetid,deviceid,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name  FROM  schedule_command as a left join device as b on a.device = b.id left join room as c on b.room = c.room and b.address = c.address and b.floor = c.floor  where  schedule = '".$schedule."' order by devicetype";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {

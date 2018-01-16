@@ -125,7 +125,7 @@
                           :value="item.value">
                         </el-option>
                       </el-select>
-                      <el-select v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_2" placeholder="">
+                      <el-select @change="sourceChange(commands[scope.$index])" v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_2" placeholder="">
                         <el-option
                           v-for="item in musicSource"
                           :key="item.value"
@@ -145,7 +145,7 @@
                           :value="item.value">
                         </el-option>
                       </el-select>
-                      <el-select v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_3" placeholder="">
+                      <el-select @change="albumChange(commands[scope.$index])" v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_3" placeholder="">
                         <el-option
                           v-for="album in commands[scope.$index].deviceProperty.albumlist"
                           :key="album.albumNo"
@@ -155,7 +155,7 @@
                       </el-select>
                     </template>
                 </el-table-column>
-                <el-table-column  width="120"  align="center">
+                <el-table-column  width="200"  align="center">
                     <template scope="scope">
                       <el-select v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_4" placeholder="">
                         <el-option
@@ -342,6 +342,36 @@ export default {
   methods: {
     dateChange() {
       this.schedule.time_1 = _g.formatDate(this.schedule.time_1);
+    },
+    sourceChange(command){
+      command.deviceProperty.source = command.operation_2;
+      command.operation_3 = "";
+      command.operation_4 = "";
+      musicApi.source_change(command, command.deviceProperty);
+      command.deviceProperty.albumlist = [];
+      command.deviceProperty.songList = [];
+      command.deviceProperty.songListAll = [];
+      // command.deviceProperty.musicLoading = true;
+      var music = Lockr.get(
+        "music_" + command.id + "_" + command.deviceProperty.source
+      );
+      if (music) {
+        command.deviceProperty.albumlist = music.albumlist;
+        command.deviceProperty.songList = music.songList;
+        command.deviceProperty.songListAll = music.songList;
+        // command.deviceProperty.musicLoading = false;
+      } else {
+        musicApi.readStatus(command, command.deviceProperty);
+      }
+    },
+    albumChange(command){
+      command.deviceProperty.songList = []
+      command.operation_4 = "";
+      for(var song of command.deviceProperty.songListAll){
+        if(song.albumNo == command.operation_3){
+          command.deviceProperty.songList.push(song)
+        }
+      }
     },
     selectionChange(selection, row) {
       console.log(selection);
