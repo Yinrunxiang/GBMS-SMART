@@ -10,6 +10,8 @@
       </el-menu-item>
       <el-menu-item index="plan">
         <i class="el-icon-menu"></i>Plan</el-menu-item>
+        <el-menu-item index="macro">
+        <i class="el-icon-menu"></i>Macro</el-menu-item>
         <el-menu-item index="schedule">
         <i class="el-icon-menu"></i>Schedule</el-menu-item>
       <el-menu-item index="report">
@@ -74,6 +76,11 @@ export default {
           title: 'plan',
           url: '/home/plan',
           name: 'plan'
+        },
+        {
+          title: 'macro',
+          url: '/home/macro',
+          name: 'macro'
         },
         {
           title: 'schedule',

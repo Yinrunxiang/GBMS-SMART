@@ -1,62 +1,11 @@
 <template>
     <div  v-loading="isLoading">
-        <div class="p-20 schedule-add">
+        <div class="p-20 macro-add">
           <el-row class="m-b-10">
-                   <el-input  class="fl w-230" placeholder="Please enter the schedule" v-model="schedule.schedule">
-                        <template slot="prepend">Schedule</template>
-                    </el-input>
-                <div class="fl " style="margin-left:23px;">
-                   <el-select class=" w-230" v-model="schedule.type" placeholder="">
-                        <el-option
-                          v-for="item in timeTypeArr"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                </div>
-                <div v-if="schedule.type == 'week'" class="fl week-select-div" style="margin-left:23px;">
-                        <el-select class="week-select "
-                          v-model="schedule.week"
-                          multiple
-                          placeholder="Please choose">
-                          <el-option
-                            v-for="item in weekArr"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                          </el-option>
-                        </el-select>
-                </div>
-                <div  v-if="schedule.type == 'once'" class="fl" style="margin-left:23px;">
-                   <el-date-picker class=" w-230"
-                    v-model="schedule.time_1"
-                    type="datetime"
-                    @change = "dateChange()"
-                    placeholder="Please choose">
-                  </el-date-picker>
-                </div>
-                <div  v-if="schedule.type == 'day' || schedule.type == 'week'" class="fl" style="margin-left:23px;">
-                  <el-time-picker
-                    v-model="schedule.time_2"
-                    value-format="HH:mm"
-                    :picker-options="{
-                      format:'HH:mm'
-                    }"
-                    
-                    placeholder="Please choose">
-                  </el-time-picker>
-                   <!-- <el-time-select
-                    v-model="schedule.time_2"
-                    :picker-options="{
-                      start: '00:00',
-                      step: '00:01',
-                      end: '23:59'
-                    }"
-                    placeholder="Please choose">
-                  </el-time-select> -->
-                </div>
-            </el-row>
+            <el-input  class="fl w-230" placeholder="Please enter the macro" v-model="macro.macro">
+                <template slot="prepend">Macro</template>
+            </el-input>
+          </el-row>
             <div class="m-b-10 ovf-hd">
                 <div class="fl" >
                   <el-cascader :options="allAddress" change-on-select @change="addressChange" style="width:230px;"></el-cascader>
@@ -200,15 +149,15 @@
 </template>
 
 <style>
-.schedule-add .vc-container {
+.macro-add .vc-container {
   z-index: 9999;
 }
-.schedule-add .week-select-div {
+.macro-add .week-select-div {
   position: relative;
   width: 230px;
   height: 40px;
 }
-.schedule-add .week-select-div .week-select {
+.macro-add .week-select-div .week-select {
   position: absolute;
   top: 0;
   left: 0;
@@ -338,7 +287,7 @@ export default {
   },
   methods: {
     dateChange() {
-      this.schedule.time_1 = _g.formatDate(this.schedule.time_1);
+      this.macro.time_1 = _g.formatDate(this.macro.time_1);
     },
     sourceChange(command){
       command.deviceProperty.source = command.operation_2;
@@ -464,11 +413,11 @@ export default {
     deleteCommand(scope) {
       const data = {
         params: {
-          id: scope.row.schedule_id
+          id: scope.row.macro_id
         }
       };
       this.apiGet(
-        "device/schedule.php?action=delete_command",
+        "device/macro.php?action=delete_command",
         data
       ).then(res => {
         if (res[0]) {
@@ -484,45 +433,11 @@ export default {
       });
     },
     save() {
-      if (this.schedule.schedule == "" || this.schedule.type == "") {
-        _g.toastMsg("error", "Please enter the name, type, time of schedule");
-        return;
-      }
-      if (this.schedule.time_1 == "" && this.schedule.time_ == "") {
-        _g.toastMsg("error", "Please enter the name, type, time of schedule");
+      if (this.macro.macro == "") {
+        _g.toastMsg("error", "Please enter the name of macro");
         return;
       }
       this.isLoading = true;
-      this.schedule.mon = "0";
-      this.schedule.tues = "0";
-      this.schedule.wed = "0";
-      this.schedule.thur = "0";
-      this.schedule.fri = "0";
-      this.schedule.sat = "0";
-      this.schedule.sun = "0";
-      for (var week of this.schedule.week) {
-        if (week == "mon") {
-          this.schedule.mon = "1";
-        }
-        if (week == "tues") {
-          this.schedule.tues = "1";
-        }
-        if (week == "wed") {
-          this.schedule.wed = "1";
-        }
-        if (week == "thur") {
-          this.schedule.thur = "1";
-        }
-        if (week == "fri") {
-          this.schedule.fri = "1";
-        }
-        if (week == "sat") {
-          this.schedule.sat = "1";
-        }
-        if (week == "sun") {
-          this.schedule.sun = "1";
-        }
-      }
       var devices = []
       for (var command of this.commands) {
         var device= {}
@@ -537,14 +452,14 @@ export default {
         device.operation_5 = command.operation_5
         devices.push(device)
       }
-      this.schedule.devices = devices
+      this.macro.devices = devices
 
       const data = {
-        params: this.schedule
+        params: this.macro
       };
       console.log(data);
       this.apiGet(
-        "device/schedule.php?action=insert_command",
+        "device/macro.php?action=insert_command",
         data
       ).then(res => {
         if (res[0]) {
@@ -591,12 +506,12 @@ export default {
       this.devicesId = [];
       const data = {
         params: {
-          schedule: this.schedule.id
+          macro: this.macro.id
         }
       };
       var vm = this;
       this.apiGet(
-        "device/schedule.php?action=search_command",
+        "device/macro.php?action=search_command",
         data
       ).then(res => {
         for (var command of res) {
@@ -651,7 +566,7 @@ export default {
     }
   },
   created() {
-    console.log("schedule-add");
+    console.log("macro-add");
     this.init();
   },
   mounted() {
@@ -665,7 +580,7 @@ export default {
     devices() {
       return this.$store.state.devices;
     },
-    schedule() {
+    macro() {
       return this.data;
     },
     allAddress() {

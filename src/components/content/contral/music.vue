@@ -18,7 +18,7 @@
                     {{sourceList[parseInt(deviceProperty.source) -1]}}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu  slot="dropdown">
-                    <el-dropdown-item command = "01">CD Card</el-dropdown-item>
+                    <el-dropdown-item command = "01">SD Card</el-dropdown-item>
                     <el-dropdown-item command = "02">FTP</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -461,7 +461,7 @@ export default {
         ]
       this.deviceProperty.songListAll= []
       this.deviceProperty.musicLoading= true
-      this.deviceProperty.source= "01"
+      // this.deviceProperty.source= "01"
       this.initMusic(device)
       return device;
     }
