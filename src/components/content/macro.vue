@@ -25,7 +25,7 @@
                 </el-table-column>
                 <el-table-column>
                   <template scope="scope">
-                    <el-button align="left"  type="primary" @click="run()">Run</el-button>
+                    <el-button align="left"  type="primary" @click="run(scope.row)">Run</el-button>
                   </template>
                 </el-table-column>
             </el-table>
@@ -68,15 +68,24 @@ export default {
       add: true,
       setting: false,
       selectData: {},
-      isLoading:true,
+      isLoading: true
     };
   },
   methods: {
-    run(){
-
+    run(macro) {
+      const data = {
+        params: macro
+      };
+      this.apiGet("device/macro.php?action=run", data).then(res => {
+        // if (res[0]) {
+        //   _g.toastMsg("success", res[1]);
+        // } else {
+        //   _g.toastMsg("error", res[1]);
+        // }
+      });
     },
     goback(bool) {
-      this.init()
+      this.init();
       this.setting = bool;
     },
     addressSetting() {
@@ -84,7 +93,7 @@ export default {
       this.setting = true;
       var data = {
         schedule: "",
-        type: "",
+        type: ""
       };
       this.selectData = data;
     },
@@ -140,7 +149,7 @@ export default {
         console.log(res);
         var macro = res;
         this.tableData = macro;
-        this.isLoading = false
+        this.isLoading = false;
       });
     },
     //初始化时统一加载
