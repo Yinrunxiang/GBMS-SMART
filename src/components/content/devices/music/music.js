@@ -130,6 +130,18 @@ const musicApi = {
         dest_port: device.port ? device.port : ""
       }
     };
+    // const data = {
+    //   params: {
+    //     operatorCodefst: "19",
+    //     operatorCodesec: "2e",
+    //     targetSubnetID: device.subnetid,
+    //     targetDeviceID: device.deviceid,
+    //     additionalContentData: ['2A', '5A', '01', '53', '54', '41', '54', '55', '53', '3F', '0D'],
+    //     macAddress: device.mac ? device.mac.split(".") : "",
+    //     dest_address: device.ip ? device.ip : "",
+    //     dest_port: device.port ? device.port : ""
+    //   }
+    // };
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()

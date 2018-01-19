@@ -19,6 +19,7 @@ class UDP
         global $music;
         if($command_row['on_off'] == '1'){
             $time = $command_row['time'] ? intval($command_row['time']):0; 
+            echo($time);
             usleep($time * 1000000);
         }
         $targetSubnetID = $command_row['subnetid']; 

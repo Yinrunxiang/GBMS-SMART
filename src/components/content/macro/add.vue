@@ -29,6 +29,12 @@
                     <el-button  size="small" class = "el-icon-close" style="color:#FF4949;" align="center" @click="deleteCommand(scope)"></el-button>
                   </template>
                 </el-table-column>
+                <el-table-column
+                  width="200">
+                  <template scope="scope">
+                    <el-input-number  v-model="commands[scope.$index].time"></el-input-number>
+                  </template>
+                </el-table-column>
                 <el-table-column label="Device" prop="device" width="120" align="center">
                 </el-table-column>
                 <el-table-column label="Type" prop="devicetype" width="120" align="center">
@@ -44,10 +50,6 @@
                         <div v-if="commands[scope.$index].devicetype == 'ac'">
                           <el-slider v-model="commands[scope.$index].operation_1" :min='0' :max='32' :step="1">
                           </el-slider>
-                          <!-- <el-slider v-if="commands[scope.$index].mode == 'heat'" v-model="commands[scope.$index].operation_2" :min='0' :max='32' :step="1" >
-                          </el-slider>
-                          <el-slider v-if="commands[scope.$index].mode == 'auto'" v-model="commands[scope.$index].operation_3" :min='0' :max='32' :step="1">
-                          </el-slider> -->
                         </div>
                         <div v-if="commands[scope.$index].devicetype == 'light'">
                           <el-slider v-model="commands[scope.$index].mode" :min='0' :max='100' :step="1">
@@ -450,6 +452,7 @@ export default {
         device.operation_3 = command.operation_3
         device.operation_4 = command.operation_4
         device.operation_5 = command.operation_5
+        device.time = command.time
         devices.push(device)
       }
       this.macro.devices = devices
@@ -515,6 +518,7 @@ export default {
         data
       ).then(res => {
         for (var command of res) {
+          command.time = command.time? parseInt(command.time):0
           vm.devicesId.push(command.id);
           for (var index in vm.tableData) {
             if (vm.tableData[index].id == command.id) {
