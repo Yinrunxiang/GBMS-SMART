@@ -14,6 +14,7 @@
               <music v-if="devicetype == 'music'"></music>
               <ir v-if="devicetype == 'ir'"></ir>
               <security v-if="devicetype == 'security'"></security>
+              <curtain v-if="devicetype == 'curtain'"></curtain>
             </div>
         </div>
         
@@ -61,6 +62,7 @@ import led from "./led";
 import ac from "./ac";
 import music from "./music";
 import ir from "./ir";
+import curtain from "./curtain";
 import security from "./security";
 export default {
   data() {
@@ -82,6 +84,7 @@ export default {
     ac,
     music,
     ir,
+    curtain,
     security,
   },
   computed: {
