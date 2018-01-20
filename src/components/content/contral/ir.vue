@@ -1,43 +1,72 @@
 <template>
     <el-col :span="24">
-        <div class="ir" style="width:300px;height:550px;padding:0;margin:20px auto;text-align: center;">
-            <div class="el-row">
-                <a class="ir-btn fl" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">on</a>
-                <a class="ir-btn fl" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">off</a>
-                <a class="ir-btn fr" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8')">2</a>
-                <a class="ir-btn fr" @click="clickToSendUdp('operation_9')" @dblclick="clickToShowDialog('operation_9')">1</a>
+      <div>{{device.device}}</div>
+        <div class="ir" style="width:300px;height:550px;padding:0;text-align: center;">
+          <div class="el-row">
+                <span class="page-btn fl" @click="changePage('control')">Control</span>
+                <span class="page-btn fr" @click="changePage('number')">Number</span>
             </div>
-            <div class="el-row">
-                <a class="ir-btn fl" @click="clickToSendUdp('operation_10')" @dblclick="clickToShowDialog('operation_10')">3</a>
-                <a class="ir-btn fl" @click="clickToSendUdp('operation_11')" @dblclick="clickToShowDialog('operation_11')">4</a>
-                <a class="ir-btn fr" @click="clickToSendUdp('operation_12')" @dblclick="clickToShowDialog('operation_12')">6</a>
-                <a class="ir-btn fr" @click="clickToSendUdp('operation_13')" @dblclick="clickToShowDialog('operation_13')">5</a>
-            </div>
-            <div style="margin:40px 0">
-                <div>
-                    <div class="triangle-up" @click="clickToSendUdp('operation_2')" @dblclick="clickToShowDialog('operation_2')"></div>
-                </div>
-                <div class="home-item">
-                  <div style="display:inline-block;margin:0 auto;">
-                    <div class="triangle-left" @click="clickToSendUdp('operation_3')" @dblclick="clickToShowDialog('operation_3')"></div>
-                    <a class="home-btn" @click="clickToSendUdp('operation_1')" @dblclick="clickToShowDialog('operation_1')">OK
-                    </a>
-                    <div class="triangle-right" @click="clickToSendUdp('operation_4')" @dblclick="clickToShowDialog('operation_4')"></div>
+            <div class="control" v-show="showPage == 'control'">
+              <div class="el-row">
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">on</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">off</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8')">2</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_9')" @dblclick="clickToShowDialog('operation_9')">1</span>
+              </div>
+              <div class="el-row">
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_10')" @dblclick="clickToShowDialog('operation_10')">3</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_11')" @dblclick="clickToShowDialog('operation_11')">4</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_12')" @dblclick="clickToShowDialog('operation_12')">6</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_13')" @dblclick="clickToShowDialog('operation_13')">5</span>
+              </div>
+              <div style="margin:20px 0">
+                  <div>
+                      <div class="triangle-up" @click="clickToSendUdp('operation_2')" @dblclick="clickToShowDialog('operation_2')"></div>
                   </div>
-                </div>
-                <div  class="triangle-down" @click="clickToSendUdp('operation_5')" @dblclick="clickToShowDialog('operation_5')"></div>
+                  <div class="home-item">
+                    <div style="display:inline-block;margin:0 auto;">
+                      <div class="triangle-left" @click="clickToSendUdp('operation_3')" @dblclick="clickToShowDialog('operation_3')"></div>
+                      <span class="home-btn" @click="clickToSendUdp('operation_1')" @dblclick="clickToShowDialog('operation_1')">OK
+                      </span>
+                      <div class="triangle-right" @click="clickToSendUdp('operation_4')" @dblclick="clickToShowDialog('operation_4')"></div>
+                    </div>
+                  </div>
+                  <div  class="triangle-down" @click="clickToSendUdp('operation_5')" @dblclick="clickToShowDialog('operation_5')"></div>
+              </div>
+              <div  class="el-row">
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_14')" @dblclick="clickToShowDialog('operation_14')">7</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_15')" @dblclick="clickToShowDialog('operation_15')">8</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_16')" @dblclick="clickToShowDialog('operation_16')">10</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_17')" @dblclick="clickToShowDialog('operation_17')">9</span>
+              </div>
+              <div  class="el-row">
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_18')" @dblclick="clickToShowDialog('operation_18')">11</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_19')" @dblclick="clickToShowDialog('operation_19')">12</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_20')" @dblclick="clickToShowDialog('operation_20')">14</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_21')" @dblclick="clickToShowDialog('operation_21')">13</span>
+              </div>
             </div>
-            <div  class="el-row">
-                <a class="ir-btn fl" @click="clickToSendUdp('operation_14')" @dblclick="clickToShowDialog('operation_14')">7</a>
-                <a class="ir-btn fl" @click="clickToSendUdp('operation_15')" @dblclick="clickToShowDialog('operation_15')">8</a>
-                <a class="ir-btn fr" @click="clickToSendUdp('operation_16')" @dblclick="clickToShowDialog('operation_16')">10</a>
-                <a class="ir-btn fr" @click="clickToSendUdp('operation_17')" @dblclick="clickToShowDialog('operation_17')">9</a>
-            </div>
-            <div  class="el-row">
-                <a class="ir-btn fl" @click="clickToSendUdp('operation_18')" @dblclick="clickToShowDialog('operation_18')">11</a>
-                <a class="ir-btn fl" @click="clickToSendUdp('operation_19')" @dblclick="clickToShowDialog('operation_19')">12</a>
-                <a class="ir-btn fr" @click="clickToSendUdp('operation_20')" @dblclick="clickToShowDialog('operation_20')">14</a>
-                <a class="ir-btn fr" @click="clickToSendUdp('operation_21')" @dblclick="clickToShowDialog('operation_21')">13</a>
+            <div class="number"  v-show="showPage == 'number'">
+              <div class="el-row">
+                  <span class="ir-btn" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">1</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">2</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8')">3</span>
+              </div>
+              <div class="el-row">
+                  <span class="ir-btn" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">4</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">5</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8')">6</span>
+              </div>
+              <div class="el-row">
+                  <span class="ir-btn" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">7</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">8</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8')">9</span>
+              </div>
+              <div class="el-row">
+                  <span class="ir-btn" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">※</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">0</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">#</span>
+              </div>
             </div>
         </div>
         <el-dialog title="Configure button" :visible.sync="showDialog">
@@ -61,12 +90,21 @@
 <style>
 .ir {
   position: relative;
-  border: 1px solid #d1dbe5;
-  border-radius: 4px;
+  /* border: 1px solid #d1dbe5;
+  border-radius: 4px; */
   overflow: hidden;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
-  background-color: #666666;
-  color: #cccccc;
+  /* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04); */
+  /* background-color: #666666; */
+  color: #aaa !important;
+}
+.ir .page-btn {
+  display: inline-block;
+  margin: 1px 3px;
+  width: 110px;
+  height: 30px;
+  line-height: 30px;
+  border: 2px solid #aaa;
+  border-radius: 30px;
 }
 .ir .el-row {
   margin: 15px;
@@ -77,28 +115,34 @@
   width: 50px;
   height: 30px;
   line-height: 30px;
-  border: 2px solid #cccccc;
+  border: 2px solid #aaa;
   border-radius: 30px;
+}
+.ir .number{
+  margin-top: 50px; 
+}
+.ir .number .ir-btn{
+  margin: 0 15px; 
 }
 .home-item {
   height: 140px;
   /* position: relative; */
 }
-.ir a:hover {
-  color: #333333;
-  border-color: #333333;
+.ir span:hover {
+  color: #20a0ff;
+  border-color: #20a0ff;
 }
 .ir .triangle-up:hover {
-  border-bottom: 60px solid #333333;
+  border-bottom: 60px solid #20a0ff;
 }
 .ir .triangle-down:hover {
-  border-top: 60px solid #333333;
+  border-top: 60px solid #20a0ff;
 }
 .ir .triangle-left:hover {
-  border-right: 60px solid #333333;
+  border-right: 60px solid #20a0ff;
 }
 .ir .triangle-right:hover {
-  border-left: 60px solid #333333;
+  border-left: 60px solid #20a0ff;
 }
 .ir .home-btn {
   float: left;
@@ -107,7 +151,7 @@
   height: 100px;
   line-height: 100px;
   font-size: 30px;
-  border: 2px solid #cccccc;
+  border: 2px solid #aaa;
   border-radius: 100px;
 }
 .ir .triangle-up {
@@ -116,7 +160,7 @@
   height: 0;
   border-left: 30px solid transparent;
   border-right: 30px solid transparent;
-  border-bottom: 60px solid #cccccc;
+  border-bottom: 60px solid #aaa;
 }
 .ir .triangle-down {
   display: inline-block;
@@ -124,7 +168,7 @@
   height: 0;
   border-left: 30px solid transparent;
   border-right: 30px solid transparent;
-  border-top: 60px solid #cccccc;
+  border-top: 60px solid #aaa;
 }
 .ir .triangle-left {
   float: left;
@@ -133,7 +177,7 @@
   height: 1px;
   border-top: 30px solid transparent;
   border-bottom: 30px solid transparent;
-  border-right: 60px solid #cccccc;
+  border-right: 60px solid #aaa;
 }
 .ir .triangle-right {
   float: left;
@@ -142,7 +186,7 @@
   height: 1px;
   border-top: 30px solid transparent;
   border-bottom: 30px solid transparent;
-  border-left: 60px solid #cccccc;
+  border-left: 60px solid #aaa;
 }
 </style>
 <script>
@@ -153,11 +197,15 @@ export default {
     return {
       key: "",
       value: "",
-      showDialog: false
+      showDialog: false,
+      showPage:'control',
     };
   },
   // props: ['device'],
   methods: {
+    changePage(val){
+      this.showPage = val
+    },
     clickToShowDialog(key) {
       this.value = this.device[key];
       this.key = key;
@@ -208,6 +256,7 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
+      this.showPage = 'control'
       return device;
     }
   },
