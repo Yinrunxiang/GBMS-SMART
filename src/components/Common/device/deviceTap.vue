@@ -20,13 +20,14 @@
   height: 50px;
 }
 
-.icon {
+.device-tap .icon {
   position: absolute;
   top: 0;
   left: 0;
   padding: 6px;
   width: 24px;
   height: 24px;
+  line-height: 24px;
   font-size: 24px;
   color: #fff;
   background-color: #20a0ff;
@@ -34,11 +35,18 @@
   border-radius: 24px;
 }
 
-.icon i {
+.device-tap .icon i {
   margin-left: 5px;
 }
-
-.device-switch {
+.device-tap .icon .fa-music {
+  margin-left:-2px
+}
+.device-tap .icon .fa-columns {
+  
+  font-size: 22px;
+  margin-left:-2px;
+}
+.device-tap .device-switch {
   position: absolute;
   top: 9px;
   left: 41px;
@@ -47,7 +55,7 @@
   margin-left: -13px;
 }
 
-.device-tap-border {
+.device-tap .device-tap-border {
   border: 2px solid #fff;
 }
 </style>

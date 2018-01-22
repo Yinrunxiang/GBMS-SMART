@@ -1,5 +1,5 @@
 <template>
-<div class="right-page-content light">
+<div class="right-page-content led">
         <div>{{device.device}}</div>
         <div>
             <i class="fa fa-lightbulb-o icon led-light"></i>
@@ -21,10 +21,11 @@
   width: 300px;
   height: 100%;
 }
-.light .icon {
+.led .icon {
   display: inline-block;
   width: 300px;
   height: 300px;
+  cursor: pointer;
   font-size: 300px;
   color: #c0ccda;
   text-align: center;

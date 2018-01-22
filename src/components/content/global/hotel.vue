@@ -728,6 +728,7 @@ export default {
 .floor-centent {
   width: 200px;
   height: 30px;
+  cursor: pointer;
   line-height: 30px;
   margin: 3px auto;
   /* background-color: rgba(0, 0, 0,0.7); */
@@ -788,7 +789,9 @@ export default {
   background-size: 100% 100%;
   -moz-background-size: 100% 100%;
 }
-
+.floorImga .room {
+  cursor: pointer;
+}
 .floorImga .room:hover {
   border: 2px solid #20a0ff;
 }

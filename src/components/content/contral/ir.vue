@@ -101,6 +101,7 @@
   display: inline-block;
   margin: 1px 3px;
   width: 110px;
+  cursor: pointer;
   height: 30px;
   line-height: 30px;
   border: 2px solid #aaa;
@@ -112,17 +113,18 @@
 .ir .ir-btn {
   display: inline-block;
   margin: 1px 3px;
+  cursor: pointer;
   width: 50px;
   height: 30px;
   line-height: 30px;
   border: 2px solid #aaa;
   border-radius: 30px;
 }
-.ir .number{
-  margin-top: 50px; 
+.ir .number {
+  margin-top: 50px;
 }
-.ir .number .ir-btn{
-  margin: 0 15px; 
+.ir .number .ir-btn {
+  margin: 0 15px;
 }
 .home-item {
   height: 140px;
@@ -198,13 +200,13 @@ export default {
       key: "",
       value: "",
       showDialog: false,
-      showPage:'control',
+      showPage: "control"
     };
   },
   // props: ['device'],
   methods: {
-    changePage(val){
-      this.showPage = val
+    changePage(val) {
+      this.showPage = val;
     },
     clickToShowDialog(key) {
       this.value = this.device[key];
@@ -256,7 +258,7 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
-      this.showPage = 'control'
+      this.showPage = "control";
       return device;
     }
   },
