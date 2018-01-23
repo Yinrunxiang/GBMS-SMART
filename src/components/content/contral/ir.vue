@@ -1,5 +1,5 @@
 <template>
-    <el-col :span="24">
+    <el-col :span="24" v-loading="ir_loading">
       <div>{{device.device}}</div>
         <div class="ir" style="width:300px;height:550px;padding:0;text-align: center;">
           <div class="el-row">
@@ -8,71 +8,78 @@
             </div>
             <div class="control" v-show="showPage == 'control'">
               <div class="el-row">
-                  <span class="ir-btn fl" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">on</span>
-                  <span class="ir-btn fl" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">off</span>
-                  <span class="ir-btn fr" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8')">2</span>
-                  <span class="ir-btn fr" @click="clickToSendUdp('operation_9')" @dblclick="clickToShowDialog('operation_9')">1</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6',true)">{{btnName('operation_6','on')}}</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7',true)">{{btnName('operation_7','off')}}</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8',true)">{{btnName('operation_8','2')}}</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_9')" @dblclick="clickToShowDialog('operation_9',true)">{{btnName('operation_9',true)}}</span>
               </div>
               <div class="el-row">
-                  <span class="ir-btn fl" @click="clickToSendUdp('operation_10')" @dblclick="clickToShowDialog('operation_10')">3</span>
-                  <span class="ir-btn fl" @click="clickToSendUdp('operation_11')" @dblclick="clickToShowDialog('operation_11')">4</span>
-                  <span class="ir-btn fr" @click="clickToSendUdp('operation_12')" @dblclick="clickToShowDialog('operation_12')">6</span>
-                  <span class="ir-btn fr" @click="clickToSendUdp('operation_13')" @dblclick="clickToShowDialog('operation_13')">5</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_10')" @dblclick="clickToShowDialog('operation_10',true)">{{btnName('operation_10','3')}}</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_11')" @dblclick="clickToShowDialog('operation_11',true)">{{btnName('operation_11','4')}}</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_12')" @dblclick="clickToShowDialog('operation_12',true)">{{btnName('operation_12','6')}}</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_13')" @dblclick="clickToShowDialog('operation_13',true)">{{btnName('operation_13','5')}}</span>
               </div>
               <div style="margin:20px 0">
                   <div>
-                      <div class="triangle-up" @click="clickToSendUdp('operation_2')" @dblclick="clickToShowDialog('operation_2')"></div>
+                      <div class="triangle-up" @click="clickToSendUdp('operation_2')" @dblclick="clickToShowDialog('operation_2',false)"></div>
                   </div>
                   <div class="home-item">
                     <div style="display:inline-block;margin:0 auto;">
-                      <div class="triangle-left" @click="clickToSendUdp('operation_3')" @dblclick="clickToShowDialog('operation_3')"></div>
-                      <span class="home-btn" @click="clickToSendUdp('operation_1')" @dblclick="clickToShowDialog('operation_1')">OK
+                      <div class="triangle-left" @click="clickToSendUdp('operation_3')" @dblclick="clickToShowDialog('operation_3',false)"></div>
+                      <span class="home-btn" @click="clickToSendUdp('operation_1')" @dblclick="clickToShowDialog('operation_1',false)">OK
                       </span>
-                      <div class="triangle-right" @click="clickToSendUdp('operation_4')" @dblclick="clickToShowDialog('operation_4')"></div>
+                      <div class="triangle-right" @click="clickToSendUdp('operation_4')" @dblclick="clickToShowDialog('operation_4',false)"></div>
                     </div>
                   </div>
-                  <div  class="triangle-down" @click="clickToSendUdp('operation_5')" @dblclick="clickToShowDialog('operation_5')"></div>
+                  <div  class="triangle-down" @click="clickToSendUdp('operation_5')" @dblclick="clickToShowDialog('operation_5',false)"></div>
               </div>
               <div  class="el-row">
-                  <span class="ir-btn fl" @click="clickToSendUdp('operation_14')" @dblclick="clickToShowDialog('operation_14')">7</span>
-                  <span class="ir-btn fl" @click="clickToSendUdp('operation_15')" @dblclick="clickToShowDialog('operation_15')">8</span>
-                  <span class="ir-btn fr" @click="clickToSendUdp('operation_16')" @dblclick="clickToShowDialog('operation_16')">10</span>
-                  <span class="ir-btn fr" @click="clickToSendUdp('operation_17')" @dblclick="clickToShowDialog('operation_17')">9</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_14')" @dblclick="clickToShowDialog('operation_14',true)">{{btnName('operation_14','7')}}</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_15')" @dblclick="clickToShowDialog('operation_15',true)">{{btnName('operation_15','8')}}</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_16')" @dblclick="clickToShowDialog('operation_16',true)">{{btnName('operation_16','10')}}</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_17')" @dblclick="clickToShowDialog('operation_17',true)">{{btnName('operation_17','9')}}</span>
               </div>
               <div  class="el-row">
-                  <span class="ir-btn fl" @click="clickToSendUdp('operation_18')" @dblclick="clickToShowDialog('operation_18')">11</span>
-                  <span class="ir-btn fl" @click="clickToSendUdp('operation_19')" @dblclick="clickToShowDialog('operation_19')">12</span>
-                  <span class="ir-btn fr" @click="clickToSendUdp('operation_20')" @dblclick="clickToShowDialog('operation_20')">14</span>
-                  <span class="ir-btn fr" @click="clickToSendUdp('operation_21')" @dblclick="clickToShowDialog('operation_21')">13</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_18')" @dblclick="clickToShowDialog('operation_18',true)">{{btnName('operation_18','11')}}</span>
+                  <span class="ir-btn fl" @click="clickToSendUdp('operation_19')" @dblclick="clickToShowDialog('operation_19',true)">{{btnName('operation_19','12')}}</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_20')" @dblclick="clickToShowDialog('operation_20',true)">{{btnName('operation_20','14')}}</span>
+                  <span class="ir-btn fr" @click="clickToSendUdp('operation_21')" @dblclick="clickToShowDialog('operation_21',true)">{{btnName('operation_21','13')}}</span>
               </div>
             </div>
             <div class="number"  v-show="showPage == 'number'">
               <div class="el-row">
-                  <span class="ir-btn" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">1</span>
-                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">2</span>
-                  <span class="ir-btn" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8')">3</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_22')" @dblclick="clickToShowDialog('operation_22',false)">1</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_23')" @dblclick="clickToShowDialog('operation_23',false)">2</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_24')" @dblclick="clickToShowDialog('operation_24',false)">3</span>
               </div>
               <div class="el-row">
-                  <span class="ir-btn" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">4</span>
-                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">5</span>
-                  <span class="ir-btn" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8')">6</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_25')" @dblclick="clickToShowDialog('operation_25',false)">4</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_26')" @dblclick="clickToShowDialog('operation_26',false)">5</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_27')" @dblclick="clickToShowDialog('operation_27',false)">6</span>
               </div>
               <div class="el-row">
-                  <span class="ir-btn" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">7</span>
-                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">8</span>
-                  <span class="ir-btn" @click="clickToSendUdp('operation_8')" @dblclick="clickToShowDialog('operation_8')">9</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_28')" @dblclick="clickToShowDialog('operation_28',false)">7</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_29')" @dblclick="clickToShowDialog('operation_29',false)">8</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_30')" @dblclick="clickToShowDialog('operation_30',false)">9</span>
               </div>
               <div class="el-row">
-                  <span class="ir-btn" @click="clickToSendUdp('operation_6')" @dblclick="clickToShowDialog('operation_6')">※</span>
-                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">0</span>
-                  <span class="ir-btn" @click="clickToSendUdp('operation_7')" @dblclick="clickToShowDialog('operation_7')">#</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_31')" @dblclick="clickToShowDialog('operation_31',false)">※</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_32')" @dblclick="clickToShowDialog('operation_32',false)">0</span>
+                  <span class="ir-btn" @click="clickToSendUdp('operation_33')" @dblclick="clickToShowDialog('operation_33',false)">#</span>
               </div>
             </div>
         </div>
         <el-dialog title="Configure button" :visible.sync="showDialog">
           <el-form>
+            <el-form-item v-show="dialogType">
+              <el-input v-model="ir_name" auto-complete="off">
+                <template slot="prepend">Name</template>
+              </el-input>
+            </el-form-item>
             <el-form-item >
-              <el-input v-model="value" auto-complete="off"></el-input>
+              <el-input v-model="ir_value" auto-complete="off">
+                <template slot="prepend">Value</template>
+              </el-input>
             </el-form-item>
             <!-- <el-form-item label="Device ID" prop="deviceid" :rules="[
                                   { required: true, message: 'The Device ID must not be null'}
@@ -93,6 +100,7 @@
   /* border: 1px solid #d1dbe5;
   border-radius: 4px; */
   overflow: hidden;
+  text-align: center;
   /* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04); */
   /* background-color: #666666; */
   color: #aaa !important;
@@ -113,6 +121,7 @@
 .ir .ir-btn {
   display: inline-block;
   margin: 1px 3px;
+  overflow: hidden;
   cursor: pointer;
   width: 50px;
   height: 30px;
@@ -197,10 +206,14 @@ import http from "../../../assets/js/http";
 export default {
   data() {
     return {
-      key: "",
-      value: "",
+      ir_key: "",
+      ir_value: "",
+      ir_name: "",
       showDialog: false,
-      showPage: "control"
+      showPage: "control",
+      dialogType: true,
+      operationObj: {},
+      ir_loading:true,
     };
   },
   // props: ['device'],
@@ -208,46 +221,131 @@ export default {
     changePage(val) {
       this.showPage = val;
     },
-    clickToShowDialog(key) {
-      this.value = this.device[key];
-      this.key = key;
+    btnName(ir_key, old_name) {
+      if (this.operationObj[ir_key]) {
+        return this.operationObj[ir_key].ir_name;
+      } else {
+        return old_name;
+      }
+    },
+    clickToShowDialog(ir_key, dialogType) {
+      this.ir_key = ir_key;
+      if (this.operationObj[ir_key]) {
+        this.ir_value = this.operationObj[ir_key].ir_value;
+        this.ir_name = this.operationObj[ir_key].ir_name;
+      } else {
+        this.ir_value = "";
+        this.ir_name = "";
+      }
+      this.dialogType = dialogType;
       this.showDialog = true;
     },
-    clickToSendUdp(key) {
-      var value = this.device[key];
-      irApi.buttonClick(this.device, value);
+    clickToSendUdp(ir_key) {
+      if (this.operationObj[ir_key]) {
+        var ir_value = this.operationObj[ir_key];
+        irApi.buttonClick(this.device, ir_value);
+      } else {
+        // this.ir_value = this.operationObj[ir_key].ir_value;
+        // this.ir_name = this.operationObj[ir_key].ir_name;
+        // this.ir_key = ir_key;
+      }
     },
     submit() {
-      if (this.value < 0 || this.value > 255) {
-        _g.toastMsg("error", "The value must in 0 to 255");
+      if (this.ir_value < 0 || this.ir_value > 255) {
+        _g.toastMsg("error", "The ir_value must in 0 to 255");
         this.showDialog = false;
         return;
       }
       var data = {
         params: {
-          id: this.device.id,
-          key: this.key,
-          value: this.value
+          device: this.device.id,
+          ir_key: this.ir_key,
+          ir_name: this.ir_name,
+          ir_value: this.ir_value
         }
       };
       var vm = this;
-      this.apiGet("device/index.php?action=setIr", data).then(res => {
-        if (res[0]) {
-          var devices = this.$store.state.devices;
-          for (var i = 0; i < devices.length; i++) {
-            if (devices[i].id == this.device.id) {
-              devices[i][this.key] = this.value;
-            }
+      if (this.operationObj[this.ir_key]) {
+        this.apiGet(
+          "device/index.php?action=updateIrOperation",
+          data
+        ).then(res => {
+          if (res[0]) {
+            vm.operationObj[vm.ir_key] = {};
+            // vm.$set(vm.operationObj[vm.ir_key], "device", vm.device.id);
+            // vm.$set(vm.operationObj[vm.ir_key], "ir_key", vm.ir_key);
+            // vm.$set(vm.operationObj[vm.ir_key], "ir_name", vm.ir_name);
+            // vm.$set(vm.operationObj[vm.ir_key], "ir_value", vm.ir_value);
+            vm.operationObj[vm.ir_key].device = vm.device.id;
+            vm.operationObj[vm.ir_key].ir_key = vm.ir_key;
+            vm.operationObj[vm.ir_key].ir_name = vm.ir_name;
+            vm.operationObj[vm.ir_key].ir_value = vm.ir_value;
+            _g.toastMsg("success", res[1]);
+          } else {
+            _g.toastMsg("error", res[1]);
           }
-          vm.$store.dispatch("setDevices", devices);
-          _g.toastMsg("success", res[1]);
-        } else {
-          _g.toastMsg("error", res[1]);
+          // for (var ir_key in this.form) {
+          //     this.form[ir_key] = ""
+          // }
+          this.showDialog = false;
+        });
+      } else {
+        this.apiGet(
+          "device/index.php?action=insertIrOperation",
+          data
+        ).then(res => {
+          if (res[0]) {
+            var obj = {};
+            obj.device = vm.device.id;
+            obj.ir_key = operation.ir_key;
+            obj.ir_name = operation.ir_name;
+            obj.ir_value = operation.ir_value;
+            vm.$set(vm.operationObj, operation.ir_key, obj);
+            // vm.operationObj[vm.ir_key] = {};
+            // vm.$set(vm.operationObj[vm.ir_key], "device", vm.device.id);
+            // vm.$set(vm.operationObj[vm.ir_key], "ir_key", vm.ir_key);
+            // vm.$set(vm.operationObj[vm.ir_key], "ir_name", vm.ir_name);
+            // vm.$set(vm.operationObj[vm.ir_key], "ir_value", vm.ir_value);
+            // vm.operationObj[vm.ir_key].device = vm.device.id;
+            // vm.operationObj[vm.ir_key].ir_key = vm.ir_key;
+            // vm.operationObj[vm.ir_key].ir_name = vm.ir_name;
+            // vm.operationObj[vm.ir_key].ir_value = vm.ir_value;
+            _g.toastMsg("success", res[1]);
+          } else {
+            _g.toastMsg("error", res[1]);
+          }
+          // for (var ir_key in this.form) {
+          //     this.form[ir_key] = ""
+          // }
+          this.showDialog = false;
+        });
+      }
+    },
+    getIrOperation(id) {
+      const data = {
+        params: {
+          device: id
         }
-        // for (var key in this.form) {
-        //     this.form[key] = ""
-        // }
-        this.showDialog = false;
+      };
+      var vm = this;
+      this.apiGet("device/index.php?action=getIrOperation", data).then(res => {
+        for (var operation of res) {
+          var obj = {};
+          obj.device = vm.device.id;
+          obj.ir_key = operation.ir_key;
+          obj.ir_name = operation.ir_name;
+          obj.ir_value = operation.ir_value;
+          vm.$set(vm.operationObj, operation.ir_key, obj);
+          vm.ir_loading= false
+          // vm.operationObj[operation.ir_key] = {};
+          // vm.$set(vm.operationObj[vm.ir_key], "device", vm.device.id);
+          //   vm.$set(vm.operationObj[vm.ir_key], "ir_key", operation.ir_key);
+          //   vm.$set(vm.operationObj[vm.ir_key], "ir_name", operation.ir_name);
+          //   vm.$set(vm.operationObj[vm.ir_key], "ir_value", operation.ir_value);
+          // vm.operationObj[operation.ir_key].ir_key = operation.ir_key;
+          // vm.operationObj[operation.ir_key].ir_name = operation.ir_name;
+          // vm.operationObj[operation.ir_key].ir_value = operation.ir_value;
+        }
       });
     }
   },
@@ -259,6 +357,7 @@ export default {
     device() {
       var device = this.$store.state.device;
       this.showPage = "control";
+      this.getIrOperation(device.id);
       return device;
     }
   },

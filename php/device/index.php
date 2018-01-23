@@ -197,23 +197,72 @@ switch ($action)
         echo(json_encode($message)); 
     }
     break;
+    case "getIrOperation":
+        $device = isset($_REQUEST["device"]) ? $_REQUEST["device"] : '';
+        $sql="select id,device,ir_key,ir_name,ir_value from ir_operation where device = '".$device."'";
+        $result = mysqli_query($con,$sql);
+        $results = array();
+        while ($row = mysqli_fetch_assoc($result)) {
+            $results[] = $row;
+        }
+        $json_results = str_replace("\/","/",json_encode($results)); 
+        echo $json_results;
+    break;
+    case "insertIrOperation":
+        $device = isset($_REQUEST["device"]) ? $_REQUEST["device"] : '';
+        $ir_key = isset($_REQUEST["ir_key"]) ? $_REQUEST["ir_key"] : '';
+        $ir_name = isset($_REQUEST["ir_name"]) ? $_REQUEST["ir_name"] : '';
+        $ir_value = isset($_REQUEST["ir_value"]) ? $_REQUEST["ir_value"] : '';
+        $sql="insert into  ir_operation (device,ir_key,ir_name,ir_value) values ('".$device."','".$ir_key."','".$ir_name."','".$ir_value."')";
+        if (!mysqli_query($con,$sql))
+        {
+            $message = [];
+            $message[0] = false;
+            $message[1] = "insert failed " . mysqli_error($con);
+            echo(json_encode($message)); 
+        }else{
+            $message = [];
+            $message[0] = true;
+            $message[1] = "update successfully";
+            echo(json_encode($message)); 
+        }
+    break;
+    case "updateIrOperation":
+        $device = isset($_REQUEST["device"]) ? $_REQUEST["device"] : '';
+        $ir_key = isset($_REQUEST["ir_key"]) ? $_REQUEST["ir_key"] : '';
+        $ir_name = isset($_REQUEST["ir_name"]) ? $_REQUEST["ir_name"] : '';
+        $ir_value = isset($_REQUEST["ir_value"]) ? $_REQUEST["ir_value"] : '';
+        $sql="update  ir_operation set ir_name = '".$ir_name."',ir_value = '".$ir_value."' where  device = '".$device."' and ir_key = '".$ir_key."'";
+        if (!mysqli_query($con,$sql))
+        {
+            $message = [];
+            $message[0] = false;
+            $message[1] = "insert failed " . mysqli_error($con);
+            echo(json_encode($message)); 
+        }else{
+            $message = [];
+            $message[0] = true;
+            $message[1] = "update successfully";
+            echo(json_encode($message)); 
+        }
+    break;
     case "setIr":
-    $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
-    $key = isset($_REQUEST["key"]) ? $_REQUEST["key"] : '';
-    $value = isset($_REQUEST["value"]) ? $_REQUEST["value"] : '';
-    $sql="update device set ".$key." = '".$value."' where id = '".$id."'";
-    if (!mysqli_query($con,$sql))
-    {
-        $message = [];
-        $message[0] = false;
-        $message[1] = "update failed: " . mysqli_error($con);
-        echo(json_encode($message)); 
-    }else{
-        $message = [];
-        $message[0] = true;
-        $message[1] = "update successfully";
-        echo(json_encode($message)); 
-    }
+        $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : '';
+        $key = isset($_REQUEST["key"]) ? $_REQUEST["key"] : '';
+        $value = isset($_REQUEST["value"]) ? $_REQUEST["value"] : '';
+        $sql="update device set ".$key." = '".$value."' where id = '".$id."'";
+        if (!mysqli_query($con,$sql))
+        {
+            $message = [];
+            $message[0] = false;
+            $message[1] = "update failed: " . mysqli_error($con);
+            echo(json_encode($message)); 
+        }else{
+            $message = [];
+            $message[0] = true;
+            $message[1] = "update successfully";
+            echo(json_encode($message)); 
+        }
     break;
 
     case "setTime":
