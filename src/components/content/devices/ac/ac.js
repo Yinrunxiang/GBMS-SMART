@@ -365,10 +365,10 @@ const acApi = {
                             }
                             break;
                         case "07":
-                            deviceProperty.heattemp = parseInt("0x" + value);
+                            deviceProperty.heattmp = parseInt("0x" + value);
                             break;
                         case "08":
-                            deviceProperty.autotemp = parseInt("0x" + value);
+                            deviceProperty.autotmp = parseInt("0x" + value);
                             break;
                     }
                 }
