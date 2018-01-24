@@ -2,7 +2,7 @@
     <el-col :span="24">
         <div class="music" style="width:300px;height:550px;text-align: center;">
           <div v-show="albumShow" class="album">
-                <div class="fa fa-reply album-btn-back" @click="albumBtnClickBack"></div>
+                <div class="fa fa-reply album-btn-back btn-hand" @click="albumBtnClickBack"></div>
                 <el-menu class="album-list">
                     <el-menu-item-group>
                         <span slot="title">Album</span>
@@ -12,7 +12,7 @@
                 </el-menu>
             </div>
           <div class="music-nav">
-            <div class="fa fa-bars album-btn" @click="albumBtnClick"></div>
+            <div class="fa fa-bars album-btn btn-hand" @click="albumBtnClick"></div>
             <el-dropdown @command="sourceChange" class="source_list">
                 <span class="el-dropdown-link">
                     {{sourceList[parseInt(deviceProperty.source) -1]}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -30,18 +30,18 @@
             <div class="music-content" :span="24">
                 <div class="music-content-top">
                     <div v-show="!deviceProperty.on_off" class=" content-icon mid" @click="play()">
-                      <i class="fa fa-play" style="margin-left:3px;"></i>
+                      <i class="fa fa-play btn-hand" style="margin-left:3px;"></i>
                     </div>
                     <div v-show="deviceProperty.on_off" class=" content-icon mid" @click="pause()">
-                      <i class="fa fa-pause"></i>
+                      <i class="fa fa-pause btn-hand"></i>
                     </div>
-                    <div class="fa fa-step-backward content-icon left" @click="pre()"></div>
-                    <div class="fa fa-step-forward content-icon right" @click="next()"></div>
+                    <div class="fa fa-step-backward btn-hand content-icon left" @click="pre()"></div>
+                    <div class="fa fa-step-forward btn-hand content-icon right" @click="next()"></div>
                 </div>
                 <div class="music-content-bottom">
-                    <div v-show="deviceProperty.mode == 'random'" class="fa fa-random content-icon fl" style="margin-left:16px" @click="random()"></div>
-                    <div v-show="deviceProperty.mode == 'single'" class="fa fa-exchange content-icon fl" style="margin-left:16px" @click="single()"></div>
-                    <div v-show="deviceProperty.mode == 'allmusic'" class="fa fa-navicon content-icon fl" style="margin-left:16px" @click="allmusic()"></div>
+                    <div v-show="deviceProperty.mode == 'random'" class="fa fa-random btn-hand content-icon fl" style="margin-left:16px" @click="random()"></div>
+                    <div v-show="deviceProperty.mode == 'single'" class="fa fa-exchange  btn-hand content-icon fl" style="margin-left:16px" @click="single()"></div>
+                    <div v-show="deviceProperty.mode == 'allmusic'" class="fa fa-navicon  btn-hand content-icon fl" style="margin-left:16px" @click="allmusic()"></div>
 
                     <el-col :span="15" class="fl" >
                         <template>
@@ -51,7 +51,7 @@
                             </div>
                         </template>
                     </el-col>
-                    <div class="fa fa-volume-up content-icon fl"></div>
+                    <div class="fa fa-volume-up btn-hand content-icon fl"></div>
                 </div>
             </div>
             <div class="model-item">

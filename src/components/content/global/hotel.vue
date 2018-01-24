@@ -80,9 +80,9 @@
                     <div @click="roomSetting">
                         <i class="el-icon-setting"></i>
                     </div>
-                    <div @click="roomClose">
+                    <!-- <div @click="roomClose">
                         <i class="fa fa-pause"></i>
-                    </div>
+                    </div> -->
                     <div @click="clickToShowMoodSetting">
                         <i class="fa fa-heart"></i>
                     </div>
@@ -99,9 +99,11 @@
         <div v-if="showDeviceUpdate">
             <deviceUpdate :device="thisdevice" :notHotel="notHotel" @changeUpdate="changeUpdate" @newDevice="addNewDevice"></deviceUpdate>
         </div>
-        <div v-if="showDevicePage">
+        <!-- <div v-if="showDevicePage">
             <devicePage :device="thisdevice" @changeContral="changeContral"></devicePage>
-        </div>
+            
+        </div> -->
+        <right-page v-if="showRightPage"></right-page>
         <div v-if="showHotelUpdate">
             <addressUpdate :add="addressAdd" :address="addressUpdateData" @goback="addressBack"></addressUpdate>
         </div>
@@ -124,6 +126,7 @@ import deviceUpdate from "../plan/update";
 import addressUpdate from "../setting/address/add";
 import floorUpdate from "../setting/floor/add";
 import roomUpdate from "../setting/room/add";
+import rightPage from "../contral/rightPage"
 import mood from "./mood";
 // import changeName from "../setting/room/changeName";
 // import $ from 'jquery'
@@ -218,10 +221,11 @@ export default {
       this.deviceList.push(device);
     },
     deviceDbclick(showRoom, showDeviceUpdate, device) {
-      this.showAll = showRoom;
-      this.$store.dispatch("setShowRoom", showRoom);
-      this.showDeviceUpdate = showDeviceUpdate;
-      this.showDevicePage = !showDeviceUpdate;
+      // this.showAll = showRoom;
+      // this.$store.dispatch("setShowRoom", showRoom);
+      // this.showDeviceUpdate = showDeviceUpdate;
+      // this.showDevicePage = !showDeviceUpdate;
+      this.$store.dispatch("setShowRightPage", !showDeviceUpdate);
       this.thisdevice = device;
       if (this.setting) {
         this.thisdevice.subnetid = this.thisdevice.subnetid
@@ -471,9 +475,13 @@ export default {
     devicePage,
     floorUpdate,
     roomUpdate,
+    rightPage,
     mood
   },
   computed: {
+    showRightPage() {
+      return this.$store.state.showRightPage;
+    },
     //获取酒店
     address() {
       // console.log(this.$route.query.address.floor)

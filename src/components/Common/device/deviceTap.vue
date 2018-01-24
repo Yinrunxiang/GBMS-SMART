@@ -41,6 +41,10 @@
 .device-tap .icon .fa-music {
   margin-left:-2px
 }
+.device-tap .icon .fa-life-ring {
+  font-size: 22px;
+  margin-left:-2px
+}
 .device-tap .icon .fa-columns {
   
   font-size: 22px;

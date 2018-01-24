@@ -522,10 +522,10 @@ const acApi = {
                             }
                             break;
                         case "07":
-                            device.heattemp = parseInt("0x" + value);
+                            device.heattmp = parseInt("0x" + value);
                             break;
                         case "08":
-                            device.autotemp = parseInt("0x" + value);
+                            device.autotmp = parseInt("0x" + value);
                             break;
                     }
                 }

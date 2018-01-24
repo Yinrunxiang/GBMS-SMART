@@ -123,6 +123,7 @@
   margin: 1px 3px;
   overflow: hidden;
   cursor: pointer;
+  user-select: none;
   width: 50px;
   height: 30px;
   line-height: 30px;
@@ -133,6 +134,7 @@
   margin-top: 50px;
 }
 .ir .number .ir-btn {
+  user-select: none;
   margin: 0 15px;
 }
 .home-item {
@@ -160,6 +162,8 @@
   margin: 18px auto;
   width: 100px;
   height: 100px;
+  cursor: pointer;
+  user-select: none;
   line-height: 100px;
   font-size: 30px;
   border: 2px solid #aaa;
@@ -169,6 +173,8 @@
   display: inline-block;
   width: 0;
   height: 0;
+  cursor: pointer;
+  user-select: none;
   border-left: 30px solid transparent;
   border-right: 30px solid transparent;
   border-bottom: 60px solid #aaa;
@@ -177,6 +183,8 @@
   display: inline-block;
   width: 0;
   height: 0;
+  cursor: pointer;
+  user-select: none;
   border-left: 30px solid transparent;
   border-right: 30px solid transparent;
   border-top: 60px solid #aaa;
@@ -186,6 +194,8 @@
   margin: 40px 18px 0 0;
   width: 1px;
   height: 1px;
+  cursor: pointer;
+  user-select: none;
   border-top: 30px solid transparent;
   border-bottom: 30px solid transparent;
   border-right: 60px solid #aaa;
@@ -195,6 +205,8 @@
   margin: 40px 0 0 18px;
   width: 1px;
   height: 1px;
+  cursor: pointer;
+  user-select: none;
   border-top: 30px solid transparent;
   border-bottom: 30px solid transparent;
   border-left: 60px solid #aaa;
@@ -252,7 +264,7 @@ export default {
     },
     submit() {
       if (this.ir_value < 0 || this.ir_value > 255) {
-        _g.toastMsg("error", "The ir_value must in 0 to 255");
+        _g.toastMsg("error", "The value must in 0 to 255");
         this.showDialog = false;
         return;
       }
