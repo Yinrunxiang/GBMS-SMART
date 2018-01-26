@@ -184,8 +184,8 @@ export default {
     };
   },
   methods: {
-    hideRightPage(){
-      console.log('123')
+    hideRightPage() {
+      console.log("123");
       this.$store.dispatch("setShowRightPage", false);
     },
     homeClick() {
@@ -377,6 +377,17 @@ export default {
         // 	var end = i + 2000
         // 	this.getRecord(start, end,count)
         // }
+      });
+    },
+    updateDatabase() {
+      const data = {
+        params: {
+          action:'updateDatabase'
+        }
+        
+      }
+      this.apiGet("device/index.php?updateDatabase",data).then(res => {
+        console.log(res)
       });
     },
     countryArr() {
@@ -691,7 +702,7 @@ export default {
     }
   },
   created() {
-    console.log("report");
+    console.log("home");
     let username = Lockr.get("username");
     let password = Lockr.get("password");
     this.username = username;
@@ -705,6 +716,7 @@ export default {
     let port = Lockr.get("port");
     var socketio = socket("http://" + document.domain + ":" + port);
     window.socketio = socketio;
+    
     // this.$store.dispatch("setShowHotel", true);
     // this.$store.dispatch("setShowFloor", false);
     // this.$store.dispatch("setShowRoom", false);
@@ -722,6 +734,7 @@ export default {
         action: "search"
       }
     };
+    this.updateDatabase()
     this.apiGet("device/index.php", data).then(res => {
       this.$store.dispatch("setDevices", res);
       // var devices = [];
