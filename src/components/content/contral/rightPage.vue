@@ -26,7 +26,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  z-index: 99999;
+  z-index: 2000;
   width: 350px;
   height: 99%;
   background-color: #fff;

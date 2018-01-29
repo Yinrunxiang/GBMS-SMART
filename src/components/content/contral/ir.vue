@@ -254,7 +254,7 @@ export default {
     },
     clickToSendUdp(ir_key) {
       if (this.operationObj[ir_key]) {
-        var ir_value = this.operationObj[ir_key];
+        var ir_value = this.operationObj[ir_key].ir_value;
         irApi.buttonClick(this.device, ir_value);
       } else {
         // this.ir_value = this.operationObj[ir_key].ir_value;

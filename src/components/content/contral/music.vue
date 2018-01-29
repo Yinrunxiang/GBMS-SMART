@@ -22,7 +22,7 @@
                     <el-dropdown-item command = "02">FTP</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-                <i class="el-icon-refresh el-dropdown-link" @click="refresh"></i>
+                <i class="el-icon-refresh" @click="refresh"></i>
             </div>
             <div class="music-title">
             <p>{{deviceProperty.music_name}}</p>
