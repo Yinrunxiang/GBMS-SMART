@@ -270,8 +270,8 @@ export default {
           label: "Medial"
         },
         {
-          value: "hign",
-          label: "Hign"
+          value: "high",
+          label: "High"
         },
         {
           value: "wind_auto",
