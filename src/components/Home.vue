@@ -1,6 +1,6 @@
 <template>
 	<div class="panel m-w-1280" @click="hideRightPage()">
-    <span class="version">ver 1.1.1</span>
+    <span class="version">ver 1.2.1</span>
 		<el-col :span="24" class="panel-top">
 			<el-col class="w-180">
 				<template v-if="logo_type == '1'">
