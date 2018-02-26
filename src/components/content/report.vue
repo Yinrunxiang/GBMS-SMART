@@ -37,7 +37,10 @@
 </template>
 
 <script>
-import echarts from "echarts";
+import echarts from "echarts/lib/echarts"
+// 引入折线图和饼状图
+require('echarts/lib/chart/line');
+require('echarts/lib/chart/bar');
 export default {
   data() {
     return {

@@ -15,19 +15,12 @@
 
 
 <script>
-// import pace from 'pace-progress'
-// import 'pace-progress/themes/blue/pace-theme-center-atom.css'
-
-// window.paceOptions = {
-//   ajax: {
-//     trackMethods: ['GET', 'POST']
-//   },
-//   eventLag: false,
-//   elements: false
-// }
 import http from "../../assets/js/http";
-import echarts from "echarts";
-// import 'echarts/lib/chart/map';
+import echarts from "echarts/lib/echarts"
+
+// 引入提示框和标题组件
+// require('echarts/lib/component/tooltip');
+// require('echarts/lib/component/title');
 import "echarts/map/js/world.js";
 
 export default {

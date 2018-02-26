@@ -10,15 +10,6 @@
             <el-form-item label="Building">
                 <el-input v-model.trim="form.address" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item label="IP">
-                <el-input v-model.trim="form.ip" class="h-40 w-200"></el-input>
-            </el-form-item>
-            <el-form-item label="Port">
-                <el-input v-model.trim="form.port" class="h-40 w-200"></el-input>
-            </el-form-item>
-            <el-form-item label="MAC">
-                <el-input v-model.trim="form.mac" class="h-40 w-200"></el-input>
-            </el-form-item>
             <el-form-item label="Floor Num">
                 <el-input v-model.trim="form.floor_num" class="h-40 w-200"></el-input>
             </el-form-item>
@@ -31,6 +22,21 @@
             <el-form-item label="KW/USD">
                 <el-input v-model.trim="form.kw_usd" class="h-40 w-200"></el-input>
             </el-form-item>
+            <!-- <el-form-item label="Operation Type">
+              <el-radio-group v-model="operation_type" @change="operationChange">
+                <el-radio label="1">Local</el-radio>
+                <el-radio label="2">Remote</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item v-show="operation_type == '2'" label="IP">
+                <el-input v-model.trim="form.ip" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <el-form-item v-show="operation_type == '2'" label="Port">
+                <el-input v-model.trim="form.port" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <el-form-item v-show="operation_type == '2'" label="MAC">
+                <el-input v-model.trim="form.mac" class="h-40 w-200"></el-input>
+            </el-form-item> -->
             <el-form-item>
                 <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
                 <el-button @click="goback()">Cancel</el-button>
@@ -57,6 +63,7 @@ export default {
       //     lng: '',
       //     status: 'enabled',
       // },
+      operation_type: "1",
       oldAddress: "",
       addressOptions: []
     };
@@ -64,6 +71,9 @@ export default {
   methods: {
     goback() {
       this.$emit("goback", false);
+    },
+    operationChange(val) {
+      this.operation = val;
     },
     getFloor() {
       const data = {
@@ -90,10 +100,10 @@ export default {
             var address = this.$store.state.address;
             address.push(this.form);
             this.$store.dispatch("setAddress", address);
-            
+
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
-              this.getFloor()
+              this.getFloor();
               this.goback();
             }, 500);
           } else {
@@ -123,14 +133,14 @@ export default {
               }
             }
             this.$store.dispatch("setDevices", devices);
-             var floors = this.$store.state.floor;
+            var floors = this.$store.state.floor;
             for (var floor of floors) {
               if (floor.address == this.oldAddress) {
                 floor.address = this.form.address;
               }
             }
             this.$store.dispatch("setFloor", floors);
-             var rooms = this.$store.state.room;
+            var rooms = this.$store.state.room;
             for (var room of rooms) {
               if (room.address == this.oldAddress) {
                 room.address = this.form.address;
@@ -139,7 +149,7 @@ export default {
             this.$store.dispatch("setRoom", rooms);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
-              this.getFloor()
+              this.getFloor();
               this.goback();
             }, 500);
           } else {
@@ -344,6 +354,10 @@ export default {
     }
   },
   props: ["add", "address"],
+  created() {
+    var operation_type = Lockr.get("operation_type");
+    this.operation_type = operation_type;
+  },
   mounted() {
     console.log("address add");
     this.oldAddress = this.address.address;

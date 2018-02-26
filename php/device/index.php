@@ -395,9 +395,11 @@ switch ($action)
     $createMacro = "CREATE TABLE if not exists `macro` (`id` int(11) NOT NULL AUTO_INCREMENT,`macro` varchar(30) DEFAULT NULL,PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC; ";
     $createMacroComment = " CREATE TABLE if not exists `macro_command` ( `id` int(11) NOT NULL AUTO_INCREMENT,  `macro` varchar(30) DEFAULT NULL, `device` varchar(50) DEFAULT NULL, `on_off` varchar(1) DEFAULT NULL, `mode` varchar(20) DEFAULT NULL, `grade` varchar(20) DEFAULT NULL, `status_1` varchar(20) DEFAULT NULL, `status_2` varchar(20) DEFAULT NULL, `status_3` varchar(20) DEFAULT NULL, `status_4` varchar(20) DEFAULT NULL, `status_5` varchar(20) DEFAULT NULL, `time` varchar(10) DEFAULT NULL, PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC; ";
     $createIrOperation = "CREATE TABLE if not exists `ir_operation` ( `id` int(11) NOT NULL AUTO_INCREMENT, `device` varchar(50) DEFAULT NULL, `ir_key` varchar(20) DEFAULT NULL, `ir_name` varchar(20) DEFAULT NULL, `ir_value` varchar(20) DEFAULT NULL,  PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8; ";
+    $addAddressOperation = "alter table address add operation varchar(1)";
       mysqli_query($con,$createMacro);
       mysqli_query($con,$createMacroComment);
       mysqli_query($con,$createIrOperation);
+      mysqli_query($con,$addAddressOperation);
     //   if (!mysqli_query($con,$sql))
     //   {
     //       $message[0] = false;

@@ -2,6 +2,13 @@
 import Vue from 'vue'
 import App from './App'
 import axios from 'axios'
+// import echarts from "echarts/lib/echarts"
+// // 引入地图
+// import 'echarts/lib/chart/map';
+// // 引入折线图和饼状图
+// import 'echarts/lib/chart/line';
+// import 'echarts/lib/chart/bar';
+// import "echarts/map/js/world.js";
 import socket from 'socket.io-client'
 import Lockr from 'lockr'
 import Cookies from 'js-cookie'
@@ -16,6 +23,7 @@ import store from './vuex/store'
 import filter from './assets/js/filter'
 import _g from './assets/js/global'
 import NProgress from 'nprogress'
+
 // import colorPicker from 'vue-color-picker'
 import 'font-awesome/css/font-awesome.css'
 import 'nprogress/nprogress.css'
