@@ -308,20 +308,6 @@ switch ($action)
         $json_results = str_replace("\/","/",json_encode($results)); 
         echo $json_results;
     break;  
-    case "getRecordCount":
-    $sql = "SELECT count(device) as count FROM record where devicetype = 'ac' or devicetype = 'light'";
-    
-    $result = mysqli_query($con,$sql);
-    
-    $count = array();
-   
-    while ($row = mysqli_fetch_assoc($result)) {
-        $count[] = $row;
-    }
-    // $data = [$ac_breed,$record];
-    $json_results = str_replace("\/","/",json_encode($count)); 
-    echo $json_results;
-    break;
     case "getRunTime":
     // $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
     $device_id = $device_id = isset($_REQUEST["device_id"]) ? $_REQUEST["device_id"] : '';
@@ -377,11 +363,42 @@ switch ($action)
         echo(json_encode($message)); 
     }
     break;
+    // case "getrecord":
+    //     // $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
+    //     $start = $start = isset($_REQUEST["start"]) ? $_REQUEST["start"] : '';
+    //     $end = $end = isset($_REQUEST["end"]) ? $_REQUEST["end"] : '';
+    //     $record = "SELECT device,devicetype,on_off,mode,grade,breed,record_date,country,address,floor,room FROM record where on_off = 'on' and (devicetype = 'ac' or devicetype = 'light') order by record_date  limit ".$start." , ".$end."";
+    //     $result = mysqli_query($con,$record);
+    //     $record = array();
+    //     while ($row = mysqli_fetch_assoc($result)) {
+    //         $record[] = $row;
+    //     }
+    //     // $data = [$ac_breed,$record];
+    //     $json_results = str_replace("\/","/",json_encode($record)); 
+    //     echo $json_results;
+    // break;
+    case "getRecordCount":
+        $beginDate = isset($_REQUEST["beginDate"]) ? $_REQUEST["beginDate"] : '';
+        $endDate =  isset($_REQUEST["endDate"]) ? $_REQUEST["endDate"] : '';
+        $sql = "SELECT count(device) as count FROM record where record_date >= '".$beginDate."' and record_date<= '".$endDate."' and (devicetype = 'ac' or devicetype = 'light')";
+        
+        $result = mysqli_query($con,$sql);
+        
+        $count = array();
+    
+        while ($row = mysqli_fetch_assoc($result)) {
+            $count[] = $row;
+        }
+        // $data = [$ac_breed,$record];
+        $json_results = str_replace("\/","/",json_encode($count)); 
+        echo $json_results;
+    break;
     case "getrecord":
-        // $record = "SELECT * FROM record where devicetype = 'ac' or devicetype = 'light' and id > 0 ";
-        $start = $start = isset($_REQUEST["start"]) ? $_REQUEST["start"] : '';
-        $end = $end = isset($_REQUEST["end"]) ? $_REQUEST["end"] : '';
-        $record = "SELECT device,devicetype,on_off,mode,grade,breed,record_date,country,address,floor,room FROM record where on_off = 'on' and (devicetype = 'ac' or devicetype = 'light') order by record_date  limit ".$start." , ".$end."";
+        $start = isset($_REQUEST["start"]) ? $_REQUEST["start"] : '';
+        $end =  isset($_REQUEST["end"]) ? $_REQUEST["end"] : '';
+        $beginDate = isset($_REQUEST["beginDate"]) ? $_REQUEST["beginDate"] : '';
+        $endDate =  isset($_REQUEST["endDate"]) ? $_REQUEST["endDate"] : '';
+        $record = "SELECT device,devicetype,on_off,mode,grade,breed,record_date,country,address,floor,room FROM record where record_date >= '".$beginDate."' and record_date<= '".$endDate."' and on_off = 'on' and (devicetype = 'ac' or devicetype = 'light') order by record_date  limit ".$start." , ".$end."";
         $result = mysqli_query($con,$record);
         $record = array();
         while ($row = mysqli_fetch_assoc($result)) {

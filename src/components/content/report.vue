@@ -37,10 +37,11 @@
 </template>
 
 <script>
-import echarts from "echarts/lib/echarts"
+import echarts from "echarts/lib/echarts";
 // 引入折线图和饼状图
-require('echarts/lib/chart/line');
-require('echarts/lib/chart/bar');
+require("echarts/lib/chart/line");
+require("echarts/lib/chart/bar");
+import recordApi from "../../assets/js/record";
 export default {
   data() {
     return {
@@ -56,7 +57,7 @@ export default {
         },
         {
           value: "usd",
-          label: "UDS"
+          label: "USD"
         }
       ],
       dateRecord: [],
@@ -93,18 +94,9 @@ export default {
       var selectRecord = [];
       var beginDate = Date.parse(new Date(val + " 00:00"));
       var endDate = Date.parse(new Date(this.endDate + " 23:59"));
-      for (var record of this.record) {
-        //   var recordData = Date.parse(new Date(record.record_date))
-        //   var month = Date.parse(new Date(val))
-        var recordDate = Date.parse(new Date(record.record_date));
-
-        if (recordDate >= beginDate && recordDate <= endDate) {
-          selectRecord.push(record);
-        }
-        //   if()
-      }
-      this.dateRecord = selectRecord;
-      this.selectRecord = selectRecord;
+      recordApi.getRecord(val + " 00:00", this.endDate + " 23:59", this);
+      // this.dateRecord = this.record;
+      // this.selectRecord = this.record;
     },
     endChange(val) {
       this.endDate = val;
@@ -112,17 +104,8 @@ export default {
       var selectRecord = [];
       var beginDate = Date.parse(new Date(this.beginDate + " 00:00"));
       var endDate = Date.parse(new Date(val + " 23:59"));
-      for (var record of this.record) {
-        //   var recordData = Date.parse(new Date(record.record_date))
-        //   var month = Date.parse(new Date(val))
-        var recordDate = Date.parse(new Date(record.record_date));
-
-        if (recordDate >= beginDate && recordDate <= endDate) {
-          selectRecord.push(record);
-        }
-        //   if()
-      }
-      this.selectRecord = selectRecord;
+      recordApi.getRecord(this.beginDate + " 00:00", val + " 23:59", this);
+      // this.selectRecord = this.record;
     },
     typeChange(val) {
       // this.type = val
@@ -134,21 +117,21 @@ export default {
       var len = value.length;
       switch (len) {
         case 1:
-          for (var record of this.dateRecord) {
+          for (var record of this.record) {
             if (record.address == value[0]) {
               selectRecord.push(record);
             }
           }
           break;
         case 2:
-          for (var record of this.dateRecord) {
+          for (var record of this.record) {
             if (record.address == value[0] && record.floor == value[1]) {
               selectRecord.push(record);
             }
           }
           break;
         case 3:
-          for (var record of this.dateRecord) {
+          for (var record of this.record) {
             if (
               record.address == value[0] &&
               record.floor == value[1] &&
@@ -470,7 +453,7 @@ export default {
   },
   components: {},
   watch: {
-    selectRecord: {
+    record: {
       handler: function(val, oldVal) {
         var allRecord = {};
         allRecord.dateArr = this.dateList;
@@ -556,61 +539,24 @@ export default {
         this.setPieChart();
       },
       deep: true
-    }
+    },
   },
   computed: {
     record() {
-      // this.selectRecord = this.$store.state.record
       return this.$store.state.record;
+    },
+    recordLoading() {
+      return this.$store.state.recordLoading;
     },
     recordLoading() {
       // return this.$store.state.recordLoading
       var recordLoading = this.$store.state.recordLoading;
       if (!recordLoading) {
-        this.selectRecord = this.$store.state.record;;
+        this.selectRecord = this.$store.state.record;
         return false;
       }
       return true;
     },
-    // allRecord() {
-    //     var records = {}
-    //     records.dateArr = []
-    //     records.recordArr = []
-    //     records.typeArr = []
-    //     var typeArr = {}
-    //     for (var record of this.selectRecord) {
-    //         var date = record.record_date.substr(0, 15) + '0'
-    //         if (records.dateArr.indexOf(date) == -1) {
-    //             records.dateArr.push(date)
-    //             records.recordArr.push(parseInt(record.watts))
-    //         } else {
-    //             var index = records.dateArr.indexOf(date)
-    //             records.recordArr[index] += parseInt(record.watts)
-    //         }
-
-    //         typeArr[record.devicetype] ? typeArr[record.devicetype] += parseInt(record.watts) : typeArr[record.devicetype] = parseInt(record.watts)
-    //         // if (typeArr.indexOf(record.devicetype) == -1){
-    //         //     typeArr[record.devicetype] = parseInt(record.watts)
-    //         // }else{
-    //         //     typeArr[record.devicetype] += parseInt(record.watts)
-    //         // }
-    //     }
-    //     var wattSort = []
-    //     for (var key in typeArr) {
-
-    //         var typeObj = {}
-    //         typeObj.name = key
-    //         typeObj.value = typeArr[key]
-    //         wattSort.push(typeArr[key])
-    //         records.typeArr.push(typeObj)
-    //     }
-    //     function sortNumber(a, b) {
-    //         return a - b
-    //     }
-    //     wattSort.sort(sortNumber)
-    //     records.wattSort = wattSort
-    //     return records
-    // },
     allAddress() {
       var allAddress = [];
       for (var address of this.$store.state.address) {
@@ -646,6 +592,6 @@ export default {
       // console.log(allAddress)
       return allAddress;
     }
-  }
+  },
 };
 </script>

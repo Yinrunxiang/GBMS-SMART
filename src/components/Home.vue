@@ -143,7 +143,7 @@ import leftMenu from "./Common/leftMenu.vue";
 import topMenu from "./Common/topMenu.vue";
 import changePwd from "./Account/changePwd.vue";
 import http from "../assets/js/http";
-
+import recordApi from "../assets/js/record"
 export default {
   data() {
     return {
@@ -178,7 +178,7 @@ export default {
       img: "",
       title: "",
       logo_type: null,
-      records: [],
+      record: [],
       dataReady: false,
       showChange: false
     };
@@ -283,111 +283,20 @@ export default {
         this.$store.dispatch("setRoom", res);
       });
     },
-    getRecord(start, end, count, setIntervalRecord) {
-      const data = {
-        params: {
-          action: "getrecord",
-          start: start,
-          end: end
-        }
-      };
+    getRecord(){
       var vm = this;
-      this.apiGet("device/index.php", data).then(res => {
-        var records = res;
-        var newRecords = [];
-        var addresss = this.$store.state.address;
-        var ac_breeds = this.$store.state.ac_breed;
-        var light_breeds = this.$store.state.light_breed;
-        var led_breeds = this.$store.state.led_breed;
-        for (var record of records) {
-          if (record.on_off == "on") {
-            switch (record.devicetype) {
-              case "ac":
-                for (var ac_breed of ac_breeds) {
-                  if (record.breed == ac_breed.breed) {
-                    record.watts =
-                      parseInt(ac_breed[record.mode]) +
-                      parseInt(ac_breed[record.grade]);
-                  }
-                }
-                break;
-              case "light":
-                for (var light_breed of light_breeds) {
-                  if (record.breed == light_breed.breed) {
-                    record.watts = parseInt(light_breed.watts);
-                  }
-                }
-                break;
-              case "led":
-                for (var led_breed of led_breeds) {
-                  if (record.breed == led_breed.breed) {
-                    record.watts = parseInt(led_breed.watts);
-                  }
-                }
-                break;
-            }
-            if (record.watts) {
-              record.watts = parseFloat(record.watts / 1000);
-              record.usd = 0;
-              for (var address of addresss) {
-                if (address.address == record.address && address.kw_usd) {
-                  record.usd = record.watts * parseFloat(address.kw_usd);
-                }
-              }
-              newRecords.push(record);
-            }
-          }
-        }
-
-        //记录数据处理完成
-        //以下是记录数据的使用
-        vm.records = vm.records.concat(newRecords);
-        if (end >= count) {
-          vm.$store.dispatch("setRecord", vm.records);
-          vm.$store.dispatch("setRecordLoading", false);
-          clearInterval(setIntervalRecord);
-        }
-      });
-    },
-    forGetRecord(count) {
-      var i = 0,
-        start = 0,
-        end = 0;
-      var vm = this;
-
-      var setIntervalRecord = setInterval(function() {
-        start = i + 1;
-        end = i + 5000;
-        i += 5000;
-        vm.getRecord(start, end, count, setIntervalRecord);
-      }, 1000);
-    },
-    getRecordCount() {
-      var vm = this;
-      const data = {
-        params: {
-          action: "getRecordCount"
-        }
-      };
-      this.apiGet("device/index.php", data).then(res => {
-        var count = parseInt(res[0].count);
-        this.forGetRecord(count);
-        // for(var i = 0 ;i<count;i+=2000){
-        // 	var start = i + 1
-        // 	var end = i + 2000
-        // 	this.getRecord(start, end,count)
-        // }
-      });
+      var beginDate = _g.getMonth() + "-01 00:00";
+      var endDate = _g.getMonth() + "-31 23:59";
+      recordApi.getRecord(beginDate,endDate,vm)
     },
     updateDatabase() {
       const data = {
         params: {
-          action:'updateDatabase'
+          action: "updateDatabase"
         }
-        
-      }
-      this.apiGet("device/index.php?updateDatabase",data).then(res => {
-        console.log(res)
+      };
+      this.apiGet("device/index.php?updateDatabase", data).then(res => {
+        console.log(res);
       });
     },
     countryArr() {
@@ -716,7 +625,7 @@ export default {
     let port = Lockr.get("port");
     var socketio = socket("http://" + document.domain + ":" + port);
     window.socketio = socketio;
-    
+
     // this.$store.dispatch("setShowHotel", true);
     // this.$store.dispatch("setShowFloor", false);
     // this.$store.dispatch("setShowRoom", false);
@@ -734,7 +643,7 @@ export default {
         action: "search"
       }
     };
-    this.updateDatabase()
+    this.updateDatabase();
     this.apiGet("device/index.php", data).then(res => {
       this.$store.dispatch("setDevices", res);
       // var devices = [];
@@ -748,7 +657,7 @@ export default {
       // this.devices = devices
       this.countryArr();
     });
-    this.getRecordCount();
+    this.getRecord();
   },
   components: {
     leftMenu,
@@ -764,6 +673,9 @@ export default {
     }
   },
   watch: {
+    record() {
+      return this.$store.state.record;
+    },
     devices: {
       handler: function(val, oldVal) {
         this.countryArr();
