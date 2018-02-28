@@ -1,6 +1,6 @@
 <template>
     <div  v-loading="moodLoading">
-    <el-card v-for="mood in moodList" class="box-card m-b-15" :span="24">
+    <el-card v-for="(mood,key) in moodList" :key = "key" class="box-card m-b-15" :span="24">
             <div v-show="!mood.add" style="line-height:36px" >
               <span>{{mood.mood}}</span>
               <a  class="fa fa-close fr m-l-10 m-t-5" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>

@@ -24,7 +24,7 @@
                 <el-table-column label="Comment" prop="comment"  width="200">
                 </el-table-column>
                 <el-table-column>
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     <el-button align="left"  type="primary" @click="run(scope.row)">Run</el-button>
                   </template>
                 </el-table-column>

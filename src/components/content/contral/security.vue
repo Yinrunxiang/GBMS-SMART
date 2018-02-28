@@ -8,7 +8,7 @@
                     <i  class="el-icon-arrow-down el-icon--right fr"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown" style="width:120px;">
-                    <el-dropdown-item  :command="area.key" v-for="area in areaList">{{area.name}}</el-dropdown-item>
+                    <el-dropdown-item  :command="area.key" v-for="(area,key) in areaList" :key="key">{{area.name}}</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <div class="fr m-r-15 " style="margin-left:-65px">

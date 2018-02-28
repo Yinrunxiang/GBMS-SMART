@@ -2,7 +2,7 @@
     <el-dialog v-if="ready" class="time-setting" ref="dialog" :visible="open" :before-close="handleClose" custom-class="time-setting-width" title="Time Contral Center">
         <div>
             <div class="day-item" w-100p>
-                <day v-for="day in week" :day="day" :active="showing" :open="runtime[day.toLowerCase()].status" @change="dayChange" @select="daySelect" @click="dayClick(day.toLowerCase())"></day>
+                <day v-for="(day,key) in week" :key="key" :day="day" :active="showing" :open="runtime[day.toLowerCase()].status" @change="dayChange" @select="daySelect" @click="dayClick(day.toLowerCase())"></day>
             </div>
             <div class="m-t-20">
                 <el-time-select class="m-l-20" placeholder="Start Time" v-model="runtime[showing].up"  :picker-options="{

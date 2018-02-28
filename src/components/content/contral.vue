@@ -3,7 +3,7 @@
         <el-col :span="24" class="contral-panel-center h-100p ">
             <aside class="w-180 h-100p ovf-hd" style="background: #eef1f6;">
                 <el-menu default-active="1" class="el-menu-vertical-demo"  @select="selectCountry">
-                    <div v-for="country in countryArr">
+                    <div v-for="(country,key) in countryArr" :key = "key">
                         <el-submenu :index="country.name">
 
                             <template slot="title">
@@ -12,7 +12,7 @@
                                 </el-badge>
                             </template>
 
-                            <div v-for="address in country.addressList">
+                            <div v-for="(address,key) in country.addressList" :key = "key">
                                 <el-badge :value="address.warn" class="address-badge-div">
                                     <el-menu-item :index="address.name" @click="menuClick">
                                         {{address.name}}</el-menu-item>
@@ -37,14 +37,14 @@
                             </div>
                             <div v-if="!showContral" style="background-color:#fff;">
                                 <el-collapse v-model="activeFloor" accordion >
-                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList" :name='floor_key' style="padding-left:15px;">
+                                    <el-collapse-item v-for="(floor,floor_key) in address.floorList" :name='floor_key' style="padding-left:15px;" :key = "floor_key">
                                         <template slot="title">
                                             <span>Floor {{floor.name}}</span>
                                             <el-badge :value="floor.warn">
                                             </el-badge>
                                         </template>
                                         <el-collapse @change="roomChange"  accordion>
-                                            <el-collapse-item v-for="room in floor.roomList" :name='room.address+","+room.floor+","+room.room'  style="position: relative;padding-left:15px;" >
+                                            <el-collapse-item v-for="(room,key) in floor.roomList" :name='room.address+","+room.floor+","+room.room'  style="position: relative;padding-left:15px;"  :key = "key">
                                                 <template slot="title">
                                                     <span>Room {{room.room_name}}</span>
                                                     <el-badge :value="room.warn">

@@ -6,7 +6,7 @@
                 <el-menu class="album-list">
                     <el-menu-item-group>
                         <span slot="title">Album</span>
-                        <el-menu-item class="album-list-li" :index="album.albumNo" v-for="album in deviceProperty.albumlist" @click="albumClick(album.albumNo)">
+                        <el-menu-item class="album-list-li" :index="album.albumNo" v-for="(album,key) in deviceProperty.albumlist" @click="albumClick(album.albumNo)" :key= "key">
                             {{album.albumName}}</el-menu-item>
                     </el-menu-item-group>
                 </el-menu>
@@ -55,7 +55,7 @@
             </div>
             <div v-loading="deviceProperty.musicLoading" class="music-list">
                 <ul style="margin:0;padding:0;">
-                    <li @dblclick="selectSong(song)" :class="song.select?'select':''" v-for="song in deviceProperty.songList">
+                    <li @dblclick="selectSong(song)" :class="song.select?'select':''" v-for="(song,key) in deviceProperty.songList" :key = "key">
                         <div class="song">
                             <!-- <div class="song-num">{{song.songNo}}</div> -->
                             <div class="song-name">{{song.songName}}</div>

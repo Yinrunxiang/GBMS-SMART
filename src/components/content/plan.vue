@@ -38,7 +38,7 @@
                 <el-table-column label="Breed" prop="breed" width="150">
                 </el-table-column>
                 <el-table-column label="Time" prop="start" >
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-button  size="small" icon="el-icon-time" @click="showTimeSetting(scope.row)"></el-button>
                     </template>
                 </el-table-column>

@@ -25,13 +25,13 @@
             <el-table :data="commands" :height="400" style="width: 75%;display: inline-block" class=" m-l-20">
                 <el-table-column
                   width="60">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     <el-button  size="small" class = "el-icon-close" style="color:#FF4949;" align="center" @click="deleteCommand(scope)"></el-button>
                   </template>
                 </el-table-column>
                 <el-table-column
                   width="200">
-                  <template scope="scope">
+                  <template slot-scope="scope">
                     <el-input-number  v-model="commands[scope.$index].time"></el-input-number>
                   </template>
                 </el-table-column>
@@ -40,13 +40,13 @@
                 <el-table-column label="Type" prop="devicetype" width="120" align="center">
                 </el-table-column>
                 <el-table-column label="Switch" prop="on_off" width="120"  align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <el-switch  v-model="commands[scope.$index].on_off" @change="switch_change(commands[scope.$index])" >
                         </el-switch>
                     </template>
                 </el-table-column>
                 <el-table-column  prop="device" width="200" align="center" >
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <div v-if="commands[scope.$index].devicetype == 'ac'">
                           <el-slider v-model="commands[scope.$index].operation_1" :min='0' :max='32' :step="1">
                           </el-slider>
@@ -67,7 +67,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column width="120" prop="mode" align="center" >
-                    <template scope="scope">
+                    <template slot-scope="scope">
                       <el-select v-if="commands[scope.$index].devicetype == 'ac'" v-model="commands[scope.$index].mode" placeholder="">
                         <el-option
                           v-for="item in modes"
@@ -87,7 +87,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column  prop="grade" width="120"  align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                       <el-select v-if="commands[scope.$index].devicetype == 'ac'" v-model="commands[scope.$index].grade" placeholder="">
                         <el-option
                           v-for="item in grades"
@@ -107,7 +107,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column  width="200"  align="center">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                       <el-select v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_4" placeholder="">
                         <el-option
                           v-for="song in commands[scope.$index].deviceProperty.songList"

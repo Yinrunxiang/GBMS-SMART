@@ -24,10 +24,10 @@
                         </div>
                         <div class="floor">
 
-                            <div v-for="(floor, floor_key, floor_index) in addressProperty.floor_num">
+                            <div v-for="(floor, floor_key, floor_index) in addressProperty.floor_num" :key = "floor_key">
                                 <el-tooltip placement="right" transition="">
                                     <div v-if="addressProperty.floorList[addressProperty.floor_num -floor_key -1]?true:false" slot="content">
-                                        <p v-for="(val, key, index) in addressProperty.floorList[addressProperty.floor_num -floor_key -1].deviceTypeNumber">{{key}}:{{val}}</p>
+                                        <p v-for="(val, key, index) in addressProperty.floorList[addressProperty.floor_num -floor_key -1].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
                                     </div>
                                     <div class="floor-centent" @click="floorClick(addressProperty.floor_num -floor_key)" @mouseover="floorOver(addressProperty.floor_num -floor_key)">Floor{{addressProperty.floor_num -floor_key}}
                                     </div>
@@ -49,11 +49,11 @@
                     </div>
                 </div>
                 <div class="floorImga">
-                    <div v-for="(room, room_key, room_index) in room_num">
+                    <div v-for="(room, room_key, room_index) in room_num" :key = "room_key">
                         <el-tooltip placement="right" transition="">
                             <div v-if="roomList[room_key]?true:false" slot="content">
                                 <p>Room: {{roomList[room_key].room_name}}</p>
-                                <p v-for="(val, key, index) in roomList[room_key].deviceTypeNumber">{{key}}:{{val}}</p>
+                                <p v-for="(val, key, index) in roomList[room_key].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
                             </div>
                             <div :class="'room'+room" class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
                         </el-tooltip>
@@ -65,7 +65,7 @@
             <div v-if="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
               <div v-show="!showRoomUpdate">
                 <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
-                    <div class="add-type-list" v-for="devicetype in typeList" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)">{{devicetype}}</div>
+                    <div class="add-type-list" v-for="(devicetype,key) in typeList" :key = "key" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)" >{{devicetype}}</div>
                 </el-popover>
                 <div class="icon-list">
                     <div @click="roomBack">
@@ -89,7 +89,7 @@
                     
                 </div>
                 <div class="roomImga">
-                    <deviceTap ref="device" v-for="device in deviceList" :device="device" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
+                    <deviceTap ref="device" v-for="(device,key) in deviceList" :device="device" :key = "key" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
 
                 </div>
                 </div>
