@@ -61,9 +61,12 @@ function getRecordList(beginDate, endDate,vm,count, start, end,  setIntervalReco
         //以下是记录数据的使用
         recordList = recordList.concat(newRecords);
         if (end >= count) {
-            vm.$store.dispatch("setRecord", recordList);
-            vm.$store.dispatch("setRecordLoading", false);
+            
             clearInterval(setIntervalRecord);
+            vm.$store.dispatch("setRecord", recordList);
+            vm.$store.dispatch("setCurrentRecord", recordList);
+            vm.$store.dispatch("setRecordLoading", false);
+            return
         }
     });
 }
@@ -74,9 +77,11 @@ function forGetRecord(beginDate,endDate,vm,count) {
 
     var setIntervalRecord = setInterval(function () {
         start = i + 1;
-        end = i + 3000;
         i += 3000;
-        getRecordList(beginDate, endDate,vm,count, start, end,  setIntervalRecord);
+        end = i>=count ? count:i;
+        if(end <= count){
+            getRecordList(beginDate, endDate,vm,count, start, end,  setIntervalRecord);
+        }
     }, 1000);
 }
 const record = {

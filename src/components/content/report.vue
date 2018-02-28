@@ -5,12 +5,12 @@
     type="month"
     placeholder="选择月" @change="monthChange">
   </el-date-picker> -->
-  <el-date-picker class="m-t-10 m-l-20"
-      v-model="beginDate"
-      type="date"
-      value-format = "yyyy-MM-dd"
-      placeholder="Begin date" 
-      @change="beginChange">
+    <el-date-picker class="m-t-10 m-l-20"
+        v-model="beginDate"
+        type="date"
+        value-format = "yyyy-MM-dd"
+        placeholder="Begin date" 
+        @change="beginChange">
     </el-date-picker>
     <el-date-picker class="m-t-10 m-l-15"
       v-model="endDate"
@@ -20,15 +20,16 @@
       @change="endChange">
     </el-date-picker>
         <el-cascader class="m-t-10 m-l-15" :options="allAddress" change-on-select @change="addressChange"></el-cascader>
-        <el-select class="m-t-10 m-l-15" v-model="type" placeholder="Select" @change="typeChange">
-    <el-option
-      v-for="item in typeList"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-      >
-    </el-option>
-  </el-select>
+          <el-select class="m-t-10 m-l-15" v-model="type" placeholder="Select" @change="typeChange">
+          <el-option
+            v-for="item in typeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            >
+          </el-option>
+        </el-select>
+        <el-button class="m-l-15" type="primary" icon="el-icon-search"></el-button>
         <div>
             <div ref="lineChart" class="line-chart fl"></div>
             <div ref="pieChart" class="pie-chart fl"></div>
@@ -115,23 +116,24 @@ export default {
     addressChange(value) {
       var selectRecord = [];
       var len = value.length;
+      this.$store.dispatch("setRecord", []);
       switch (len) {
         case 1:
-          for (var record of this.record) {
+          for (var record of this.currentRecord) {
             if (record.address == value[0]) {
               selectRecord.push(record);
             }
           }
           break;
         case 2:
-          for (var record of this.record) {
+          for (var record of this.currentRecord) {
             if (record.address == value[0] && record.floor == value[1]) {
               selectRecord.push(record);
             }
           }
           break;
         case 3:
-          for (var record of this.record) {
+          for (var record of this.currentRecord) {
             if (
               record.address == value[0] &&
               record.floor == value[1] &&
@@ -142,7 +144,7 @@ export default {
           }
           break;
       }
-      this.selectRecord = selectRecord;
+      this.$store.dispatch("setRecord", selectRecord);
     },
     getDate(start, end) {
       var dateList = [];
@@ -455,6 +457,7 @@ export default {
   watch: {
     record: {
       handler: function(val, oldVal) {
+        this.allRecord = {}
         var allRecord = {};
         allRecord.dateArr = this.dateList;
         allRecord.recordArr = [];
@@ -469,7 +472,7 @@ export default {
         var typeWattsArr = {};
         var typeUsdArr = {};
         // console.log(this.selectRecord)
-        for (var record of this.selectRecord) {
+        for (var record of val) {
           //   var date = record.record_date.substr(0, 15) + "0";
           var date = record.record_date.substr(0, 13);
           var index = allRecord.dateArr.indexOf(date);
@@ -545,18 +548,21 @@ export default {
     record() {
       return this.$store.state.record;
     },
+    currentRecord() {
+      return this.$store.state.currentRecord;
+    },
     recordLoading() {
       return this.$store.state.recordLoading;
     },
-    recordLoading() {
-      // return this.$store.state.recordLoading
-      var recordLoading = this.$store.state.recordLoading;
-      if (!recordLoading) {
-        this.selectRecord = this.$store.state.record;
-        return false;
-      }
-      return true;
-    },
+    // recordLoading() {
+    //   // return this.$store.state.recordLoading
+    //   var recordLoading = this.$store.state.recordLoading;
+    //   if (!recordLoading) {
+    //     this.selectRecord = this.$store.state.record;
+    //     return false;
+    //   }
+    //   return true;
+    // },
     allAddress() {
       var allAddress = [];
       for (var address of this.$store.state.address) {

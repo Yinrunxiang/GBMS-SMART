@@ -13,6 +13,7 @@ const state = {
   light_breed:[],
   led_breed:[],
   record:[],
+  currentRecord:[],
   countryArr:[],
   address:[],
   floor:[],

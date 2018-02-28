@@ -657,7 +657,7 @@ export default {
       // this.devices = devices
       this.countryArr();
     });
-    this.getRecord();
+    // this.getRecord();
   },
   components: {
     leftMenu,
@@ -673,9 +673,6 @@ export default {
     }
   },
   watch: {
-    record() {
-      return this.$store.state.record;
-    },
     devices: {
       handler: function(val, oldVal) {
         this.countryArr();

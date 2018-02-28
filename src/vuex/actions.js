@@ -41,6 +41,9 @@ const actions = {
   setRecord({ commit }, record) {
     commit("setRecord", record);
   },
+  setCurrentRecord({ commit }, currentRecord) {
+    commit("setCurrentRecord", currentRecord);
+  },
   setCountryArr({ commit }, countryArr) {
     commit("setCountryArr", countryArr);
   },
