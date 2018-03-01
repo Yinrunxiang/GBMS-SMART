@@ -29,7 +29,7 @@
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
-			<aside class="w-180 ovf-hd">
+			<aside class="w-180" style="overflow-x:hidden;overflow-y:auto;" ref="leftMenu">
 				<leftMenu :menuData="menuData" ref="leftMenu"></leftMenu>
 			</aside>
 			<section class="panel-c-c" :class="{'hide-leftMenu': hasChildMenu}">
@@ -143,7 +143,7 @@ import leftMenu from "./Common/leftMenu.vue";
 import topMenu from "./Common/topMenu.vue";
 import changePwd from "./Account/changePwd.vue";
 import http from "../assets/js/http";
-import recordApi from "../assets/js/record"
+import recordApi from "../assets/js/record";
 export default {
   data() {
     return {
@@ -283,11 +283,11 @@ export default {
         this.$store.dispatch("setRoom", res);
       });
     },
-    getRecord(){
+    getRecord() {
       var vm = this;
       var beginDate = _g.getMonth() + "-01 00:00";
       var endDate = _g.getMonth() + "-31 23:59";
-      recordApi.getRecord(beginDate,endDate,vm)
+      recordApi.getRecord(beginDate, endDate, vm);
     },
     updateDatabase() {
       const data = {
@@ -441,7 +441,7 @@ export default {
               break;
           }
           if (item.watts) {
-            item.watts = parseFloat(item.watts / 1000 /6);
+            item.watts = parseFloat(item.watts / 1000 / 6);
             item.usd = 0;
             for (var address of addresss) {
               if (address.address == item.address && address.kw_usd) {
@@ -631,6 +631,9 @@ export default {
     // this.$store.dispatch("setShowRoom", false);
   },
   mounted() {
+    var height = document.body.clientHeight - 60;
+    var leftMenu = this.$refs.leftMenu;
+    leftMenu.style.height = height + "px";
     this.getAcBreed();
     this.getLightBreed();
     this.getLedBreed();
