@@ -48,7 +48,6 @@ class Music
         $songNoHigh = substr($val, 2, 2);
         $songNoLow = substr($val, 4, 2);
         $additionalContentData = ["06",$albumNo,$songNoHigh,$songNoLow];
-        var_dump( $additionalContentData);
         $macAddress = $macAddress == "" ? [] : split(".", $macAddress);
         $msg = $sendCommand->send($operatorCodefst, $operatorCodesec, $targetSubnetID, $targetDeviceID, $additionalContentData, $macAddress,$dest_address,$dest_port);
     }

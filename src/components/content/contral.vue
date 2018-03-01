@@ -125,7 +125,7 @@ export default {
       this.room = room
     },
     roomClose() {
-        var vm =this
+      var vm =this
       var i = 0;
       var len = this.roomDevices.length;
       var forDevice = setInterval(function() {

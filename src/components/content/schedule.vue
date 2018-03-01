@@ -147,7 +147,6 @@ export default {
         }
       };
       this.apiGet("device/schedule.php?action=search", data).then(res => {
-        console.log(res);
         var schedules = res;
         for (var schedule of schedules) {
           schedule.week = [];

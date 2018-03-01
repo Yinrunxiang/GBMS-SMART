@@ -1,6 +1,6 @@
 <template>
 	<div class="panel m-w-1280" @click="hideRightPage()">
-    <span class="version">ver 1.2.1</span>
+    <span class="version">ver 1.3.1</span>
 		<el-col :span="24" class="panel-top">
 			<el-col class="w-180">
 				<template v-if="logo_type == '1'">
@@ -185,7 +185,7 @@ export default {
   },
   methods: {
     hideRightPage() {
-      console.log("123");
+      // console.log("123");
       this.$store.dispatch("setShowRightPage", false);
     },
     homeClick() {
@@ -441,7 +441,7 @@ export default {
               break;
           }
           if (item.watts) {
-            item.watts = parseFloat(item.watts / 1000);
+            item.watts = parseFloat(item.watts / 1000 /6);
             item.usd = 0;
             for (var address of addresss) {
               if (address.address == item.address && address.kw_usd) {

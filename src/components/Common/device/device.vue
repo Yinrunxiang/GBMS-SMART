@@ -97,7 +97,7 @@ export default {
       // this.$store.dispatch("showContral", true);
       // let url = "/home/contral/" + device.devicetype;
       // console.log('typelist:' + url + '/n');
-      console.log('123')
+      // console.log('123')
       this.$store.dispatch("setDevice", device);
       this.$store.dispatch("setShowRightPage", false);
       this.$store.dispatch("setShowRightPage", true);

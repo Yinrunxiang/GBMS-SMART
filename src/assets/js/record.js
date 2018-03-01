@@ -45,7 +45,7 @@ function getRecordList(beginDate, endDate,vm,count, start, end,  setIntervalReco
                         break;
                 }
                 if (record.watts) {
-                    record.watts = parseFloat(record.watts / 1000);
+                    record.watts = parseFloat(record.watts / 1000 /6);
                     record.usd = 0;
                     for (var address of addresss) {
                         if (address.address == record.address && address.kw_usd) {
