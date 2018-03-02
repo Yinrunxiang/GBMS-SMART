@@ -171,7 +171,7 @@
 import http from "../../../assets/js/http.js";
 import list from "../../../assets/js/list.js";
 import colorPicker from "vue-color-picker";
-import musicApi from "../devices/music/music";
+import musicApi from "../devices/music/api";
 export default {
   //  currentPage        页码
   //  keywords           关键字

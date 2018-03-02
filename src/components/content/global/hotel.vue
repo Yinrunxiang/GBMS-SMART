@@ -119,15 +119,13 @@
 
 
 <script>
-import deviceList from "../../Common/device/deviceList";
-import deviceTap from "../../Common/device/deviceTap";
-import devicePage from "../../Common/device/devicePage";
+import deviceTap from "../../Common/deviceTap";
 import deviceUpdate from "../plan/update";
 import addressUpdate from "../setting/address/add";
 import floorUpdate from "../setting/floor/add";
 import roomUpdate from "../setting/room/add";
-import rightPage from "../contral/rightPage"
-import mood from "./mood";
+import rightPage from "../../Common/rightPage"
+import mood from "../../Common/mood";
 // import changeName from "../setting/room/changeName";
 // import $ from 'jquery'
 // import '../../../assets/css/drag.css'
@@ -468,11 +466,9 @@ export default {
     });
   },
   components: {
-    deviceList,
     deviceTap,
     deviceUpdate,
     addressUpdate,
-    devicePage,
     floorUpdate,
     roomUpdate,
     rightPage,

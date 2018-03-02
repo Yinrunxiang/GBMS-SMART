@@ -2,77 +2,32 @@
 const refresh = () =>  import("./components/refresh.vue");
 const Login = () =>  import("./components/Account/Login.vue");
 const Home = () =>  import("./components/Home.vue");
-const global = () =>  import("./components/content/global.vue");
-const hotel = () =>  import("./components/content/global/hotel.vue");
-const floor = () =>  import("./components/content/global/floor.vue");
-const room = () =>  import("./components/content/global/room.vue");
-const plan = () =>  import("./components/content/plan.vue");
-const macro = () =>  import("./components/content/macro.vue");
-const schedule = () =>  import("./components/content/schedule.vue");
-const report = () =>  import("./components/content/report.vue");
-const contral = () =>  import("./components/content/contral.vue");
-const light = () =>  import("./components/content/devices/light.vue");
-const ac = () =>  import("./components/content/devices/ac.vue");
-const music = () =>  import("./components/content/devices/music.vue");
-const led = () =>  import("./components/content/devices/led.vue");
-const curtain = () =>  import("./components/content/devices/curtain.vue");
-const ir = () =>  import("./components/content/devices/ir.vue");
-const planUpdate = () =>  import("./components/content/plan/update.vue");
-const macroAdd = () =>  import("./components/content/macro/add.vue");
-const scheduleAdd = () =>  import("./components/content/schedule/add.vue");
-const settingTypeAc = () =>  import("./components/content/setting/type/ac/ac.vue");
-const settingTypeAcAdd = () =>  import("./components/content/setting/type/ac/add.vue");
-const settingTypeAcUpdate = () =>  import("./components/content/setting/type/ac/update.vue");
-const settingTypeLight = () =>  import("./components/content/setting/type/light/light.vue");
-const settingTypeLightAdd = () =>  import("./components/content/setting/type/light/add.vue");
-const settingTypeLightUpdate = () =>  import("./components/content/setting/type/light/update.vue");
-const settingTypeLed = () =>  import("./components/content/setting/type/led/led.vue");
-const settingTypeLedAdd = () =>  import("./components/content/setting/type/led/add.vue");
-const settingTypeLedUpdate = () =>  import("./components/content/setting/type/led/update.vue");
-const address = () =>  import("./components/content/setting/address/address.vue");
-const addressAdd = () =>  import("./components/content/setting/address/add.vue");
-const addressUpdate = () =>  import("./components/content/setting/address/update.vue");
-const floorSetting = () =>  import("./components/content/setting/floor/floor.vue");
-const floorAdd = () =>  import("./components/content/setting/floor/add.vue");
-const roomSetting = () =>  import("./components/content/setting/room/room.vue");
-const roomAdd = () =>  import("./components/content/setting/room/add.vue");
-// import refresh from "./components/refresh.vue";
-// import Login from './components/Account/Login.vue'
-// import Home from "./components/Home.vue";
-// import global from "./components/content/global.vue";
-// import hotel from "./components/content/global/hotel.vue";
-// import floor from "./components/content/global/floor.vue";
-// import room from "./components/content/global/room.vue";
-// import plan from "./components/content/plan.vue";
-// import macro from "./components/content/macro.vue";
-// import schedule from "./components/content/schedule.vue";
-// import report from "./components/content/report.vue";
-// import contral from "./components/content/contral.vue";
-// import light from "./components/content/devices/light.vue";
-// import ac from "./components/content/devices/ac.vue";
-// import music from "./components/content/devices/music.vue";
-// import led from "./components/content/devices/led.vue";
-// import curtain from "./components/content/devices/curtain.vue";
-// import ir from "./components/content/devices/ir.vue";
-// import planUpdate from "./components/content/plan/update.vue";
-// import macroAdd from "./components/content/macro/add.vue";
-// import scheduleAdd from "./components/content/schedule/add.vue";
-// import settingTypeAc from "./components/content/setting/type/ac/ac.vue";
-// import settingTypeAcAdd from "./components/content/setting/type/ac/add.vue";
-// import settingTypeAcUpdate from "./components/content/setting/type/ac/update.vue";
-// import settingTypeLight from "./components/content/setting/type/light/light.vue";
-// import settingTypeLightAdd from "./components/content/setting/type/light/add.vue";
-// import settingTypeLightUpdate from "./components/content/setting/type/light/update.vue";
-// import settingTypeLed from "./components/content/setting/type/led/led.vue";
-// import settingTypeLedAdd from "./components/content/setting/type/led/add.vue";
-// import settingTypeLedUpdate from "./components/content/setting/type/led/update.vue";
-// import address from "./components/content/setting/address/address.vue";
-// import addressAdd from "./components/content/setting/address/add.vue";
-// import addressUpdate from "./components/content/setting/address/update.vue";
-// import floorSetting from "./components/content/setting/floor/floor.vue";
-// import floorAdd from "./components/content/setting/floor/add.vue";
-// import roomSetting from "./components/content/setting/room/room.vue";
-// import roomAdd from "./components/content/setting/room/add.vue";
+const global = () =>  import("./components/Content/global");
+const hotel = () =>  import("./components/Content/global/hotel.vue");
+const plan = () =>  import("./components/Content/plan");
+const macro = () =>  import("./components/Content/macro");
+const schedule = () =>  import("./components/Content/schedule");
+const report = () =>  import("./components/Content/report");
+const contral = () =>  import("./components/Content/contral");
+const planUpdate = () =>  import("./components/Content/plan/update.vue");
+const macroAdd = () =>  import("./components/Content/macro/add.vue");
+const scheduleAdd = () =>  import("./components/Content/schedule/add.vue");
+const settingTypeAc = () =>  import("./components/Content/setting/type/ac");
+const settingTypeAcAdd = () =>  import("./components/Content/setting/type/ac/add.vue");
+const settingTypeAcUpdate = () =>  import("./components/Content/setting/type/ac/update.vue");
+const settingTypeLight = () =>  import("./components/Content/setting/type/light");
+const settingTypeLightAdd = () =>  import("./components/Content/setting/type/light/add.vue");
+const settingTypeLightUpdate = () =>  import("./components/Content/setting/type/light/update.vue");
+const settingTypeLed = () =>  import("./components/Content/setting/type/led");
+const settingTypeLedAdd = () =>  import("./components/Content/setting/type/led/add.vue");
+const settingTypeLedUpdate = () =>  import("./components/Content/setting/type/led/update.vue");
+const address = () =>  import("./components/Content/setting/address");
+const addressAdd = () =>  import("./components/Content/setting/address/add.vue");
+const addressUpdate = () =>  import("./components/Content/setting/address/update.vue");
+const floorSetting = () =>  import("./components/Content/setting/floor");
+const floorAdd = () =>  import("./components/Content/setting/floor/add.vue");
+const roomSetting = () =>  import("./components/Content/setting/room");
+const roomAdd = () =>  import("./components/Content/setting/room/add.vue");
 /**
  * meta参数解析
  * hideLeft: 是否隐藏左侧菜单，单页菜单为true
@@ -88,9 +43,7 @@ const routes = [
     children: [
       { path: "refresh", component: refresh, name: "refresh" },
       { path: "global", component: global, name: "global" },
-      { path: "global/hotel", component: hotel, name: "hotel" },
-      { path: "global/floor", component: floor, name: "floor" },
-      { path: "global/room", component: room, name: "room" },]
+      { path: "global/hotel", component: hotel, name: "hotel" },]
 
   },
   {
@@ -101,14 +54,6 @@ const routes = [
         path: "contral",
         component: contral,
         name: "contral",
-        children: [
-          {path: "light", component: light, name: "light" },
-          {path: "ac", component: ac, name: "ac" },
-          {path: "music", component: music, name: "music" },
-          {path: "led", component: led, name: "led" },
-          {path: "curtain", component: curtain, name: "curtain" },
-          {path: "ir", component: ir, name: "ir" },
-        ]
       }
     ]
   },

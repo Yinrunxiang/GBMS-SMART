@@ -143,7 +143,6 @@ import leftMenu from "./Common/leftMenu.vue";
 import topMenu from "./Common/topMenu.vue";
 import changePwd from "./Account/changePwd.vue";
 import http from "../assets/js/http";
-import recordApi from "../assets/js/record";
 export default {
   data() {
     return {
@@ -178,7 +177,6 @@ export default {
       img: "",
       title: "",
       logo_type: null,
-      record: [],
       dataReady: false,
       showChange: false
     };
@@ -282,12 +280,6 @@ export default {
       this.apiGet("device/room.php", data).then(res => {
         this.$store.dispatch("setRoom", res);
       });
-    },
-    getRecord() {
-      var vm = this;
-      var beginDate = _g.getMonth() + "-01 00:00";
-      var endDate = _g.getMonth() + "-31 23:59";
-      recordApi.getRecord(beginDate, endDate, vm);
     },
     updateDatabase() {
       const data = {
@@ -660,7 +652,6 @@ export default {
       // this.devices = devices
       this.countryArr();
     });
-    // this.getRecord();
   },
   components: {
     leftMenu,
