@@ -178,7 +178,7 @@ export default {
     deviceWarn() {
       var warn = 0;
       for (var device of this.$store.state.devices) {
-        if (device.on_off == "on") {
+        if (device.on_off == true) {
           for (var breed of this.$store.state[device.devicetype + "_breed"]) {
             var run_time = parseInt(breed.run_time) * 36000;
             if (device.breed == breed.breed && device.run_time >= run_time) {

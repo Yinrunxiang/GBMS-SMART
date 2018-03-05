@@ -5,6 +5,7 @@ const Home = () =>  import("./components/Home.vue");
 const global = () =>  import("./components/Content/global");
 const hotel = () =>  import("./components/Content/global/hotel.vue");
 const plan = () =>  import("./components/Content/plan");
+const runing = () =>  import("./components/Content/runing");
 const macro = () =>  import("./components/Content/macro");
 const schedule = () =>  import("./components/Content/schedule");
 const report = () =>  import("./components/Content/report");
@@ -82,6 +83,13 @@ const routes = [
       { path: "plan", component: plan, name: "plan" },
       // { path: "plan/add", component: planAdd, name: "planAdd" },
       { path: "plan/update", component: planUpdate, name: "planUpdate" },
+    ]
+  },
+  {
+    path: "/home",
+    component: Home,
+    children: [
+      { path: "runing", component: runing, name: "runing" },
     ]
   },
   {

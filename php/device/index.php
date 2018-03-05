@@ -303,6 +303,7 @@ switch ($action)
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {
+            $row['on_off'] = $row['on_off'] == 'on'? true:false;
             $results[] = $row;
         }
         $json_results = str_replace("\/","/",json_encode($results)); 

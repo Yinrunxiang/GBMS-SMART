@@ -1,14 +1,16 @@
 ;(function($, window, document,undefined) {
-    //定义的构造函数
+	//定义的构造函数
+	console.log('drag')
     var Drag = function(ele, opt) {
         this.$ele = ele,
 				this.x = 0,
 				this.y = 0,
         this.defaults = {
 					parent:'parent',
-					randomPosition:true,
+					randomPosition:false,
 					direction:'all',
 					handler:false,
+					lock:true,
 					dragStart:function(x,y){},
 					dragEnd:function(x,y){},
 					dragMove:function(x,y){}
@@ -24,6 +26,7 @@
 					var direction = this.options.direction; //方向
 					var handler = this.options.handler;
 					var parent = this.options.parent;
+					var lock = this.options.lock
 					var isDown = false; //记录鼠标是否按下
 					var fun = this.options; //使用外部函数
 					var X = 0,
@@ -78,6 +81,9 @@
 						}
 					}
 					handler.css({cursor:'move'}).mousedown(function(e){
+						if(lock){
+							return
+						}
 						isDown = true;
 						X = e.pageX;
 						Y = e.pageY;
@@ -93,6 +99,9 @@
 						moveX = $this.x+e.pageX-X;
 						moveY = $this.y+e.pageY-Y;
 						function thisXMove(){ //x轴移动
+							if(lock){
+								return
+							}
 							if(isDown == true){
 								element.css({left:moveX});
 							}else{
@@ -107,6 +116,9 @@
 							return moveX;
 						}
 						function thisYMove(){ //y轴移动
+							if(lock){
+								return
+							}
 							if(isDown == true){
 								element.css({top:moveY});
 							}else{
@@ -121,6 +133,9 @@
 							return moveY;
 						}
 						function thisAllMove(){ //全部移动
+							if(lock){
+								return
+							}
 							if(isDown == true){
 								element.css({left:moveX,top:moveY});
 							}else{
@@ -138,6 +153,9 @@
 							if(moveY > (boxHeight-sonHeight)){
 								element.css({top:boxHeight-sonHeight});
 							}
+						}
+						if(lock){
+							return
 						}
 						if(isDown){
 					  	fun.dragMove(parseInt(element.css('left')),parseInt(element.css('top')));

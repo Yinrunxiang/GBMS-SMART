@@ -39,16 +39,15 @@
   margin-left: 5px;
 }
 .device-tap .icon .fa-music {
-  margin-left:-2px
+  margin-left: -2px;
 }
 .device-tap .icon .fa-life-ring {
   font-size: 22px;
-  margin-left:-2px
+  margin-left: -2px;
 }
 .device-tap .icon .fa-columns {
-  
   font-size: 22px;
-  margin-left:-2px;
+  margin-left: -2px;
 }
 .device-tap .device-switch {
   position: absolute;
@@ -74,7 +73,9 @@ import "../../assets/js/drag.js";
 import http from "../../assets/js/http";
 export default {
   data() {
-    return {};
+    return {
+      jqDevice : {}
+    };
   },
   props: ["device"],
   methods: {
@@ -119,7 +120,7 @@ export default {
           lightApi.switch_change(val, this.device, deviceProperty);
           break;
         case "ac":
-          this.device.on_ff = false;
+          this.device.on_off = false;
           acApi.switch_change(val, this.device);
           break;
         case "led":
@@ -142,11 +143,11 @@ export default {
     readOpen() {
       switch (this.device.devicetype) {
         case "light":
-          this.device.on_ff = false;
+          this.device.on_off = false;
           lightApi.readOpen(this.device);
           break;
         case "ac":
-          this.device.on_ff = false;
+          this.device.on_off = false;
           acApi.readOpen(this.device);
           break;
         case "led":
@@ -186,7 +187,7 @@ export default {
           return "fa-lock";
           break;
       }
-    }
+    },
   },
   created() {
     // console.log('device list device')
@@ -196,11 +197,13 @@ export default {
     var self = this;
     this.$nextTick(function() {
       var device = this.$refs.device;
-      $(device).myDrag({
+      this.jqDevice = $(device)
+      this.jqDevice.myDrag({
         parent: "parent", //定义拖动不能超出的外框,拖动范围
         randomPosition: false, //初始化随机位置
         direction: "all", //方向
         handler: false, //把手
+        lock:this.lock,
         dragStart: function(x, y) {}, //拖动开始 x,y为当前坐标
         dragEnd: function(x, y) {
           if (self.device.x_axis != x || self.device.y_axis != y) {
@@ -234,7 +237,7 @@ export default {
       });
     });
   },
-  props: ["device", "setting"],
+  props: ["device", "setting","lock"],
   components: {},
   computed: {},
   mixins: [http]

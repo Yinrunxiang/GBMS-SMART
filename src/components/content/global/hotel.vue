@@ -86,10 +86,16 @@
                     <div @click="clickToShowMoodSetting">
                         <i class="fa fa-heart"></i>
                     </div>
+                    <div v-show="!lock" @click="clickToLock">
+                        <i class="fa fa-lock"></i>
+                    </div>
+                    <div v-show="lock" @click="clickToUnLock">
+                        <i class="fa fa-unlock"></i>
+                    </div>
                     
                 </div>
                 <div class="roomImga">
-                    <deviceTap ref="device" v-for="(device,key) in deviceList" :device="device" :key = "key" :setting="setting" @deviceDbclick="deviceDbclick"></deviceTap>
+                    <deviceTap ref="device" v-for="(device,key) in deviceList" :device="device" :key = "key" :setting="setting" :lock = "lock" @deviceDbclick="deviceDbclick"></deviceTap>
 
                 </div>
                 </div>
@@ -124,7 +130,7 @@ import deviceUpdate from "../plan/update";
 import addressUpdate from "../setting/address/add";
 import floorUpdate from "../setting/floor/add";
 import roomUpdate from "../setting/room/add";
-import rightPage from "../../Common/rightPage"
+import rightPage from "../../Common/rightPage";
 import mood from "../../Common/mood";
 // import changeName from "../setting/room/changeName";
 // import $ from 'jquery'
@@ -164,13 +170,33 @@ export default {
       showFloorUpdate: false,
       showRoomUpdate: false,
       floor: {},
-      room: {}
+      room: {},
+      lock: true
     };
   },
   // prop:[address],
   methods: {
     changeRoomName() {
       this.showChange = true;
+    },
+    clickToLock() {
+      var currentDeviceList = [];
+      currentDeviceList = currentDeviceList.concat(this.deviceList);
+      this.deviceList = [];
+      this.lock = true;
+
+      this.$nextTick(function() {
+        this.deviceList = currentDeviceList;
+      });
+    },
+    clickToUnLock() {
+      var currentDeviceList = [];
+      currentDeviceList = currentDeviceList.concat(this.deviceList);
+      this.deviceList = [];
+      this.lock = false;
+      this.$nextTick(function() {
+        this.deviceList = currentDeviceList;
+      });
     },
     showChangePage(val) {
       this.showChange = val;
@@ -332,7 +358,7 @@ export default {
           this.room.room_name = room.room_name;
           this.room.floor = room.floor;
           this.room.address = room.address;
-          this.room.typeList = room.typeList
+          this.room.typeList = room.typeList;
           for (var type of room.typeList) {
             for (var device of type.deviceList) {
               deviceList.push(device);
@@ -436,7 +462,6 @@ export default {
     this.roomWatts = echarts.init(this.$refs.roomWatts);
     this.hotelName = this.address.name;
     this.floorList = this.address.floorList;
-    console.log(this.address);
     for (var address of this.$store.state.address) {
       if (this.address.name == address.address) {
         this.addressUpdateData = address;

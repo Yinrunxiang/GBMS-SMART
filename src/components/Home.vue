@@ -390,7 +390,7 @@ export default {
         item.warn = false;
         var warnDeviceList = ["light", "ac", "led"];
         if (warnDeviceList.indexOf(item.devicetype) != -1) {
-          if (item.on_off == "on") {
+          if (item.on_off == true) {
             for (var breed of this.$store.state[item.devicetype + "_breed"]) {
               var run_time = parseInt(breed.run_time) * 36000;
               if (
@@ -406,7 +406,7 @@ export default {
         }
         item.watts = 0;
         item.usd = 0;
-        if (item.on_off == "on") {
+        if (item.on_off == true) {
           switch (item.devicetype) {
             case "ac":
               for (var ac_breed of ac_breeds) {
