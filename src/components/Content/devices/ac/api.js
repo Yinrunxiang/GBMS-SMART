@@ -1,4 +1,4 @@
-import api from "../../../../assets/js/http";
+import api from "../../../../assets/js/api";
 const acApi = {
     get_switch_change(val, device, deviceProperty) {
         if (val) {
