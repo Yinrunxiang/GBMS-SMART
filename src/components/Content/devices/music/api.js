@@ -116,6 +116,44 @@ const musicApi = {
       // _g.closeGlobalLoading()
     });
   },
+  switch_change(val, device) {
+    device.on_off = val;
+    var data = {}
+    switch (val) {
+      case true:
+        data = {
+          params: {
+            operatorCodefst: "02",
+            operatorCodesec: "18",
+            targetSubnetID: device.subnetid,
+            targetDeviceID: device.deviceid,
+            additionalContentData: "04,03,00,00".split(","),
+            macAddress: device.mac ? device.mac.split(".") : "",
+            dest_address: device.ip ? device.ip : "",
+            dest_port: device.port ? device.port : ""
+          }
+        };
+        break
+      case false:
+        data = {
+          params: {
+            operatorCodefst: "02",
+            operatorCodesec: "18",
+            targetSubnetID: device.subnetid,
+            targetDeviceID: device.deviceid,
+            additionalContentData: "04,04,00,00".split(","),
+            macAddress: device.mac ? device.mac.split(".") : "",
+            dest_address: device.ip ? device.ip : "",
+            dest_port: device.port ? device.port : ""
+          }
+        };
+        break
+    }
+    api.apiGet("udp/sendUdp.php", data).then(res => {
+      // console.log("res = ", _g.j2s(res));
+      // _g.closeGlobalLoading()
+    });
+  },
   play(device) {
     device.on_off = true;
     const data = {
@@ -130,18 +168,6 @@ const musicApi = {
         dest_port: device.port ? device.port : ""
       }
     };
-    // const data = {
-    //   params: {
-    //     operatorCodefst: "19",
-    //     operatorCodesec: "2e",
-    //     targetSubnetID: device.subnetid,
-    //     targetDeviceID: device.deviceid,
-    //     additionalContentData: ['2A', '5A', '01', '53', '54', '41', '54', '55', '53', '3F', '0D'],
-    //     macAddress: device.mac ? device.mac.split(".") : "",
-    //     dest_address: device.ip ? device.ip : "",
-    //     dest_port: device.port ? device.port : ""
-    //   }
-    // };
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
@@ -462,7 +488,7 @@ const musicApi = {
                 var songObj = {}
                 songObj.albumNo = albumno
                 songObj.No = parseInt('0x' + currentSonglist.substr(songCount, 4))
-                songObj.songNo = songObj.albumNo+currentSonglist.substr(songCount, 4)
+                songObj.songNo = songObj.albumNo + currentSonglist.substr(songCount, 4)
                 songObj.songNoHigh = currentSonglist.substr(songCount, 2);
                 songObj.songNoLow = currentSonglist.substr(songCount + 2, 2);
                 songObj.songName = songName

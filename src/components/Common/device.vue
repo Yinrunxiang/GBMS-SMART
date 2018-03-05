@@ -130,7 +130,7 @@ export default {
           ledApi.switch_change(val, this.device, deviceProperty);
           break;
         case "music":
-          // musicApi.switch_change(this.device)
+          musicApi.switch_change(val,this.device)
           break;
         case "curtain":
           curtainApi.switch_change(val, this.device);
