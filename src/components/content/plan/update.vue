@@ -42,19 +42,19 @@
               <template slot="prepend">Http://</template>
                 <el-select v-model="form.address" filterable placeholder="Select Building" class="h-40 w-200">
                   
-                    <el-option v-for="item in address" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="(item,key) in address" :key="key" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item v-show="notHotel" label="Floor">
                 <el-select v-model="form.floor" filterable placeholder="Select Floor" class="h-40 w-200">
-                    <el-option v-for="item in floor" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="(item,key)  in floor" :key="key" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item v-show="notHotel" label="Room">
                 <el-select v-model="form.room" filterable placeholder="Select Room" class="h-40 w-200">
-                    <el-option v-for="item in room" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="(item,key) in room" :key="key" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>

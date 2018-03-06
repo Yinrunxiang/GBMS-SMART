@@ -52,6 +52,9 @@ switch ($action)
                     $insertRoom="insert into room (room,room_name,floor,address,status) values ('".$i."','".$i."','".$floor."','".$address."','enabled')";
                     mysqli_query($con,$insertRoom);
                 }
+            }else if ($room_num < $count){
+                $deleteRoom="delete from room where address = '".$address."' and floor = '".$floor."' and room > '".$room_num."'";
+                mysqli_query($con,$deleteRoom);
             }
             $message = [];
             $message[0] = true;

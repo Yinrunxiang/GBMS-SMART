@@ -73,6 +73,9 @@ switch ($action)
                     $insertFloor="insert into floor (floor,room_num,address,status) values ('".$i."',0,'".$address."','enabled')";
                     mysqli_query($con,$insertFloor);
                 }
+            }else if ($floor_num < $floor_count){
+                $deleteFloor ="delete from floor where address = '".$address."' and floor > '".$floor_num."'";
+                mysqli_query($con,$deleteFloor);
             }
             $message = [];
             $message[0] = true;
@@ -90,16 +93,20 @@ switch ($action)
         $re_str = "";
         for ($i = 0; $i  < count($selections); $i++) {
             $selection = json_decode($selections[$i]);
-            $sql = " delete from address where id = '".$selection->id."'";
+            $deleteDevice = " delete from device where address = '".$selection->address."'";
+            $deleteFloor =" delete from floor where address = '".$selection->address."'";
+            $deleteRoom = " delete from room where address = '".$selection->address."'";
+            $sql = " delete from address where address = '".$selection->address."'";
+            mysqli_query($con,$deleteDevice);
+            mysqli_query($con,$deleteFloor);
+            mysqli_query($con,$deleteRoom);
             if (!mysqli_query($con,$sql))
             {
                 $re = false;
                 $re_str = $re_str." Delete failed: " .$selection->address;
-            }
-            else{
+            }else{
                 $re = true;
             }
-            
         }
         if (!$re)
         {

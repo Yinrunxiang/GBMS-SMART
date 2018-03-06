@@ -3,7 +3,7 @@
         <div style="margin-bottom:20px;padding-left:10px;height:30px;line-height:30px;background-color:#58B7FF;color:#fff;border-radius:5px">
                     <p>Runing device</p>
                 </div>
-        <device class="fl" v-for="(val,key) in runList" :key = "key" :device="val"></device>
+        <device ref="device" class="fl" v-for="(val,key) in runList" :key = "key" :device="val"></device>
         <right-page v-if="showRightPage">
           
         </right-page>
@@ -13,7 +13,7 @@
 <script>
 import http from "../../../assets/js/http.js";
 import device from "../../Common/device";
-import rightPage from "../../Common/rightPage"
+import rightPage from "../../Common/rightPage";
 export default {
   data() {
     return {
@@ -25,6 +25,23 @@ export default {
   created() {
     console.log("runing");
   },
+  mounted() {
+    var vm = this;
+    for (var device of vm.$refs.device) {
+      var i = 0;
+      var len = vm.$refs.device.length;
+      if (len > 0) {
+        var interval = setInterval(function() {
+          device.readOpen();
+          i = i + 1;
+          if (i >= len) {
+            clearInterval(interval);
+            return;
+          }
+        }, 100);
+      }
+    }
+  },
   components: {
     device,
     rightPage
@@ -33,11 +50,11 @@ export default {
     runList() {
       var runList = [];
       for (var device of this.$store.state.devices) {
-        if ((device.on_off == true)) {
+        if (device.on_off == true) {
           runList.push(device);
         }
       }
-      return runList
+      return runList;
     },
     showRightPage() {
       return this.$store.state.showRightPage;

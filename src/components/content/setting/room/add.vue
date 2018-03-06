@@ -9,13 +9,13 @@
             </el-form-item>
             <el-form-item  label="Address">
                 <el-select  :disabled="!this.add" v-model="form.address" filterable placeholder="Select Address" class="h-40 w-200">
-                    <el-option v-for="item in address" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="(item,key) in address" :key="key" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="Floor">
                 <el-select  :disabled="!this.add" v-model="form.floor" filterable placeholder="Select Floor" class="h-40 w-200">
-                    <el-option v-for="item in floor" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="(item,key) in floor" :key="key" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -82,7 +82,7 @@ export default {
           if (res[0]) {
             var room = this.$store.state.room;
             for (var i = 0; i < room.length; i++) {
-              if (room[i].room == this.form.room) {
+              if (room[i].room == this.form.room && room[i].floor == this.form.floor && room[i].address == this.form.address) {
                 room[i] = this.form;
               }
             }
