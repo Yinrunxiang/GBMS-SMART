@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div v-show="setting">
+        <div v-if="setting">
             <add :add="add" :room="room" @goback="goback"></add>
         </div>
     </div>

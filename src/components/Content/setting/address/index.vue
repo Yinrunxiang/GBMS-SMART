@@ -127,7 +127,7 @@ export default {
     },
     //删除按钮事件
     deleteBtn() {
-      this.$confirm("Are you sure to delete the selected data?", "Tips", {
+      this.$confirm("Are you sure to delete the selected data? The floor, room, and device that the building belongs to will also be deleted.", "Tips", {
         confirmButtonText: "Yse",
         cancelButtonText: "No",
         type: "warning"
@@ -141,14 +141,19 @@ export default {
           this.apiGet("device/address.php?action=delete", data).then(res => {
             if (res[0]) {
               var address = this.$store.state.address;
-              for (var i = 0; i < address.length; i++) {
-                for (var selection of this.multipleSelection) {
-                  if (address[i].address == selection.address) {
-                    address.splice(i, 1);
-                  }
-                }
+              var floor = this.$store.state.floor;
+              var room = this.$store.state.room;
+              var devices = this.$store.state.devices;
+              for (var selection of this.multipleSelection) {
+                address = address.filter(item => item.address != selection.address);
+                floor = floor.filter(item => item.address != selection.address);
+                room = room.filter(item => item.address != selection.address);
+                devices = devices.filter(item => item.address != selection.address);
               }
               this.$store.dispatch("setAddress", address);
+              this.$store.dispatch("setFloor", floor);
+              this.$store.dispatch("setRoom", room);
+              this.$store.dispatch("setDevices", devices);
               _g.toastMsg("success", res[1]);
             } else {
               _g.toastMsg("error", res[1]);
@@ -159,7 +164,7 @@ export default {
           // catch error
         });
     },
-     getAllData() {
+    getAllData() {
       // var pages = Math.ceil(this.dataCount/this.limit)
       var data = [];
       //   var devices = [];
@@ -183,7 +188,7 @@ export default {
     init() {
       this.getKeywords();
       this.getCurrentPage();
-      this.getAllData()
+      this.getAllData();
     }
   },
   created() {
@@ -214,6 +219,6 @@ export default {
       deep: true
     }
   },
-  mixins: [http,list]
+  mixins: [http, list]
 };
 </script>

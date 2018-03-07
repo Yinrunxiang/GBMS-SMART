@@ -74,7 +74,9 @@ switch ($action)
                     mysqli_query($con,$insertFloor);
                 }
             }else if ($floor_num < $floor_count){
-                $deleteFloor ="delete from floor where address = '".$address."' and floor > '".$floor_num."'";
+                $deleteFloor ="delete from floor where address = '".$address."' and floor > ".$floor_num;
+                $deleteRoom ="delete from room where address = '".$address."' and floor > ".$floor_num;
+                $deleteDevice ="delete from device where address = '".$address."' and floor > ".$floor_num;
                 mysqli_query($con,$deleteFloor);
             }
             $message = [];

@@ -14,7 +14,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
+                <el-button type="primary" @click="addFloor('form')" :loading="isLoading">Save</el-button>
                 <el-button @click="goback()">Cancel</el-button>
             </el-form-item>
         </el-form>
@@ -40,7 +40,7 @@ export default {
       //     status: 'enabled',
       // },
       addressOptions: [],
-      oldFloor:"",
+      oldFloor: ""
     };
   },
   methods: {
@@ -57,8 +57,8 @@ export default {
         this.$store.dispatch("setRoom", res);
       });
     },
-    addAddress(form) {
-      console.log(this.form);
+    addFloorRun() {
+      var vm = this;
       this.isLoading = !this.isLoading;
       this.form.oldFloor = this.oldFloor;
       const data = {
@@ -68,40 +68,65 @@ export default {
         this.apiGet("device/floor.php?action=insert", data).then(res => {
           // _g.clearVuex('setRules')
           if (res[0]) {
-            var floor = this.$store.state.floor;
-            floor.push(this.form);
-            this.$store.dispatch("setFloor", floor);
+            var floor = vm.$store.state.floor;
+            floor.push(vm.form);
+            vm.$store.dispatch("setFloor", floor);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
-              this.getRoom()
-              this.goback();
+              vm.getRoom();
+              vm.goback();
             }, 500);
           } else {
             _g.toastMsg("error", res[1]);
           }
-          this.isLoading = false;
+          vm.isLoading = false;
         });
       } else {
-        this.apiGet("device/floor.php?action=update", data).then(res => {
+        vm.apiGet("device/floor.php?action=update", data).then(res => {
           // _g.clearVuex('setRules')
           if (res[0]) {
-            var floor = this.$store.state.floor;
-            for (var i = 0; i < floor.length; i++) {
-              if (floor[i].floor == this.form.floor && floor[i].address == this.form.address) {
-                floor[i] = this.form;
+            var floor = [];
+            floor = floor.concat(vm.$store.state.floor);
+            for (var index in floor) {
+              if (
+                floor[index].floor == vm.form.floor &&
+                floor[index].address == vm.form.address
+              ) {
+                floor[index] = vm.form;
               }
             }
-            this.$store.dispatch("setFloor", floor);
+            vm.$store.dispatch("setFloor", floor);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
-              this.getRoom()
-              this.goback();
+              vm.getRoom();
+              vm.goback();
             }, 500);
           } else {
             _g.toastMsg("error", res[1]);
           }
-          this.isLoading = false;
+          vm.isLoading = false;
         });
+      }
+    },
+    addFloor(form) {
+      if (parseInt(this.form.room_num) < parseInt(this.floor.room_num)) {
+        this.$confirm(
+          "If you reduce the number of floors, the rooms and devices that are deleted will also be removed.",
+          "Tips",
+          {
+            confirmButtonText: "Yse",
+            cancelButtonText: "No",
+            type: "warning"
+          }
+        )
+          .then(() => {
+            this.addFloorRun();
+          })
+          .catch(() => {
+            // catch error
+          });
+      } else {
+        this.addFloorRun();
       }
     }
   },
@@ -112,7 +137,7 @@ export default {
   },
   computed: {
     form() {
-      return this.floor;
+      return Object.assign({}, this.floor);
     },
     address() {
       var address = [];

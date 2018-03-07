@@ -53,8 +53,10 @@ switch ($action)
                     mysqli_query($con,$insertRoom);
                 }
             }else if ($room_num < $count){
-                $deleteRoom="delete from room where address = '".$address."' and floor = '".$floor."' and room > '".$room_num."'";
+                $deleteRoom="delete from room where address = '".$address."' and floor = '".$floor."' and room > ".$room_num;
+                $deleteDevice="delete from device where address = '".$address."' and floor = '".$floor."' and room > ".$room_num;
                 mysqli_query($con,$deleteRoom);
+                mysqli_query($con,$deleteDevice);
             }
             $message = [];
             $message[0] = true;

@@ -54,7 +54,7 @@ export default {
       this.$emit("goback", false);
     },
     addAddress(form) {
-      console.log(this.form);
+      // console.log(this.form);
       this.isLoading = !this.isLoading;
       this.form.oldRoom = this.oldRoom;
       const data = {
@@ -106,7 +106,7 @@ export default {
   },
   computed: {
     form() {
-      return this.room;
+      return Object.assign({},this.room)
     },
     address() {
       var address = [];

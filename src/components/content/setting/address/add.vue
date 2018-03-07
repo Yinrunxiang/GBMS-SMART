@@ -85,8 +85,8 @@ export default {
         this.$store.dispatch("setFloor", res);
       });
     },
-    addAddress(form) {
-      console.log(this.form);
+    addAddressRun() {
+      var vm = this;
       this.isLoading = !this.isLoading;
       this.form.oldAddress = this.oldAddress;
       const data = {
@@ -97,66 +97,110 @@ export default {
         this.apiGet("device/address.php?action=insert", data).then(res => {
           // _g.clearVuex('setRules')
           if (res[0]) {
-            var address = this.$store.state.address;
-            address.push(this.form);
-            this.$store.dispatch("setAddress", address);
+            var address = vm.$store.state.address;
+            address.push(vm.form);
+            vm.$store.dispatch("setAddress", address);
 
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
-              this.getFloor();
-              this.goback();
+              vm.getFloor();
+              vm.goback();
             }, 500);
           } else {
             _g.toastMsg("error", res[1]);
           }
-          this.isLoading = false;
+          vm.isLoading = false;
         });
       } else {
-        this.apiGet("device/address.php?action=update", data).then(res => {
+        vm.apiGet("device/address.php?action=update", data).then(res => {
           // _g.clearVuex('setRules')
           if (res[0]) {
-            var address = this.$store.state.address;
-            for (var i = 0; i < address.length; i++) {
-              if (address[i].address == this.form.address) {
-                address[i] = this.form;
+            var address = [];
+            address = address.concat(vm.$store.state.address);
+            for (var index in address) {
+              if (address[index].address == vm.oldAddress) {
+                address[index] = vm.form;
               }
             }
-            this.$store.dispatch("setAddress", address);
-            var devices = this.$store.state.devices;
-            for (var device of devices) {
-              if (device.address == this.oldAddress) {
-                device.address = this.form.address;
-                device.ip = this.form.ip;
-                device.port = this.form.port;
-                device.mac = this.form.mac;
-                device.country = this.form.country;
+            vm.$store.dispatch("setAddress", address);
+            var devices = [];
+            devices = devices.concat(vm.$store.state.devices);
+            for (var index in devices) {
+              if (devices[index].address == vm.oldAddress) {
+                if (
+                  parseInt(devices[index].floor) > parseInt(vm.form.floor_num)
+                ) {
+                  devices.splice(index, 1);
+                } else {
+                  devices[index].address = vm.form.address;
+                  devices[index].ip = vm.form.ip;
+                  devices[index].port = vm.form.port;
+                  devices[index].mac = vm.form.mac;
+                  devices[index].country = vm.form.country;
+                }
               }
             }
-            this.$store.dispatch("setDevices", devices);
-            var floors = this.$store.state.floor;
-            for (var floor of floors) {
-              if (floor.address == this.oldAddress) {
-                floor.address = this.form.address;
+            vm.$store.dispatch("setDevices", devices);
+            var floors = [];
+            floors = floors.concat(vm.$store.state.floor);
+            floors 
+            for (var index in floors) {
+              if (floors[index].address == vm.oldAddress) {
+                if (
+                  parseInt(floors[index].floor) > parseInt(vm.form.floor_num)
+                ) {
+                  floors.splice(index, 1);
+                } else {
+                  floors[index].address = vm.form.address;
+                }
               }
             }
-            this.$store.dispatch("setFloor", floors);
-            var rooms = this.$store.state.room;
-            for (var room of rooms) {
-              if (room.address == this.oldAddress) {
-                room.address = this.form.address;
+            vm.$store.dispatch("setFloor", floors);
+            var rooms = [];
+            rooms = rooms.concat(vm.$store.state.room);
+            for (var index in rooms) {
+              if (rooms[index].address == vm.oldAddress) {
+                if (
+                  parseInt(rooms[index].floor) > parseInt(vm.form.floor_num)
+                ) {
+                  rooms.splice(index, 1);
+                } else {
+                  rooms[index].address = vm.form.address;
+                }
               }
             }
-            this.$store.dispatch("setRoom", rooms);
+            vm.$store.dispatch("setRoom", rooms);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
-              this.getFloor();
-              this.goback();
+              vm.getFloor();
+              vm.goback();
             }, 500);
           } else {
             _g.toastMsg("error", res[1]);
           }
-          this.isLoading = false;
+          vm.isLoading = false;
         });
+      }
+    },
+    addAddress(form) {
+      if (parseInt(this.form.floor_num) < parseInt(this.address.floor_num)) {
+        this.$confirm(
+          "If you reduce the number of floors, the rooms and devices that are deleted will also be removed.",
+          "Tips",
+          {
+            confirmButtonText: "Yse",
+            cancelButtonText: "No",
+            type: "warning"
+          }
+        )
+          .then(() => {
+            this.addAddressRun();
+          })
+          .catch(() => {
+            // catch error
+          });
+      } else {
+        this.addAddressRun();
       }
     },
     getAddressOptions() {
@@ -365,7 +409,7 @@ export default {
   },
   computed: {
     form() {
-      return this.address;
+      return Object.assign({}, this.address);
     }
   },
   components: {},
