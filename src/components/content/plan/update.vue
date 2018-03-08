@@ -14,7 +14,7 @@
             </el-form-item>
             <el-form-item label="Breed Type">
                 <el-select v-model="form.breed" filterable placeholder="Select Breed" class="h-40 w-200">
-                    <el-option v-for="item in breedData" :key="item.value" :label="item.label" :value="item.value">
+                    <el-option v-for="(item,key) in breedData" :key="key" :label="item.breed" :value="item.breed">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -262,17 +262,17 @@ export default {
     breedData() {
       switch (this.form.devicetype) {
         case "ac":
-          var breeds = this.getBreedList(this.$store.state.ac_breed);
+          var breeds = this.ac_breed;
           return breeds;
           break;
         case "light":
           // return this.$store.state.light_breed
-          var breeds = this.getBreedList(this.$store.state.light_breed);
+          var breeds = this.light_breed;
           return breeds;
           break;
         case "led":
           // return this.$store.state.led_breed
-          var breeds = this.getBreedList(this.$store.state.led_breed);
+          var breeds = this.led_breed;
           return breeds;
           break;
       }
@@ -325,22 +325,31 @@ export default {
       }
 
       return room;
+    },
+    ac_breed() {
+      return this.$store.state.ac_breed;
+    },
+    light_breed() {
+      return this.$store.state.light_breed;
+    },
+    led_breed() {
+      return this.$store.state.led_breed;
     }
   },
-  // watch: {
-  //     device: {
-  //         handler: function(val, oldVal) {
-  //             console.log(this.device)
-  //             var device = Object.assign({}, this.device)
-  //             device.subnetid = parseInt('0x' + device.subnetid)
-  //             device.deviceid = parseInt('0x' + device.deviceid)
-  //             device.channel = parseInt('0x' + device.channel)
-  //             device.channel_spare = parseInt('0x' + device.channel_spare)
-  //             this.form = device
-  //         },
-  //         deep: true
-  //     }
-  // },
+  watch: {
+    // device: {
+    //     handler: function(val, oldVal) {
+    //         console.log(this.device)
+    //         var device = Object.assign({}, this.device)
+    //         device.subnetid = parseInt('0x' + device.subnetid)
+    //         device.deviceid = parseInt('0x' + device.deviceid)
+    //         device.channel = parseInt('0x' + device.channel)
+    //         device.channel_spare = parseInt('0x' + device.channel_spare)
+    //         this.form = device
+    //     },
+    //     deep: true
+    // },
+  },
   mixins: [http, fomrMixin]
 };
 </script>

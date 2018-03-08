@@ -19,61 +19,55 @@
 </template>
 
 <script>
-import http from '../../../../../assets/js/http'
-import fomrMixin from '../../../../../assets/js/form_com'
+import http from "../../../../../assets/js/http";
+import fomrMixin from "../../../../../assets/js/form_com";
 
 export default {
-    data() {
-        return {
-            isLoading: false,
-            form: {
-                breed: '',
-                watts: '',
-                run_time: '',
-                status: 'enabled',
-            },
-        }
-    },
-    methods: {
-        add(form) {
-            console.log(this.form)
-            this.isLoading = !this.isLoading
-            const data = {
-                params: this.form
+  data() {
+    return {
+      isLoading: false,
+      form: {
+        breed: "",
+        watts: "",
+        run_time: "",
+        status: "enabled"
+      }
+    };
+  },
+  methods: {
+    add(form) {
+      var vm = this;
+      this.isLoading = !this.isLoading;
+      const data = {
+        params: this.form
+      };
+      this.apiGet("device/light_breed.php?action=update", data).then(res => {
+        // _g.clearVuex('setRules')
+        if (res[0]) {
+          var light_breed = [];
+          light_breed = light_breed.concat(vm.$store.state.light_breed);
+          for (var i = 0; i < light_breed.length; i++) {
+            if (light_breed[i].breed == vm.form.breed) {
+              light_breed[i] = vm.form;
             }
-            this.apiGet('device/light_breed.php?action=update', data).then((res) => {
-                // _g.clearVuex('setRules')
-                if (res[0]) {
-                    var light_breed = this.$store.state.light_breed
-                    for (var i = 0; i < light_breed.length; i++) {
-                        if (light_breed[i].breed == this.form.breed) {
-                            light_breed[i] = this.form
-                        }
-
-                    }
-                    // for (var breed of this.$store.state.light_breed) {
-                    //     if (breed.breed == this.form.breed) {
-                    //         breed = this.form
-                    //     }
-                    // }this.$store.dispatch('setLightBreed', this.$store.state.light_breed)
-                    _g.toastMsg('success', res[1])
-                    setTimeout(() => {
-                        this.goback()
-                    }, 500)
-                } else {
-                    _g.toastMsg('error', res[1])
-                }
-                this.isLoading = false
-            })
-        },
-    },
-    created() {
-        this.form = this.$route.query
-    },
-    mounted() {
-    },
-    components: {
-    },
-    mixins: [http, fomrMixin]
-}
+          }
+          vm.$store.dispatch('setLightBreed', light_breed)
+          _g.toastMsg("success", res[1]);
+          setTimeout(() => {
+            vm.goback();
+          }, 500);
+        } else {
+          _g.toastMsg("error", res[1]);
+        }
+        vm.isLoading = false;
+      });
+    }
+  },
+  created() {
+    this.form = this.$route.query;
+  },
+  mounted() {},
+  components: {},
+  mixins: [http, fomrMixin]
+};
 </script>

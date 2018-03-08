@@ -671,6 +671,15 @@ export default {
     room() {
       return this.$store.state.room;
     },
+    ac_breed() {
+      return this.$store.state.ac_breed;
+    },
+    light_breed() {
+      return this.$store.state.light_breed;
+    },
+    led_breed() {
+      return this.$store.state.led_breed;
+    },
     globalLoading() {
       return store.state.globalLoading;
     }
@@ -695,6 +704,24 @@ export default {
       deep: true
     },
     room: {
+      handler: function(val, oldVal) {
+        this.countryArr();
+      },
+      deep: true
+    },
+    ac_breed: {
+      handler: function(val, oldVal) {
+        this.countryArr();
+      },
+      deep: true
+    },
+    light_breed: {
+      handler: function(val, oldVal) {
+        this.countryArr();
+      },
+      deep: true
+    },
+    led_breed: {
       handler: function(val, oldVal) {
         this.countryArr();
       },

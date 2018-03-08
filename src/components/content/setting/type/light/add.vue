@@ -19,52 +19,49 @@
 </template>
 
 <script>
-import http from '../../../../../assets/js/http'
-import fomrMixin from '../../../../../assets/js/form_com'
+import http from "../../../../../assets/js/http";
+import fomrMixin from "../../../../../assets/js/form_com";
 
 export default {
-    data() {
-        return {
-            isLoading: false,
-            form: {
-                breed: '',
-                watts: '',
-                run_time:'',
-                status: 'enabled',
-            },
+  data() {
+    return {
+      isLoading: false,
+      form: {
+        breed: "",
+        watts: "",
+        run_time: "",
+        status: "enabled"
+      }
+    };
+  },
+  methods: {
+    add(form) {
+      var vm = this;
+      this.isLoading = !this.isLoading;
+      const data = {
+        params: this.form
+      };
+      this.apiGet("device/light_breed.php?action=insert", data).then(res => {
+        // _g.clearVuex('setRules')
+        if (res[0]) {
+          var light_breed = [];
+          light_breed = light_breed.concat(vm.$store.state.light_breed);
+          light_breed.push(vm.form);
+          vm.$store.dispatch('setLightBreed', light_breed)
+          _g.toastMsg("success", res[1]);
+          setTimeout(() => {
+            vm.goback();
+          }, 500);
+        } else {
+          _g.toastMsg("error", res[1]);
         }
-    },
-    methods: {
-        add(form) {
-            console.log(this.form)
-            this.isLoading = !this.isLoading
-            const data = {
-                params: this.form
-            }
-            this.apiGet('device/light_breed.php?action=insert', data).then((res) => {
-                // _g.clearVuex('setRules')
-                if (res[0]) {
-                    var light_breed = this.$store.state.light_breed
-                    light_breed.push(this.form)
-                    // this.$store.dispatch('setLightBreed', light_breed)
-                    _g.toastMsg('success', res[1])
-                    setTimeout(() => {
-                        this.goback()
-                    }, 500)
-                } else {
-                    _g.toastMsg('error', res[1])
-                }
-                this.isLoading = false
-            })
-        },
-    },
-    created() {
-        
-    },
-    mounted() {
-    },
-    components: {
-    },
-    mixins: [http,fomrMixin]
-}
+        this.isLoading = false;
+      });
+    }
+  },
+  created() {},
+  mounted() {},
+  components: {},
+  mixins: [http, fomrMixin]
+};
 </script>

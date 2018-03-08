@@ -40,68 +40,64 @@
 </template>
 
 <script>
-import http from '../../../../../assets/js/http'
-import fomrMixin from '../../../../../assets/js/form_com'
+import http from "../../../../../assets/js/http";
+import fomrMixin from "../../../../../assets/js/form_com";
 
 export default {
-    data() {
-        return {
-            isLoading: false,
-            form: {
-                breed: '',
-                mode_atuo: '',
-                fan: '',
-                cool: '',
-                heat: '',
-                wind_auto: '',
-                low: '',
-                medium: '',
-                high: '',
-                status: 'enabled',
-            },
-        }
-    },
-    methods: {
-        add(form) {
-            console.log(this.form)
-            this.isLoading = !this.isLoading
-            const data = {
-                params: this.form
+  data() {
+    return {
+      isLoading: false,
+      form: {
+        breed: "",
+        mode_atuo: "",
+        fan: "",
+        cool: "",
+        heat: "",
+        wind_auto: "",
+        low: "",
+        medium: "",
+        high: "",
+        status: "enabled"
+      }
+    };
+  },
+  methods: {
+    add(form) {
+      var vm = this
+      this.isLoading = !this.isLoading;
+      const data = {
+        params: this.form
+      };
+      this.apiGet("device/ac_breed.php?action=update", data).then(res => {
+        // _g.clearVuex('setRules')
+        if (res[0] == true) {
+          var ac_breed = [];
+          ac_breed = ac_breed.concat(vm.$store.state.ac_breed);
+          var ac_breed = vm.$store.state.ac_breed;
+
+          for (var i = 0; i < ac_breed.length; i++) {
+            if (ac_breed[i].breed == vm.form.breed) {
+              ac_breed[i] = vm.form;
             }
-            this.apiGet('device/ac_breed.php?action=update', data).then((res) => {
-                // _g.clearVuex('setRules')
-                if (res[0] == true) {
-                    var ac_breed = this.$store.state.ac_breed
-
-                    for (var i = 0; i < ac_breed.length; i++) {
-                        if (ac_breed[i].breed == this.form.breed) {
-                            ac_breed[i] = this.form
-                        }
-
-                    }
-                    // // var ac_breed = this.$store.state.ac_breed
-                    // // ac_breed.push(this.form)
-                    // this.$store.dispatch('setAcBreed', ac_breed)
-                    _g.toastMsg('success', res[1])
-                    setTimeout(() => {
-                        this.goback()
-                    }, 500)
-                } else {
-                    _g.toastMsg('error', res[1])
-                }
-                this.isLoading = false
-
-            })
-        },
-    },
-    created() {
-        console.log('ac_breed add')
-        this.form = this.$route.query
-    },
-    mounted() {
-    },
-    components: {
-    },
-    mixins: [http, fomrMixin]
-}
+          }
+          vm.$store.dispatch('setAcBreed', ac_breed)
+          _g.toastMsg("success", res[1]);
+          setTimeout(() => {
+            vm.goback();
+          }, 500);
+        } else {
+          _g.toastMsg("error", res[1]);
+        }
+        vm.isLoading = false;
+      });
+    }
+  },
+  created() {
+    console.log("ac_breed add");
+    this.form = this.$route.query;
+  },
+  mounted() {},
+  components: {},
+  mixins: [http, fomrMixin]
+};
 </script>
