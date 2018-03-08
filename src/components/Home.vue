@@ -662,6 +662,15 @@ export default {
     devices() {
       return this.$store.state.devices;
     },
+    address() {
+      return this.$store.state.address;
+    },
+    floor() {
+      return this.$store.state.floor;
+    },
+    room() {
+      return this.$store.state.room;
+    },
     globalLoading() {
       return store.state.globalLoading;
     }
@@ -672,7 +681,25 @@ export default {
         this.countryArr();
       },
       deep: true
-    }
+    },
+    address: {
+      handler: function(val, oldVal) {
+        this.countryArr();
+      },
+      deep: true
+    },
+    floor: {
+      handler: function(val, oldVal) {
+        this.countryArr();
+      },
+      deep: true
+    },
+    room: {
+      handler: function(val, oldVal) {
+        this.countryArr();
+      },
+      deep: true
+    },
   },
   mixins: [http]
 };

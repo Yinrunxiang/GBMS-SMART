@@ -54,7 +54,7 @@ export default {
       this.$emit("goback", false);
     },
     addAddress(form) {
-      // console.log(this.form);
+      var vm = this
       this.isLoading = !this.isLoading;
       this.form.oldRoom = this.oldRoom;
       const data = {
@@ -64,37 +64,38 @@ export default {
         this.apiGet("device/room.php?action=insert", data).then(res => {
           // _g.clearVuex('setRules')
           if (res[0]) {
-            var room = this.$store.state.room;
-            room.push(this.form);
-            this.$store.dispatch("setRoom", room);
+            var room = vm.$store.state.room;
+            room.push(vm.form);
+            vm.$store.dispatch("setRoom", room);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
-              this.goback();
+              vm.goback();
             }, 500);
           } else {
             _g.toastMsg("error", res[1]);
           }
-          this.isLoading = false;
+          vm.isLoading = false;
         });
       } else {
         this.apiGet("device/room.php?action=update", data).then(res => {
           // _g.clearVuex('setRules')
           if (res[0]) {
-            var room = this.$store.state.room;
+            var room = [];
+            room = room.concat(vm.$store.state.room);
             for (var i = 0; i < room.length; i++) {
-              if (room[i].room == this.form.room && room[i].floor == this.form.floor && room[i].address == this.form.address) {
-                room[i] = this.form;
+              if (room[i].room == vm.form.room && room[i].floor == vm.form.floor && room[i].address == vm.form.address) {
+                room[i] = vm.form;
               }
             }
-            this.$store.dispatch("setRoom", room);
+            vm.$store.dispatch("setRoom", room);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
-              this.goback();
+              vm.goback();
             }, 500);
           } else {
             _g.toastMsg("error", res[1]);
           }
-          this.isLoading = false;
+          vm.isLoading = false;
         });
       }
     }

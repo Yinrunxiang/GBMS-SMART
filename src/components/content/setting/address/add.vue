@@ -65,6 +65,7 @@ export default {
       // },
       operation_type: "1",
       oldAddress: "",
+      oldFloorNum: "",
       addressOptions: []
     };
   },
@@ -97,10 +98,22 @@ export default {
         this.apiGet("device/address.php?action=insert", data).then(res => {
           // _g.clearVuex('setRules')
           if (res[0]) {
-            var address = vm.$store.state.address;
+            var address = [];
+            address = address.concat(vm.$store.state.address);
             address.push(vm.form);
             vm.$store.dispatch("setAddress", address);
-
+            var floors = [];
+            floors = floors.concat(vm.$store.state.floor);
+            for (var i = 1; i <= parseInt(vm.form.floor_num); i++) {
+              var floorObj = {
+                floor: i,
+                room_num: 0,
+                address: vm.form.address,
+                status: "enabled"
+              };
+              floors.push(floorObj);
+            }
+            vm.$store.dispatch("setFloor", floors);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
               vm.getFloor();
@@ -143,14 +156,28 @@ export default {
             vm.$store.dispatch("setDevices", devices);
             var floors = [];
             floors = floors.concat(vm.$store.state.floor);
-            floors 
-            for (var index in floors) {
-              if (floors[index].address == vm.oldAddress) {
-                if (
-                  parseInt(floors[index].floor) > parseInt(vm.form.floor_num)
-                ) {
-                  floors.splice(index, 1);
-                } else {
+            if (parseInt(vm.oldFloorNum) < parseInt(vm.form.floor_num)) {
+              for (
+                var i = parseInt(vm.oldFloorNum);
+                i <= parseInt(vm.form.floor_num);
+                i++
+              ) {
+                var floorObj = {
+                  floor: i,
+                  room_num: 0,
+                  address: vm.form.address,
+                  status: "enabled"
+                };
+                floors.push(floorObj);
+              }
+            } else {
+              floors = floors.filter(
+                item =>
+                  item.address != vm.oldAddress ||
+                  parseInt(item.floor) <= parseInt(vm.form.floor_num)
+              );
+              for (var index in floors) {
+                if (floors[index].address == vm.oldAddress) {
                   floors[index].address = vm.form.address;
                 }
               }
@@ -405,6 +432,7 @@ export default {
   mounted() {
     console.log("address add");
     this.oldAddress = this.address.address;
+    this.oldFloorNum = this.address.floor_num;
     this.addressOptions = this.getAddressOptions();
   },
   computed: {

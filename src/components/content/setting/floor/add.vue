@@ -40,7 +40,8 @@ export default {
       //     status: 'enabled',
       // },
       addressOptions: [],
-      oldFloor: ""
+      oldFloor: "",
+      oldRoomNum:"",
     };
   },
   methods: {
@@ -68,9 +69,23 @@ export default {
         this.apiGet("device/floor.php?action=insert", data).then(res => {
           // _g.clearVuex('setRules')
           if (res[0]) {
-            var floor = vm.$store.state.floor;
-            floor.push(vm.form);
-            vm.$store.dispatch("setFloor", floor);
+            var floors = [];
+            floors = floors.concat(vm.$store.state.floor);
+            floors.push(vm.form);
+            vm.$store.dispatch("setFloor", floors);
+            var rooms = [];
+            rooms = rooms.concat(vm.$store.state.room);
+            for (var i = 1; i <= parseInt(vm.form.room_num); i++) {
+              var roomObj = {
+                room: i,
+                room_name: 0,
+                floor: vm.form.floor,
+                address: vm.form.address,
+                status: "enabled"
+              };
+              rooms.push(roomObj);
+            }
+            vm.$store.dispatch("setRoom", rooms);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
               vm.getRoom();
@@ -96,6 +111,37 @@ export default {
               }
             }
             vm.$store.dispatch("setFloor", floor);
+            var rooms = [];
+            rooms = rooms.concat(vm.$store.state.room);
+            if (parseInt(vm.oldRoomNum) < parseInt(vm.form.room_num)) {
+              for (
+                var i = parseInt(vm.oldRoomNum);
+                i <= parseInt(vm.form.room_num);
+                i++
+              ) {
+                var roomObj = {
+                  room: i,
+                  room_name: i,
+                  floor: vm.form.floor,
+                  address: vm.form.address,
+                  status: "enabled"
+                };
+                rooms.push(roomObj);
+              }
+            } else {
+              rooms = rooms.filter(
+                item =>
+                  item.address != vm.form.address ||
+                  item.floor != vm.oldFloor ||
+                  parseInt(item.room) <= parseInt(vm.form.room_num)
+              );
+              // for (var index in rooms) {
+              //   if (rooms[index].address == vm.form.address && rooms[index].floor == vm.oldFloor) {
+              //     rooms[index].address = vm.form.address;
+              //   }
+              // }
+            }
+            vm.$store.dispatch("setRoom", rooms);
             _g.toastMsg("success", res[1]);
             setTimeout(() => {
               vm.getRoom();
@@ -111,7 +157,7 @@ export default {
     addFloor(form) {
       if (parseInt(this.form.room_num) < parseInt(this.floor.room_num)) {
         this.$confirm(
-          "If you reduce the number of floors, the rooms and devices that are deleted will also be removed.",
+          "If you reduce the number of rooms,the devices in the deleted room will also be deleted.",
           "Tips",
           {
             confirmButtonText: "Yse",
@@ -134,6 +180,7 @@ export default {
   mounted() {
     console.log("floor add");
     this.oldFloor = this.floor.floor;
+    this.oldRoomNum = this.floor.room_num
   },
   computed: {
     form() {
