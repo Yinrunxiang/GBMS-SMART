@@ -1,47 +1,72 @@
 <template>
-    <div class="m-l-50 m-t-30 w-500">
-        <el-form ref="form" :model="form" label-width="150px">
-            <el-form-item label="Country">
-                <el-select v-model="form.country" filterable placeholder="Select Address" class="h-40 w-200">
-                    <el-option v-for="item in addressOptions" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="Building">
-                <el-input v-model.trim="form.address" class="h-40 w-200"></el-input>
-            </el-form-item>
-            <el-form-item label="Floor Num">
-                <el-input v-model.trim="form.floor_num" class="h-40 w-200"></el-input>
-            </el-form-item>
-            <el-form-item label="Latitude">
-                <el-input v-model.trim="form.lat" class="h-40 w-200"></el-input>
-            </el-form-item>
-            <el-form-item label="Longitude">
-                <el-input v-model.trim="form.lng" class="h-40 w-200"></el-input>
-            </el-form-item>
-            <el-form-item label="KW/USD">
-                <el-input v-model.trim="form.kw_usd" class="h-40 w-200"></el-input>
-            </el-form-item>
-            <!-- <el-form-item label="Operation Type">
-              <el-radio-group v-model="operation_type" @change="operationChange">
-                <el-radio label="1">Local</el-radio>
-                <el-radio label="2">Remote</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item v-show="operation_type == '2'" label="IP">
-                <el-input v-model.trim="form.ip" class="h-40 w-200"></el-input>
-            </el-form-item>
-            <el-form-item v-show="operation_type == '2'" label="Port">
-                <el-input v-model.trim="form.port" class="h-40 w-200"></el-input>
-            </el-form-item>
-            <el-form-item v-show="operation_type == '2'" label="MAC">
-                <el-input v-model.trim="form.mac" class="h-40 w-200"></el-input>
-            </el-form-item> -->
-            <el-form-item>
-                <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
-                <el-button @click="goback()">Cancel</el-button>
-            </el-form-item>
-        </el-form>
+  <div class="w-100p">
+      <div class="m-l-50 m-t-30 w-500 fl">
+          <el-form ref="form" :model="form" label-width="150px">
+              <el-form-item label="Country">
+                  <el-select v-model="form.country" filterable placeholder="Select Address" class="h-40 w-200">
+                      <el-option v-for="item in addressOptions" :key="item.value" :label="item.label" :value="item.value">
+                      </el-option>
+                  </el-select>
+              </el-form-item>
+              <el-form-item label="Building">
+                  <el-input v-model.trim="form.address" class="h-40 w-200"></el-input>
+              </el-form-item>
+              <el-form-item label="Floor Num">
+                  <el-input v-model.trim="form.floor_num" class="h-40 w-200"></el-input>
+              </el-form-item>
+              <el-form-item label="Latitude">
+                  <el-input v-model.trim="form.lat" class="h-40 w-200"></el-input>
+              </el-form-item>
+              <el-form-item label="Longitude">
+                  <el-input v-model.trim="form.lng" class="h-40 w-200"></el-input>
+              </el-form-item>
+              <el-form-item label="KW/USD">
+                  <el-input v-model.trim="form.kw_usd" class="h-40 w-200"></el-input>
+              </el-form-item>
+              <!-- <el-form-item label="Operation Type">
+                <el-radio-group v-model="operation_type" @change="operationChange">
+                  <el-radio label="1">Local</el-radio>
+                  <el-radio label="2">Remote</el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item v-show="operation_type == '2'" label="IP">
+                  <el-input v-model.trim="form.ip" class="h-40 w-200"></el-input>
+              </el-form-item>
+              <el-form-item v-show="operation_type == '2'" label="Port">
+                  <el-input v-model.trim="form.port" class="h-40 w-200"></el-input>
+              </el-form-item>
+              <el-form-item v-show="operation_type == '2'" label="MAC">
+                  <el-input v-model.trim="form.mac" class="h-40 w-200"></el-input>
+              </el-form-item> -->
+              
+          </el-form>
+      </div>
+      <div class="m-l-50 m-t-30 fl" style="width:360px;">
+        <el-upload
+        class="upload-demo"
+        ref="upload"
+        drag
+        action="https://jsonplaceholder.typicode.com/posts/"
+        :before-upload="upload()"
+        multiple>
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+        <p class= "m-t-30" style="margin:0,color:#606266;">Remarks</p>
+        <el-input
+          style="width:360px;"
+          type="textarea"
+          :rows="6"
+          placeholder="请输入内容"
+          v-model="textarea">
+        </el-input>
+        <div class= "m-t-30 fr">
+          <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
+          <el-button @click="goback()">Cancel</el-button>
+        </div>
+      </div>
     </div>
 </template>
 
@@ -53,6 +78,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      textarea: "",
       // form: {
       //     country: '',
       //     address: '',
@@ -70,6 +96,12 @@ export default {
     };
   },
   methods: {
+    upload(file) {
+      return file;
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
     goback() {
       this.$emit("goback", false);
     },

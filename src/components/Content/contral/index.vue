@@ -77,7 +77,7 @@
     
 </template>
 <style>
-.contral{
+.contral {
   position: relative;
 }
 .contral-mood-icon {
@@ -106,7 +106,7 @@
 import http from "../../../assets/js/http";
 import deviceList from "./deviceList";
 import mood from "../../Common/mood";
-import rightPage from "../../Common/rightPage"
+import rightPage from "../../Common/rightPage";
 export default {
   data() {
     return {
@@ -116,16 +116,17 @@ export default {
       showMoodSetting: false,
       room: {},
       room_key: "",
-      roomDevices:[],
+      roomDevices: [],
+      interval: ""
     };
   },
   methods: {
     clickToShowMoodSetting(room) {
       this.showMoodSetting = true;
-      this.room = room
+      this.room = room;
     },
     roomClose() {
-      var vm =this
+      var vm = this;
       var i = 0;
       var len = this.roomDevices.length;
       var forDevice = setInterval(function() {
@@ -140,8 +141,9 @@ export default {
       }, 100);
     },
     roomChange(val) {
+      var vm = this
       this.room_key = val;
-      clearInterval(interval);
+      clearInterval(vm.interval);
       if (typeof val == "string" && val == "") {
         return;
       }
@@ -153,15 +155,14 @@ export default {
         if (devicelist.$attrs.room == val) {
           var i = 0;
           var devices = devicelist.$refs.device;
-          this.roomDevices = devices
+          this.roomDevices = devices;
           var len = devices.length;
           if (len > 0) {
-            var interval = setInterval(function() {
-              
+            vm.interval = setInterval(function() {
               devices[i].readOpen();
               i = i + 1;
               if (i >= len) {
-                clearInterval(interval);
+                clearInterval(vm.interval);
                 return;
               }
             }, 100);
@@ -228,7 +229,10 @@ export default {
   components: {
     deviceList,
     mood,
-    rightPage,
+    rightPage
+  },
+  destroyed() {
+    clearInterval(this.interval);
   },
   computed: {
     devices() {
@@ -281,7 +285,6 @@ export default {
       }
     },
     showContral() {
-      
       return this.$store.state.showContral;
     }
   },

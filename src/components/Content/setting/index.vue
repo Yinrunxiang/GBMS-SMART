@@ -4,14 +4,14 @@
             <!--<el-col :span="4">-->
             <div class="nav" :class='"w-"+addresswidth'>
                 <aside class="ovf-hd fl address" :class='"w-"+addresswidth' @mouseenter="enteraddress" @mouseleave="leaveaddress">
-                    <div v-for="item in addresslist" @mouseenter="addressChange(item)">
+                    <div v-for="(item,key) in addresslist" @mouseenter="addressChange(item)" :key="key">
                         <div class="c-light-gray m-t-10">
                             <div class="w-100p h-40 p-l-20 left-menu pointer c-blue">{{item}}
                             </div>
                         </div>
                     </div>
                     <aside class="w-100 ovf-hd fl type h-100p" :class='"w-"+typewidth' v-show="ontype" @mouseenter="entertype" @mouseleave="leavetype">
-                        <div v-for="item in typelist" @mouseenter="typeChange(item)">
+                        <div v-for="(item,key) in typelist" :key="key" @mouseenter="typeChange(item)">
                             <div class="c-light-gray m-t-10">
                                 <div class="w-100p h-40 p-l-20 left-menu pointer c-blue">
                                     <i class="fa" :class="iconstyle(item)"></i>
@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <aside class="w-100 ovf-hd fl device h-100p" v-show="ondevice">
-                            <div v-for="item in list">
+                            <div v-for="(item,key) in list" :key="key">
                                 <div class="c-light-gray m-t-10">
                                     <div class="w-100p h-40 p-l-20 left-menu pointer c-blue" @click="deviceChange(item)">
                                         <i class="fa" :class="iconstyle(item.devicetype)"></i> {{item.device}}</div>

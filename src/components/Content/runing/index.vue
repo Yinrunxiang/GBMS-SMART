@@ -18,7 +18,8 @@ export default {
   data() {
     return {
       //   runList: [],
-      isLoading: false
+      isLoading: false,
+      interval: ""
     };
   },
   methods: {},
@@ -27,20 +28,22 @@ export default {
   },
   mounted() {
     var vm = this;
-    for (var device of vm.$refs.device) {
-      var i = 0;
-      var len = vm.$refs.device.length;
-      if (len > 0) {
-        var interval = setInterval(function() {
-          device.readOpen();
-          i = i + 1;
-          if (i >= len) {
-            clearInterval(interval);
-            return;
-          }
-        }, 100);
-      }
+    var devices = vm.$refs.device
+    var i = 0;
+    var len = devices.length;
+    if (len > 0) {
+      vm.interval = setInterval(function() {
+        devices[i].readOpen();
+        i = i + 1;
+        if (i >= len) {
+          clearInterval(vm.interval);
+          // return;
+        }
+      }, 100);
     }
+  },
+  destroyed() {
+    clearInterval(this.interval);
   },
   components: {
     device,
