@@ -155,7 +155,7 @@ export default {
 
       // var data = this.devices
       var start = this.limit * (this.currentPage - 1);
-      var end = start + this.limit - 1;
+      var end = start + this.limit;
       this.tableData = data.slice(start, end);
     },
     //初始化时统一加载
