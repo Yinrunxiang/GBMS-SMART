@@ -309,10 +309,10 @@ export default {
           if (res[0]) {
             var obj = {};
             obj.device = vm.device.id;
-            obj.ir_key = operation.ir_key;
-            obj.ir_name = operation.ir_name;
-            obj.ir_value = operation.ir_value;
-            vm.$set(vm.operationObj, operation.ir_key, obj);
+            obj.ir_key = vm.ir_key;
+            obj.ir_name = vm.ir_name;
+            obj.ir_value = vm.ir_value;
+            vm.$set(vm.operationObj, vm.ir_key, obj);
             // vm.operationObj[vm.ir_key] = {};
             // vm.$set(vm.operationObj[vm.ir_key], "device", vm.device.id);
             // vm.$set(vm.operationObj[vm.ir_key], "ir_key", vm.ir_key);

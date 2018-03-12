@@ -7,7 +7,7 @@
 					<!-- <img :src="img" class="logo"> -->
 				</template>
 				<template v-else>
-					<a class="p-l-10"  style="cursor:pointer"  @click="homeClick()"><img src="../assets/images/Gensen app of GBMS.png" class="logo">SMART GBMS</a>
+					<a class="p-l-10"  style="cursor:pointer;color:#eee;"  @click="homeClick()"><img src="../assets/images/Gensen app of GBMS.png" class="logo">SMART GBMS</a>
 				</template>
 			</el-col>
       <el-col :span="18" class="h-60">
@@ -16,7 +16,7 @@
 			<el-col  :span="2" class="pos-rel">
 				<el-dropdown @command="handleMenu" class="user-menu">
 
-					<p class="el-dropdown-link c-gra user-ground" style="cursor: default">
+					<p class="el-dropdown-link user-ground" style="cursor: default;color:#eee;">
 						<i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;{{username}}
 					</p>
 					<el-dropdown-menu slot="dropdown">
@@ -69,7 +69,7 @@
   height: 60px;
   line-height: 60px;
   background: #1f2d3d;
-  color: #c0ccda;
+  color: #eee;
 }
 
 .panel-center {
@@ -112,7 +112,7 @@
   top: 5px;
   right: 5px;
   font-size: 10px;
-  color: #c0ccda;
+  color: #eee;
 }
 
 .user-ground {
@@ -131,7 +131,7 @@
 } */
 
 .admin {
-  color: #c0ccda;
+  color: #eee;
   text-align: center;
 }
 
