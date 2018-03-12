@@ -7,7 +7,7 @@
 					<!-- <img :src="img" class="logo"> -->
 				</template>
 				<template v-else>
-					<a class="p-l-10"  style="cursor:pointer"  @click="homeClick()"><img src="../assets/images/applog.png" class="logo">SMART GBMS</a>
+					<a class="p-l-10"  style="cursor:pointer"  @click="homeClick()"><img src="../assets/images/Gensen app of GBMS.png" class="logo">SMART GBMS</a>
 				</template>
 			</el-col>
       <el-col :span="18" class="h-60">
@@ -100,11 +100,12 @@
 }
 
 .logo {
-  margin: 10px 0 10px 10px;
-  height: 40px;
-  width: 40px;
+  margin: 6px 0 6px 10px;
+  height: 44px;
+  width: 44px;
   float: left;
-  border-radius: 10px;
+  /* border:2px solid #ffffff;
+  border-radius: 10px; */
 }
 .version {
   position: absolute;

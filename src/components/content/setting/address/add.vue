@@ -43,17 +43,15 @@
       </div>
       <div class="m-l-50 m-t-30 fl" style="width:360px;">
         <el-upload
-        class="upload-demo"
-        ref="upload"
-        drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :before-upload="upload()"
-        multiple>
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-        </el-upload>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+  class="avatar-uploader"
+  :action="action"
+  :show-file-list="false"
+  :on-success="handleAvatarSuccess"
+  :before-upload="beforeAvatarUpload">
+  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+</el-upload>
+        <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
         <p class= "m-t-30" style="margin:0,color:#606266;">Remarks</p>
         <el-input
           style="width:360px;"
@@ -70,6 +68,32 @@
     </div>
 </template>
 
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
+
 <script>
 import http from "../../../../assets/js/http";
 // import fomrMixin from '../../../../assets/js/form_com'
@@ -77,6 +101,7 @@ import http from "../../../../assets/js/http";
 export default {
   data() {
     return {
+      action : HOST+"upload/up.php",
       isLoading: false,
       textarea: "",
       // form: {
@@ -92,15 +117,26 @@ export default {
       operation_type: "1",
       oldAddress: "",
       oldFloorNum: "",
-      addressOptions: []
+      addressOptions: [],
+      imageUrl: ''
     };
   },
   methods: {
-    upload(file) {
-      return file;
+    handleAvatarSuccess(res, file) {
+      console.log(res)
+      this.imageUrl = URL.createObjectURL(file.raw);
     },
-    submitUpload() {
-      this.$refs.upload.submit();
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG 格式!");
+      }
+      if (!isLt2M) {
+        this.$message.error("上传头像图片大小不能超过 2MB!");
+      }
+      return isJPG && isLt2M;
     },
     goback() {
       this.$emit("goback", false);

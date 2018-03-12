@@ -15,27 +15,26 @@
                     </div>
                 </div>
                 <div class="container-in">
-                    <div class="container-home">
-                        <div class="build">
-                            <a class="build-img">
-                                <img src="../../../assets/images/build.jpg">
-                            </a>
-                            <!-- <p class="p-title">Build</p> -->
-                        </div>
-                        <div class="floor">
-
-                            <div v-for="(floor, floor_key, floor_index) in addressProperty.floor_num" :key = "floor_key">
-                                <el-tooltip placement="right" transition="">
-                                    <div v-if="addressProperty.floorList[addressProperty.floor_num -floor_key -1]?true:false" slot="content">
-                                        <p v-for="(val, key, index) in addressProperty.floorList[addressProperty.floor_num -floor_key -1].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
-                                    </div>
-                                    <div class="floor-centent" @click="floorClick(addressProperty.floor_num -floor_key)" @mouseover="floorOver(addressProperty.floor_num -floor_key)">Floor{{addressProperty.floor_num -floor_key}}
-                                    </div>
-                                </el-tooltip>
-                            </div>
-                            <!-- <p class="p-title">Floor</p> -->
-                        </div>
+                    <div class="build">
+                      <a class="build-img">
+                        <img src="../../../assets/images/build.jpg">
+                      </a>
                     </div>
+                    <div class="floor">
+                        <div class="floor-container">
+                          <div v-for="(floor, floor_key) in addressProperty.floor_num" :key = "floor_key">
+                              <el-tooltip placement="right" transition="">
+                                  <div v-if="addressProperty.floorList[addressProperty.floor_num -floor_key -1]?true:false" slot="content">
+                                      <p v-for="(val, key) in addressProperty.floorList[addressProperty.floor_num -floor_key -1].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
+                                  </div>
+                                  <div class="floor-centent" @click="floorClick(addressProperty.floor_num -floor_key)" @mouseover="floorOver(addressProperty.floor_num -floor_key)">Floor{{addressProperty.floor_num -floor_key}}
+                                  </div>
+                              </el-tooltip>
+                          </div>
+                        </div>
+                        <!-- <p class="p-title">Floor</p> -->
+                    </div>
+                    
                 </div>
             </div>
             <div v-show="showFloor" >
@@ -49,11 +48,11 @@
                     </div>
                 </div>
                 <div class="floorImga">
-                    <div v-for="(room, room_key, room_index) in room_num" :key = "room_key">
+                    <div v-for="(room, room_key) in room_num" :key = "room_key">
                         <el-tooltip placement="right" transition="">
                             <div v-if="roomList[room_key]?true:false" slot="content">
                                 <p>Room: {{roomList[room_key].room_name}}</p>
-                                <p v-for="(val, key, index) in roomList[room_key].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
+                                <p v-for="(val, key) in roomList[room_key].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
                             </div>
                             <div :class="'room'+room" class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
                         </el-tooltip>
@@ -713,30 +712,35 @@ export default {
 
 .container-in {
   position: relative;
-  width: 800px;
-  height: 550px;
-  padding: 0;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
   /* border: 1px solid #000;
     border-radius: 10px; */
 }
 
 .build {
-  width: 200px;
-  height: 300px;
-  margin: 0 30px 0 100px;
+  position: relative;
+  float: left;
+  width: 50%;
+  height: 100%;
 }
 
 .build-img {
-  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%)
+  /* display: inline-block;
   width: 300px;
   height: 500px;
-  margin: 30px auto;
+  margin: 30px auto; */
 }
 
 .build-img img {
   width: 100%;
   height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .p-title {
@@ -745,15 +749,17 @@ export default {
 }
 
 .floor {
-  position: absolute;
-  right: 50px;
-  bottom: 75px;
-  width: 250px;
-  height: 400px;
-  overflow: auto;
-  margin: 0 30px 0 100px;
+  position: relative;
+  float: left;
+  width: 30%;
+  height: 100%;
 }
-
+.floor .floor-container{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%)
+}
 .floor-centent {
   width: 200px;
   height: 30px;
