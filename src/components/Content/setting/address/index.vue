@@ -93,6 +93,8 @@ export default {
         mac: "",
         lat: "",
         lng: "",
+        image:"",
+        comment:"",
         status: "enabled"
       };
       this.address = address;

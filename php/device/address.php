@@ -13,6 +13,8 @@ switch ($action)
         $mac = isset($_REQUEST["mac"]) ? $_REQUEST["mac"] : '';
         $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
         $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
+        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
+        $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
         $kw_usd = isset($_REQUEST["kw_usd"]) ? $_REQUEST["kw_usd"] : '';
         $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
         $sql="insert into address (country,address,ip,port,mac,lat,lng,floor_num,kw_usd,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','".$lat."','".$lng."','".$floor_num."','".$kw_usd."','enabled')";

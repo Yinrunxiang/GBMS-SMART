@@ -42,23 +42,23 @@
           </el-form>
       </div>
       <div class="m-l-50 m-t-30 fl" style="width:360px;">
-        <el-upload
-  class="avatar-uploader"
-  :action="action"
-  :show-file-list="false"
-  :on-success="handleAvatarSuccess"
-  :before-upload="beforeAvatarUpload">
-  <img v-if="imageUrl" :src="imageUrl" class="avatar">
-  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-</el-upload>
-        <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
+          <el-upload
+          class="avatar-uploader"
+          :action="action"
+          :show-file-list="false"
+          :on-change="imageChange"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="image" :src="image" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
         <p class= "m-t-30" style="margin:0,color:#606266;">Remarks</p>
         <el-input
           style="width:360px;"
           type="textarea"
           :rows="6"
           placeholder="请输入内容"
-          v-model="textarea">
+          v-model="form.comment">
         </el-input>
         <div class= "m-t-30 fr">
           <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
@@ -82,14 +82,14 @@
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
+  width: 200px;
+  height: 200px;
+  line-height: 200px;
   text-align: center;
 }
 .avatar {
-  width: 178px;
-  height: 178px;
+  width: 200px;
+  height: 200px;
   display: block;
 }
 </style>
@@ -101,7 +101,7 @@ import http from "../../../../assets/js/http";
 export default {
   data() {
     return {
-      action : HOST+"upload/up.php",
+      action: HOST + "upload/up.php",
       isLoading: false,
       textarea: "",
       // form: {
@@ -118,13 +118,17 @@ export default {
       oldAddress: "",
       oldFloorNum: "",
       addressOptions: [],
-      imageUrl: ''
+      image: ""
     };
   },
   methods: {
+    imageChange(file, fileLis) {
+      this.image = URL.createObjectURL(file.raw)
+      this.form.image = URL.createObjectURL(file.raw)
+    },
     handleAvatarSuccess(res, file) {
-      console.log(res)
-      this.imageUrl = URL.createObjectURL(file.raw);
+      this.image = res
+      this.form.image = res;
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
@@ -494,6 +498,7 @@ export default {
   },
   props: ["add", "address"],
   created() {
+    //判断远程还是本地
     var operation_type = Lockr.get("operation_type");
     this.operation_type = operation_type;
   },
