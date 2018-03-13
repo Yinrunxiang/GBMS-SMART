@@ -19,7 +19,7 @@
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="deviceProperty.autotmp" :min='0' :max='32' :step="1" @change="autotmp_change">
+                                <el-slider v-model="deviceProperty.autotmp" :min='deviceProperty.auto_strat' :max='deviceProperty.auto_end' :step="1" @change="autotmp_change">
                                 </el-slider>
                             </div>
                         </template>
@@ -35,7 +35,7 @@
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="deviceProperty.cooltmp" :min='0' :max='32' :step="1" @change="cooltmp_change">
+                                <el-slider v-model="deviceProperty.cooltmp" :min='deviceProperty.cool_strat' :max='deviceProperty.cool_end' :step="1" @change="cooltmp_change">
                                 </el-slider>
                             </div>
                         </template>
@@ -51,7 +51,7 @@
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="deviceProperty.heattmp" :min='0' :max='32' :step="1" @change="heattmp_change">
+                                <el-slider v-model="deviceProperty.heattmp" :min='deviceProperty.heat_strat' :max='deviceProperty.heat_end' :step="1" @change="heattmp_change">
                                 </el-slider>
                             </div>
                         </template>
@@ -116,7 +116,13 @@ export default {
         heattmp: 0,
         tmp: 26,
         wind: 2,
-        mode: "cool"
+        mode: "cool",
+        cool_strat:0,
+        cool_end:36,
+        heat_strat:0,
+        heat_end:36,
+        auto_strat:0,
+        auto_end:36,
       }
     };
   },
@@ -187,6 +193,7 @@ export default {
     console.log("ac");
 
     acApi.readStatus(this.device, this.deviceProperty);
+    acApi.readTmpRange(this.device, this.deviceProperty)
   },
   components: {},
   computed: {
