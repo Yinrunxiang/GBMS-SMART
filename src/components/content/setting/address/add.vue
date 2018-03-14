@@ -46,12 +46,14 @@
           class="avatar-uploader"
           :action="action"
           :show-file-list="false"
+          :auto-upload="true"
           :on-change="imageChange"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
           <img v-if="image" :src="image" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
+        <img ref="image" :src="currentImage" class="avatar">
         <p class= "m-t-30" style="margin:0,color:#606266;">Remarks</p>
         <el-input
           style="width:360px;"
@@ -114,7 +116,8 @@ export default {
       //     lng: '',
       //     status: 'enabled',
       // },
-      form:{},
+      currentImage: "",
+      form: {},
       operation_type: "1",
       oldAddress: "",
       oldFloorNum: "",
@@ -124,12 +127,16 @@ export default {
   },
   methods: {
     imageChange(file, fileLis) {
+      // console.log(file)
+      // var reader=new FileReader();
+      //       reader.readAsDataURL(file.raw);
+      //  console.log(reader)
       // this.image = URL.createObjectURL(file.raw)
       // this.form.image = URL.createObjectURL(file.raw)
     },
     handleAvatarSuccess(res, file) {
-      console.log(res)
-      this.image = URL.createObjectURL(file.raw)
+      console.log(res);
+      this.image = URL.createObjectURL(file.raw);
       this.form.image = res;
     },
     beforeAvatarUpload(file) {
@@ -502,23 +509,27 @@ export default {
   created() {
     //判断远程还是本地
     this.form = Object.assign({}, this.address);
+    this.currentImage = this.form.image;
+    
+    // var myImage = new Image(100, 200);
+    // myImage.src = this.form.image;
+    // console.log(myImage);
     this.image = this.form.image
-    // this.image = URL.createObjectURL(this.form.image)
+    // this.image = URL.createObjectURL(this.form.image);
     var operation_type = Lockr.get("operation_type");
     this.operation_type = operation_type;
-    this.apiGet("device/address.php?action=insert").then(res => {
-      console.log(res)
-    })
   },
   mounted() {
+    if(this.currentImage ){
+      console.log(this.$refs.image)
+      // this.$refs.image.baseURI=""
+    }
     console.log("address add");
     this.oldAddress = this.address.address;
     this.oldFloorNum = this.address.floor_num;
     this.addressOptions = this.getAddressOptions();
   },
-  computed: {
-    
-  },
+  computed: {},
   components: {},
   mixins: [http]
 };
