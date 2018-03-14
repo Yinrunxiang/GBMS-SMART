@@ -114,6 +114,7 @@ export default {
       //     lng: '',
       //     status: 'enabled',
       // },
+      form:{},
       operation_type: "1",
       oldAddress: "",
       oldFloorNum: "",
@@ -123,11 +124,12 @@ export default {
   },
   methods: {
     imageChange(file, fileLis) {
-      this.image = URL.createObjectURL(file.raw)
-      this.form.image = URL.createObjectURL(file.raw)
+      // this.image = URL.createObjectURL(file.raw)
+      // this.form.image = URL.createObjectURL(file.raw)
     },
     handleAvatarSuccess(res, file) {
-      this.image = res
+      console.log(res)
+      this.image = URL.createObjectURL(file.raw)
       this.form.image = res;
     },
     beforeAvatarUpload(file) {
@@ -499,8 +501,14 @@ export default {
   props: ["add", "address"],
   created() {
     //判断远程还是本地
+    this.form = Object.assign({}, this.address);
+    this.image = this.form.image
+    // this.image = URL.createObjectURL(this.form.image)
     var operation_type = Lockr.get("operation_type");
     this.operation_type = operation_type;
+    this.apiGet("device/address.php?action=insert").then(res => {
+      console.log(res)
+    })
   },
   mounted() {
     console.log("address add");
@@ -509,9 +517,7 @@ export default {
     this.addressOptions = this.getAddressOptions();
   },
   computed: {
-    form() {
-      return Object.assign({}, this.address);
-    }
+    
   },
   components: {},
   mixins: [http]

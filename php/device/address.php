@@ -17,7 +17,7 @@ switch ($action)
         $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
         $kw_usd = isset($_REQUEST["kw_usd"]) ? $_REQUEST["kw_usd"] : '';
         $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
-        $sql="insert into address (country,address,ip,port,mac,lat,lng,floor_num,kw_usd,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','".$lat."','".$lng."','".$floor_num."','".$kw_usd."','enabled')";
+        $sql="insert into address (country,address,ip,port,mac,lat,lng,floor_num,kw_usd,image,comment,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','".$lat."','".$lng."','".$floor_num."','".$kw_usd."','".$image."','".$comment."','enabled')";
         
         if (!mysqli_query($con,$sql))
         {
