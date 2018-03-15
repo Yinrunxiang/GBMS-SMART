@@ -8,8 +8,9 @@ switch ($action)
     case "insert":
         $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
         $room_num = isset($_REQUEST["room_num"]) ? $_REQUEST["room_num"] : '';
-        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
+        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
+        $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
         $sql="insert into floor (floor,room_num,image,address,status) values ('".$floor."','".$room_num."','".$image."','".$address."','enabled')";
         if (!mysqli_query($con,$sql))
         {
@@ -20,7 +21,7 @@ switch ($action)
         }else{
             $room_num = intval($room_num);
             for($i = 1;$i<=$room_num;$i++){
-                $insertRoom="insert into room (room,room_name,floor,address,status) values ('".$i."','".$i."','".$floor."','".$address."','enabled')";
+                $insertRoom="insert into room (room,room_name,floor,address,image,comment,status) values ('".$i."','".$i."','".$floor."','".$address."','".$image."','".$comment."','enabled')";
                 mysqli_query($con,$insertRoom);
             }
             $message = [];
@@ -32,9 +33,10 @@ switch ($action)
     case "update":
         $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
         $room_num = isset($_REQUEST["room_num"]) ? $_REQUEST["room_num"] : '';
-        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
-        $sql="update floor set room_num = '".$room_num."',image = '".$image."' where floor = '".$floor."' and address = '".$address."'";
+        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
+        $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
+        $sql="update floor set room_num = '".$room_num."',image = '".$image."',comment = '".$comment."' where floor = '".$floor."' and address = '".$address."'";
         if (!mysqli_query($con,$sql))
         {
             $message = [];

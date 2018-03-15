@@ -1,5 +1,6 @@
 <template>
-    <div class="m-l-50 m-t-30 w-500">
+  <div class="w-100p">
+    <div class="m-l-50 m-t-30 w-500 fl">
         <el-form ref="form" :model="form" label-width="150px">
             <el-form-item label="Room">
                 <el-input  :disabled="!this.add" v-model.trim="form.room" class="h-40 w-200"></el-input>
@@ -19,16 +20,64 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
-                <el-button @click="goback()">Cancel</el-button>
-            </el-form-item>
         </el-form>
     </div>
+    <div class="m-l-50 m-t-30 fl" style="width:360px;">
+          <el-upload
+          class="avatar-uploader"
+          :action="action"
+          :show-file-list="false"
+          :auto-upload="true"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="form.image" :src="form.image" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+             
+        </el-upload>
+        <el-button v-if="form.image" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
+        <p  style="margin:0,color:#606266;">Remarks</p>
+        <el-input
+          style="width:360px;"
+          type="textarea"
+          :rows="6"
+          placeholder="请输入内容"
+          v-model="form.comment">
+        </el-input>
+        <div class= "m-t-30 fr">
+          <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
+          <el-button @click="goback()">Cancel</el-button>
+        </div>
+      </div>
+  </div>
 </template>
-
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 200px;
+  height: 200px;
+  line-height: 200px;
+  text-align: center;
+}
+.avatar {
+  width: 200px;
+  height: 200px;
+  display: block;
+}
+</style>
 <script>
 import http from "../../../../assets/js/http";
+import image from "../../../../assets/js/image";
 // import fomrMixin from '../../../../assets/js/form_com'
 
 export default {
@@ -101,6 +150,9 @@ export default {
     }
   },
   props: ["add", "room"],
+  created(){
+    this.currentImage = this.form.image;
+  },
   mounted() {
     console.log("room add");
     this.oldRoom = this.room.room;
@@ -139,6 +191,6 @@ export default {
     }
   },
   components: {},
-  mixins: [http]
+  mixins: [http,image]
 };
 </script>

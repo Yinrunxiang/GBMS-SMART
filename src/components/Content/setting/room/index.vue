@@ -77,6 +77,12 @@ export default {
         room_num: "",
         floor: "",
         address: "",
+        image:"",
+        comment:"",
+        lat:"",
+        lng:"",
+        width:"",
+        height:"",
         status: "enabled"
       };
       this.room = room;

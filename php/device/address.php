@@ -47,9 +47,11 @@ switch ($action)
         $mac = isset($_REQUEST["mac"]) ? $_REQUEST["mac"] : '';
         $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
         $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
+        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
+        $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
         $kw_usd = isset($_REQUEST["kw_usd"]) ? $_REQUEST["kw_usd"] : '';
         $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
-        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."',kw_usd = '".$kw_usd."' where address = '".$oldAddress."' ; ";
+        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."',kw_usd = '".$kw_usd."',image = '".$image."',comment = '".$comment."' where address = '".$oldAddress."' ; ";
         if (!mysqli_query($con,$sql))
         {
             $message = [];

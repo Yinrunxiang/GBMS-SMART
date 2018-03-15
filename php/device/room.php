@@ -31,6 +31,12 @@ switch ($action)
         $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
         $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
+        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
+        $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
+        $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
+        $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
+        $width = isset($_REQUEST["width"]) ? $_REQUEST["width"] : '';
+        $height = isset($_REQUEST["height"]) ? $_REQUEST["height"] : '';
         $sql="update room set room_name = '".$room_name."',image = '".$image."' where room = '".$room."' and floor = '".$floor."' and address = '".$address."'";
         if (!mysqli_query($con,$sql))
         {

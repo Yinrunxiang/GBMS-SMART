@@ -47,14 +47,14 @@
           :action="action"
           :show-file-list="false"
           :auto-upload="true"
-          :on-change="imageChange"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="image" :src="image" class="avatar">
+          <img v-if="form.image" :src="form.image" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+             
         </el-upload>
-        <img ref="image" :src="currentImage" class="avatar">
-        <p class= "m-t-30" style="margin:0,color:#606266;">Remarks</p>
+        <el-button v-if="form.image" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
+        <p  style="margin:0,color:#606266;">Remarks</p>
         <el-input
           style="width:360px;"
           type="textarea"
@@ -98,12 +98,12 @@
 
 <script>
 import http from "../../../../assets/js/http";
+import image from "../../../../assets/js/image";
 // import fomrMixin from '../../../../assets/js/form_com'
 
 export default {
   data() {
     return {
-      action: HOST + "upload/up.php",
       isLoading: false,
       textarea: "",
       // form: {
@@ -116,41 +116,16 @@ export default {
       //     lng: '',
       //     status: 'enabled',
       // },
-      currentImage: "",
       form: {},
       operation_type: "1",
       oldAddress: "",
       oldFloorNum: "",
       addressOptions: [],
-      image: ""
+      
     };
   },
   methods: {
-    imageChange(file, fileLis) {
-      // console.log(file)
-      // var reader=new FileReader();
-      //       reader.readAsDataURL(file.raw);
-      //  console.log(reader)
-      // this.image = URL.createObjectURL(file.raw)
-      // this.form.image = URL.createObjectURL(file.raw)
-    },
-    handleAvatarSuccess(res, file) {
-      console.log(res);
-      this.image = URL.createObjectURL(file.raw);
-      this.form.image = res;
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
-    },
+   
     goback() {
       this.$emit("goback", false);
     },
@@ -196,6 +171,8 @@ export default {
             }
             vm.$store.dispatch("setFloor", floors);
             _g.toastMsg("success", res[1]);
+            vm.updateDeleteImage()
+            vm.success = true;
             setTimeout(() => {
               vm.getFloor();
               vm.goback();
@@ -279,6 +256,8 @@ export default {
             }
             vm.$store.dispatch("setRoom", rooms);
             _g.toastMsg("success", res[1]);
+            vm.updateDeleteImage()
+            vm.success = true;
             setTimeout(() => {
               vm.getFloor();
               vm.goback();
@@ -510,27 +489,20 @@ export default {
     //判断远程还是本地
     this.form = Object.assign({}, this.address);
     this.currentImage = this.form.image;
-    
-    // var myImage = new Image(100, 200);
-    // myImage.src = this.form.image;
-    // console.log(myImage);
-    this.image = this.form.image
-    // this.image = URL.createObjectURL(this.form.image);
     var operation_type = Lockr.get("operation_type");
     this.operation_type = operation_type;
   },
   mounted() {
-    if(this.currentImage ){
-      console.log(this.$refs.image)
-      // this.$refs.image.baseURI=""
-    }
     console.log("address add");
     this.oldAddress = this.address.address;
     this.oldFloorNum = this.address.floor_num;
     this.addressOptions = this.getAddressOptions();
   },
+  destroyed() {
+    this.destroyedDeleteImage()
+  },
   computed: {},
   components: {},
-  mixins: [http]
+  mixins: [http,image]
 };
 </script>
