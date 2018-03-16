@@ -44,7 +44,7 @@
           v-model="form.comment">
         </el-input>
         <div class= "m-t-30 fr">
-          <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
+          <el-button type="primary" @click="addAddress()" :loading="isLoading">Save</el-button>
           <el-button @click="goback()">Cancel</el-button>
         </div>
       </div>
@@ -94,6 +94,7 @@ export default {
       //     lng: '',
       //     status: 'enabled',
       // },
+      form:{},
       addressOptions: [],
       oldRoom:"",
     };
@@ -102,7 +103,7 @@ export default {
     goback() {
       this.$emit("goback", false);
     },
-    addAddress(form) {
+    addAddress() {
       var vm = this
       this.isLoading = !this.isLoading;
       this.form.oldRoom = this.oldRoom;
@@ -151,6 +152,7 @@ export default {
   },
   props: ["add", "room"],
   created(){
+    this.form = Object.assign({},this.room)
     this.currentImage = this.form.image;
   },
   mounted() {
@@ -158,9 +160,6 @@ export default {
     this.oldRoom = this.room.room;
   },
   computed: {
-    form() {
-      return Object.assign({},this.room)
-    },
     address() {
       var address = [];
       for (var item of this.$store.state.address) {

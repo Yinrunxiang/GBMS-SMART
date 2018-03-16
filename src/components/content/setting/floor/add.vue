@@ -38,7 +38,7 @@
           v-model="form.comment">
         </el-input>
         <div class= "m-t-30 fr">
-          <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
+          <el-button type="primary" @click="addFloor('form')" :loading="isLoading">Save</el-button>
           <el-button @click="goback()">Cancel</el-button>
         </div>
       </div>
@@ -89,6 +89,7 @@ export default {
       //     lng: '',
       //     status: 'enabled',
       // },
+      form:{},
       addressOptions: [],
       oldFloor: "",
       oldRoomNum:"",
@@ -228,6 +229,7 @@ export default {
   },
   props: ["add", "floor"],
   created(){
+    this.form = Object.assign({}, this.floor)
     this.currentImage = this.form.image;
   },
   mounted() {
@@ -236,9 +238,6 @@ export default {
     this.oldRoomNum = this.floor.room_num
   },
   computed: {
-    form() {
-      return Object.assign({}, this.floor);
-    },
     address() {
       var address = [];
       for (var item of this.$store.state.address) {
