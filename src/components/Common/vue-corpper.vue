@@ -255,11 +255,13 @@ export default {
     // 校验图片
     checkedImg() {
       if (this.img === "") return;
+      console.log(this.img)
       this.loading = true;
       this.scale = 1;
       this.clearCrop();
       let canvas = document.createElement("canvas");
       let img = new Image();
+      img.crossOrigin = "anonymous";
       let rotate = 0;
       img.onload = () => {
         let width = img.width;
@@ -326,14 +328,13 @@ export default {
               this.imgs = data;
             },
             "image/" + this.outputType,
-            1
           );
         });
       };
       img.onerror = () => {
         this.$emit("imgLoad", "error");
       };
-      img.crossOrigin = "*";
+      
       img.src = this.img;
     },
     fitCropArea() {

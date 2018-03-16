@@ -8,10 +8,15 @@ switch ($action)
     case "insert":
         $room = isset($_REQUEST["room"]) ? $_REQUEST["room"] : '';
         $room_name = isset($_REQUEST["room_name"]) ? $_REQUEST["room_name"] : '';
-        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
         $floor = isset($_REQUEST["floor"]) ? $_REQUEST["floor"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
-        $sql="insert into room (room,room_name,image,floor,address) values ('".$room."','".$room_name."','".$image."','".$floor."','".$mac."','".$address."','enabled')";
+        $image = isset($_REQUEST["image"]) ? $_REQUEST["image"] : '';
+        $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
+        $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : '';
+        $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
+        $width = isset($_REQUEST["width"]) ? $_REQUEST["width"] : '';
+        $height = isset($_REQUEST["height"]) ? $_REQUEST["height"] : '';
+        $sql="insert into room (room,room_name,floor,address,image,comment,lat,lng,width,height) values ('".$room."','".$room_name."','".$floor."','".$address."','".$image."','".$comment."','".$lat."','".$lng."','".$width."','".$height."')";
         if (!mysqli_query($con,$sql))
         {
             $message = [];
@@ -37,7 +42,7 @@ switch ($action)
         $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : '';
         $width = isset($_REQUEST["width"]) ? $_REQUEST["width"] : '';
         $height = isset($_REQUEST["height"]) ? $_REQUEST["height"] : '';
-        $sql="update room set room_name = '".$room_name."',image = '".$image."' where room = '".$room."' and floor = '".$floor."' and address = '".$address."'";
+        $sql="update room set room_name = '".$room_name."',image = '".$image."',comment = '".$comment."',lat = '".$lat."',lng = '".$lng."',width = '".$width."',height = '".$height."' where room = '".$room."' and floor = '".$floor."' and address = '".$address."'";
         if (!mysqli_query($con,$sql))
         {
             $message = [];

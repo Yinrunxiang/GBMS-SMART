@@ -8,7 +8,13 @@
             <el-form-item label="Room Name">
                 <el-input v-model.trim="form.room_name" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item  label="Address">
+            <el-form-item label="Address">
+                <el-input :disabled="!this.add" v-model.trim="form.address" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <el-form-item label="Floor">
+                <el-input :disabled="!this.add" v-model.trim="form.floor" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <!-- <el-form-item  label="Address">
                 <el-select  :disabled="!this.add" v-model="form.address" filterable placeholder="Select Address" class="h-40 w-200">
                     <el-option v-for="(item,key) in address" :key="key" :label="item.label" :value="item.value">
                     </el-option>
@@ -19,7 +25,7 @@
                     <el-option v-for="(item,key) in floor" :key="key" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item> -->
         </el-form>
     </div>
     <div class="m-l-50 m-t-30 fl" style="width:360px;">
@@ -35,6 +41,7 @@
              
         </el-upload>
         <el-button v-if="form.image" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
+        <el-button icon="el-icon-rank" @click="showFloorImage = true"></el-button>
         <p  style="margin:0,color:#606266;">Remarks</p>
         <el-input
           style="width:360px;"
@@ -47,7 +54,16 @@
           <el-button type="primary" @click="addAddress()" :loading="isLoading">Save</el-button>
           <el-button @click="goback()">Cancel</el-button>
         </div>
-      </div>
+    </div>
+    <div  style="width:500px;height:500px">
+    <!-- <img src = "http://192.168.1.129:2123/upload/image/1521161287.jpg"> -->
+    <vueCorpper
+    style="width:500px;height:500px"
+     v-if="showFloorImage"
+     ref="cropper"
+      :img="floor.image"
+     ></vueCorpper>
+  </div>
   </div>
 </template>
 <style>
@@ -78,6 +94,7 @@
 <script>
 import http from "../../../../assets/js/http";
 import image from "../../../../assets/js/image";
+import vueCorpper from "../../../Common/vue-corpper";
 // import fomrMixin from '../../../../assets/js/form_com'
 
 export default {
@@ -94,9 +111,13 @@ export default {
       //     lng: '',
       //     status: 'enabled',
       // },
-      form:{},
+      form: {},
       addressOptions: [],
-      oldRoom:"",
+      oldRoom: "",
+      showFloorImage: false,
+      floor: {
+        image: "http://192.168.1.129:2123/upload/image/1521161287.jpg"
+      }
     };
   },
   methods: {
@@ -104,7 +125,7 @@ export default {
       this.$emit("goback", false);
     },
     addAddress() {
-      var vm = this
+      var vm = this;
       this.isLoading = !this.isLoading;
       this.form.oldRoom = this.oldRoom;
       const data = {
@@ -133,7 +154,11 @@ export default {
             var room = [];
             room = room.concat(vm.$store.state.room);
             for (var i = 0; i < room.length; i++) {
-              if (room[i].room == vm.form.room && room[i].floor == vm.form.floor && room[i].address == vm.form.address) {
+              if (
+                room[i].room == vm.form.room &&
+                room[i].floor == vm.form.floor &&
+                room[i].address == vm.form.address
+              ) {
                 room[i] = vm.form;
               }
             }
@@ -151,45 +176,56 @@ export default {
     }
   },
   props: ["add", "room"],
-  created(){
-    this.form = Object.assign({},this.room)
+  created() {
+    var vm = this;
+    this.form = Object.assign({}, this.room);
     this.currentImage = this.form.image;
+
+    var floor = this.$store.state.floor.filter(function(item) {
+      return item.address == vm.form.address && item.floor == vm.form.floor;
+    });
+    this.floor = Object.assign({}, this.floor);
+    let img = new Image();
+    img.src = this.floor.image;
+    img.onload = item => {
+      console.log(item);
+    };
   },
   mounted() {
     console.log("room add");
     this.oldRoom = this.room.room;
   },
   computed: {
-    address() {
-      var address = [];
-      for (var item of this.$store.state.address) {
-        var addressObj = {};
-        addressObj.label = item.address;
-        addressObj.value = item.address;
-        addressObj.address = item;
-        address.push(addressObj);
-      }
-      return address;
-    },
-    floor() {
-      var floor = [];
-      if (this.form.address && this.form.address != "") {
-        for (var item of this.$store.state.floor) {
-          if (item.address == this.form.address) {
-            //   if (item.status == "enabled") {
-            var floorObj = {};
-            floorObj.label = item.floor;
-            floorObj.value = item.floor;
-            floorObj.floor = item;
-            floor.push(floorObj);
-          }
-          // }
-        }
-      }
-      return floor;
-    }
+    // address() {
+    //   var address = [];
+    //   for (var item of this.$store.state.address) {
+    //     var addressObj = {};
+    //     addressObj.label = item.address;
+    //     addressObj.value = item.address;
+    //     addressObj.address = item;
+    //     address.push(addressObj);
+    //   }
+    //   return address;
+    // },
+    // floor() {
+    //   var floor = [];
+    //   if (this.form.address && this.form.address != "") {
+    //     for (var item of this.$store.state.floor) {
+    //       if (item.address == this.form.address) {
+    //         var floorObj = {};
+    //         floorObj.label = item.floor;
+    //         floorObj.value = item.floor;
+    //         floorObj.floor = item;
+    //         floor.push(floorObj);
+    //       }
+    //     }
+    //   }
+    //   return floor;
+    // }
   },
-  components: {},
-  mixins: [http,image]
+  components: {
+    vueCorpper
+  },
+  mixins: [http, image]
 };
 </script>
