@@ -15,15 +15,15 @@
 
 * Unzip phpStudy
 
-   ![file](images\file.PNG)
+   ![file](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/file.PNG)
 
 * Run phpStydy.exe
 
-   ![file2](images\file2.PNG)
+   ![file2](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/file2.PNG)
 
 * Turn on local service
 
-   ![phpStudy](images\phpStudy.PNG)
+   ![phpStudy](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/phpStudy.PNG)
 
   ​
 
@@ -31,35 +31,35 @@
 
   * Get the PHP directory address
 
-    Click "Other Menu" -> "Open File Location" -> "PHP"![location](images\location.PNG)
+    Click "Other Menu" -> "Open File Location" -> "PHP"![location](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/location.PNG)
 
-    Copy the PHP path![location_file](images\location_file.PNG)
+    Copy the PHP path![location_file](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/location_file.PNG)
 
     Right click on my computer and click Properties
 
-     ![properties1](images\properties1.PNG)
+     ![properties1](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/properties1.PNG)
 
     Select "Advanced", "Environment Variables"
 
-     ![Advanced](images\Advanced.PNG)
+     ![Advanced](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/Advanced.PNG)
 
     Select "Path", click "Edit"
 
-     ![variables](images\variables.PNG)
+     ![variables](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/variables.PNG)
 
     Will just get the PHP path, paste in the "Variable value" at the end,
 
     In front of the path plus ";"
 
-     ![user_var](images\user_var.PNG)
+     ![user_var](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/user_var.PNG)
 
 * Run the UDP receive script web-> php-> start_for_win.bat
 
-   ![start_for_win](images\start_for_win.PNG)
+   ![start_for_win](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/start_for_win.PNG)
 
   Running successfully
 
-   ![start_for_win2](images\start_for_win2.PNG)
+   ![start_for_win2](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/start_for_win2.PNG)
 
 ## 2.Login and basic settings  
 
@@ -69,44 +69,44 @@
 
   Password : admin
 
-  ![login](images\login.PNG)
+  ![login](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/login.PNG)
 
 * Select the Address screen
 
-  ​    ![address](images\address.PNG)
+  ​    ![address](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/address.PNG)
 
   Double-click to set the address information
 
-  ![](images\address2.PNG)
+  ![](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/address2.PNG)
 
   The local server does not need to fill in the IP port MAC
 
-   ![address_update](images\address_update.PNG)
+   ![address_update](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/address_update.PNG)
 
 * Set the room name
 
- ![room_setting](images\room_setting.PNG)
+ ![room_setting](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/room_setting.PNG)
 
 Double click on room data to change room name
 
- ![room_setting_dbclick](images\room_setting_dbclick.PNG)
+ ![room_setting_dbclick](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/room_setting_dbclick.PNG)
 
 * Set the power consumption of the device brand
 
-   ![devicetype](images\devicetype.PNG)
+   ![devicetype](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/devicetype.PNG)
 
 
 ## 3.Configure device information
 
 * Plan interface
 
-  ![plan](images\plan.PNG)
+  ![plan](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/plan.PNG)
 
   Click the ADD button to add the device
 
   ​
 
-   ![plan_insert](images\plan_insert.PNG)
+   ![plan_insert](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/plan_insert.PNG)
 
   ​
 
@@ -114,15 +114,15 @@ Double click on room data to change room name
 
 * Select the address at Global
 
-   ![global](images\global.PNG)
+   ![global](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/global.PNG)
 
 * Select the floor
 
-   ![hotel](images\hotel.PNG)
+   ![hotel](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/hotel.PNG)
 
 * Select the room
 
-   ![floor](images\floor.PNG)
+   ![floor](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/floor.PNG)
 
 * In the room can operate the device, add equipment, modify the equipment information
 
@@ -131,19 +131,19 @@ Double click on room data to change room name
   * Set button
   * Stop button
 
-   ![room](images\room.PNG)
+   ![room](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/room.PNG)
 
 ## 5. Center
 
- ![center](images\center.PNG)
+ ![center](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/center.PNG)
 
 Double-click the device to control the device
 
- ![center_dbclick](images\center_dbclick.PNG)
+ ![center_dbclick](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/center_dbclick.PNG)
 
 ## 6. Report
 
- ![report](images\report.PNG)
+ ![report](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/report.PNG)
 
 * Select the start time, end time
 
