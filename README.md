@@ -1,6 +1,6 @@
 
 
- ![logo](images/logo.png)
+ ![logo](https://github.com/Yinrunxiang/GBMS-SMART/blob/master/images/logo.png)
 
 # Manual for  SMART-GBMS
 
