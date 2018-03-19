@@ -255,86 +255,98 @@ export default {
     // 校验图片
     checkedImg() {
       if (this.img === "") return;
-      console.log(this.img)
       this.loading = true;
       this.scale = 1;
       this.clearCrop();
       let canvas = document.createElement("canvas");
       let img = new Image();
-      img.crossOrigin = "anonymous";
       let rotate = 0;
       img.onload = () => {
         let width = img.width;
         let height = img.height;
         let ctx = canvas.getContext("2d");
         ctx.save();
-        exif.getData(img, () => {
-          exif.getAllTags(img);
-          this.orientation = exif.getTag(img, "Orientation");
-          switch (this.orientation) {
-            case 6:
-              rotate = 1;
-              break;
-            case 8:
-              rotate = -1;
-              break;
-            case 3:
-              rotate = 3;
-              break;
-            default:
-              rotate = 0;
-          }
-          if (rotate === 0) {
-            this.imgs = this.img;
-            return;
-          }
-          switch (rotate) {
-            case 0:
-              canvas.width = width;
-              canvas.height = height;
-              ctx.drawImage(img, 0, 0, width, height);
-              break;
-            case 1:
-            case -3:
-              // 旋转90度 或者-270度 宽度和高度对调
-              canvas.width = height;
-              canvas.height = width;
-              ctx.rotate(rotate * 90 * Math.PI / 180);
-              ctx.drawImage(img, 0, -height, width, height);
-              break;
-            case 2:
-            case -2:
-              canvas.width = width;
-              canvas.height = height;
-              ctx.rotate(rotate * 90 * Math.PI / 180);
-              ctx.drawImage(img, -width, -height, width, height);
-              break;
-            case 3:
-            case -1:
-              canvas.width = height;
-              canvas.height = width;
-              ctx.rotate(rotate * 90 * Math.PI / 180);
-              ctx.drawImage(img, -width, 0, width, height);
-              break;
-            default:
-              canvas.width = width;
-              canvas.height = height;
-              ctx.drawImage(img, 0, 0, width, height);
-          }
-          ctx.restore();
+        this.imgs = this.img;
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        ctx.restore();
           canvas.toBlob(
             blob => {
               let data = URL.createObjectURL(blob);
               this.imgs = data;
             },
             "image/" + this.outputType,
+            1
           );
-        });
+        // exif.getData(img, () => {
+        //   exif.getAllTags(img);
+        //   this.orientation = exif.getTag(img, "Orientation");
+        //   switch (this.orientation) {
+        //     case 6:
+        //       rotate = 1;
+        //       break;
+        //     case 8:
+        //       rotate = -1;
+        //       break;
+        //     case 3:
+        //       rotate = 3;
+        //       break;
+        //     default:
+        //       rotate = 0;
+        //   }
+        //   if (rotate === 0) {
+        //     this.imgs = this.img;
+        //     return;
+        //   }
+        //   switch (rotate) {
+        //     case 0:
+        //       canvas.width = width;
+        //       canvas.height = height;
+        //       ctx.drawImage(img, 0, 0, width, height);
+        //       break;
+        //     case 1:
+        //     case -3:
+        //       // 旋转90度 或者-270度 宽度和高度对调
+        //       canvas.width = height;
+        //       canvas.height = width;
+        //       ctx.rotate(rotate * 90 * Math.PI / 180);
+        //       ctx.drawImage(img, 0, -height, width, height);
+        //       break;
+        //     case 2:
+        //     case -2:
+        //       canvas.width = width;
+        //       canvas.height = height;
+        //       ctx.rotate(rotate * 90 * Math.PI / 180);
+        //       ctx.drawImage(img, -width, -height, width, height);
+        //       break;
+        //     case 3:
+        //     case -1:
+        //       canvas.width = height;
+        //       canvas.height = width;
+        //       ctx.rotate(rotate * 90 * Math.PI / 180);
+        //       ctx.drawImage(img, -width, 0, width, height);
+        //       break;
+        //     default:
+        //       canvas.width = width;
+        //       canvas.height = height;
+        //       ctx.drawImage(img, 0, 0, width, height);
+        //   }
+        //   ctx.restore();
+        //   canvas.toBlob(
+        //     blob => {
+        //       let data = URL.createObjectURL(blob);
+        //       this.imgs = data;
+        //     },
+        //     "image/" + this.outputType,
+        //     1
+        //   );
+        // });
       };
       img.onerror = () => {
         this.$emit("imgLoad", "error");
       };
-      
+      img.crossOrigin = "*";
       img.src = this.img;
     },
     fitCropArea() {

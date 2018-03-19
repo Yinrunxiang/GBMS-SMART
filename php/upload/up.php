@@ -25,7 +25,7 @@ if (move_uploaded_file($_FILES['file']['tmp_name'],iconv("UTF-8", "gb2312", $upl
     } else {
         $host_ip = $_SERVER['SERVER_NAME'];
     }
-    $img_url = "http://" . $host_ip .":". $_SERVER["SERVER_PORT"] . "/upload/" . $uploaddir . $name;
+    $img_url = "http://" . $host_ip .":". $_SERVER["SERVER_PORT"] . "/php/upload/" . $uploaddir . $name;
     $url = str_replace("\\", "/", $img_url);
     print_r($url);
 } else {

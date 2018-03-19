@@ -56,12 +56,14 @@
         </div>
     </div>
     <div  style="width:500px;height:500px">
-    <!-- <img src = "http://192.168.1.129:2123/upload/image/1521161287.jpg"> -->
+    <!-- <img style="width:500px;height:500px"  ref="image" :src = "base64Image"
+    > -->
     <vueCorpper
     style="width:500px;height:500px"
      v-if="showFloorImage"
      ref="cropper"
-      :img="floor.image"
+     :autoCrop="true"
+      :img="base64Image"
      ></vueCorpper>
   </div>
   </div>
@@ -115,9 +117,8 @@ export default {
       addressOptions: [],
       oldRoom: "",
       showFloorImage: false,
-      floor: {
-        image: "http://192.168.1.129:2123/upload/image/1521161287.jpg"
-      }
+      floorImage: "",
+      base64Image: ""
     };
   },
   methods: {
@@ -173,6 +174,47 @@ export default {
           vm.isLoading = false;
         });
       }
+    },
+
+    getBase64Image(img, width, height) {
+      //width、height调用时传入具体像素值，控制大小 ,不传则默认图像大小
+      var canvas = document.createElement("canvas");
+      canvas.width = width ? width : img.width;
+      canvas.height = height ? height : img.height;
+
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var dataURL = canvas.toDataURL();
+      return dataURL;
+    },
+    getFloorImage() {
+      var imgSrc = this.floor.image;
+
+      function getBase64(img) {
+        //传入图片路径，返回base64
+
+        var image = new Image();
+        image.crossOrigin = "*";
+        image.src = img;
+        return new Promise((resolve, reject) => {
+          if (img) {
+            image.onload = () => {
+              resolve(this.getBase64Image(image)); //将base64传给done上传处理
+            };
+            image.onerror = () => {
+              reject("error");
+            };
+          }
+        });
+      }
+      getBase64(imgSrc).then(
+        function(base64) {
+          console.log(base64);
+        },
+        function(err) {
+          console.log(err);
+        }
+      );
     }
   },
   props: ["add", "room"],
@@ -184,16 +226,50 @@ export default {
     var floor = this.$store.state.floor.filter(function(item) {
       return item.address == vm.form.address && item.floor == vm.form.floor;
     });
-    this.floor = Object.assign({}, this.floor);
-    let img = new Image();
-    img.src = this.floor.image;
-    img.onload = item => {
-      console.log(item);
+    // console.log(floor[0])
+    this.floorImage = floor[0].image;
+
+    let data = {
+      params: {
+        image: this.floorImage
+      }
     };
+    this.apiGet("/upload/image.php", data).then(res => {
+      this.base64Image = res;
+    });
+
+    // this.getFloorImage()
+
+    // let img = new Image();
+    // img.src = this.floor.image;
+    // img.setAttribute("crossOrigin",'Anonymous')
+    // img.onload = () => {
+    //   var canvas = document.createElement("canvas");
+    //   canvas.width = img.width;
+    //   canvas.height = img.height;
+
+    //   var ctx = canvas.getContext("2d");
+    //   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    //   var dataURL = canvas.toDataURL();
+    //   console.log(dataURL);
+    // };
   },
   mounted() {
     console.log("room add");
     this.oldRoom = this.room.room;
+    //  var imageX = this.$refs.image
+
+    // imageX.onload = () => {
+    //   // imageX.crossOrigin = "Anonymous";
+    //   var canvas = document.createElement("canvas");
+    //   canvas.width = imageX.width;
+    //   canvas.height = imageX.height;
+
+    //   var ctx = canvas.getContext("2d");
+    //   ctx.drawImage(imageX, 0, 0, canvas.width, canvas.height);
+    //   var dataURL = canvas.toDataURL();
+    //   console.log(dataURL);
+    // };
   },
   computed: {
     // address() {
