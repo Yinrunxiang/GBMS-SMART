@@ -5,6 +5,7 @@ const imageMethods = {
             action: HOST + "upload/up.php",
             currentImage: "",
             success: false,
+            showImage:"",
         }
     },
     methods: {
@@ -12,8 +13,9 @@ const imageMethods = {
             if (this.currentImage != this.form.image) {
                 this.deleteImage(this.form.image)
             }
-            this.image = res;
-            this.form.image = res;
+            this.showImage = this.form.image_addr+res;
+            this.form.image = res
+            console.log(res);
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === "image/jpeg";
@@ -50,9 +52,10 @@ const imageMethods = {
         recoveryImage() {
             if (this.currentImage == this.form.image) {
                 this.form.image = ""
+                this.showImage = ""
             }else{
                 this.deleteImage(this.form.image)
-                this.form.image = ""
+                this.showImage = ""
             }
 
         }

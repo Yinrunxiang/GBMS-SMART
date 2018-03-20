@@ -6,7 +6,7 @@ header('Access-Control-Allow-Origin:*');
 header('Access-Control-Allow-Methods:*');  
 // 响应头设置  
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
-$uploaddir = 'image/';
+$uploaddir = '../../image/';
 $name = $_FILES['file']['name'];
 $type = strtolower(substr(strrchr($name, '.'), 1));
 $name = time();
@@ -19,13 +19,13 @@ if (!in_array($type, $typeArr)) {
     exit;
 }
 if (move_uploaded_file($_FILES['file']['tmp_name'],iconv("UTF-8", "gb2312", $uploadfile))) {
-    if ($_SERVER['SERVER_NAME'] == "localhost") {
-        $host_name = exec("hostname");
-        $host_ip = gethostbyname($host_name);
-    } else {
-        $host_ip = $_SERVER['SERVER_NAME'];
-    }
-    $img_url = "http://" . $host_ip .":". $_SERVER["SERVER_PORT"] . "/php/upload/" . $uploaddir . $name;
+    // if ($_SERVER['SERVER_NAME'] == "localhost") {
+    //     $host_name = exec("hostname");
+    //     $host_ip = gethostbyname($host_name);
+    // } else {
+    //     $host_ip = $_SERVER['SERVER_NAME'];
+    // }
+    $img_url = "/image/" . $name;
     $url = str_replace("\\", "/", $img_url);
     print_r($url);
 } else {

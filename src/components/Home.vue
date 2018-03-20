@@ -320,6 +320,7 @@ export default {
               addressObject.ip = address2.ip;
               addressObject.port = address2.port;
               addressObject.mac = address2.mac;
+              addressObject.image_full = address2.image_full;
               addressObject.floorList = [];
               addressObject.deviceList = [];
               addressObject.warn = 0;
@@ -330,6 +331,7 @@ export default {
                 if (floor.address == address2.address) {
                   var floorObject = {};
                   floorObject.name = floor.floor;
+                  floorObject.image_full = floor.image_full;
                   floorObject.roomList = [];
                   floorObject.roomArr = [];
                   floorObject.deviceList = [];
@@ -350,7 +352,11 @@ export default {
                       roomObject.room_name = room.room_name;
                       roomObject.floor = room.floor;
                       roomObject.address = room.address;
-
+                      roomObject.width = room.width;
+                      roomObject.height = room.height;
+                      roomObject.lat = room.lat;
+                      roomObject.lng = room.lng;
+                      roomObject.image_full = room.image_full;
                       roomObject.typeList = [];
                       roomObject.typeArr = [];
                       roomObject.deviceList = [];
@@ -727,7 +733,7 @@ export default {
         this.countryArr();
       },
       deep: true
-    },
+    }
   },
   mixins: [http]
 };

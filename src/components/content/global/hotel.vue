@@ -16,9 +16,9 @@
                 </div>
                 <div class="container-in">
                     <div class="build">
-                      <a class="build-img">
-                        <img src="../../../assets/images/build.jpg">
-                      </a>
+                      <!-- <a class="build-img"> -->
+                        <img class="build-img" :src="address.image_full">
+                      <!-- </a> -->
                     </div>
                     <div class="floor">
                         <div class="floor-container">
@@ -47,17 +47,24 @@
                         <i class="el-icon-setting"></i>
                     </div>
                 </div>
-                <div class="floorImga">
-                    <div v-for="(room, room_key) in room_num" :key = "room_key">
+                <div v-for="(room, room_key) in room_num" :key = "room_key">
                         <el-tooltip placement="right" transition="">
                             <div v-if="roomList[room_key]?true:false" slot="content">
                                 <p>Room: {{roomList[room_key].room_name}}</p>
                                 <p v-for="(val, key) in roomList[room_key].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
                             </div>
-                            <div :class="'room'+room" class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
+                            <div 
+                            v-if="floor.image_full"
+                             :style="{
+                                top:roomList[room_key].lat,
+                                left:roomList[room_key].lng,
+                                width:roomList[room_key].width,
+                                height:roomList[room_key].height,
+                            }"  class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
+                            <div v-else :class="'room'+room" class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
                         </el-tooltip>
                     </div>
-                </div>
+                <img class="floorImga" :src="floor.image_full">
                 </div>
                 <floorUpdate v-if="showFloorUpdate" :floor="this.floor" :add="false" @goback="floorUpdateback"></floorUpdate>
             </div>
@@ -170,7 +177,7 @@ export default {
       showRoomUpdate: false,
       floor: {},
       room: {},
-      lock: true
+      lock: true,
     };
   },
   // prop:[address],
@@ -725,22 +732,22 @@ export default {
   height: 100%;
 }
 
-.build-img {
+/* .build-img {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%)
-  /* display: inline-block;
-  width: 300px;
-  height: 500px;
-  margin: 30px auto; */
-}
+} */
 
-.build-img img {
-  width: 100%;
+.build-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* width: 100%;
   height: 100%;
   max-width: 100%;
-  max-height: 100%;
+  max-height: 100%; */
 }
 
 .p-title {
@@ -754,11 +761,11 @@ export default {
   width: 30%;
   height: 100%;
 }
-.floor .floor-container{
+.floor .floor-container {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%)
+  transform: translate(-50%, -50%);
 }
 .floor-centent {
   width: 200px;
@@ -814,20 +821,10 @@ export default {
   background-color: #fff;
 }
 
-.floorImga {
-  position: relative;
-  width: 1020px;
-  height: 740px;
-  /* margin: 0px auto; */
-  background-image: url("../../../assets/images/floor.jpg");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
-}
-.floorImga .room {
+.floor-content .room {
   cursor: pointer;
 }
-.floorImga .room:hover {
+.floor-content .room:hover {
   border: 2px solid #20a0ff;
 }
 

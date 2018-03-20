@@ -49,11 +49,11 @@
           :auto-upload="true"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="form.image" :src="form.image" class="avatar">
+          <img v-if="showImage" :src="showImage" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
              
         </el-upload>
-        <el-button v-if="form.image" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
+        <el-button v-if="showImage" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
         <p  style="margin:0,color:#606266;">Remarks</p>
         <el-input
           style="width:360px;"
@@ -489,6 +489,7 @@ export default {
     //判断远程还是本地
     this.form = Object.assign({}, this.address);
     this.currentImage = this.form.image;
+    this.showImage = this.form.image_addr + this.form.image;
     var operation_type = Lockr.get("operation_type");
     this.operation_type = operation_type;
   },

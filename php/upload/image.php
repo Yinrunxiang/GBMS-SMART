@@ -8,6 +8,15 @@ header('Access-Control-Allow-Methods:*');
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 header('content-type: image/jpeg'); 
 $image = $_REQUEST["image"];
+if ($_SERVER['SERVER_NAME'] == "localhost") {
+    $host_name = exec("hostname");
+    $host_ip = gethostbyname($host_name);
+} else {
+    $host_ip = $_SERVER['SERVER_NAME'];
+}
+$image_addr = "http://" . $host_ip . ":" . $_SERVER["SERVER_PORT"];
+
+$image = $image_addr.$image;
 $image_file = $image;
 $image_info = getimagesize($image_file);
 $base64_image_content = "data:{$image_info['mime']};base64," . 

@@ -36,11 +36,11 @@
           :auto-upload="true"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="form.image" :src="form.image" class="avatar">
+          <img v-if="showImage" :src="showImage" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
              
         </el-upload>
-        <el-button v-if="form.image" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
+        <el-button v-if="showImage" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
         <el-button icon="el-icon-rank" @click="showFloorImage = true"></el-button>
         <p  style="margin:0,color:#606266;">Remarks</p>
         <el-input
@@ -55,17 +55,23 @@
           <el-button @click="goback()">Cancel</el-button>
         </div>
     </div>
-    <div  style="width:500px;height:500px">
-    <!-- <img style="width:500px;height:500px"  ref="image" :src = "base64Image"
-    > -->
-    <vueCorpper
-    style="width:500px;height:500px"
-     v-if="showFloorImage"
-     ref="cropper"
-     :autoCrop="true"
-      :img="base64Image"
-     ></vueCorpper>
-  </div>
+    <el-dialog title="" v-if="showFloorImage" :visible.sync="showFloorImage" :width="floorImageWidth+40+'px'">
+      <vueCorpper
+        :style="{height:floorImageHeight+'px',width:floorImageWidth+'px'}"
+        v-if="showFloorImage"
+        ref="cropper"
+        :autoCrop="true"
+          :img="base64Image"
+          :canScale="false"
+          :canMove = "false"
+          :fixed = "false"
+        ></vueCorpper>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogClose">Cannel</el-button>
+          <el-button type="primary" @click="dialogSave">Save</el-button>
+        </div>
+    </el-dialog>
+    
   </div>
 </template>
 <style>
@@ -95,7 +101,7 @@
 </style>
 <script>
 import http from "../../../../assets/js/http";
-import image from "../../../../assets/js/image";
+import image_api from "../../../../assets/js/image";
 import vueCorpper from "../../../Common/vue-corpper";
 // import fomrMixin from '../../../../assets/js/form_com'
 
@@ -118,12 +124,34 @@ export default {
       oldRoom: "",
       showFloorImage: false,
       floorImage: "",
+      floorImageWidth: "",
+      floorImageHeight: "",
       base64Image: ""
     };
   },
   methods: {
     goback() {
       this.$emit("goback", false);
+    },
+    getImage(image) {
+      let img = new Image();
+      img.crossOrigin = "*";
+      img.src = image;
+      img.onload = () => {
+        this.floorImageWidth = img.width;
+        this.floorImageHeight = img.height;
+      };
+    },
+    dialogClose() {
+      this.showFloorImage = false;
+    },
+    dialogSave() {
+      this.form.width = this.$refs.cropper.cropW;
+      this.form.height = this.$refs.cropper.cropH;
+      this.form.lat = this.$refs.cropper.cropOffsertX;
+      this.form.lng = this.$refs.cropper.cropOffsertY;
+      this.showFloorImage = false;
+      // console.log(this.form);
     },
     addAddress() {
       var vm = this;
@@ -222,13 +250,12 @@ export default {
     var vm = this;
     this.form = Object.assign({}, this.room);
     this.currentImage = this.form.image;
-
+    this.showImage = this.form.image_addr + this.form.image;
     var floor = this.$store.state.floor.filter(function(item) {
       return item.address == vm.form.address && item.floor == vm.form.floor;
     });
     // console.log(floor[0])
     this.floorImage = floor[0].image;
-
     let data = {
       params: {
         image: this.floorImage
@@ -236,6 +263,7 @@ export default {
     };
     this.apiGet("/upload/image.php", data).then(res => {
       this.base64Image = res;
+      this.getImage(res);
     });
 
     // this.getFloorImage()
@@ -257,6 +285,7 @@ export default {
   mounted() {
     console.log("room add");
     this.oldRoom = this.room.room;
+
     //  var imageX = this.$refs.image
 
     // imageX.onload = () => {
@@ -302,6 +331,6 @@ export default {
   components: {
     vueCorpper
   },
-  mixins: [http, image]
+  mixins: [http, image_api]
 };
 </script>

@@ -160,10 +160,19 @@ switch ($action)
     }
     break;
     case "search":
+    if ($_SERVER['SERVER_NAME'] == "localhost") {
+        $host_name = exec("hostname");
+        $host_ip = gethostbyname($host_name);
+    } else {
+        $host_ip = $_SERVER['SERVER_NAME'];
+    }
+    $image_addr = "http://" . $host_ip . ":" . $_SERVER["SERVER_PORT"];
         $sql="SELECT * FROM address ";
         $result = mysqli_query($con,$sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {
+            $row["image_addr"] = $image_addr;
+            $row["image_full"] =$row["image"]==""?"": $image_addr.$row["image"];
             $results[] = $row;
         }
         $json_results = str_replace("\/","/",json_encode($results)); 
