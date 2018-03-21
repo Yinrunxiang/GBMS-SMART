@@ -1,5 +1,6 @@
 <template>
-    <div class="m-l-50 m-t-30 w-500 plan-update">
+<div class="w-100p">
+    <div class="m-l-50 m-t-30 w-500 plan-update fl">
         <el-form ref="form" :model="form" label-width="110px">
             <el-form-item label="Device Name" prop="device" :rules="[
                                   { required: true, message: 'The Device Name must not be null'}
@@ -58,11 +59,26 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item>
+            <!-- <el-form-item>
                 <el-button type="primary" @click="commit('form')" :loading="isLoading">Save</el-button>
                 <el-button @click="goback()">Cancel</el-button>
-            </el-form-item>
+            </el-form-item> -->
         </el-form>
+    </div>
+    <div class="m-l-50 m-t-30 fl" style="width:360px;">
+      <p  style="margin:0,color:#606266;">Comment</p>
+        <el-input
+          style="width:360px;"
+          type="textarea"
+          :rows="6"
+          placeholder="Please enter the comment"
+          v-model="form.comment">
+        </el-input>
+        <div class= "m-t-30 fr">
+          <el-button type="primary" @click="commit('form')" :loading="isLoading">Save</el-button>
+                <el-button @click="goback()">Cancel</el-button>
+        </div>
+    </div>
     </div>
 </template>
 <style>
@@ -125,6 +141,13 @@ export default {
       // this.form.deviceid = _g.toHex(this.form.deviceid)
       // this.form.channel = _g.toHex(this.form.channel)
       // this.form.channel_spare = _g.toHex(this.form.channel_spare ? this.form.channel_spare : 0)
+      if( this.form.comment.length  > 120){
+        this.$message({
+          message: "The length of the comment can not exceed 100 characters",
+          type: 'error'
+        });
+        return
+      }
       this.isLoading = !this.isLoading;
       var vm = this;
       const data = {

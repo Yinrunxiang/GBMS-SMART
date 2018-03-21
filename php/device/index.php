@@ -44,7 +44,8 @@ switch ($action) {
         $room = isset($_REQUEST["room"]) ? $_REQUEST["room"] : '';
         $x_axis = isset($_REQUEST["x_axis"]) ? $_REQUEST["x_axis"] : '';
         $y_axis = isset($_REQUEST["y_axis"]) ? $_REQUEST["y_axis"] : '';
-        $sql = "insert into device (device,subnetid,deviceid,channel,channel_spare,address,floor,room,x_axis,y_axis,devicetype,breed,status) values ('" . $device . "','" . $subnetid . "','" . $deviceid . "','" . $channel . "','" . $channel_spare . "','" . $address . "','" . $floor . "','" . $room . "','" . $x_axis . "','" . $y_axis . "','" . $devicetype . "','" . $breed . "','enabled')";
+        $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
+        $sql = "insert into device (device,subnetid,deviceid,channel,channel_spare,address,floor,room,x_axis,y_axis,devicetype,breed,comment,status) values ('" . $device . "','" . $subnetid . "','" . $deviceid . "','" . $channel . "','" . $channel_spare . "','" . $address . "','" . $floor . "','" . $room . "','" . $x_axis . "','" . $y_axis . "','" . $devicetype . "','" . $breed . "','" . $comment . "','enabled')";
         if (!mysqli_query($con, $sql)) {
             $message = [];
             $message[0] = false;
@@ -84,7 +85,8 @@ switch ($action) {
         $room = isset($_REQUEST["room"]) ? $_REQUEST["room"] : '';
         $x_axis = isset($_REQUEST["x_axis"]) ? $_REQUEST["x_axis"] : '';
         $y_axis = isset($_REQUEST["y_axis"]) ? $_REQUEST["y_axis"] : '';
-        $sql = "update device set device = '" . $device . "', subnetid = '" . $subnetid . "', deviceid = '" . $deviceid . "', channel = '" . $channel . "',channel_spare = '" . $channel_spare . "', devicetype = '" . $devicetype . "', breed = '" . $breed . "', address = '" . $address . "', floor = '" . $floor . "', room = '" . $room . "', x_axis = '" . $x_axis . "', y_axis = '" . $y_axis . "' where id = '" . $id . "'";
+        $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
+        $sql = "update device set device = '" . $device . "', subnetid = '" . $subnetid . "', deviceid = '" . $deviceid . "', channel = '" . $channel . "',channel_spare = '" . $channel_spare . "', devicetype = '" . $devicetype . "', breed = '" . $breed . "', address = '" . $address . "', floor = '" . $floor . "', room = '" . $room . "', x_axis = '" . $x_axis . "', y_axis = '" . $y_axis . "', comment = '" . $comment . "' where id = '" . $id . "'";
         if (!mysqli_query($con, $sql)) {
             $message = [];
             $message[0] = false;
@@ -280,7 +282,7 @@ switch ($action) {
         }
         break;
     case "search":
-        $sql = " SELECT a.id,maxid,device,subnetid,deviceid,channel,channel_spare,b.id as addressid,mac,ip,port,b.lat,b.lng,a.floor,a.room,devicetype,case when on_off = 'on' then now() - run_date else null end as run_time,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,a.floor,a.room,room_name,x_axis,y_axis,operation_1,operation_2,operation_3,operation_4,operation_5,operation_6,operation_7,operation_8,operation_9,operation_10,operation_11,operation_12,operation_13,operation_14,operation_15,operation_16,operation_17,operation_18,operation_19,operation_20,operation_21 FROM device as a left join address as b on a.address = b.address left join room as r on a.address = r.address and a.floor = r.floor and a.room = r.room left join (select max(id) as maxid from device) as c on 1=1  order by a.address,a.floor,a.room + 0,devicetype,breed,id ";
+        $sql = " SELECT a.id,maxid,device,subnetid,deviceid,channel,channel_spare,b.id as addressid,mac,ip,port,b.lat,b.lng,a.floor,a.room,devicetype,case when on_off = 'on' then now() - run_date else null end as run_time,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,a.floor,a.room,room_name,x_axis,y_axis,operation_1,operation_2,operation_3,operation_4,operation_5,operation_6,operation_7,operation_8,operation_9,operation_10,operation_11,operation_12,operation_13,operation_14,operation_15,operation_16,operation_17,operation_18,operation_19,operation_20,operation_21,a.comment FROM device as a left join address as b on a.address = b.address left join room as r on a.address = r.address and a.floor = r.floor and a.room = r.room left join (select max(id) as maxid from device) as c on 1=1  order by a.address,a.floor,a.room + 0,devicetype,breed,id ";
         $result = mysqli_query($con, $sql);
         $results = array();
         while ($row = mysqli_fetch_assoc($result)) {
@@ -404,6 +406,7 @@ switch ($action) {
         $addRoomLng = "alter table room add lng varchar(10); ";
         $addRoomWidth = "alter table room add width varchar(10); ";
         $addRoomHeight = "alter table room add height varchar(10); ";
+        $addDeviceComment = "alter table device add comment varchar(255); ";
         mysqli_query($con, $createMacro);
         mysqli_query($con, $createMacroComment);
         mysqli_query($con, $createIrOperation);
@@ -418,6 +421,7 @@ switch ($action) {
         mysqli_query($con, $addRoomLng);
         mysqli_query($con, $addRoomWidth);
         mysqli_query($con, $addRoomHeight);
+        mysqli_query($con, $addDeviceComment);
     //   if (!mysqli_query($con,$sql))
     //   {
     //       $message[0] = false;

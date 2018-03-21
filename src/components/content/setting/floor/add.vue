@@ -34,7 +34,7 @@
           style="width:360px;"
           type="textarea"
           :rows="6"
-          placeholder="请输入内容"
+          placeholder="Please enter the comment"
           v-model="form.comment">
         </el-input>
         <div class= "m-t-30 fr">
@@ -206,6 +206,13 @@ export default {
       }
     },
     addFloor(form) {
+      if( this.form.comment.length  > 120){
+        this.$message({
+          message: "The length of the comment can not exceed 100 characters",
+          type: 'error'
+        });
+        return
+      }
       if (parseInt(this.form.room_num) < parseInt(this.floor.room_num)) {
         this.$confirm(
           "If you reduce the number of rooms,the devices in the deleted room will also be deleted.",

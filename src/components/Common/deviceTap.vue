@@ -1,7 +1,10 @@
 <template>
     <div class="device-tap" @dblclick="deviceDbclick()" ref="device" :style="{left:device.x_axis + 'px', top:device.y_axis + 'px'}">
         <el-tooltip placement="bottom" transition="" style="width:42px;height:42px;">
-            <div  slot="content">{{device.device}}</div>
+            <div style="width:150px;word-break:break-word;" slot="content">
+              <p>Name : {{device.device}}</p>
+              <p v-if="device.comment" >Comment : {{device.comment}}</p>
+            </div>
             <div>
                 <div :class="{'device-tap-border': setting }" class="icon">
                     <i class="fa" :class="iconstyle(device.devicetype)"></i>
@@ -74,7 +77,7 @@ import http from "../../assets/js/http";
 export default {
   data() {
     return {
-      jqDevice : {}
+      jqDevice: {}
     };
   },
   props: ["device"],
@@ -187,7 +190,7 @@ export default {
           return "fa-lock";
           break;
       }
-    },
+    }
   },
   created() {
     // console.log('device list device')
@@ -197,13 +200,13 @@ export default {
     var self = this;
     this.$nextTick(function() {
       var device = this.$refs.device;
-      this.jqDevice = $(device)
+      this.jqDevice = $(device);
       this.jqDevice.myDrag({
         parent: "parent", //定义拖动不能超出的外框,拖动范围
         randomPosition: false, //初始化随机位置
         direction: "all", //方向
         handler: false, //把手
-        lock:this.lock,
+        lock: this.lock,
         dragStart: function(x, y) {}, //拖动开始 x,y为当前坐标
         dragEnd: function(x, y) {
           if (self.device.x_axis != x || self.device.y_axis != y) {
@@ -237,7 +240,7 @@ export default {
       });
     });
   },
-  props: ["device", "setting","lock"],
+  props: ["device", "setting", "lock"],
   components: {},
   computed: {},
   mixins: [http]

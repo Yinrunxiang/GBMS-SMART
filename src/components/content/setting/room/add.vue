@@ -47,7 +47,7 @@
           style="width:360px;"
           type="textarea"
           :rows="6"
-          placeholder="请输入内容"
+          placeholder="Please enter the comment"
           v-model="form.comment">
         </el-input>
         <div class= "m-t-30 fr">
@@ -154,6 +154,13 @@ export default {
       // console.log(this.form);
     },
     addAddress() {
+      if( this.form.comment.length  > 120){
+        this.$message({
+          message: "The length of the comment can not exceed 100 characters",
+          type: 'error'
+        });
+        return
+      }
       var vm = this;
       this.isLoading = !this.isLoading;
       this.form.oldRoom = this.oldRoom;
