@@ -16,7 +16,7 @@
 
 <script>
 import http from "../../../assets/js/http";
-import echarts from "echarts/lib/echarts"
+import echarts from "echarts/lib/echarts";
 
 // 引入提示框和标题组件
 // require('echarts/lib/component/tooltip');
@@ -103,8 +103,22 @@ export default {
               itCounteyTooltip +=
                 type + " : " + address.deviceTypeNumber[type] + "<br/>";
             }
-            itCounteyTooltip += "Watts: " + parseFloat(address.watts.toFixed(2)) + " W<br/>";
-            itCounteyTooltip += "Cost : " + parseFloat(address.usd.toFixed(2)) + " USD<br/>";
+            itCounteyTooltip +=
+              "Watts: " + parseFloat(address.watts.toFixed(2)) + " W<br/>";
+            itCounteyTooltip +=
+              "Cost : " + parseFloat(address.usd.toFixed(2)) + " USD<br/>";
+              if(address.comment){
+                let commentList = []
+                let commentLength = address.comment.length
+                itCounteyTooltip += "Comment : " 
+                itCounteyTooltip +=address.comment.substr(0,20)+ "<br/>";
+                for(let i = 20;i< commentLength;i+=30){
+                  // commentList.push()
+                  itCounteyTooltip +=address.comment.substr(i,30)+ "<br/>";
+                }
+                // itCounteyTooltip += "<br/>"
+              }
+            
           }
         }
       }
@@ -141,7 +155,8 @@ export default {
           formatter: function(params) {
             var str = e.itCounteyTooltip(params);
             return str;
-          }
+          },
+          width: 150
         },
         toolbox: {
           show: true,
@@ -247,18 +262,18 @@ export default {
       return store.state.globalLoading;
     }
   },
-  // watch: {
-  //     countryArr: {
-  //         handler: function(val, oldVal) {
-  //             if (this.countryArr.length > 0) {
-  //                 this.initMapSize()
-  //                 this.createmap(this)
-  //                 _g.closeGlobalLoading()
-  //             }
-  //         },
-  //         deep: true
-  //     }
-  // },
+  watch: {
+    countryArr: {
+      handler: function(val, oldVal) {
+        if (this.countryArr.length > 0) {
+          this.initMapSize();
+          this.createmap(this);
+          _g.closeGlobalLoading();
+        }
+      },
+      deep: true
+    }
+  },
 
   mixins: [http]
 };

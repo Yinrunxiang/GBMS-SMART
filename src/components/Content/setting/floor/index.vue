@@ -23,7 +23,9 @@
                 </el-table-column>
                 <el-table-column label="Room Number" prop="room_num" width="150">
                 </el-table-column>
-                <el-table-column label="Address" prop="address">
+                <el-table-column label="Address" prop="address" width="150">
+                </el-table-column>
+                <el-table-column label="Comment" prop="comment">
                 </el-table-column>
             </el-table>
             <div class="pos-rel p-t-20">

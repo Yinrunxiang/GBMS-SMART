@@ -31,11 +31,11 @@
                 </el-table-column>
                 <el-table-column label="Latitude" prop="lat" width="200">
                 </el-table-column>
-                <el-table-column label="Longitude" prop="lng" width="200">
+                <el-table-column label="Longitude" prop="lng" width="150">
                 </el-table-column>
-                <el-table-column label="KW/USD" prop="kw_usd" width="200">
+                <el-table-column label="KW/USD" prop="kw_usd" width="150">
                 </el-table-column>
-                <el-table-column label="Status" prop="status">
+                <el-table-column label="Comment" prop="comment"  width="300">
                 </el-table-column>
             </el-table>
             <div class="pos-rel p-t-20">

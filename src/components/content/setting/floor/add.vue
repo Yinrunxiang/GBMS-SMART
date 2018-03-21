@@ -29,7 +29,7 @@
              
         </el-upload>
         <el-button v-if="showImage" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
-        <p  style="margin:0,color:#606266;">Remarks</p>
+        <p  style="margin:0,color:#606266;">Comment</p>
         <el-input
           style="width:360px;"
           type="textarea"
@@ -231,7 +231,7 @@ export default {
   created(){
     this.form = Object.assign({}, this.floor)
     this.currentImage = this.form.image;
-    this.showImage = this.form.image_addr + this.form.image;
+    this.showImage = this.form.image_full;
   },
   mounted() {
     console.log("floor add");

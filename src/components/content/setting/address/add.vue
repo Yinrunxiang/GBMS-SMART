@@ -54,7 +54,7 @@
              
         </el-upload>
         <el-button v-if="showImage" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
-        <p  style="margin:0,color:#606266;">Remarks</p>
+        <p  style="margin:0,color:#606266;">Comment</p>
         <el-input
           style="width:360px;"
           type="textarea"
@@ -489,7 +489,7 @@ export default {
     //判断远程还是本地
     this.form = Object.assign({}, this.address);
     this.currentImage = this.form.image;
-    this.showImage = this.form.image_addr + this.form.image;
+    this.showImage = this.form.image_full;
     var operation_type = Lockr.get("operation_type");
     this.operation_type = operation_type;
   },

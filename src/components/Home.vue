@@ -321,6 +321,7 @@ export default {
               addressObject.port = address2.port;
               addressObject.mac = address2.mac;
               addressObject.image_full = address2.image_full;
+              addressObject.comment = address2.comment;
               addressObject.floorList = [];
               addressObject.deviceList = [];
               addressObject.warn = 0;
@@ -332,6 +333,7 @@ export default {
                   var floorObject = {};
                   floorObject.name = floor.floor;
                   floorObject.image_full = floor.image_full;
+                  floorObject.comment = floor.comment;
                   floorObject.roomList = [];
                   floorObject.roomArr = [];
                   floorObject.deviceList = [];
@@ -357,6 +359,7 @@ export default {
                       roomObject.lat = room.lat;
                       roomObject.lng = room.lng;
                       roomObject.image_full = room.image_full;
+                      roomObject.comment = room.comment;
                       roomObject.typeList = [];
                       roomObject.typeArr = [];
                       roomObject.deviceList = [];

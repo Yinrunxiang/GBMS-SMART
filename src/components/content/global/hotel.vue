@@ -1,7 +1,7 @@
 <template>
     <div class="container-out" style="height:100%">
         <div v-show="showAll" style="width:100%;height:100%">
-            <div class="roomWattsContainer">
+            <div v-show="showWatts" class="roomWattsContainer">
                 <div ref="roomWatts" class="roomWatts" style=""></div>
             </div>
             
@@ -17,15 +17,17 @@
                 <div class="container-in">
                     <div class="build">
                       <!-- <a class="build-img"> -->
-                        <img class="build-img" :src="address.image_full">
+                        <img v-if="address.image_full" class="build-img" :src="address.image_full">
+                        <img v-else class="build-img" src="../../../assets/images/build.jpg">
                       <!-- </a> -->
                     </div>
                     <div class="floor">
                         <div class="floor-container">
                           <div v-for="(floor, floor_key) in addressProperty.floor_num" :key = "floor_key">
                               <el-tooltip placement="right" transition="">
-                                  <div v-if="addressProperty.floorList[addressProperty.floor_num -floor_key -1]?true:false" slot="content">
+                                  <div style="width:150px;word-break:break-word;"  v-if="addressProperty.floorList[addressProperty.floor_num -floor_key -1]?true:false" slot="content">
                                       <p v-for="(val, key) in addressProperty.floorList[addressProperty.floor_num -floor_key -1].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
+                                      <p v-if="addressProperty.floorList[addressProperty.floor_num -floor_key -1].comment">comment:{{addressProperty.floorList[addressProperty.floor_num -floor_key -1].comment}}</p>
                                   </div>
                                   <div class="floor-centent" @click="floorClick(addressProperty.floor_num -floor_key)" @mouseover="floorOver(addressProperty.floor_num -floor_key)">Floor{{addressProperty.floor_num -floor_key}}
                                   </div>
@@ -48,23 +50,25 @@
                     </div>
                 </div>
                 <div v-for="(room, room_key) in room_num" :key = "room_key">
-                        <el-tooltip placement="right" transition="">
-                            <div v-if="roomList[room_key]?true:false" slot="content">
-                                <p>Room: {{roomList[room_key].room_name}}</p>
-                                <p v-for="(val, key) in roomList[room_key].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
-                            </div>
-                            <div 
-                            v-if="floor.image_full"
-                             :style="{
-                                top:roomList[room_key].lat,
-                                left:roomList[room_key].lng,
-                                width:roomList[room_key].width,
-                                height:roomList[room_key].height,
-                            }"  class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
-                            <div v-else :class="'room'+room" class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
-                        </el-tooltip>
-                    </div>
-                <img class="floorImga" :src="floor.image_full">
+                    <el-tooltip placement="right" transition="">
+                        <div style="width:150px;word-break:break-word;" v-if="roomList[room_key]?true:false" slot="content">
+                            <p>room: {{roomList[room_key].room_name}}</p>
+                            <p v-for="(val, key) in roomList[room_key].deviceTypeNumber" :key = "key">{{key}}:{{val}}</p>
+                            <p v-if="roomList[room_key].comment">comment: {{roomList[room_key].comment}}</p>
+                        </div>
+                        <div 
+                        v-if="roomList[room_key] && roomList[room_key].width" 
+                          :style="{
+                            top:roomList[room_key].lat+'px',
+                            left:roomList[room_key].lng+'px',
+                            width:roomList[room_key].width+'px',
+                            height:roomList[room_key].height+'px',
+                        }"  class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
+                        <div v-else :class="'room'+room" class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
+                    </el-tooltip>
+                </div>
+                <img v-if="floor.image_full" class="floorImga" :src="floor.image_full">
+                <img v-else class="floorImga" src="../../../assets/images/floor.jpg">
                 </div>
                 <floorUpdate v-if="showFloorUpdate" :floor="this.floor" :add="false" @goback="floorUpdateback"></floorUpdate>
             </div>
@@ -178,6 +182,7 @@ export default {
       floor: {},
       room: {},
       lock: true,
+      showWatts:true,
     };
   },
   // prop:[address],
@@ -331,9 +336,11 @@ export default {
     },
     floorSetting() {
       this.showFloorUpdate = true;
+      this.showWatts = false
     },
     floorUpdateback(val) {
       this.showFloorUpdate = val;
+      this.showWatts = true
     },
     roomClick(val) {
       // window.socketio.removeAllListeners("new_msg");
@@ -404,9 +411,11 @@ export default {
     },
     roomSetting() {
       this.showRoomUpdate = true;
+      this.showWatts = false
     },
     roomUpdateback(val) {
       this.showRoomUpdate = val;
+      this.showWatts = true
     },
     roomClose() {
       var deviceList = this.$refs.device;
@@ -832,6 +841,7 @@ export default {
   position: absolute;
   top: 10px;
   right: 5px;
+  z-index:99;
 }
 
 .icon-list div {
@@ -867,7 +877,9 @@ export default {
   background-size: 100% 100%;
   -moz-background-size: 100% 100%;
 }
-
+.floor-content .room {
+  position: absolute;
+}
 .room1 {
   position: absolute;
   left: 0;

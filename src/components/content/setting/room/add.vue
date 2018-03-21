@@ -41,8 +41,8 @@
              
         </el-upload>
         <el-button v-if="showImage" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
-        <el-button icon="el-icon-rank" @click="showFloorImage = true"></el-button>
-        <p  style="margin:0,color:#606266;">Remarks</p>
+        <el-button v-if="base64Image.substr(0,4) == 'data'" icon="el-icon-rank" @click="showFloorImage = true"></el-button>
+        <p  style="margin:0,color:#606266;">Comment</p>
         <el-input
           style="width:360px;"
           type="textarea"
@@ -250,7 +250,7 @@ export default {
     var vm = this;
     this.form = Object.assign({}, this.room);
     this.currentImage = this.form.image;
-    this.showImage = this.form.image_addr + this.form.image;
+    this.showImage = this.form.image_full;
     var floor = this.$store.state.floor.filter(function(item) {
       return item.address == vm.form.address && item.floor == vm.form.floor;
     });
@@ -264,6 +264,7 @@ export default {
     this.apiGet("/upload/image.php", data).then(res => {
       this.base64Image = res;
       this.getImage(res);
+      console.log(res)
     });
 
     // this.getFloorImage()

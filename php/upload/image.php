@@ -8,6 +8,10 @@ header('Access-Control-Allow-Methods:*');
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 header('content-type: image/jpeg'); 
 $image = $_REQUEST["image"];
+if(!$image){
+    echo "";
+    return;
+}
 if ($_SERVER['SERVER_NAME'] == "localhost") {
     $host_name = exec("hostname");
     $host_ip = gethostbyname($host_name);
