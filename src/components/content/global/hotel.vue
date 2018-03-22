@@ -249,6 +249,7 @@ export default {
       deviceObj.breed = "";
       deviceObj.x_axis = 0;
       deviceObj.y_axis = 0;
+      deviceObj.comment = "";
       this.thisdevice = deviceObj;
       // this.deviceList.push(deviceObj);
     },

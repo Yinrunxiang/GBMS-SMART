@@ -1,5 +1,5 @@
 const api = {
-apiGet(url, data) {
+  apiGet(url, data) {
     return new Promise((resolve, reject) => {
       axios.get(url, data).then((response) => {
         resolve(response.data)
@@ -13,5 +13,20 @@ apiGet(url, data) {
       })
     })
   },
+  getUdp(device, operatorCodefst, operatorCodesec, additionalContentData) {
+    const data = {
+      params: {
+        operatorCodefst: operatorCodefst,
+        operatorCodesec: operatorCodesec,
+        targetSubnetID: device.subnetid,
+        targetDeviceID: device.deviceid,
+        additionalContentData: additionalContentData,
+        macAddress: device.mac ? device.mac.split(".") : "",
+        dest_address: device.ip ? device.ip : "",
+        dest_port: device.port ? device.port : "",
+      }
+    }
+    return data
+  }
 }
 export default api;

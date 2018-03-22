@@ -193,7 +193,8 @@ export default {
         status: "enabled",
         on_off: false,
         starttime: "",
-        endtime: ""
+        endtime: "",
+        comment:"",
       };
     },
     rowDblclick(row) {

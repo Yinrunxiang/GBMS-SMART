@@ -2,18 +2,19 @@
     <div class="right-page-content light security">
         <!-- <div>{{device.device}}</div> -->
         <div>
-            <div style="margin-bottom:20px;">
-            <el-dropdown @command="areaClick">
+            <div style="margin-bottom:20px;line-height:40px">
+              <span class="fa fa-lock fl" style="font-size:36px;margin:4px -80px 0 50px;"></span>
+              <el-dropdown @command="areaClick">
                 <el-button  style="width:120px;" ><span>{{area}}</span>
                     <i  class="el-icon-arrow-down el-icon--right fr"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown" style="width:120px;">
                     <el-dropdown-item  :command="area.key" v-for="(area,key) in areaList" :key="key">{{area.name}}</el-dropdown-item>
                 </el-dropdown-menu>
-            </el-dropdown>
-            <div class="fr m-r-15 " style="margin-left:-65px">
-              <!-- <el-button icon="el-icon-setting"></el-button> -->
-            </div>
+              </el-dropdown>
+              <div class="fr m-r-15 " style="margin-left:-65px">
+                <!-- <el-button icon="el-icon-setting"></el-button> -->
+              </div>
             </div>
             <div>
             <el-button class="security-btn"  @click="sendCommand('02')">Away</el-button>

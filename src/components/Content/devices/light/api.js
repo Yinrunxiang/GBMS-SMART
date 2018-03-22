@@ -1,6 +1,6 @@
 import api from "../../../../assets/js/api";
 const lightApi = {
-  get_switch_change(val,device,deviceProperty) {
+  get_switch_change(val, device, deviceProperty) {
     if (val) {
       deviceProperty.brightness = 100;
       const data = {
@@ -34,7 +34,7 @@ const lightApi = {
       return data
     }
   },
-  get_slider_change(val,device,deviceProperty) {
+  get_slider_change(val, device, deviceProperty) {
     const data = {
       params: {
         operatorCodefst: "00",
@@ -52,21 +52,21 @@ const lightApi = {
     };
     return data
   },
-  switch_change(val,device,deviceProperty) {
-      const data = this.get_switch_change(val,device,deviceProperty)
-      api.apiGet("udp/sendUdp.php", data).then(res => {
-        // console.log("res = ", _g.j2s(res));
-        // _g.closeGlobalLoading()
-      });
-  },
-  slider_change(val,device,deviceProperty) {
-    const data = this.get_slider_change(val,device,deviceProperty)    
+  switch_change(val, device, deviceProperty) {
+    const data = this.get_switch_change(val, device, deviceProperty)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
   },
-  readStatus(device,deviceProperty) {
+  slider_change(val, device, deviceProperty) {
+    const data = this.get_slider_change(val, device, deviceProperty)
+    api.apiGet("udp/sendUdp.php", data).then(res => {
+      // console.log("res = ", _g.j2s(res));
+      // _g.closeGlobalLoading()
+    });
+  },
+  readStatus(device, deviceProperty) {
     let data = {
       params: {
         operatorCodefst: "00",
@@ -85,7 +85,7 @@ const lightApi = {
     });
     // var socket = window.socket("http://" + document.domain + ":2120");
     // window.socketio.removeAllListeners("new_msg");
-    window.socketio.on("new_msg", function(msg) {
+    window.socketio.on("new_msg", function (msg) {
       var subnetid = msg.substr(34, 2);
       var deviceid = msg.substr(36, 2);
       var channel = msg.substr(52, 2);
@@ -106,7 +106,22 @@ const lightApi = {
             }
           }
         } else if (msg1 == "0034") {
-          var len = 50 + parseInt("0x" + device.channel) * 2;
+          var channel = device.channel
+          switch (channel) {
+            case "31":
+              channel = "01"
+              break
+            case "32":
+              channel = "02"
+              break
+            case "33":
+              channel = "03"
+              break
+            case "34":
+              channel = "04"
+              break
+          }
+          var len = 50 + parseInt("0x" + channel) * 2;
           var msg2 = msg.substr(len, 2);
           var msg3 = parseInt("0x" + msg2);
           if (msg2 != "00") {
@@ -139,7 +154,7 @@ const lightApi = {
     });
     // var socket = window.socket("http://" + document.domain + ":2120");
     // window.socketio.removeAllListeners("new_msg");
-    window.socketio.on("new_msg", function(msg) {
+    window.socketio.on("new_msg", function (msg) {
       var subnetid = msg.substr(34, 2);
       var deviceid = msg.substr(36, 2);
       var channel = msg.substr(52, 2);
@@ -159,7 +174,22 @@ const lightApi = {
             }
           }
         } else if (msg1 == "0034") {
-          var len = 50 + parseInt("0x" + device.channel) * 2;
+          var channel = device.channel
+          switch (channel) {
+            case "31":
+              channel = "01"
+              break
+            case "32":
+              channel = "02"
+              break
+            case "33":
+              channel = "03"
+              break
+            case "34":
+              channel = "04"
+              break
+          }
+          var len = 50 + parseInt("0x" + channel) * 2;
           var msg2 = msg.substr(len, 2);
           if (msg2 != "00") {
             device.on_off = true;
