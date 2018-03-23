@@ -5,28 +5,21 @@ header('Access-Control-Allow-Origin:*');
 // 响应类型  
 header('Access-Control-Allow-Methods:POST');  
 // 响应头设置  
-header('Access-Control-Allow-Headers:x-requested-with,content-type'); 
+header('Access-Control-Allow-Headers:x-requested-with,content-type');
 require_once '/UdpSocket.php';
 require_once '/UdpProtocol.php';
 //接收操作协议
-
-// $params =  isset($_REQUEST["params"])? $_REQUEST["params"] : '';
-// echo $params;
-// $data =  isset($_REQUEST["data"])? $_REQUEST["data"] : '';
-// echo $data;
 $operatorCodefst = isset($_REQUEST["operatorCodefst"]) ? $_REQUEST["operatorCodefst"] : '';
 $operatorCodesec = isset($_REQUEST["operatorCodesec"]) ? $_REQUEST["operatorCodesec"] : '';
 $targetSubnetID = isset($_REQUEST["targetSubnetID"]) ? $_REQUEST["targetSubnetID"] : '';
 $targetDeviceID = isset($_REQUEST["targetDeviceID"]) ? $_REQUEST["targetDeviceID"] : '';
 $additionalContentData = isset($_REQUEST["additionalContentData"]) ? $_REQUEST["additionalContentData"] : [];
 
-$macAddress = $_REQUEST["macAddress"]? $_REQUEST["macAddress"] : [];
-
+$macAddress = $_REQUEST["macAddress"] ? $_REQUEST["macAddress"] : [];
 // var_dump($macAddress);
-// echo $operatorCodefst = "123";
 //调用UDP协议类，生成UDP协议
 $udpProtocol = new UdpProtocol();
-$msg  = $udpProtocol->UdpProtocol($operatorCodefst,$operatorCodesec,$targetSubnetID,$targetDeviceID,$additionalContentData,$macAddress);
+$msg = $udpProtocol->UdpProtocol($operatorCodefst, $operatorCodesec, $targetSubnetID, $targetDeviceID, $additionalContentData, $macAddress);
 // echo $msg;
 
 
@@ -34,16 +27,21 @@ $msg  = $udpProtocol->UdpProtocol($operatorCodefst,$operatorCodesec,$targetSubne
 $address = '127.0.0.1';
 $port = 6000;
 //广播地址
-// $dest_address = '192.168.1.255';
-// $dest_port = 6000;
-$dest_address = $_REQUEST["dest_address"]? $_REQUEST["dest_address"] : '255.255.255.255';
-$dest_port = $_REQUEST["dest_port"]? $_REQUEST["dest_port"] : 6000;
+$dest_address = $_REQUEST["dest_address"] ? $_REQUEST["dest_address"] : '255.255.255.255';
+$dest_port = $_REQUEST["dest_port"] ? $_REQUEST["dest_port"] : 6000;
 // echo $dest_address;
 // echo $dest_port;
-// $dest_address = '162.144.66.131';
-// $dest_port = 8888;
 $udpSocket = new UdpSocket();
-$hear = $udpSocket->UdpSocket($address,$port,$dest_address,$dest_port,$msg);
+
+if ($_SERVER['SERVER_NAME'] == "localhost") {
+    $host_name = exec("hostname");
+    $host_ip = gethostbyname($host_name);
+} else {
+    $host_ip = $_SERVER['SERVER_NAME'];
+}
+$hear = $udpSocket->UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
+
+$hear = $udpSocket->UdpSocket($host_ip, '6000', $dest_address, $dest_port, $msg);
 echo $hear;
 
 ?>

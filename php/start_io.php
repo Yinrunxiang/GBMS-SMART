@@ -127,39 +127,49 @@ $sender_io->on('workerStart', function () {
                 break;
             case "0034":
                 if ($deviceTypeId == '0382') {
-                    // echo $msg.'\n'.'0382\n';
-                    $red = tocolor(substr($msg, 52, 2));
-                    $green = tocolor(substr($msg, 54, 2));
-                    $blue = tocolor(substr($msg, 56, 2));
+                    $red = substr($msg, 52, 2);
+                    $green = substr($msg, 54, 2);
+                    $blue = substr($msg, 56, 2);
+                    $mix = substr($msg, 58, 2);
+                    //用light模式控led
+                    $on_off = $red != '00' ? 'on' : 'off';
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $red . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'  and devicetype = 'light' and channel = '31'";
+                    mysqli_query($con, $sql);
+                    $on_off = $green != '00' ? 'on' : 'off';
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $green . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'  and devicetype = 'light' and channel = '32'";
+                    mysqli_query($con, $sql);
+                    $on_off = $blue != '00' ? 'on' : 'off';
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $blue . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'  and devicetype = 'light' and channel = '33'";
+                    mysqli_query($con, $sql);
+                    $on_off = $mix != '00' ? 'on' : 'off';
+                    $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $mix . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'  and devicetype = 'light' and channel = '34'";
+                    mysqli_query($con, $sql);
+                    //普通LED模式
+                    $red = tocolor($red);
+                    $blue = tocolor($blue);
+                    $green = tocolor($green);
+                    $mix = tocolor($mix);
                     $color = "#" . $red . $green . $blue;
                     if ($color != "#000000") {
                         $on_off = true;
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                        $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and devicetype = 'led'";
+                        mysqli_query($con, $sql);
                     } else {
                         $on_off = false;
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = 'off' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                        $sql = "update device as a left join address as b on a.address = b.address set on_off = 'off' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and devicetype = 'led'";
+                        mysqli_query($con, $sql);
                     }
-                    mysqli_query($con, $sql);
+
+
+
+
                 } else {
-
-
-                    // $channel = substr($msg,52, 2);
-                    $brightness = substr($msg, 54, 2);
-                    // $devicetype = $channel != '00'? 'light' : 'led';
                     $devicetype = 'light';
-                    $on_off = $brightness != '00' ? $on_off = '1' : $on_off = '0';
                     $channelnum = hexdec(substr($msg, 50, 2));
-                    $mac = "";
-                    $remote = substr($msg, 52 + ($channelnum * 2), 2);
-                    // if($remote == "02"){
-                    //     for($i = 0;$i <8 ;$i++){
-                    //         $start  = 54+($channelnum*2)+($i*2);
-                    //         $mac  = $mac.'.'.substr($msg,$start, 2);
-                    //     }
-                    // }
                     for ($i = 1; $i <= $channelnum; $i++) {
                         $start = ($i * 2) + 50;
-                        if (substr($msg, $start, 2) != "00") {
+                        $brightness = substr($msg, $start, 2);
+                        if ($brightness != "00") {
                             $on_off = "on";
                         } else {
                             $on_off = "off";
@@ -171,7 +181,7 @@ $sender_io->on('workerStart', function () {
                         }
                         // echo  $channel;
                         if ($on_off == 'on') {
-                            $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
+                            $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "' and mode = '" . $brightness . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
                         } else {
                             $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
                         }
@@ -404,7 +414,7 @@ $sender_io->on('workerStart', function () {
     });
     Timer::add(1, function () {
         global $con;
-        if(date("s") == '00'){
+        if (date("s") == '00') {
             $time_1 = date("Y-m-d H:i:s");
             $time_2 = date("H:i");
             $week = lcfirst(date("D"));
@@ -413,26 +423,26 @@ $sender_io->on('workerStart', function () {
             $schedule = array();
             $result = mysqli_query($con, $sql);
             while ($row = mysqli_fetch_assoc($result)) {
-                switch($row['type']){
+                switch ($row['type']) {
                     case "once":
-                        if($row['time_1']  == $time_1){
+                        if ($row['time_1'] == $time_1) {
                             sendCommand($row['id']);
                         }
-                    break;
+                        break;
                     case "day":
-                        if($row['time_2'] == $time_2){
+                        if ($row['time_2'] == $time_2) {
                             sendCommand($row['id']);
                         }
-                    break;
+                        break;
                     case "week":
-                    $week = $week == "tue"?"tues":$week;
-                    $week = $week == "thu"?"thur":$week;
-                    if($row[$week] == '1'){
-                        if($row['time_2'] == $time_2){
-                            sendCommand($row['id']);
+                        $week = $week == "tue" ? "tues" : $week;
+                        $week = $week == "thu" ? "thur" : $week;
+                        if ($row[$week] == '1') {
+                            if ($row['time_2'] == $time_2) {
+                                sendCommand($row['id']);
+                            }
                         }
-                    }
-                    break;
+                        break;
                 }
             }
         }

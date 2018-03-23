@@ -23,7 +23,7 @@
               <el-form-item label="KW/USD">
                   <el-input v-model.trim="form.kw_usd" class="h-40 w-200"></el-input>
               </el-form-item>
-              <!-- <el-form-item label="Operation Type">
+              <el-form-item label="Operation Type">
                 <el-radio-group v-model="operation_type" @change="operationChange">
                   <el-radio label="1">Local</el-radio>
                   <el-radio label="2">Remote</el-radio>
@@ -37,7 +37,7 @@
               </el-form-item>
               <el-form-item v-show="operation_type == '2'" label="MAC">
                   <el-input v-model.trim="form.mac" class="h-40 w-200"></el-input>
-              </el-form-item> -->
+              </el-form-item>
               
           </el-form>
       </div>
