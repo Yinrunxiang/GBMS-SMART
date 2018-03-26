@@ -24,18 +24,15 @@
                   <el-input v-model.trim="form.kw_usd" class="h-40 w-200"></el-input>
               </el-form-item>
               <el-form-item label="Operation Type">
-                <el-radio-group v-model="operation_type" @change="operationChange">
-                  <el-radio label="1">Local</el-radio>
-                  <el-radio label="2">Remote</el-radio>
+                <el-radio-group v-model="form.operation" @change="operationChange">
+                  <el-radio label="0">Local</el-radio>
+                  <el-radio label="1">Remote</el-radio>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item v-show="operation_type == '2'" label="IP">
+              <el-form-item v-show="form.operation == '1'" label="IP">
                   <el-input v-model.trim="form.ip" class="h-40 w-200"></el-input>
               </el-form-item>
-              <el-form-item v-show="operation_type == '2'" label="Port">
-                  <el-input v-model.trim="form.port" class="h-40 w-200"></el-input>
-              </el-form-item>
-              <el-form-item v-show="operation_type == '2'" label="MAC">
+              <el-form-item v-show="form.operation == '1'" label="MAC">
                   <el-input v-model.trim="form.mac" class="h-40 w-200"></el-input>
               </el-form-item>
               
@@ -117,7 +114,6 @@ export default {
       //     status: 'enabled',
       // },
       form: {},
-      operation_type: "1",
       oldAddress: "",
       oldFloorNum: "",
       addressOptions: [],
@@ -144,6 +140,12 @@ export default {
     },
     addAddressRun() {
       var vm = this;
+      if(this.form.operation == '1'){
+        if(this.form.ip == "" || this.form.mac == ""){
+          this.$message.error('In remote mode, you must enter IP and MAC');
+          return
+        }
+      }
       this.isLoading = !this.isLoading;
       this.form.oldAddress = this.oldAddress;
       const data = {
@@ -497,8 +499,6 @@ export default {
     this.form = Object.assign({}, this.address);
     this.currentImage = this.form.image;
     this.showImage = this.form.image_full;
-    var operation_type = Lockr.get("operation_type");
-    this.operation_type = operation_type;
   },
   mounted() {
     console.log("address add");

@@ -1,175 +1,76 @@
 import api from "../../../../assets/js/api";
-function toTmp(tmp){
-    tmp = parseInt('0x'+tmp)
-    tmp = tmp>=128? -256+tmp:tmp
+function toTmp(tmp) {
+    tmp = parseInt('0x' + tmp)
+    tmp = tmp >= 128 ? -256 + tmp : tmp
     return tmp
 }
 const acApi = {
     get_switch_change(val, device, deviceProperty) {
         if (val) {
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetSubnetID: device.subnetid,
-                    targetDeviceID: device.deviceid,
-                    additionalContentData: ("03,01").split(","),
-                    macAddress: device.mac ? device.mac.split(".") : "",
-                    dest_address: device.ip ? device.ip : "",
-                    dest_port: device.port ? device.port : "",
-                }
-            }
-            return data
+            var operatorCodefst = "E3",
+                operatorCodesec = "D8",
+                additionalContentData = ["03", "01"]
+            return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         } else {
-            const data = {
-                params: {
-                    operatorCodefst: "E3",
-                    operatorCodesec: "D8",
-                    targetSubnetID: device.subnetid,
-                    targetDeviceID: device.deviceid,
-                    additionalContentData: ("03,00").split(","),
-                    macAddress: device.mac ? device.mac.split(".") : "",
-                    dest_address: device.ip ? device.ip : "",
-                    dest_port: device.port ? device.port : "",
-                }
-            }
-            return data
+            var operatorCodefst = "E3",
+                operatorCodesec = "D8",
+                additionalContentData = ["03", "00"]
+            return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         }
     },
     get_autotmp_change(val, device, deviceProperty) {
-        const data = {
-            params: {
-                operatorCodefst: "E3",
-                operatorCodesec: "D8",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("08," + _g.toHex(val < 0? val+256:val)).split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        return data
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = ["08", _g.toHex(val < 0 ? val + 256 : val)]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_cooltmp_change(val, device, deviceProperty) {
-        const data = {
-            params: {
-                operatorCodefst: "E3",
-                operatorCodesec: "D8",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("04," + _g.toHex(val < 0? val+256:val)).split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        return data
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = ["04", _g.toHex(val < 0 ? val + 256 : val)]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_heattmp_change(val, device, deviceProperty) {
-        const data = {
-            params: {
-                operatorCodefst: "E3",
-                operatorCodesec: "D8",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("07," + _g.toHex(val < 0? val+256:val)).split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        return data
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = ["07", _g.toHex(val < 0 ? val + 256 : val)]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_wind_change(val, device, deviceProperty) {
-        const data = {
-            params: {
-                operatorCodefst: "E3",
-                operatorCodesec: "D8",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("05," + _g.toHex(val)).split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        return data
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = ["05", _g.toHex(val)]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_autobtn(device, deviceProperty) {
-        const data = {
-            params: {
-                operatorCodefst: "E3",
-                operatorCodesec: "D8",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("06,03").split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        return data
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = ["06", "03"]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_fanbtn(device, deviceProperty) {
-        const data = {
-            params: {
-                operatorCodefst: "E3",
-                operatorCodesec: "D8",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("06,02").split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        return data
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = ["06", "02"]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_coolbtn(device, deviceProperty) {
-        const data = {
-            params: {
-                operatorCodefst: "E3",
-                operatorCodesec: "D8",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("06,00").split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        return data
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = ["06", "00"]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_heatbtn(device, deviceProperty) {
-        const data = {
-            params: {
-                operatorCodefst: "E3",
-                operatorCodesec: "D8",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("06,01").split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        return data
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = ["06", "01"]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_readTmpRange(device, deviceProperty) {
-        const data = {
-            params: {
-                operatorCodefst: "19",
-                operatorCodesec: "00",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: [],
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        return data
+        var operatorCodefst = "19",
+            operatorCodesec = "00",
+            additionalContentData = []
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     switch_change(val, device, deviceProperty) {
         const data = this.get_switch_change(val, device, deviceProperty)
@@ -246,18 +147,10 @@ const acApi = {
         })
     },
     readStatus(device, deviceProperty) {
-        let data = {
-            params: {
-                operatorCodefst: "E0",
-                operatorCodesec: "EC",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("00").split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
+        var operatorCodefst = "E0",
+            operatorCodesec = "EC",
+            additionalContentData = ["00"]
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         // console.log(device)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // console.log('res = ', _g.j2s(res))
@@ -401,14 +294,14 @@ const acApi = {
                                 break;
                         }
                         break
-                        case "1901":
-                        
+                    case "1901":
+
                         deviceProperty.cool_strat = toTmp(msg.substr(50, 2)),
-                        deviceProperty.cool_end = toTmp(msg.substr(52, 2)),
-                        deviceProperty.heat_strat = toTmp(msg.substr(54, 2)),
-                        deviceProperty.heat_end = toTmp(msg.substr(56, 2)),
-                        deviceProperty.auto_strat = toTmp(msg.substr(58, 2)),
-                        deviceProperty.auto_end = toTmp(msg.substr(60, 2))
+                            deviceProperty.cool_end = toTmp(msg.substr(52, 2)),
+                            deviceProperty.heat_strat = toTmp(msg.substr(54, 2)),
+                            deviceProperty.heat_end = toTmp(msg.substr(56, 2)),
+                            deviceProperty.auto_strat = toTmp(msg.substr(58, 2)),
+                            deviceProperty.auto_end = toTmp(msg.substr(60, 2))
                         // var tmp_range = {
                         //     cool_strat:cool_strat,
                         //     cool_end:cool_end,
@@ -424,19 +317,10 @@ const acApi = {
         });
     },
     readOpen(device) {
-        let data = {
-            params: {
-                operatorCodefst: "E0",
-                operatorCodesec: "EC",
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: ("00").split(","),
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-            }
-        }
-        // console.log(device)
+        var operatorCodefst = "E0",
+            operatorCodesec = "EC",
+            additionalContentData = ["00"]
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()

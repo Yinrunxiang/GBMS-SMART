@@ -17,7 +17,8 @@ switch ($action)
         $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
         $kw_usd = isset($_REQUEST["kw_usd"]) ? $_REQUEST["kw_usd"] : '';
         $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
-        $sql="insert into address (country,address,ip,port,mac,lat,lng,floor_num,kw_usd,image,comment,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','".$lat."','".$lng."','".$floor_num."','".$kw_usd."','".$image."','".$comment."','enabled')";
+        $operation = isset($_REQUEST["operation"]) ? $_REQUEST["operation"] : '';
+        $sql="insert into address (country,address,ip,port,mac,lat,lng,floor_num,kw_usd,image,comment,operation,status) values ('".$country."','".$address."','".$ip."','".$port."','".$mac."','".$lat."','".$lng."','".$floor_num."','".$kw_usd."','".$image."','".$comment."','".$operation."','enabled')";
         
         if (!mysqli_query($con,$sql))
         {
@@ -51,7 +52,8 @@ switch ($action)
         $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
         $kw_usd = isset($_REQUEST["kw_usd"]) ? $_REQUEST["kw_usd"] : '';
         $floor_num = isset($_REQUEST["floor_num"]) ? $_REQUEST["floor_num"] : '';
-        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."',kw_usd = '".$kw_usd."',image = '".$image."',comment = '".$comment."' where address = '".$oldAddress."' ; ";
+        $operation = isset($_REQUEST["operation"]) ? $_REQUEST["operation"] : '';
+        $sql="update address set country = '".$country."',address = '".$address."',ip = '".$ip."',port = '".$port."',mac = '".$mac."',lat = '".$lat."',lng = '".$lng."',floor_num = '".$floor_num."',kw_usd = '".$kw_usd."',image = '".$image."',comment = '".$comment."',operation = '".$operation."' where address = '".$oldAddress."' ; ";
         if (!mysqli_query($con,$sql))
         {
             $message = [];

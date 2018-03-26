@@ -38,18 +38,10 @@ const musicApi = {
   },
   source_change(device, deviceProperty) {
     var source = deviceProperty.source == '02' ? '03' : deviceProperty.source
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: ["01", source],
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["01", source]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       console.log(res)
       // console.log('res = ', _g.j2s(res))
@@ -60,57 +52,30 @@ const musicApi = {
     deviceProperty.vol = val;
     device.loading = true;
     val = 79 - val;
-    // if(val < 10)
-    // val = '0'+val
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        // additionalContentData: ("05,01,03," + val).split(","),
-        additionalContentData: ("05,01,03," + _g.toHex(val)).split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["05", "01", "03", _g.toHex(val)]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
   },
   pre(device) {
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: "04,01,00,00".split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["04", "01", "00", "00"]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log('res = ', _g.j2s(res))
       // _g.closeGlobalLoading()
     });
   },
   next(device) {
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: "04,02,00,00".split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["04", "02", "00", "00"]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log('res = ', _g.j2s(res))
       // _g.closeGlobalLoading()
@@ -121,32 +86,16 @@ const musicApi = {
     var data = {}
     switch (val) {
       case true:
-        data = {
-          params: {
-            operatorCodefst: "02",
-            operatorCodesec: "18",
-            targetSubnetID: device.subnetid,
-            targetDeviceID: device.deviceid,
-            additionalContentData: "04,03,00,00".split(","),
-            macAddress: device.mac ? device.mac.split(".") : "",
-            dest_address: device.ip ? device.ip : "",
-            dest_port: device.port ? device.port : ""
-          }
-        };
+        var operatorCodefst = "02",
+          operatorCodesec = "18",
+          additionalContentData = ["04", "03", "00", "00"]
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         break
       case false:
-        data = {
-          params: {
-            operatorCodefst: "02",
-            operatorCodesec: "18",
-            targetSubnetID: device.subnetid,
-            targetDeviceID: device.deviceid,
-            additionalContentData: "04,04,00,00".split(","),
-            macAddress: device.mac ? device.mac.split(".") : "",
-            dest_address: device.ip ? device.ip : "",
-            dest_port: device.port ? device.port : ""
-          }
-        };
+        var operatorCodefst = "02",
+          operatorCodesec = "18",
+          additionalContentData = ["04", "04", "00", "00"]
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         break
     }
     api.apiGet("udp/sendUdp.php", data).then(res => {
@@ -156,18 +105,10 @@ const musicApi = {
   },
   play(device) {
     device.on_off = true;
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: "04,03,00,00".split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["04", "03", "00", "00"]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
@@ -175,96 +116,50 @@ const musicApi = {
   },
   pause(device) {
     device.on_off = false;
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: "04,04,00,00".split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["04", "04", "00", "00"]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log('res = ', _g.j2s(res))
       // _g.closeGlobalLoading()
     });
   },
   random(device) {
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: "02,01".split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["02", "01"]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log('res = ', _g.j2s(res))
       // _g.closeGlobalLoading()
     });
   },
   single(device) {
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: "02,02".split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["02", "02"]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log('res = ', _g.j2s(res))
       // _g.closeGlobalLoading()
     });
   },
   allmusic(device) {
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: "02,04".split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["02", "04"]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log('res = ', _g.j2s(res))
       // _g.closeGlobalLoading()
     });
   },
   selectSong(device, deviceProperty, song) {
-    // var songNoHigh =song.songNoHigh
-    // var songNoLow =song.songNoLow
-    // songNoHigh = parseInt('0x'+songNoHigh).toString(2)
-    // songNoHigh = (songNoHigh << 2) + parseInt('0x'+songNoLow)
-    // songNoHigh =_g.toHex(songNoHigh)
-    const data = {
-      params: {
-        operatorCodefst: "02",
-        operatorCodesec: "18",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        // additionalContentData: ("06," + song.albumNo+',' +songNoHigh+',' +songNoLow).split(","),
-        additionalContentData: ("06," + song.albumNo + ',' + song.songNoHigh + ',' + song.songNoLow).split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "02",
+      operatorCodesec = "18",
+      additionalContentData = ["06", song.albumNo, song.songNoHigh, song.songNoLow]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log('res = ', _g.j2s(res))
       // _g.closeGlobalLoading()
@@ -277,19 +172,15 @@ const musicApi = {
     var albumNoList = {}
     var songNoList = {}
     var songList = []
-    var albumList = []
-    let additionalContentData = [deviceProperty.source];
-    _g.sendUdp(
-      "02",
-      "E0",
-      device.subnetid,
-      device.deviceid,
-      additionalContentData,
-      device.mac,
-      device.ip,
-      device.port
-    );
-    // window.socketio.removeAllListeners("new_msg");
+
+    var operatorCodefst = "02",
+      operatorCodesec = "E0",
+      additionalContentData = [deviceProperty.source]
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    api.apiGet("udp/sendUdp.php", data).then(res => {
+      // console.log('res = ', _g.j2s(res))
+      // _g.closeGlobalLoading()
+    });
     window.socketio.on("new_msg", function (msg) {
       var msglen = msg.length;
       var stop = msglen - 4;
@@ -310,17 +201,13 @@ const musicApi = {
             var albumpack = msg.substring(52, stop);
             var additionalContentData = strToarr(albumpack);
             additionalContentData.unshift(source);
-            // console.log(additionalContentData)
-            _g.sendUdp(
-              "02",
-              "E2",
-              device.subnetid,
-              device.deviceid,
-              additionalContentData,
-              device.mac,
-              device.ip,
-              device.port
-            );
+            var operatorCodefst = "02",
+              operatorCodesec = "E2"
+            var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+            api.apiGet("udp/sendUdp.php", data).then(res => {
+              // console.log('res = ', _g.j2s(res))
+              // _g.closeGlobalLoading()
+            });
             // console.log("02E1");
           }
 
@@ -336,7 +223,8 @@ const musicApi = {
             deviceProperty.albumlist = [];
             deviceProperty.songList = [];
             deviceProperty.songListAll = [];
-
+            var albumList = []
+            songList = []
             for (var i = 0; i < albumnum; i++) {
               var albumNo = albumlist.substr(albumCount, 2);
               var albumLength = albumlist.substr(albumCount + 2, 2);
@@ -361,34 +249,28 @@ const musicApi = {
             // console.log(deviceProperty.albumlist);
 
             for (var key in albumNoList) {
-              var additionalContentData = (source + "," + key).split(",");
-              _g.sendUdp(
-                "02",
-                "E4",
-                device.subnetid,
-                device.deviceid,
-                additionalContentData,
-                device.mac,
-                device.ip,
-                device.port
-              );
+              var operatorCodefst = "02",
+                operatorCodesec = "E4",
+                additionalContentData = [source, key]
+              var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+              api.apiGet("udp/sendUdp.php", data).then(res => {
+                // console.log('res = ', _g.j2s(res))
+                // _g.closeGlobalLoading()
+              });
             }
             var albumInterval = setInterval(function () {
               var check = true
               for (var key in albumNoList) {
                 if (!albumNoList[key]) {
                   check = false
-                  var additionalContentData = (source + "," + key).split(",");
-                  _g.sendUdp(
-                    "02",
-                    "E4",
-                    device.subnetid,
-                    device.deviceid,
-                    additionalContentData,
-                    device.mac,
-                    device.ip,
-                    device.port
-                  );
+                  var operatorCodefst = "02",
+                    operatorCodesec = "E4",
+                    additionalContentData = [source, key]
+                  var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+                  api.apiGet("udp/sendUdp.php", data).then(res => {
+                    // console.log('res = ', _g.j2s(res))
+                    // _g.closeGlobalLoading()
+                  });
                 }
               }
               if (check) {
@@ -416,34 +298,28 @@ const musicApi = {
 
               for (var i = 1; i <= songpack; i++) {
                 songNoList[albumno + _g.toHex(i)] = false
-                var additionalContentData = (source + "," + albumno + "," + _g.toHex(i)).split(",");
-                _g.sendUdp(
-                  "02",
-                  "E6",
-                  device.subnetid,
-                  device.deviceid,
-                  additionalContentData,
-                  device.mac,
-                  device.ip,
-                  device.port
-                );
+                var operatorCodefst = "02",
+                  operatorCodesec = "E6",
+                  additionalContentData = [source, albumno, _g.toHex(i)]
+                var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+                api.apiGet("udp/sendUdp.php", data).then(res => {
+                  // console.log('res = ', _g.j2s(res))
+                  // _g.closeGlobalLoading()
+                });
               }
               var songInterval = setInterval(function () {
                 var check = true
                 for (var key in songNoList) {
                   if (!songNoList[key]) {
                     check = false
-                    var additionalContentData = (source + "," + key.substr(0, 2) + "," + key.substr(2, 2)).split(",");
-                    _g.sendUdp(
-                      "02",
-                      "E6",
-                      device.subnetid,
-                      device.deviceid,
-                      additionalContentData,
-                      device.mac,
-                      device.ip,
-                      device.port
-                    );
+                    var operatorCodefst = "02",
+                      operatorCodesec = "E6",
+                      additionalContentData = [source, key.substr(0, 2), key.substr(2, 2)]
+                    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+                    api.apiGet("udp/sendUdp.php", data).then(res => {
+                      // console.log('res = ', _g.j2s(res))
+                      // _g.closeGlobalLoading()
+                    });
                   }
                 }
                 if (check) {

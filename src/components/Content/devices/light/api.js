@@ -3,54 +3,23 @@ const lightApi = {
   get_switch_change(val, device, deviceProperty) {
     if (val) {
       deviceProperty.brightness = 100;
-      const data = {
-        params: {
-          operatorCodefst: "00",
-          operatorCodesec: "31",
-          targetSubnetID: device.subnetid,
-          targetDeviceID: device.deviceid,
-          additionalContentData: (device.channel +
-            ",64,00,00").split(","),
-          macAddress: device.mac ? device.mac.split(".") : "",
-          dest_address: device.ip ? device.ip : "",
-          dest_port: device.port ? device.port : ""
-        }
-      };
-      return data
+      var operatorCodefst = "00",
+        operatorCodesec = "31",
+        additionalContentData = [device.channel, "64", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     } else {
       deviceProperty.brightness == 0;
-      const data = {
-        params: {
-          operatorCodefst: "00",
-          operatorCodesec: "31",
-          targetSubnetID: device.subnetid,
-          targetDeviceID: device.deviceid,
-          additionalContentData: (device.channel + ",00,00,00").split(","),
-          macAddress: device.mac ? device.mac.split(".") : "",
-          dest_address: device.ip ? device.ip : "",
-          dest_port: device.port ? device.port : ""
-        }
-      };
-      return data
+      var operatorCodefst = "00",
+        operatorCodesec = "31",
+        additionalContentData = [device.channel, "00", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     }
   },
   get_slider_change(val, device, deviceProperty) {
-    const data = {
-      params: {
-        operatorCodefst: "00",
-        operatorCodesec: "31",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: (device.channel +
-          "," +
-          _g.toHex(val) +
-          ",00,00").split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
-    return data
+    var operatorCodefst = "00",
+      operatorCodesec = "31",
+      additionalContentData = [device.channel, _g.toHex(val), "00", "00"]
+    return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
   },
   switch_change(val, device, deviceProperty) {
     const data = this.get_switch_change(val, device, deviceProperty)
@@ -67,17 +36,10 @@ const lightApi = {
     });
   },
   readStatus(device, deviceProperty) {
-    let data = {
-      params: {
-        operatorCodefst: "00",
-        operatorCodesec: "33",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "00",
+      operatorCodesec = "33",
+      additionalContentData = []
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     // console.log(device);
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
@@ -136,20 +98,13 @@ const lightApi = {
     })
   },
   readOpen(device) {
-    let data = {
-      params: {
-        operatorCodefst: "00",
-        operatorCodesec: "33",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "00",
+      operatorCodesec = "33",
+      additionalContentData = []
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     // console.log(device);
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
+      console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
     // var socket = window.socket("http://" + document.domain + ":2120");

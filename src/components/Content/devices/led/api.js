@@ -13,38 +13,15 @@ const ledApi = {
         Math.round(parseInt("0x" + color.substr(3, 2)) / 255 * 100)
       );
       var blue = _g.toHex(Math.round(parseInt("0x" + color.substr(5, 2)) / 255 * 100));
-      const data = {
-        params: {
-          operatorCodefst: "F0",
-          operatorCodesec: "80",
-          targetSubnetID: device.subnetid,
-          targetDeviceID: device.deviceid,
-          additionalContentData: (red +
-            "," +
-            green +
-            "," +
-            blue +
-            ",00,00,00").split(","),
-          macAddress: device.mac ? device.mac.split(".") : "",
-          dest_address: device.ip ? device.ip : "",
-          dest_port: device.port ? device.port : ""
-        }
-      };
-      return data
+      var operatorCodefst = "F0",
+        operatorCodesec = "80",
+        additionalContentData = [red, green, blue, "00", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     } else {
-      const data = {
-        params: {
-          operatorCodefst: "F0",
-          operatorCodesec: "80",
-          targetSubnetID: device.subnetid,
-          targetDeviceID: device.deviceid,
-          additionalContentData: "00,00,00,00,00,00".split(","),
-          macAddress: device.mac ? device.mac.split(".") : "",
-          dest_address: device.ip ? device.ip : "",
-          dest_port: device.port ? device.port : ""
-        }
-      };
-      return data
+      var operatorCodefst = "F0",
+        operatorCodesec = "80",
+        additionalContentData = ["00", "00", "00", "00", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     }
   },
   //当颜色值发生改变时
@@ -60,25 +37,10 @@ const ledApi = {
     );
     var blue = _g.toHex(Math.round(parseInt("0x" + color.substr(5, 2)) / 255 * 100));
     if (deviceProperty.on_off) {
-      const data = {
-        params: {
-          operatorCodefst: "F0",
-          operatorCodesec: "80",
-          targetSubnetID: device.subnetid,
-          targetDeviceID: device.deviceid,
-          additionalContentData: (red +
-            "," +
-            green +
-            "," +
-            blue +
-            ",00,00,00").split(","),
-          // additionalContentData: ("64,64,64,00,00,00").split(","),
-          macAddress: device.mac ? device.mac.split(".") : "",
-          dest_address: device.ip ? device.ip : "",
-          dest_port: device.port ? device.port : ""
-        }
-      };
-      return data
+      var operatorCodefst = "F0",
+        operatorCodesec = "80",
+        additionalContentData = [red, green, blue, "00", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     }
   },
   switch_change(val, device, deviceProperty) {
@@ -98,24 +60,15 @@ const ledApi = {
     });
   },
   readStatus(device, deviceProperty) {
-    let data = {
-      params: {
-        operatorCodefst: "00",
-        operatorCodesec: "33",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
+    var operatorCodefst = "00",
+      operatorCodesec = "33",
+      additionalContentData = []
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     // console.log(device);
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
-    // var socket = window.socket("http://" + document.domain + ":2120");
-    // window.socketio.removeAllListeners("new_msg");
     window.socketio.on("new_msg", function (msg) {
       var subnetid = msg.substr(34, 2);
       var deviceid = msg.substr(36, 2);
@@ -166,18 +119,10 @@ const ledApi = {
     });
   },
   readOpen(device) {
-    let data = {
-      params: {
-        operatorCodefst: "00",
-        operatorCodesec: "33",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
-    // console.log(device);
+    var operatorCodefst = "00",
+      operatorCodesec = "33",
+      additionalContentData = []
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()

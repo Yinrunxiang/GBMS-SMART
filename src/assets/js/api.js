@@ -24,6 +24,7 @@ const api = {
         macAddress: device.mac ? device.mac.split(".") : "",
         dest_address: device.ip ? device.ip : "",
         dest_port: device.port ? device.port : "",
+        udp_type :device.udp_type?device.udp_type:""
       }
     }
     return data

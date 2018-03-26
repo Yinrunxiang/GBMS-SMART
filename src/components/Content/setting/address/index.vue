@@ -95,6 +95,7 @@ export default {
         lng: "",
         image:"",
         comment:"",
+        operation:"0",
         status: "enabled"
       };
       this.address = address;

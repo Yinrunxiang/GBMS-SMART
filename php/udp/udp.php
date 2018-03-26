@@ -32,6 +32,19 @@ class UDP
         $channel_spare = $command_row['channel_spare'];
         $mode = $command_row['mode'];
         $grade = $command_row['grade'];
+        //判断UDP发送模式
+        $udp_type = $command_row['udp_type'];
+        if ($udp_type== 1) {
+            $dest_address = $dest_address ? $dest_address : '255.255.255.255';
+            $macAddress = $macAddress ?explode(".",$macAddress) : [];
+            $dest_port = 8888;
+        }else{
+            $dest_address = '255.255.255.255';
+            $macAddress = [];
+            $dest_port = 6000;
+            
+        }
+        echo $dest_address . $macAddress . $dest_port;
         switch($devicetype){
             case 'ac':
                 $tmp = $command_row['status_1'];

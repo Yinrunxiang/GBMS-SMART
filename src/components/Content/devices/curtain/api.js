@@ -2,89 +2,35 @@ import api from "../../../../assets/js/api";
 const cutainApi = {
   get_switch_change(val, device, deviceProperty) {
     if (val) {
-      const data = {
-        params: {
-          operatorCodefst: "00",
-          operatorCodesec: "31",
-          targetSubnetID: device.subnetid,
-          targetDeviceID: device.deviceid,
-          additionalContentData: (device.channel +
-            // "," +
-            // _g.toHex(deviceProperty.brightness) +
-            ",64,00,00").split(","),
-          macAddress: device.mac ? device.mac.split(".") : "",
-          dest_address: device.ip ? device.ip : "",
-          dest_port: device.port ? device.port : ""
-        }
-      };
-      return data
+      var operatorCodefst = "00",
+        operatorCodesec = "31",
+        additionalContentData = [device.channel, "64", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     } else {
-      const data = {
-        params: {
-          operatorCodefst: "00",
-          operatorCodesec: "31",
-          targetSubnetID: device.subnetid,
-          targetDeviceID: device.deviceid,
-          additionalContentData: (device.channel_spare + ",64,00,00").split(","),
-          macAddress: device.mac ? device.mac.split(".") : "",
-          dest_address: device.ip ? device.ip : "",
-          dest_port: device.port ? device.port : ""
-        }
-      };
-      return data
+      var operatorCodefst = "00",
+        operatorCodesec = "31",
+        additionalContentData = [device.channel_spare, "64", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     }
   },
   get_stop(val, device, deviceProperty) {
     if (val) {
-      const data = {
-        params: {
-          operatorCodefst: "00",
-          operatorCodesec: "31",
-          targetSubnetID: device.subnetid,
-          targetDeviceID: device.deviceid,
-          additionalContentData: (device.channel +
-            // "," +
-            // _g.toHex(deviceProperty.brightness) +
-            ",00,00,00").split(","),
-          macAddress: device.mac ? device.mac.split(".") : "",
-          dest_address: device.ip ? device.ip : "",
-          dest_port: device.port ? device.port : ""
-        }
-      };
-      return data
+      var operatorCodefst = "00",
+        operatorCodesec = "31",
+        additionalContentData = [device.channel, "00", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     } else {
-      const data = {
-        params: {
-          operatorCodefst: "00",
-          operatorCodesec: "31",
-          targetSubnetID: device.subnetid,
-          targetDeviceID: device.deviceid,
-          additionalContentData: (device.channel_spare + ",00,00,00").split(","),
-          macAddress: device.mac ? device.mac.split(".") : "",
-          dest_address: device.ip ? device.ip : "",
-          dest_port: device.port ? device.port : ""
-        }
-      };
-      return data
+      var operatorCodefst = "00",
+        operatorCodesec = "31",
+        additionalContentData = [device.channel_spare, "00", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     }
   },
   get_slider_change(val, device, deviceProperty) {
-    const data = {
-      params: {
-        operatorCodefst: "00",
-        operatorCodesec: "31",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        additionalContentData: (device.channel +
-          "," +
-          _g.toHex(val) +
-          ",00,00").split(","),
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
-    return data
+    var operatorCodefst = "00",
+      operatorCodesec = "31",
+      additionalContentData = [device.channel, _g.toHex(val), "00", "00"]
+    return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
   },
   switch_change(val, device, deviceProperty) {
     const data = this.get_switch_change(val, device, deviceProperty)
@@ -108,18 +54,10 @@ const cutainApi = {
     });
   },
   readStatus(device, deviceProperty) {
-    let data = {
-      params: {
-        operatorCodefst: "00",
-        operatorCodesec: "33",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
-    // console.log(device);
+    var operatorCodefst = "00",
+      operatorCodesec = "33",
+      additionalContentData = []
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
@@ -162,18 +100,10 @@ const cutainApi = {
     })
   },
   readOpen(device) {
-    let data = {
-      params: {
-        operatorCodefst: "00",
-        operatorCodesec: "33",
-        targetSubnetID: device.subnetid,
-        targetDeviceID: device.deviceid,
-        macAddress: device.mac ? device.mac.split(".") : "",
-        dest_address: device.ip ? device.ip : "",
-        dest_port: device.port ? device.port : ""
-      }
-    };
-    // console.log(device);
+    var operatorCodefst = "00",
+      operatorCodesec = "33",
+      additionalContentData = []
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.apiGet("udp/sendUdp.php", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
