@@ -324,10 +324,15 @@ const musicApi = {
                 }
                 if (check) {
                   clearInterval(songInterval)
-                  songList.sort(function (a, b) {
-                    // return a.songNo - b.songNo
-                    return parseInt(a.albumNo + a.No) - parseInt(b.albumNo + b.No)
-                  });
+                  // var hash = {};
+                  // songList = songList.reduce(function (item, next) {
+                  //   hash[next.songNo] ? '' : hash[next.songNo] = true && item.push(next);
+                  //   return item
+                  // }, [])
+                  // songList.sort(function (a, b) {
+                  //   // return a.songNo - b.songNo
+                  //   return parseInt(a.albumNo + a.No) - parseInt(b.albumNo + b.No)
+                  // });
                   deviceProperty.songList = songList
                   deviceProperty.songListAll = songList
                   deviceProperty.musicLoading = false

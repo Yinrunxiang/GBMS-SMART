@@ -206,7 +206,7 @@ export default {
       }
     },
     addFloor(form) {
-      if( this.form.comment.length  > 120){
+      if( this.form.comment && this.form.comment.length  > 120){
         this.$message({
           message: "The length of the comment can not exceed 100 characters",
           type: 'error'

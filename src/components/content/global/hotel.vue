@@ -59,8 +59,8 @@
                         <div 
                         v-if="roomList[room_key] && roomList[room_key].width" 
                           :style="{
-                            top:roomList[room_key].lat+'px',
-                            left:roomList[room_key].lng+'px',
+                            top:roomList[room_key].lng+'px',
+                            left:roomList[room_key].lat+'px',
                             width:roomList[room_key].width+'px',
                             height:roomList[room_key].height+'px',
                         }"  class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>

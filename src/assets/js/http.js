@@ -10,10 +10,10 @@ const apiMethods = {
         }, (response) => {
           reject(response)
           _g.closeGlobalLoading()
-          bus.$message({
-            message: 'Request timeout, please check the network',
-            type: 'warning'
-          })
+          // bus.$message({
+          //   message: 'Request timeout, please check the network',
+          //   type: 'warning'
+          // })
         })
       })
     },
@@ -27,10 +27,10 @@ const apiMethods = {
         }).catch((response) => {
           console.log('f', response)
           resolve(response)
-          bus.$message({
-            message: 'Request timeout, please check the network',
-            type: 'warning'
-          })
+          // bus.$message({
+          //   message: 'Request timeout, please check the network',
+          //   type: 'warning'
+          // })
         })
       })
     },
@@ -41,10 +41,10 @@ const apiMethods = {
         }, (response) => {
           reject(response)
           _g.closeGlobalLoading()
-          bus.$message({
-            message: 'Request timeout, please check the network',
-            type: 'warning'
-          })
+          // bus.$message({
+          //   message: 'Request timeout, please check the network',
+          //   type: 'warning'
+          // })
         })
       })
     },
@@ -54,10 +54,10 @@ const apiMethods = {
           resolve(response.data)
         }, (response) => {
           _g.closeGlobalLoading()
-          bus.$message({
-            message: 'Request timeout, please check the network',
-            type: 'warning'
-          })
+          // bus.$message({
+          //   message: 'Request timeout, please check the network',
+          //   type: 'warning'
+          // })
           reject(response)
         })
       })
@@ -155,10 +155,10 @@ const apiMethods = {
           resolve(response.data)
         }, (response) => {
           reject(response)
-          bus.$message({
-            message: 'Request timeout, please check the network',
-            type: 'warning'
-          })
+          // bus.$message({
+          //   message: 'Request timeout, please check the network',
+          //   type: 'warning'
+          // })
         })
       })
     }

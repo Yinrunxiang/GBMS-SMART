@@ -15,6 +15,7 @@ const imageMethods = {
             }
             this.showImage = this.form.image_addr+res;
             this.form.image = res
+            this.form.image_full = this.form.image_addr + res
             console.log(res);
         },
         beforeAvatarUpload(file) {
@@ -52,6 +53,7 @@ const imageMethods = {
         recoveryImage() {
             if (this.currentImage == this.form.image) {
                 this.form.image = ""
+                this.form.image_full = ""
                 this.showImage = ""
             }else{
                 this.deleteImage(this.form.image)

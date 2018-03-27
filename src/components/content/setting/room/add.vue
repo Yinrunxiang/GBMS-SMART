@@ -28,7 +28,7 @@
             </el-form-item> -->
         </el-form>
     </div>
-    <div class="m-l-50 m-t-30 fl" style="width:360px;">
+    <div class="m-l-50 m-t-30 fl" style="position:relative;width:360px;">
           <el-upload
           class="avatar-uploader"
           :action="action"
@@ -40,8 +40,8 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
              
         </el-upload>
-        <el-button v-if="showImage" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
-        <el-button v-if="base64Image.substr(0,4) == 'data'" icon="el-icon-rank" @click="showFloorImage = true"></el-button>
+        <el-button v-if="showImage" size="medium" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
+        <el-button size="medium" type="primary" v-if="base64Image.substr(0,4) == 'data'"  @click="showFloorImage = true" style="position:absolute;top:206px;right:0;">Change position</el-button>
         <p  style="margin:0,color:#606266;">Comment</p>
         <el-input
           style="width:360px;"
@@ -154,7 +154,7 @@ export default {
       // console.log(this.form);
     },
     addAddress() {
-      if( this.form.comment.length  > 120){
+      if( this.form.comment && this.form.comment.length  > 120){
         this.$message({
           message: "The length of the comment can not exceed 100 characters",
           type: 'error'

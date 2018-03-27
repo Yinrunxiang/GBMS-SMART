@@ -25,9 +25,11 @@ $msg = $udpProtocol->UdpProtocol($operatorCodefst, $operatorCodesec, $targetSubn
 if ($_REQUEST["udp_type"] == "1") {
     $dest_address = $_REQUEST["dest_address"] ? $_REQUEST["dest_address"] : '255.255.255.255';
     $dest_port = 8888;
+    $macAddress = $_REQUEST["macAddress"] ?$_REQUEST["macAddress"] : [];
 }else{
     $dest_address = '255.255.255.255';
     $dest_port = 6000;
+    $macAddress = [];
 }
 
 echo $dest_address;
