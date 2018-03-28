@@ -4,7 +4,7 @@
 <script>
 export default {
   created() {
-    console.log(this.$route.query.name)
+    // console.log(this.$route.query.name)
     if (this.$route.query.name) {
       router.replace({ name: this.$route.query.name })
     } else {

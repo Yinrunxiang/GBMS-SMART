@@ -69,7 +69,7 @@ export default {
     //获取被选中的数据
     selectItem(val) {
       this.multipleSelection = val;
-      console.log(this.multipleSelection);
+      // console.log(this.multipleSelection);
     },
     //保存状态点击事件
     setStatusBtn(status) {

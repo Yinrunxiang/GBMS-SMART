@@ -24,7 +24,7 @@ const lightApi = {
   switch_change(val, device, deviceProperty) {
     const data = this.get_switch_change(val, device, deviceProperty)
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
   },
@@ -56,43 +56,74 @@ const lightApi = {
         deviceid.toLowerCase() == device.deviceid.toLowerCase()
       ) {
         var msg1 = msg.substr(42, 4);
-        if (msg1 == "0032") {
-          var channel = msg.substr(50, 2);
-          if (channel.toLowerCase() == device.channel.toLowerCase()) {
-            var msg2 = msg.substr(54, 2);
+        switch (msg1) {
+          case "0032":
+            var channel = msg.substr(50, 2);
+            if (channel.toLowerCase() == device.channel.toLowerCase()) {
+              var msg2 = msg.substr(54, 2);
+              if (msg2 != "00") {
+                deviceProperty.on_off = true;
+              } else {
+                deviceProperty.on_off = false;
+                deviceProperty.brightness = 0;
+              }
+            }
+            break
+          case "0034":
+            var channel = device.channel
+            switch (channel) {
+              case "31":
+                channel = "01"
+                break
+              case "32":
+                channel = "02"
+                break
+              case "33":
+                channel = "03"
+                break
+              case "34":
+                channel = "04"
+                break
+            }
+            var len = 50 + parseInt("0x" + channel) * 2;
+            var msg2 = msg.substr(len, 2);
+            var msg3 = parseInt("0x" + msg2);
             if (msg2 != "00") {
               deviceProperty.on_off = true;
+              deviceProperty.brightness = msg3;
             } else {
               deviceProperty.on_off = false;
-              deviceProperty.brightness = 0;
+              deviceProperty.brightness = msg3;
             }
-          }
-        } else if (msg1 == "0034") {
-          var channel = device.channel
-          switch (channel) {
-            case "31":
-              channel = "01"
-              break
-            case "32":
-              channel = "02"
-              break
-            case "33":
-              channel = "03"
-              break
-            case "34":
-              channel = "04"
-              break
-          }
-          var len = 50 + parseInt("0x" + channel) * 2;
-          var msg2 = msg.substr(len, 2);
-          var msg3 = parseInt("0x" + msg2);
-          if (msg2 != "00") {
-            deviceProperty.on_off = true;
-            deviceProperty.brightness = msg3;
-          } else {
-            deviceProperty.on_off = false;
-            deviceProperty.brightness = msg3;
-          }
+            break
+          case "f081":
+            var red = msg.substr(52, 2);
+            var green = msg.substr(54, 2);
+            var blue = msg.substr(56, 2);
+            var mix = msg.substr(58, 2);
+            var brightness = "00"
+            switch (device.channel) {
+              case "31":
+                brightness = parseInt("0x" + red)
+                break
+              case "32":
+                brightness = parseInt("0x" + green)
+                break
+              case "33":
+                brightness = parseInt("0x" + blue)
+                break
+              case "34":
+                brightness = parseInt("0x" + mix)
+                break
+            }
+            if (brightness != "00") {
+              deviceProperty.on_off = true;
+              deviceProperty.brightness = brightness;
+            } else {
+              deviceProperty.on_off = false;
+              deviceProperty.brightness = brightness;
+            }
+            break
         }
       }
     })
@@ -104,7 +135,7 @@ const lightApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     // console.log(device);
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
+      // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
     // var socket = window.socket("http://" + document.domain + ":2120");
@@ -118,39 +149,68 @@ const lightApi = {
         deviceid.toLowerCase() == device.deviceid.toLowerCase()
       ) {
         var msg1 = msg.substr(42, 4);
-        if (msg1 == "0032") {
-          var channel = msg.substr(50, 2);
-          if (channel.toLowerCase() == device.channel.toLowerCase()) {
-            var msg2 = msg.substr(54, 2);
+        switch (msg1) {
+          case "0032":
+            var channel = msg.substr(50, 2);
+            if (channel.toLowerCase() == device.channel.toLowerCase()) {
+              var msg2 = msg.substr(54, 2);
+              if (msg2 != "00") {
+                device.on_off = true;
+              } else {
+                device.on_off = false;
+              }
+            }
+            break
+          case "0034":
+            var channel = device.channel
+            switch (channel) {
+              case "31":
+                channel = "01"
+                break
+              case "32":
+                channel = "02"
+                break
+              case "33":
+                channel = "03"
+                break
+              case "34":
+                channel = "04"
+                break
+            }
+            var len = 50 + parseInt("0x" + channel) * 2;
+            var msg2 = msg.substr(len, 2);
             if (msg2 != "00") {
               device.on_off = true;
             } else {
               device.on_off = false;
             }
-          }
-        } else if (msg1 == "0034") {
-          var channel = device.channel
-          switch (channel) {
-            case "31":
-              channel = "01"
-              break
-            case "32":
-              channel = "02"
-              break
-            case "33":
-              channel = "03"
-              break
-            case "34":
-              channel = "04"
-              break
-          }
-          var len = 50 + parseInt("0x" + channel) * 2;
-          var msg2 = msg.substr(len, 2);
-          if (msg2 != "00") {
-            device.on_off = true;
-          } else {
-            device.on_off = false;
-          }
+            break
+          case "f081":
+            var red = msg.substr(52, 2);
+            var green = msg.substr(54, 2);
+            var blue = msg.substr(56, 2);
+            var mix = msg.substr(58, 2);
+            var brightness = "00"
+            switch (device.channel) {
+              case "31":
+                brightness = parseInt("0x" + red)
+                break
+              case "32":
+                brightness = parseInt("0x" + green)
+                break
+              case "33":
+                brightness = parseInt("0x" + blue)
+                break
+              case "34":
+                brightness = parseInt("0x" + mix)
+                break
+            }
+            if (brightness != "00") {
+              device.on_off = true;
+            } else {
+              device.on_off = false;
+            }
+            break
         }
       }
     })

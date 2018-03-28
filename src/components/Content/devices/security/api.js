@@ -34,7 +34,7 @@ const lightApi = {
     },
     send_command(val, device) {
         const data = this.get_command(val, device)
-        console.log(data)
+        // console.log(data)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()

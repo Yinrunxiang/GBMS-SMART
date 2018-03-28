@@ -173,7 +173,7 @@ export default {
   computed: {
     //从vuex中获取设备数据
     ac_breeds() {
-      console.log(this.$store.state.ac_breed);
+      // console.log(this.$store.state.ac_breed);
       return this.$store.state.ac_breed;
     },
     //从vuex中获取设备数据条数

@@ -244,10 +244,10 @@ export default {
       }
       getBase64(imgSrc).then(
         function(base64) {
-          console.log(base64);
+          // console.log(base64);
         },
         function(err) {
-          console.log(err);
+          // console.log(err);
         }
       );
     }
@@ -271,7 +271,7 @@ export default {
     this.apiGet("/upload/image.php", data).then(res => {
       this.base64Image = res;
       this.getImage(res);
-      console.log(res)
+      // console.log(res)
     });
 
     // this.getFloorImage()

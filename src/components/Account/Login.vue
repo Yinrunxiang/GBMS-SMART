@@ -90,7 +90,7 @@ export default {
 
         }
         this.apiGet('account/account.php?action=login', data).then((res) => {
-          console.log(res)
+          // console.log(res)
           if (res[0]) {
             this.resetCommonData(res[0])
           }

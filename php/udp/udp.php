@@ -44,7 +44,6 @@ class UDP
             $dest_port = 6000;
             
         }
-        echo $dest_address . $macAddress . $dest_port;
         switch($devicetype){
             case 'ac':
                 $tmp = $command_row['status_1'];

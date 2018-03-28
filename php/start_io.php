@@ -56,12 +56,20 @@ function sendCommand($schedule)
     // global $light;
     // global $curtain;
     // global $music;
-    $command = "select subnetid,deviceid,channel,channel_spare,devicetype,ip,port,mac,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5 from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $schedule . "'";
+    $command = "select subnetid,deviceid,channel,channel_spare,devicetype,ip,port,mac,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,c.operation as udp_type from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $schedule . "'";
     $command = mysqli_query($con, $command);
     while ($command_row = mysqli_fetch_assoc($command)) {
         // var_dump($command_row);
         $UDP->sendStatusUdp($command_row);
     }
+};
+function updataLed($channel,$color,$subnetid,$deviceid,$con){
+    if ($color != "00") {
+        $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
+    } else {
+        $sql = "update device as a left join address as b on a.address = b.address set on_off = 'off',run_date = null where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
+    }
+    mysqli_query($con, $sql);
 };
 $ac = new Ac();
 $light = new Light();
@@ -114,9 +122,19 @@ $sender_io->on('workerStart', function () {
                 mysqli_query($con, $sql);
                 break;
             case 'f081':
-                $red = tocolor(substr($msg, 52, 2));
-                $green = tocolor(substr($msg, 54, 2));
-                $blue = tocolor(substr($msg, 56, 2));
+                $red = substr($msg, 52, 2);
+                $green = substr($msg, 54, 2);
+                $blue = substr($msg, 56, 2);
+                $mix = substr($msg, 58, 2);
+                
+                updataLed('31',$red,$subnetid,$deviceid,$con);
+                updataLed('32',$green,$subnetid,$deviceid,$con);
+                updataLed('33',$blue,$subnetid,$deviceid,$con);
+                updataLed('34',$mix,$subnetid,$deviceid,$con);
+                $red = tocolor($red);
+                $green = tocolor($green);
+                $blue = tocolor($blue);
+                $mix = tocolor($mix);
                 $color = "#" . $red . $green . $blue;
                 if ($color != "#000000") {
                     $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";

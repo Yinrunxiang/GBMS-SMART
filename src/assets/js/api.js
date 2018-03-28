@@ -6,10 +6,10 @@ const api = {
       }, (response) => {
         reject(response)
         _g.closeGlobalLoading()
-        bus.$message({
-          message: 'Request timeout, please check the network',
-          type: 'warning'
-        })
+        // bus.$message({
+        //   message: 'Request timeout, please check the network',
+        //   type: 'warning'
+        // })
       })
     })
   },

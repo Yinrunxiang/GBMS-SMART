@@ -175,7 +175,7 @@ export default {
             this.device = item
             this.devicetype = item.devicetype
             let url = '/home/contral/' + item.devicetype
-            console.log('typelist:' + url + '/n');
+            // console.log('typelist:' + url + '/n');
             this.$store.dispatch('setDevice', item)
             if (url != this.$route.path) {
                 router.push(url)

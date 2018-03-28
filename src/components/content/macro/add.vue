@@ -322,8 +322,8 @@ export default {
       }
     },
     selectionChange(selection, row) {
-      console.log(selection);
-      console.log(row);
+      // console.log(selection);
+      // console.log(row);
       for (var index in this.commands) {
         if (this.commands[index].id == selection.id) {
           this.commands.splice(index, 1);
@@ -337,7 +337,7 @@ export default {
       // this.commands[index].mode =val
     },
     switch_change(row) {
-      console.log(row);
+      // console.log(row);
     },
     addressChange(value) {
       var len = value.length;
@@ -460,7 +460,7 @@ export default {
       const data = {
         params: this.macro
       };
-      console.log(data);
+      // console.log(data);
       this.apiGet(
         "device/macro.php?action=insert_command",
         data

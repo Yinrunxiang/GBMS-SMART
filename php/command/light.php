@@ -10,13 +10,11 @@ class Light
             $operatorCodefst = "00";
             $operatorCodesec = "31";
             $additionalContentData = [$channel,"64","00","00"];
-            $macAddress = $macAddress == "" ? [] : split(".", $macAddress);
             
         } else {
             $operatorCodefst = "00";
             $operatorCodesec = "31";
             $additionalContentData = [$channel,"00","00","00"];
-            $macAddress = $macAddress == "" ? [] : split(".", $macAddress);
             
         }
         
@@ -28,7 +26,6 @@ class Light
         $operatorCodefst = "00";
         $operatorCodesec = "31";
         $additionalContentData = [$channel,$sendCommand->toHex($val),"00","00"];
-        $macAddress = $macAddress == "" ? [] : split(".", $macAddress);
         $msg = $sendCommand->send($operatorCodefst, $operatorCodesec, $targetSubnetID, $targetDeviceID, $additionalContentData, $macAddress,$dest_address,$dest_port);
     }
 }

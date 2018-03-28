@@ -83,7 +83,7 @@ export default {
     //当颜色值发生改变时
     headleChangeColor(val) {
       this.deviceProperty.color = val.hex;
-      // this.setColor()
+      this.setColor()
       ledApi.headleChangeColor(val, this.device, this.deviceProperty);
     }
   },

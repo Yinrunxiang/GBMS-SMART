@@ -69,7 +69,7 @@ export default {
     //获取被选中的数据
     selectItem(val) {
       this.multipleSelection = val;
-      console.log(this.multipleSelection);
+      // console.log(this.multipleSelection);
     },
     //保存状态点击事件
     setStatusBtn(status) {
@@ -158,7 +158,7 @@ export default {
   computed: {
     //从vuex中获取设备数据
     led_breeds() {
-      console.log(this.$store.state.led_breed);
+      // console.log(this.$store.state.led_breed);
       return this.$store.state.led_breed;
     },
     //从vuex中获取设备数据条数

@@ -81,6 +81,7 @@
 						}
 					}
 					handler.css({cursor:'move'}).mousedown(function(e){
+						fun.dragStart(parseInt(element.css('left')),parseInt(element.css('top')));
 						if(lock){
 							return
 						}
@@ -90,7 +91,7 @@
 						$this.x = element.position().left;
 						$this.y = element.position().top;
 						element.addClass('on');
-						fun.dragStart(parseInt(element.css('left')),parseInt(element.css('top')));
+						
 						return false;
 					});
 					element.parent().mouseup(function(e){fun.dragEnd(parseInt(element.css('left')),parseInt(element.css('top')));element.removeClass('on');isDown = false;e.stopPropagation();});

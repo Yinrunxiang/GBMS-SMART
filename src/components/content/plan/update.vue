@@ -156,7 +156,7 @@ export default {
       if (this.form.id) {
         this.apiGet("device/index.php?action=update", data).then(res => {
           // _g.clearVuex('setRules')
-          console.log(res);
+          // console.log(res);
 
           if (res[0]) {
             var devices = this.$store.state.devices;
@@ -179,7 +179,7 @@ export default {
       } else {
         this.apiGet("device/index.php?action=insert", data).then(res => {
           // _g.clearVuex('setRules')
-          console.log(res);
+          // console.log(res);
 
           if (res[0]) {
             var devices = vm.$store.state.devices;
@@ -192,7 +192,7 @@ export default {
                 vm.form.mac = address.mac;
               }
             }
-            console.log(res[2]);
+            // console.log(res[2]);
             vm.form.id = res[2];
             this.$set(
               vm.form,
@@ -261,7 +261,7 @@ export default {
   computed: {
     form() {
       // var device = this.$store.state.device
-      console.log(this.device);
+      // console.log(this.device);
       var device = this.device;
       // var device = Object.assign({}, this.device)
       // device.subnetid = parseInt('0x' + device.subnetid)

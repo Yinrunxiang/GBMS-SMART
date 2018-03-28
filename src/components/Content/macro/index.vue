@@ -146,7 +146,6 @@ export default {
         }
       };
       this.apiGet("device/macro.php?action=search", data).then(res => {
-        console.log(res);
         var macro = res;
         this.tableData = macro;
         this.isLoading = false;

@@ -206,8 +206,18 @@ export default {
         randomPosition: false, //初始化随机位置
         direction: "all", //方向
         handler: false, //把手
-        lock: this.lock,
-        dragStart: function(x, y) {}, //拖动开始 x,y为当前坐标
+        lock: self.lock,
+        dragStart: function(x, y) {
+          if (self.lock) {
+            self.$message({
+              showClose: true,
+              message:
+                "Mobile function has been banned, please click the right unlock button and move again",
+              type: "warning",
+              duration:3000,
+            });
+          }
+        }, //拖动开始 x,y为当前坐标
         dragEnd: function(x, y) {
           if (self.device.x_axis != x || self.device.y_axis != y) {
             self.device.x_axis = x;

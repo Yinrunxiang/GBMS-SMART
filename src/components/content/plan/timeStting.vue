@@ -155,7 +155,7 @@ export default {
               status: data.sat_status == 1 ? true : false
             }
           };
-          console.log(runtime);
+          // console.log(runtime);
           this.runtime = runtime;
         } else {
           var runtime = {
@@ -195,7 +195,7 @@ export default {
               status: false
             }
           };
-          console.log(runtime);
+          // console.log(runtime);
           this.runtime = runtime;
         }
         this.ready = true;

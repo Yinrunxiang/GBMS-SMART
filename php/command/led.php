@@ -13,14 +13,10 @@ class Led
             $operatorCodefst = "F0";
             $operatorCodesec = "80";
             $additionalContentData = [$red,$green,$blue,"00","00","00"];
-            $macAddress = $macAddress == "" ? [] : split(".", $macAddress);
-            
         } else {
             $operatorCodefst = "F0";
             $operatorCodesec = "80";
-            $additionalContentData = ["00","00","00","00","00","00"];
-            $macAddress = $macAddress == "" ? [] : split(".", $macAddress);
-            
+            $additionalContentData = ["00","00","00","00","00","00"]; 
         }
         
         $msg = $sendCommand->send($operatorCodefst, $operatorCodesec, $targetSubnetID, $targetDeviceID, $additionalContentData, $macAddress,$dest_address,$dest_port);
@@ -34,7 +30,7 @@ class Led
         $operatorCodefst = "F0";
         $operatorCodesec = "80";
         $additionalContentData = [$red,$green,$blue,"00","00","00"];
-        $macAddress = $macAddress == "" ? [] : split(".", $macAddress);
+        $macAddress = $macAddress == "" ? [] : explode(".", $macAddress);
         $msg = $sendCommand->send($operatorCodefst, $operatorCodesec, $targetSubnetID, $targetDeviceID, $additionalContentData, $macAddress,$dest_address,$dest_port);
     }
 }

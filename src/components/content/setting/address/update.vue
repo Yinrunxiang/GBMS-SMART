@@ -56,7 +56,7 @@ export default {
     },
     methods: {
         add(form) {
-            console.log(this.form)
+            // console.log(this.form)
             this.isLoading = !this.isLoading
             const data = {
                 params: this.form

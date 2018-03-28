@@ -105,6 +105,8 @@
                     
                 </div>
                 <div class="roomImga">
+                  <img v-if="room.image_full" :src="room.image_full">
+                  <img v-else src="../../../assets/images/room.jpg">
                     <deviceTap ref="device" v-for="(device,key) in deviceList" :device="device" :key = "key" :setting="setting" :lock = "lock" @deviceDbclick="deviceDbclick"></deviceTap>
 
                 </div>
@@ -182,7 +184,7 @@ export default {
       floor: {},
       room: {},
       lock: true,
-      showWatts:true,
+      showWatts: true
     };
   },
   // prop:[address],
@@ -337,11 +339,11 @@ export default {
     },
     floorSetting() {
       this.showFloorUpdate = true;
-      this.showWatts = false
+      this.showWatts = false;
     },
     floorUpdateback(val) {
       this.showFloorUpdate = val;
-      this.showWatts = true
+      this.showWatts = true;
     },
     roomClick(val) {
       // window.socketio.removeAllListeners("new_msg");
@@ -368,6 +370,7 @@ export default {
         if (room.name == val) {
           this.room.id = room.id;
           this.room.image = room.image;
+          this.room.image_full = room.image_full;
           this.room.room = room.room;
           this.room.room_name = room.room_name;
           this.room.floor = room.floor;
@@ -412,11 +415,11 @@ export default {
     },
     roomSetting() {
       this.showRoomUpdate = true;
-      this.showWatts = false
+      this.showWatts = false;
     },
     roomUpdateback(val) {
       this.showRoomUpdate = val;
-      this.showWatts = true
+      this.showWatts = true;
     },
     roomClose() {
       var deviceList = this.$refs.device;
@@ -842,7 +845,7 @@ export default {
   position: absolute;
   top: 10px;
   right: 5px;
-  z-index:99;
+  z-index: 99;
 }
 
 .icon-list div {
@@ -871,12 +874,12 @@ export default {
 
 .roomImga {
   position: relative;
-  width: 895px;
-  height: 487px;
-  background-image: url("../../../assets/images/room.jpg");
-  background-repeat: no-repeat;
+  /* width: 895px;
+  height: 487px; */
+  /* background-image: url("../../../assets/images/room.jpg"); */
+  /* background-repeat: no-repeat;
   background-size: 100% 100%;
-  -moz-background-size: 100% 100%;
+  -moz-background-size: 100% 100%; */
 }
 .floor-content .room {
   position: absolute;

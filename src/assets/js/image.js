@@ -13,9 +13,9 @@ const imageMethods = {
             if (this.currentImage != this.form.image) {
                 this.deleteImage(this.form.image)
             }
-            this.showImage = this.form.image_addr+res;
+            this.showImage = URL.createObjectURL(file.raw);
             this.form.image = res
-            this.form.image_full = this.form.image_addr + res
+            this.form.image_full = URL.createObjectURL(file.raw)
             console.log(res);
         },
         beforeAvatarUpload(file) {
