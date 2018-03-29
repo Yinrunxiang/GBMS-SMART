@@ -80,7 +80,7 @@
 							}
 						}
 					}
-					handler.css({cursor:'move'}).mousedown(function(e){
+					handler.find('.icon').css({cursor:'move'}).mousedown(function(e){
 						fun.dragStart(parseInt(element.css('left')),parseInt(element.css('top')));
 						if(lock){
 							return

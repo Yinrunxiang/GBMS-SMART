@@ -24,7 +24,7 @@ const lightApi = {
   switch_change(val, device, deviceProperty) {
     const data = this.get_switch_change(val, device, deviceProperty)
     api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
+      console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });
   },

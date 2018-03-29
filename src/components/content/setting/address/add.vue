@@ -210,6 +210,7 @@ export default {
                   devices[index].port = vm.form.port;
                   devices[index].mac = vm.form.mac;
                   devices[index].country = vm.form.country;
+                  devices[index].udp_type = vm.form.operation;
                 }
               }
             }

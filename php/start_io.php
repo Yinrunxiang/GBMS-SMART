@@ -10,11 +10,6 @@ include __DIR__ . '/vendor/autoload.php';
 require_once './udp/UdpSocket.php';
 require_once './udp/UdpProtocol.php';
 require_once './udp/udp.php';
-// require_once './command/ac.php';
-// require_once './command/light.php';
-// require_once './command/led.php';
-// require_once './command/curtain.php';
-// require_once './command/music.php';
 // 全局数组保存uid在线数据
 $uidConnectionMap = array();
 // 记录最后一次广播的在线用户数
@@ -26,7 +21,6 @@ $con = mysqli_connect('localhost', 'root', 'root');
 if (!$con) {
     die('Could not connect: ' . mysqli_error($con));
 }
-// mysqli_select_db($con,"udp");
 mysqli_select_db($con, "admin");
 mysqli_set_charset($con, "utf8");
 function toHex($num)
@@ -40,10 +34,6 @@ function toHex($num)
 
 function tocolor($str)
 {
-    // echo $str.'\n';
-    // echo hexdec("0x" + $str).' \n';
-    // echo (hexdec("0x" + $str) / 100 * 255).' \n';
-    // echo round(hexdec("0x" + $str) / 100 * 255).' \n';
     $color = toHex(round(hexdec("0x" + $str) / 100 * 255));
     return $color;
 };
@@ -51,15 +41,9 @@ function sendCommand($schedule)
 {
     global $con;
     global $UDP;
-    // global $ac;
-    // global $led;
-    // global $light;
-    // global $curtain;
-    // global $music;
     $command = "select subnetid,deviceid,channel,channel_spare,devicetype,ip,port,mac,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,c.operation as udp_type from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $schedule . "'";
     $command = mysqli_query($con, $command);
     while ($command_row = mysqli_fetch_assoc($command)) {
-        // var_dump($command_row);
         $UDP->sendStatusUdp($command_row);
     }
 };
@@ -71,16 +55,11 @@ function updataLed($channel,$color,$subnetid,$deviceid,$con){
     }
     mysqli_query($con, $sql);
 };
-$ac = new Ac();
-$light = new Light();
-$led = new Led();
-$curtain = new Curtain();
-$music = new Music();
 // PHPSocketIO服务
 $sender_io = new SocketIO(2120);
-$udpProtocol = new UdpProtocol();
-$udpSocket = new UdpSocket();
-$UDP = new UDP();
+$udpProtocol = new UdpProtocol;
+$udpSocket = new UdpSocket;
+$UDP = new UDP;
 $devices = array();
 // 客户端发起连接事件时，设置连接socket的各种事件回调
 $sender_io->on('connection', function ($socket) {

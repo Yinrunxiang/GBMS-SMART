@@ -3,7 +3,7 @@ header("Content-type: text/html; charset=utf-8");
 // 指定允许其他域名访问  
 header('Access-Control-Allow-Origin:*');  
 // 响应类型  
-header('Access-Control-Allow-Methods:POST');  
+header('Access-Control-Allow-Methods:*');  
 // 响应头设置  
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 require_once '/UdpSocket.php';
@@ -14,7 +14,6 @@ $operatorCodesec = isset($_REQUEST["operatorCodesec"]) ? $_REQUEST["operatorCode
 $targetSubnetID = isset($_REQUEST["targetSubnetID"]) ? $_REQUEST["targetSubnetID"] : '';
 $targetDeviceID = isset($_REQUEST["targetDeviceID"]) ? $_REQUEST["targetDeviceID"] : '';
 $additionalContentData = isset($_REQUEST["additionalContentData"]) ? $_REQUEST["additionalContentData"] : [];
-
 $macAddress = $_REQUEST["macAddress"] ? $_REQUEST["macAddress"] : [];
 // var_dump($macAddress);
 //调用UDP协议类，生成UDP协议
@@ -31,19 +30,15 @@ if ($_REQUEST["udp_type"] == "1") {
     $dest_port = 6000;
     $macAddress = [];
 }
-
-echo $dest_address;
-echo $dest_port;
-$udpSocket = new UdpSocket();
-
 if ($_SERVER['SERVER_NAME'] == "localhost") {
     $host_name = exec("hostname");
     $host_ip = gethostbyname($host_name);
 } else {
     $host_ip = $_SERVER['SERVER_NAME'];
 }
-$hear = $udpSocket->UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
+new UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
+// $hear = $udpSocket->UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
 // $hear = $udpSocket->UdpSocket($host_ip, '6000', $dest_address, $dest_port, $msg);
-echo $hear;
+// echo $hear;
 
 ?>

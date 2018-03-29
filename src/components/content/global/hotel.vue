@@ -96,10 +96,10 @@
                     <div @click="clickToShowMoodSetting">
                         <i class="fa fa-heart"></i>
                     </div>
-                    <div v-show="!lock" @click="clickToLock">
+                    <div v-show="lock" @click="clickToUnLock">
                         <i class="fa fa-lock"></i>
                     </div>
-                    <div v-show="lock" @click="clickToUnLock">
+                    <div v-show="!lock" @click="clickToLock">
                         <i class="fa fa-unlock"></i>
                     </div>
                     

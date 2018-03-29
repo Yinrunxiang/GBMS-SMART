@@ -4,11 +4,11 @@ require_once __DIR__ .'/../command/light.php';
 require_once __DIR__ .'/../command/led.php';
 require_once __DIR__ .'/../command/curtain.php';
 require_once __DIR__ .'/../command/music.php';
-$ac = new Ac();
-$light = new Light();
-$led = new Led();
-$curtain = new Curtain();
-$music = new Music();
+$ac = new Ac;
+$light = new Light;
+$led = new Led;
+$curtain = new Curtain;
+$music = new Music;
 class UDP
 {
     public static function sendStatusUdp($command_row){
