@@ -56,6 +56,7 @@ import acApi from "../Content/devices/ac/api.js";
 import ledApi from "../Content/devices/led/api.js";
 import musicApi from "../Content/devices/music/api.js";
 import curtainApi from "../Content/devices/curtain/api.js";
+import floorHeatApi from "../Content/devices/floorheat/api.js";
 export default {
   data() {
     return {};
@@ -130,7 +131,7 @@ export default {
           ledApi.switch_change(val, this.device, deviceProperty);
           break;
         case "music":
-          musicApi.switch_change(val,this.device)
+          musicApi.switch_change(val, this.device);
           break;
         case "curtain":
           curtainApi.switch_change(val, this.device);
@@ -141,6 +142,9 @@ export default {
             brightness: 0
           };
           curtainApi.switch_change(val, this.device, deviceProperty);
+          break;
+        case "floorheat":
+          floorHeatApi.switch_change(val, this.device, deviceProperty);
           break;
       }
     },
@@ -170,6 +174,10 @@ export default {
         case "curtain":
           this.device.on_ff = false;
           curtainApi.readOpen(this.device);
+          break;
+        case "floorheat":
+          this.device.on_ff = false;
+          floorHeatApi.readOpen(this.device);
           break;
       }
       // console.log("OK");

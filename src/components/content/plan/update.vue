@@ -122,7 +122,8 @@ export default {
         { label: "Curtain", value: "curtain" },
         { label: "Music", value: "music" },
         { label: "IR", value: "ir" },
-        { label: "Security", value: "security" }
+        { label: "Security", value: "security" },
+        // { label: "FloorHeat", value: "floorheat" }
       ]
     };
   },
