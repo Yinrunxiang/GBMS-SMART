@@ -15,9 +15,7 @@ $sender_io->on('workerStart', function () {
     $loaclPort = '6000';
     $remotePort = '8888';
     $loacl = new udpServer($sender_io,$loaclPort);
-    // $loacl->runServer($sender_io,$loaclPort);
-    $remote = new udpServer($sender_io,$remotePort);
-    // $remote->runServer($sender_io,$remotePort);
+    // $remote = new udpServer($sender_io,$remotePort);
 });
 
 if (!defined('GLOBAL_START')) {

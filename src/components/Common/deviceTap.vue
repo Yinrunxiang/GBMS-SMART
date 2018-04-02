@@ -208,15 +208,15 @@ export default {
         handler: false, //把手
         lock: self.lock,
         dragStart: function(x, y) {
-          if (self.lock) {
-            self.$message({
-              showClose: true,
-              message:
-                "Mobile function has been banned, please click the right unlock button and move again",
-              type: "warning",
-              duration:3000,
-            });
-          }
+          // if (self.lock) {
+          //   self.$message({
+          //     showClose: true,
+          //     message:
+          //       "Mobile function has been banned, please click the right unlock button and move again",
+          //     type: "warning",
+          //     duration:3000,
+          //   });
+          // }
         }, //拖动开始 x,y为当前坐标
         dragEnd: function(x, y) {
           if (self.device.x_axis != x || self.device.y_axis != y) {

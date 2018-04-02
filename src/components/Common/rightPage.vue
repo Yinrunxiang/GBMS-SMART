@@ -15,6 +15,7 @@
               <ir v-if="devicetype == 'ir'"></ir>
               <security v-if="devicetype == 'security'"></security>
               <curtain v-if="devicetype == 'curtain'"></curtain>
+              <floorheat v-if="devicetype == 'floorheat'"></floorheat>
             </div>
         </div>
         
@@ -29,6 +30,7 @@
   width: 350px;
   height: 99%;
   background-color: #fff;
+  z-index:999;
 }
 .contarl-right-content {
   position: relative;
@@ -64,6 +66,7 @@ import music from "../Content/devices/music/index";
 import ir from "../Content/devices/ir/index";
 import curtain from "../Content/devices/curtain/index";
 import security from "../Content/devices/security/index";
+import floorheat from "../Content/devices/floorheat/index";
 export default {
   data() {
     return {
@@ -86,6 +89,7 @@ export default {
     ir,
     curtain,
     security,
+    floorheat,
   },
   computed: {
     devicetype() {

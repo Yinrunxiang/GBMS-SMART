@@ -17,8 +17,8 @@
                 <div class="container-in">
                     <div class="build">
                       <!-- <a class="build-img"> -->
-                        <img v-if="address.image_full" class="build-img" :src="address.image_full">
-                        <img v-else class="build-img" src="../../../assets/images/build.jpg">
+                        <img v-show="address.image_full" class="build-img" :src="address.image_full">
+                        <img v-show="!address.image_full"  class="build-img" src="../../../assets/images/build.jpg">
                       <!-- </a> -->
                     </div>
                     <div class="floor">
@@ -67,8 +67,8 @@
                         <div v-else :class="'room'+room" class="room" @click="roomClick(room)" @mouseover="roomOver(room)"></div>
                     </el-tooltip>
                 </div>
-                <img v-if="floor.image_full" class="floorImga" :src="floor.image_full">
-                <img v-else class="floorImga" src="../../../assets/images/floor.jpg">
+                <img v-show="floor.image_full" class="floorImga" :src="floor.image_full">
+                <img v-show="!floor.image_full" class="floorImga" src="../../../assets/images/floor.jpg">
                 </div>
                 <floorUpdate v-if="showFloorUpdate" :floor="this.floor" :add="false" @goback="floorUpdateback"></floorUpdate>
             </div>
@@ -105,8 +105,8 @@
                     
                 </div>
                 <div class="roomImga">
-                  <img v-if="room.image_full" :src="room.image_full">
-                  <img v-else src="../../../assets/images/room.jpg">
+                  <img v-show="room.image_full" :src="room.image_full">
+                  <img v-show="!room.image_full" src="../../../assets/images/room.jpg">
                     <deviceTap ref="device" v-for="(device,key) in deviceList" :device="device" :key = "key" :setting="setting" :lock = "lock" @deviceDbclick="deviceDbclick"></deviceTap>
 
                 </div>
@@ -384,7 +384,15 @@ export default {
         }
       }
       this.deviceList = deviceList;
-
+      if(this.lock){
+        this.$message({
+        showClose: true,
+        message:
+          "Mobile function has been banned, please click the right unlock button and move again",
+        type: "warning",
+        duration: 3000
+      });
+      }
       clearInterval(interval);
       // window.socketio.removeAllListeners("new_msg");
       // console.log(val)

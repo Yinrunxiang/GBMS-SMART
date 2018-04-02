@@ -205,6 +205,9 @@ export default {
         case "security":
           return "fa-lock";
           break;
+        case "floorheat":
+          return "fa-thermometer";
+          break;
       }
     }
   },

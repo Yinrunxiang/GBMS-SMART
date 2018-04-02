@@ -203,10 +203,12 @@ const acApi = {
                         })
                         break
                     case "03cc":
-                        deviceProperty.dayTimeHour = _g.getadditional(msg, 0)
-                        deviceProperty.dayTimeMinute = _g.getadditional(msg, 1)
-                        deviceProperty.nightTimeHour = _g.getadditional(msg, 2)
-                        deviceProperty.nightTimeMinute = _g.getadditional(msg, 3)
+                        var dayTimeHour = _g.getadditional(msg, 0)
+                        var dayTimeMinute = _g.getadditional(msg, 1)
+                        var nightTimeHour = _g.getadditional(msg, 2)
+                        var nightTimeMinute = _g.getadditional(msg, 3)
+                        deviceProperty.dayTime = dayTimeHour+':'+dayTimeMinute
+                        deviceProperty.nightTime = nightTimeHour+':'+nightTimeMinute
                         break
                     case "e3d8":
                         channel = _g.getadditional(msg, 2)
@@ -232,8 +234,10 @@ const acApi = {
                             return
                         }
                         var insideChannel = parseInt('0x' + deviceProperty.insideSensor.channel);
-                        deviceProperty.insideTemperature = _g.getadditional(msg, insideChannel + 8) ? (0 - parseInt('0x' + _g.getadditional(msg, insideChannel))) : parseInt('0x' + _g.getadditional(msg, insideChannel))
                         var outsideChannel = parseInt('0x' + device.outsideSensor.channel);
+
+                        deviceProperty.insideTemperature = _g.getadditional(msg, insideChannel + 8) ? (0 - parseInt('0x' + _g.getadditional(msg, insideChannel))) : parseInt('0x' + _g.getadditional(msg, insideChannel))
+
                         deviceProperty.outsideTemperature = _g.getadditional(msg, outsideChannel + 8) ? (0 - parseInt('0x' + _g.getadditional(msg, outsideChannel))) : parseInt('0x' + _g.getadditional(msg, outsideChannel))
                         break
                 }

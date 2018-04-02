@@ -1,88 +1,72 @@
 <template>
-    <div class="right-page-content light">
+    <div class="right-page-content floorheat">
         <div>{{device.device}}</div>
         <div class="m-t-20">
                 <i class="fa fa-thermometer icon"></i>
         </div>
         <div >
-            <el-row class="m-t-30" style="font-size:30px;text-align:center">
-                    <i class="fa" :class="modestyle(deviceProperty.mode)"></i>
-                    <span> {{deviceProperty.tmp}} ℃</span>
-            </el-row>
             <el-switch class="m-t-20" v-model="deviceProperty.on_off" @change="switch_change">
             </el-switch>
             <div v-if="deviceProperty.on_off" class="m-t-20">
-                <el-row v-if="deviceProperty.mode=='auto'">
-                    <el-col :span="4">
-                        <span class="fr" style="line-height:36px">Temperature</span>
-                    </el-col>
-                    <el-col :span="14" :offset="1">
-                        <template>
-                            <div>
-                                <el-slider v-model="deviceProperty.autotmp" :min='deviceProperty.auto_strat' :max='deviceProperty.auto_end' :step="1" @change="autotmp_change">
-                                </el-slider>
-                            </div>
-                        </template>
-                    </el-col>
-                    <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{deviceProperty.autotmp}} ℃</span>
-                    </el-col>
-                </el-row>
-                <el-row v-if="deviceProperty.mode=='cool' || deviceProperty.mode=='fan'">
-                    <el-col :span="4">
-                        <span class="fr" style="line-height:36px">Temperature</span>
-                    </el-col>
-                    <el-col :span="14" :offset="1">
-                        <template>
-                            <div>
-                                <el-slider v-model="deviceProperty.cooltmp" :min='deviceProperty.cool_strat' :max='deviceProperty.cool_end' :step="1" @change="cooltmp_change">
-                                </el-slider>
-                            </div>
-                        </template>
-                    </el-col>
-                    <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{deviceProperty.cooltmp}} ℃</span>
-                    </el-col>
-                </el-row>
-                <el-row v-if="deviceProperty.mode=='heat'">
-                    <el-col :span="4">
-                        <span class="fr" style="line-height:36px">Temperature</span>
-                    </el-col>
-                    <el-col :span="14" :offset="1">
-                        <template>
-                            <div>
-                                <el-slider v-model="deviceProperty.heattmp" :min='deviceProperty.heat_strat' :max='deviceProperty.heat_end' :step="1" @change="heattmp_change">
-                                </el-slider>
-                            </div>
-                        </template>
-                    </el-col>
-                    <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{deviceProperty.heattmp}} ℃</span>
-                    </el-col>
-                </el-row>
-                <el-row class="m-t-20">
-                    <el-col :span="4">
-                        <span class="fr" style="line-height:36px">Wind</span>
-                    </el-col>
-                    <el-col :span="14" :offset="1">
-                        <template>
-                            <div>
-                                <el-slider v-model="deviceProperty.wind" :min='0' :max='3' :step="1" :format-tooltip="formatTooltip" @change="wind_change">
-                                </el-slider>
-                            </div>
-                        </template>
-                    </el-col>
-                    <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{formatTooltip(deviceProperty.wind)}}</span>
-                    </el-col>
-                </el-row>
                 <el-row>
-                    <el-col class="m-t-20">
-                        <el-button style="margin:0" @click="autobtn()">Auto</el-button>
-                        <el-button style="margin:0"  @click="fanbtn()">Fan</el-button>
-                        <el-button style="margin:0"  @click="coolbtn()">Cool</el-button>
-                        <el-button style="margin:0"  @click="heatbtn()">Heat</el-button>
-                    </el-col>
+                  <div class="m-t-20">
+                    <div class="i-b">
+                      <i class="fa fa-home"></i>
+                      <div  class="i-b" >
+                        <div>{{deviceProperty.insideTemperature}}℃</div>
+                        <div>{{deviceProperty.insideTemperature}}F</div>
+                      </div>
+                    </div>
+                    <div class="i-b">
+                      <div  class="i-b" >
+                        <div>{{deviceProperty.outsideTemperature}}℃</div>
+                        <div>{{deviceProperty.outsideTemperature}}F</div>
+                      </div>
+                      <i class="fa fa-tree"></i>
+                    </div>
+                  </div>
+                  <div class="m-t-20">
+                    <div class="i-b"><i class="fa fa-caret-up"></i></div>
+                    <div class="i-b">
+                      <div>{{deviceProperty.temp}}℃</div>
+                      <div>{{deviceProperty.temp}}F</div>
+                    </div>
+                    <div class="i-b"><i class="fa fa-caret-down"></i></div>
+                  </div>
+                    <div class="m-t-20">
+                        <el-button style="margin:0" @click="handbtn()"><i class="fa fa-hand-pointer-o"></i></el-button>
+                        <el-button style="margin:0"  @click="daybtn()"><i class="fa fa-sun-o"></i></el-button>
+                        <el-button style="margin:0"  @click="nightbtn()"><i class="fa fa-moon-o"></i></el-button>
+                        <el-button style="margin:0"  @click="awaybtn()"><i class="fa fa-sign-out"></i></el-button>
+                    </div>
+                    <div class="m-t-20">
+                        <el-button style="margin:0" @click="clockbtn()"><i class="fa fa-clock-o"></i></el-button>
+                    </div>
+                    <div class="m-t-20">
+                      <el-time-select 
+                        class="i-b"
+                        style="width:120px"
+                        v-model="deviceProperty.dayTime"
+                        :picker-options="{
+                            start: '00:00',
+                            step: '00:01',
+                            end: '18:30'
+                        }"
+                        placeholder="Selection time">
+                        </el-time-select>
+                        <el-time-select  
+                        class="i-b"
+                        style="width:120px"
+                        v-model="deviceProperty.nightTime"
+                        :picker-options="{
+                            start: '00:00',
+                            step: '00:01',
+                            end: '18:30',
+                            minTime:deviceProperty.dayTime
+                        }"
+                        placeholder="Selection time">
+                        </el-time-select>
+                    </div>
                 </el-row>
             </div>
         </div>
@@ -95,11 +79,11 @@
   width: 300px;
   height: 100%;
 }
-.light .icon {
+.floorheat .icon {
   display: inline-block;
-  width: 200px;
-  height: 200px;
-  font-size: 200px;
+  width: 100px;
+  height: 100px;
+  font-size: 100px;
   color: #c0ccda;
   text-align: center;
 }
@@ -111,18 +95,12 @@ export default {
     return {
       deviceProperty: {
         on_off: false,
-        cooltmp: 26,
-        autotmp: 0,
-        heattmp: 0,
-        tmp: 26,
-        wind: 2,
+        temp: 26,
         mode: "cool",
-        cool_strat:0,
-        cool_end:36,
-        heat_strat:0,
-        heat_end:36,
-        auto_strat:0,
-        auto_end:36,
+        dayTime: "",
+        nightTime: "",
+        insideTemperature: "",
+        outsideTemperature: ""
       }
     };
   },
@@ -193,7 +171,7 @@ export default {
     console.log("ac");
 
     acApi.readStatus(this.device, this.deviceProperty);
-    acApi.readTmpRange(this.device, this.deviceProperty)
+    acApi.readTmpRange(this.device, this.deviceProperty);
   },
   components: {},
   computed: {

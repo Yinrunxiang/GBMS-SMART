@@ -1,5 +1,5 @@
 <template>
-    <div class="right-page-content light">
+    <div class="right-page-content ac">
         <div>{{device.device}}</div>
         <div class="m-t-20">
                 <i class="fa fa-thermometer icon"></i>
@@ -95,7 +95,7 @@
   width: 300px;
   height: 100%;
 }
-.light .icon {
+.ac .icon {
   display: inline-block;
   width: 200px;
   height: 200px;
