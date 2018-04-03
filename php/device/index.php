@@ -396,6 +396,7 @@ switch ($action) {
         $createIrOperation = "CREATE TABLE if not exists `ir_operation` ( `id` int(11) NOT NULL AUTO_INCREMENT, `device` varchar(50) DEFAULT NULL, `ir_key` varchar(20) DEFAULT NULL, `ir_name` varchar(20) DEFAULT NULL, `ir_value` varchar(20) DEFAULT NULL,  PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8; ";
     // $addAddressOperation = "alter table address add operation varchar(1)";
         $addAddressOperation = "alter table address add operation varchar(1) DEFAULT '0'; ";
+        $updateAddressOperation = "update address set operation = '0' where operation = '' or operation is null";
         $addAddressImage = "alter table address add image varchar(255); ";
         $addAddressComment = "alter table address add comment varchar(255); ";
         $addFloorImage = "alter table floor add image varchar(255); ";
@@ -411,6 +412,7 @@ switch ($action) {
         mysqli_query($con, $createMacroComment);
         mysqli_query($con, $createIrOperation);
         mysqli_query($con, $addAddressOperation);
+        mysqli_query($con, $updateAddressOperation);
         mysqli_query($con, $addAddressImage);
         mysqli_query($con, $addAddressComment);
         mysqli_query($con, $addFloorImage);

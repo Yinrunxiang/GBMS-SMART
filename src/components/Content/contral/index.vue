@@ -165,7 +165,7 @@ export default {
                 clearInterval(vm.interval);
                 return;
               }
-            }, 100);
+            }, 200);
           }
         }
       }

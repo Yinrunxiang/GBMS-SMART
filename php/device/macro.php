@@ -144,6 +144,7 @@ switch ($action)
     $result = mysqli_query($con,$sql);
     while ($row = mysqli_fetch_assoc($result)) {
         $UDP->sendStatusUdp($row);
+        usleep(300000);
     }
     break; 
 };

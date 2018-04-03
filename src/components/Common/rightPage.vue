@@ -1,7 +1,6 @@
 <template>
-  <div @click.stop="stop()">
-    <el-card class="contarl-right-page">
-        <div class="right-page-content">
+    <el-card  class="contarl-right-page">
+        <div @click.stop="stop()" class="right-page-content">
             <div class="left-collect" @click="hideRightPage">
                 <div class="btn-contetn">
                 <i class="collect-btn el-icon-caret-right"></i>
@@ -20,7 +19,6 @@
         </div>
         
     </el-card>
-  </div>
 </template>
 <style>
 .contarl-right-page {
@@ -30,7 +28,7 @@
   width: 350px;
   height: 99%;
   background-color: #fff;
-  z-index:999;
+  /* z-index:20; */
 }
 .contarl-right-content {
   position: relative;

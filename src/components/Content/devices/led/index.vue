@@ -10,7 +10,7 @@
             
         </el-row>
         <div style="visible: hidden;">
-          <colorPicker  v-model="deviceProperty.color" v-on:accept="headleChangeColor"></colorPicker>
+          <colorPicker v-model="deviceProperty.color" v-on:accept="headleChangeColor"></colorPicker>
         </div>
 </div>
 </template>

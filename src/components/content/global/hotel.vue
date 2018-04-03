@@ -72,7 +72,7 @@
                 </div>
                 <floorUpdate v-if="showFloorUpdate" :floor="this.floor" :add="false" @goback="floorUpdateback"></floorUpdate>
             </div>
-            <div v-if="showRoom" id="parentConstrain" class="room-content" style="position:absolute;width:100%;height:100%;background-color:#fff;">
+            <div v-if="showRoom" id="parentConstrain" class="room-content" style="width:100%;height:100%;background-color:#fff;">
               <div v-show="!showRoomUpdate">
                 <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
                     <div class="add-type-list" v-for="(devicetype,key) in typeList" :key = "key" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)" >{{devicetype}}</div>
@@ -121,7 +121,7 @@
             <devicePage :device="thisdevice" @changeContral="changeContral"></devicePage>
             
         </div> -->
-        <right-page v-if="showRightPage"></right-page>
+        <right-page  v-if="showRightPage"></right-page>
         <div v-if="showHotelUpdate">
             <addressUpdate :add="addressAdd" :address="addressUpdateData" @goback="addressBack"></addressUpdate>
         </div>
@@ -411,7 +411,7 @@ export default {
         }
         deviceList[i].readOpen();
         i = i + 1;
-      }, 100);
+      }, 200);
       // this.roomWatts = echarts.init(this.$refs.roomWatts);
     },
     roomOver(val) {
@@ -714,7 +714,6 @@ export default {
   position: fixed;
   right: 15px;
   bottom: 10px;
-  z-index: 10;
 }
 .roomWatts {
   width: 250px;
