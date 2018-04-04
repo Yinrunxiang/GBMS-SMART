@@ -411,7 +411,7 @@ export default {
         }
         deviceList[i].readOpen();
         i = i + 1;
-      }, 200);
+      }, 300);
       // this.roomWatts = echarts.init(this.$refs.roomWatts);
     },
     roomOver(val) {

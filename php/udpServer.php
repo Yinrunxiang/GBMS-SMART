@@ -41,7 +41,7 @@ class udpServer
         $command = mysqli_query($con, $command);
         while ($command_row = mysqli_fetch_assoc($command)) {
             $UDP->sendStatusUdp($command_row);
-            usleep(300000);
+            // usleep(300000);
         }
     }
      function updataLed($channel, $color, $subnetid, $deviceid, $con)
