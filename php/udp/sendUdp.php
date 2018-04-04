@@ -14,12 +14,6 @@ $operatorCodesec = isset($_REQUEST["operatorCodesec"]) ? $_REQUEST["operatorCode
 $targetSubnetID = isset($_REQUEST["targetSubnetID"]) ? $_REQUEST["targetSubnetID"] : '';
 $targetDeviceID = isset($_REQUEST["targetDeviceID"]) ? $_REQUEST["targetDeviceID"] : '';
 $additionalContentData = isset($_REQUEST["additionalContentData"]) ? $_REQUEST["additionalContentData"] : [];
-$macAddress = $_REQUEST["macAddress"] ? $_REQUEST["macAddress"] : [];
-// var_dump($macAddress);
-//调用UDP协议类，生成UDP协议
-$udpProtocol = new UdpProtocol();
-$msg = $udpProtocol->UdpProtocol($operatorCodefst, $operatorCodesec, $targetSubnetID, $targetDeviceID, $additionalContentData, $macAddress);
-// echo $msg;
 //广播地址
 if ($_REQUEST["udp_type"] == "1") {
     $dest_address = $_REQUEST["dest_address"] ? $_REQUEST["dest_address"] : '255.255.255.255';
@@ -30,6 +24,12 @@ if ($_REQUEST["udp_type"] == "1") {
     $dest_port = 6000;
     $macAddress = [];
 }
+// var_dump($macAddress);
+//调用UDP协议类，生成UDP协议
+$udpProtocol = new UdpProtocol();
+$msg = $udpProtocol->UdpProtocol($operatorCodefst, $operatorCodesec, $targetSubnetID, $targetDeviceID, $additionalContentData, $macAddress);
+// echo $msg;
+
 if ($_SERVER['SERVER_NAME'] == "localhost") {
     $host_name = exec("hostname");
     $host_ip = gethostbyname($host_name);
