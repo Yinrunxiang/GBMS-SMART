@@ -10,37 +10,37 @@
             <div v-if="deviceProperty.on_off" class="m-t-20">
                 <el-row>
                   <div class="m-t-20">
-                    <div class="i-b">
-                      <i class="fa fa-home"></i>
-                      <div  class="i-b" >
+                    <div class="i-b temp-show" >
+                      <i class="fa fa-home temp-show-icon"></i>
+                      <div  class="i-b  p-t-5" >
                         <div>{{deviceProperty.insideTemperature}}℃</div>
                         <div>{{deviceProperty.insideTemperature}}F</div>
                       </div>
                     </div>
-                    <div class="i-b">
-                      <div  class="i-b" >
+                    <div class="i-b temp-show" >
+                      <div  class="i-b  p-t-5" >
                         <div>{{deviceProperty.outsideTemperature}}℃</div>
                         <div>{{deviceProperty.outsideTemperature}}F</div>
                       </div>
-                      <i class="fa fa-tree"></i>
+                      <i class="fa fa-tree temp-show-icon"></i>
                     </div>
                   </div>
                   <div class="m-t-20">
-                    <div class="i-b"><i class="fa fa-caret-up"></i></div>
+                    <div v-show="deviceProperty.mode == 'manual'" class="i-b now-temp-show fl btn-group" style="margin-left:26px" @click="addTemperatureButtonClick()"><i class="fa fa-caret-up now-temp-show-icon"></i></div>
                     <div class="i-b">
-                      <div>{{deviceProperty.temp}}℃</div>
-                      <div>{{deviceProperty.temp}}F</div>
+                      <div>{{modeTemperature}}℃</div>
+                      <div>{{modeTemperature}}F</div>
                     </div>
-                    <div class="i-b"><i class="fa fa-caret-down"></i></div>
+                    <div v-show="deviceProperty.mode == 'manual'" class="i-b now-temp-show fr btn-group" style="margin-right:26px" @click="reduceTemperatureButtonClick()" ><i class="fa fa-caret-down now-temp-show-icon"></i></div>
                   </div>
                     <div class="m-t-20">
-                        <el-button style="margin:0" @click="handbtn()"><i class="fa fa-hand-pointer-o"></i></el-button>
-                        <el-button style="margin:0"  @click="daybtn()"><i class="fa fa-sun-o"></i></el-button>
-                        <el-button style="margin:0"  @click="nightbtn()"><i class="fa fa-moon-o"></i></el-button>
-                        <el-button style="margin:0"  @click="awaybtn()"><i class="fa fa-sign-out"></i></el-button>
+                        <el-button size="small" class="mode-btn" style="margin:0" @click="manualButtonClick()"><i class="fa fa-hand-pointer-o"></i></el-button>
+                        <el-button size="small" class="mode-btn" style="margin:0"  @click="dayButtonClick()"><i class="fa fa-sun-o"></i></el-button>
+                        <el-button size="small" class="mode-btn" style="margin:0"  @click="nightButtonClick()"><i class="fa fa-moon-o"></i></el-button>
+                        <el-button size="small" class="mode-btn" style="margin:0"  @click="awayButtonClick()"><i class="fa fa-sign-out"></i></el-button>
                     </div>
                     <div class="m-t-20">
-                        <el-button style="margin:0" @click="clockbtn()"><i class="fa fa-clock-o"></i></el-button>
+                        <el-button size="small" class="mode-btn" style="margin:0" @click="alarmButtonClick()"><i class="fa fa-clock-o"></i></el-button>
                     </div>
                     <div class="m-t-20">
                       <el-time-select 
@@ -84,8 +84,45 @@
   width: 100px;
   height: 100px;
   font-size: 100px;
-  color: #c0ccda;
+  color: #a0b6ba;
   text-align: center;
+}
+.floorheat .temp-show {
+  width: 120px;
+  height: 50px;
+  font-size: 16px;
+  border: 1px solid #c0ccda;
+  border-radius: 5px;
+}
+.floorheat .temp-show .temp-show-icon {
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  font-size: 36px;
+  color: #a0b6ba;
+  text-align: center;
+}
+.floorheat .now-temp-show {
+  width: 40px;
+  height: 36px;
+  font-size: 16px;
+  border: 1px solid #c0ccda;
+  border-radius: 5px;
+}
+.floorheat .now-temp-show .now-temp-show-icon {
+  display: inline-block;
+  /* width: 36px;
+  height: 36px; */
+  font-size: 36px;
+  color: #a0b6ba;
+  text-align: center;
+}
+.floorheat .mode-btn {
+  text-align: center;
+  width: 59px;
+  font-size: 20px;
+  color: #a0b6ba;
+  border-radius: 5px;
 }
 </style>
 <script>
@@ -95,12 +132,16 @@ export default {
     return {
       deviceProperty: {
         on_off: false,
-        temp: 26,
-        mode: "cool",
+        manualTemperature: 26,
+        dayTemperature: 26,
+        nightTemperature: 26,
+        awayTemperature: 26,
+        alarmTemperature: 26,
+        mode: "manual",
         dayTime: "",
         nightTime: "",
-        insideTemperature: "",
-        outsideTemperature: ""
+        insideTemperature: 26,
+        outsideTemperature: 26
       }
     };
   },
@@ -141,51 +182,68 @@ export default {
     switch_change(val) {
       acApi.switch_change(val, this.device, this.deviceProperty);
     },
-    autotmp_change(val) {
-      acApi.autotmp_change(val, this.device, this.deviceProperty);
+    addTemperatureButtonClick() {
+      acApi.addTemperatureButtonClick(this.device, this.deviceProperty);
     },
-    cooltmp_change(val) {
-      acApi.cooltmp_change(val, this.device, this.deviceProperty);
+    reduceTemperatureButtonClick() {
+      acApi.reduceTemperatureButtonClick(this.device, this.deviceProperty);
     },
-    heattmp_change(val) {
-      acApi.heattmp_change(val, this.device, this.deviceProperty);
+    manualButtonClick() {
+      acApi.manualButtonClick(this.device, this.deviceProperty);
     },
-    wind_change(val) {
-      acApi.wind_change(val, this.device, this.deviceProperty);
+    dayButtonClick() {
+      acApi.dayButtonClick(this.device, this.deviceProperty);
     },
-
-    autobtn() {
-      acApi.autobtn(this.device, this.deviceProperty);
+    nightButtonClick() {
+      acApi.nightButtonClick(this.device, this.deviceProperty);
     },
-    fanbtn() {
-      acApi.fanbtn(this.device, this.deviceProperty);
+    awayButtonClick() {
+      acApi.awayButtonClick(this.device, this.deviceProperty);
     },
-    coolbtn() {
-      acApi.coolbtn(this.device, this.deviceProperty);
-    },
-    heatbtn() {
-      acApi.heatbtn(this.device, this.deviceProperty);
+    alarmButtonClick() {
+      acApi.alarmButtonClick(this.device, this.deviceProperty);
     }
   },
   mounted() {
     console.log("ac");
 
     acApi.readStatus(this.device, this.deviceProperty);
-    acApi.readTmpRange(this.device, this.deviceProperty);
   },
   components: {},
   computed: {
     device() {
       var device = this.$store.state.device;
-      this.deviceProperty.on_off = false;
-      this.deviceProperty.cooltmp = 26;
-      this.deviceProperty.autotmp = 0;
-      this.deviceProperty.heattmp = 0;
-      this.deviceProperty.tmp = 26;
-      this.deviceProperty.wind = 2;
-      this.deviceProperty.mode = "cool";
+      this.deviceProperty.on_off =  false
+        this.deviceProperty.manualTemperature= 26
+        this.deviceProperty.dayTemperature= 26
+        this.deviceProperty.nightTemperature= 26
+        this.deviceProperty.awayTemperature= 26
+        this.deviceProperty.alarmTemperature= 26
+        this.deviceProperty.mode= "manual"
+        this.deviceProperty.dayTime= ""
+        this.deviceProperty.nightTime= ""
+        this.deviceProperty.insideTemperature= 26
+        this.deviceProperty.outsideTemperature= 26
       acApi.readStatus(device, this.deviceProperty);
       return device;
+    },
+    modeTemperature() {
+      var modeTemperature = ""
+      switch (this.deviceProperty.mode) {
+        case "manual":
+          modeTemperature =  this.deviceProperty.manualTemperature;
+          break;
+        case "day":
+          modeTemperature =  this.deviceProperty.dayTemperature;
+          break;
+        case "night":
+          modeTemperature =  this.deviceProperty.nightTemperature;
+          break;
+        case "away":
+          modeTemperature = this.deviceProperty.awayTemperature;
+          break;
+      }
+      return  modeTemperature
     }
   }
 };

@@ -28,6 +28,20 @@ const acApi = {
             return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         }
     },
+    get_addTemperatureButtonClick(device, deviceProperty) {
+        deviceProperty.temp = deviceProperty.temp + 1
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = [controlTemp, _g.toHex(deviceProperty.temp < 0 ? deviceProperty.temp + 256 : deviceProperty.temp), device.channel]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    },
+    get_reduceTemperatureButtonClick(device, deviceProperty) {
+        deviceProperty.temp = deviceProperty.temp + 1
+        var operatorCodefst = "E3",
+            operatorCodesec = "D8",
+            additionalContentData = [controlTemp, _g.toHex(deviceProperty.temp < 0 ? deviceProperty.temp + 256 : deviceProperty.temp), device.channel]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    },
     get_manualButtonClick(device, deviceProperty) {
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
@@ -66,6 +80,20 @@ const acApi = {
     },
     switch_change(val, device, deviceProperty) {
         const data = this.get_switch_change(val, device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    addTemperatureButtonClick(device, deviceProperty) {
+        const data = this.get_addTemperatureButtonClick(device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
+    reduceTemperatureButtonClick(device, deviceProperty) {
+        const data = this.get_reduceTemperatureButtonClick(device, deviceProperty)
         api.apiGet('udp/sendUdp.php', data).then((res) => {
             // console.log('res = ', _g.j2s(res))
             // _g.closeGlobalLoading()
@@ -149,13 +177,13 @@ const acApi = {
                 var operatorCode = msg.substr(42, 4).toLowerCase();
                 switch (operatorCode) {
                     case "efff":
-                        var zoneCount = parseInt('0x' + _g.getadditional(msg, 0))
-                        var channelCount = parseInt('0x' + _g.getadditional(msg, zoneCount + 1))
-                        var deviceChannelArea = parseInt(parseInt(device.channel) / 8)
-                        var channelStatus = parseInt('0x' + _g.getadditional(msg, zoneCount + 1 + deviceChannelArea + 1)).toString(2)
-                        deviceChannel = parseInt(device.channel) - (deviceChannelArea * 8)
-                        deviceChannelStatus = channelStatus.charAt(deviceChannel - 1)
-                        deviceProperty.on_off = deviceChannelStatus == "1" ? true : false
+                        // var zoneCount = parseInt('0x' + _g.getadditional(msg, 0))
+                        // var channelCount = parseInt('0x' + _g.getadditional(msg, zoneCount + 1))
+                        // var deviceChannelArea = parseInt(parseInt(device.channel) / 8)
+                        // var channelStatus = parseInt('0x' + _g.getadditional(msg, zoneCount + 1 + deviceChannelArea + 1)).toString(2)
+                        // var deviceChannel = parseInt(device.channel) - (deviceChannelArea * 8)
+                        // var deviceChannelStatus = channelStatus.charAt(deviceChannel - 1)
+                        // deviceProperty.on_off = deviceChannelStatus == "1" ? true : false
                         break
                     case "e3d9":
                         var channel = _g.getadditional(msg, 2)
@@ -168,22 +196,41 @@ const acApi = {
                                 console.log("开关" + operatorResult)
                                 break
                             case controlModel:
-                                deviceProperty.mode = operatorResult
-                                console.log("操作" + operatorResult)
+                                switch (operatorResult) {
+                                    case '01':
+                                        deviceProperty.mode = 'manual'
+                                        break
+                                    case '02':
+                                        deviceProperty.mode = 'day'
+                                        break
+                                    case '03':
+                                        deviceProperty.mode = 'night'
+                                        break
+                                    case '04':
+                                        deviceProperty.mode = 'away'
+                                        break
+                                    case '05':
+                                        deviceProperty.mode = 'alarm'
+                                        break
+                                }
                                 break
                             case controlTemp:
-                                deviceProperty.temp = parseInt(operatorResult)
-                                console.log("温度" + operatorResult)
+                                deviceProperty.manualTemperature = toTmp(operatorResult)
+                                
                                 break
                         }
                         break
                     case "03c8":
                         var channel = _g.getadditional(msg, 0)
                         if (device.channel != channel) return
-                        var manualTemperature = parseInt('0x' + _g.getadditional(msg, 1))
-                        var dayTemperature = parseInt('0x' + _g.getadditional(msg, 3))
-                        var nightTemperature = parseInt('0x' + _g.getadditional(msg, 5))
-                        var awayTemperature = parseInt('0x' + _g.getadditional(msg, 7))
+                        var manualTemperature = toTmp(_g.getadditional(msg, 1))
+                        var dayTemperature = toTmp(_g.getadditional(msg, 3))
+                        var nightTemperature = toTmp(_g.getadditional(msg, 5))
+                        var awayTemperature = toTmp(_g.getadditional(msg, 7))
+                        deviceProperty.manualTemperature = manualTemperature
+                        deviceProperty.dayTemperature = dayTemperature
+                        deviceProperty.nightTemperature = nightTemperature
+                        deviceProperty.awayTemperature = awayTemperature
                         deviceProperty.insideSensor = {
                             targetSubnetID: _g.getadditional(msg, 9),
                             targetDeviceID: _g.getadditional(msg, 10),
@@ -207,8 +254,8 @@ const acApi = {
                         var dayTimeMinute = _g.getadditional(msg, 1)
                         var nightTimeHour = _g.getadditional(msg, 2)
                         var nightTimeMinute = _g.getadditional(msg, 3)
-                        deviceProperty.dayTime = dayTimeHour+':'+dayTimeMinute
-                        deviceProperty.nightTime = nightTimeHour+':'+nightTimeMinute
+                        deviceProperty.dayTime = dayTimeHour + ':' + dayTimeMinute
+                        deviceProperty.nightTime = nightTimeHour + ':' + nightTimeMinute
                         break
                     case "e3d8":
                         channel = _g.getadditional(msg, 2)
@@ -222,7 +269,24 @@ const acApi = {
                                 deviceProperty.on_off = operatorResult
                                 break;
                             case controlModel:
-                                deviceProperty.mode = operatorResult
+
+                                switch (operatorResult) {
+                                    case '01':
+                                        deviceProperty.mode = 'manual'
+                                        break
+                                    case '02':
+                                        deviceProperty.mode = 'day'
+                                        break
+                                    case '03':
+                                        deviceProperty.mode = 'night'
+                                        break
+                                    case '04':
+                                        deviceProperty.mode = 'away'
+                                        break
+                                    case '05':
+                                        deviceProperty.mode = 'alarm'
+                                        break
+                                }
                                 break;
                         }
                         break

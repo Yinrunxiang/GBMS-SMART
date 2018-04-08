@@ -465,3 +465,9 @@ a {
 .panel {
   padding: 0 !important;
 }
+.btn-group:hover{
+  background-color: #ecf6ff !important;
+}
+.btn-group:active{
+  border: 1px solid #44B5DF !important;
+}
