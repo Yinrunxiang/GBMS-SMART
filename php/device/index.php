@@ -408,6 +408,9 @@ switch ($action) {
         $addRoomWidth = "alter table room add width varchar(10); ";
         $addRoomHeight = "alter table room add height varchar(10); ";
         $addDeviceComment = "alter table device add comment varchar(255); ";
+        $addMoodOnOff = "alter table mood add on_off varchar(1); ";
+        $addMoodMode = "alter table mood add mode varchar(20); ";
+        $addMoodGrade = "alter table mood add grade varchar(20); ";
         mysqli_query($con, $createMacro);
         mysqli_query($con, $createMacroComment);
         mysqli_query($con, $createIrOperation);
@@ -424,6 +427,9 @@ switch ($action) {
         mysqli_query($con, $addRoomWidth);
         mysqli_query($con, $addRoomHeight);
         mysqli_query($con, $addDeviceComment);
+        mysqli_query($con, $addMoodOnOff);
+        mysqli_query($con, $addMoodMode);
+        mysqli_query($con, $addMoodGrade);
     //   if (!mysqli_query($con,$sql))
     //   {
     //       $message[0] = false;

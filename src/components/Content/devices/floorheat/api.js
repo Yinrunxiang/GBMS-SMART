@@ -29,17 +29,17 @@ const acApi = {
         }
     },
     get_addTemperatureButtonClick(device, deviceProperty) {
-        deviceProperty.temp = deviceProperty.temp + 1
+        deviceProperty.manualTemperature = deviceProperty.manualTemperature + 1
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
-            additionalContentData = [controlTemp, _g.toHex(deviceProperty.temp < 0 ? deviceProperty.temp + 256 : deviceProperty.temp), device.channel]
+            additionalContentData = [controlTemp, _g.toHex(deviceProperty.manualTemperature < 0 ? deviceProperty.manualTemperature + 256 : deviceProperty.manualTemperature), device.channel]
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_reduceTemperatureButtonClick(device, deviceProperty) {
-        deviceProperty.temp = deviceProperty.temp + 1
+        deviceProperty.manualTemperature = deviceProperty.manualTemperature - 1
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
-            additionalContentData = [controlTemp, _g.toHex(deviceProperty.temp < 0 ? deviceProperty.temp + 256 : deviceProperty.temp), device.channel]
+            additionalContentData = [controlTemp, _g.toHex(deviceProperty.manualTemperature < 0 ? deviceProperty.manualTemperature + 256 : deviceProperty.manualTemperature), device.channel]
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     get_manualButtonClick(device, deviceProperty) {
@@ -76,6 +76,16 @@ const acApi = {
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
             additionalContentData = [controlTemp, deviceProperty.temp, device.channel]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    },
+    get_timeChange(device, deviceProperty) {
+        var dayTimeHour = _g.toHex(deviceProperty.dayTime.split(':')[0]),
+            dayTimeMinute = _g.toHex(deviceProperty.dayTime.split(':')[1]),
+            nightTimeHour = _g.toHex(deviceProperty.nightTime.split(':')[0]),
+            nightTimeMinute = _g.toHex(deviceProperty.nightTime.split(':')[1])
+        var operatorCodefst = "E3",
+            operatorCodesec = "C9",
+            additionalContentData = [dayTimeHour, dayTimeMinute, nightTimeHour, nightTimeMinute]
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     switch_change(val, device, deviceProperty) {
@@ -134,7 +144,15 @@ const acApi = {
             // _g.closeGlobalLoading()
         })
     },
+    timeChange(device, deviceProperty) {
+        const data = this.get_timeChange(device, deviceProperty)
+        api.apiGet('udp/sendUdp.php', data).then((res) => {
+            // console.log('res = ', _g.j2s(res))
+            // _g.closeGlobalLoading()
+        })
+    },
     readStatus(device, deviceProperty) {
+        console.log('floorheatApi')
         // 读取定时器模式下的开始与结束时间
         var operatorCodefst = "03",
             operatorCodesec = "CB",
@@ -168,144 +186,162 @@ const acApi = {
         window.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);
-            // var channel = msg.substr(52, 2);
-            if (
-                subnetid.toLowerCase() == device.subnetid.toLowerCase() &&
-                deviceid.toLowerCase() == device.deviceid.toLowerCase()
-            ) {
-                //操作码
-                var operatorCode = msg.substr(42, 4).toLowerCase();
-                switch (operatorCode) {
-                    case "efff":
-                        // var zoneCount = parseInt('0x' + _g.getadditional(msg, 0))
-                        // var channelCount = parseInt('0x' + _g.getadditional(msg, zoneCount + 1))
-                        // var deviceChannelArea = parseInt(parseInt(device.channel) / 8)
-                        // var channelStatus = parseInt('0x' + _g.getadditional(msg, zoneCount + 1 + deviceChannelArea + 1)).toString(2)
-                        // var deviceChannel = parseInt(device.channel) - (deviceChannelArea * 8)
-                        // var deviceChannelStatus = channelStatus.charAt(deviceChannel - 1)
-                        // deviceProperty.on_off = deviceChannelStatus == "1" ? true : false
-                        break
-                    case "e3d9":
-                        var channel = _g.getadditional(msg, 2)
-                        if (device.channel != channel) return
-                        var operatorKind = _g.getadditional(msg, 0)
-                        var operatorResult = _g.getadditional(msg, 1)
-                        switch (operatorKind) {
-                            case controlOnAndOff:
-                                deviceProperty.on_off = operatorResult == "01" ? true : false
-                                console.log("开关" + operatorResult)
-                                break
-                            case controlModel:
-                                switch (operatorResult) {
-                                    case '01':
-                                        deviceProperty.mode = 'manual'
-                                        break
-                                    case '02':
-                                        deviceProperty.mode = 'day'
-                                        break
-                                    case '03':
-                                        deviceProperty.mode = 'night'
-                                        break
-                                    case '04':
-                                        deviceProperty.mode = 'away'
-                                        break
-                                    case '05':
-                                        deviceProperty.mode = 'alarm'
-                                        break
-                                }
-                                break
-                            case controlTemp:
-                                deviceProperty.manualTemperature = toTmp(operatorResult)
-                                
-                                break
-                        }
-                        break
-                    case "03c8":
-                        var channel = _g.getadditional(msg, 0)
-                        if (device.channel != channel) return
-                        var manualTemperature = toTmp(_g.getadditional(msg, 1))
-                        var dayTemperature = toTmp(_g.getadditional(msg, 3))
-                        var nightTemperature = toTmp(_g.getadditional(msg, 5))
-                        var awayTemperature = toTmp(_g.getadditional(msg, 7))
-                        deviceProperty.manualTemperature = manualTemperature
-                        deviceProperty.dayTemperature = dayTemperature
-                        deviceProperty.nightTemperature = nightTemperature
-                        deviceProperty.awayTemperature = awayTemperature
-                        deviceProperty.insideSensor = {
-                            targetSubnetID: _g.getadditional(msg, 9),
-                            targetDeviceID: _g.getadditional(msg, 10),
-                            channel: _g.getadditional(msg, 11),
-                        }
-                        var operatorCodefst = "E3",
-                            operatorCodesec = "E7",
-                            additionalContentData = ["01"]
-                        api.apiGet('udp/sendUdp.php', api.getUdp(deviceProperty.insideSensor, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-                        })
-                        break
-                    case "03ca":
-                        var operatorCodefst = "03",
-                            operatorCodesec = "CB",
-                            additionalContentData = []
-                        api.apiGet('udp/sendUdp.php', api.getUdp(deviceProperty.insideSensor, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-                        })
-                        break
-                    case "03cc":
-                        var dayTimeHour = _g.getadditional(msg, 0)
-                        var dayTimeMinute = _g.getadditional(msg, 1)
-                        var nightTimeHour = _g.getadditional(msg, 2)
-                        var nightTimeMinute = _g.getadditional(msg, 3)
-                        deviceProperty.dayTime = dayTimeHour + ':' + dayTimeMinute
-                        deviceProperty.nightTime = nightTimeHour + ':' + nightTimeMinute
-                        break
-                    case "e3d8":
-                        channel = _g.getadditional(msg, 2)
-                        if (deviceProperty.channel != channel) {
-                            return
-                        }
-                        operatorKind = _g.getadditional(msg, 0)
-                        operatorResult = _g.getadditional(msg, 1)
-                        switch (operatorKind) {
-                            case controlOnAndOff:
-                                deviceProperty.on_off = operatorResult
-                                break;
-                            case controlModel:
+            //操作码
+            var operatorCode = msg.substr(42, 4).toLowerCase();
+            switch (operatorCode) {
+                case "efff":
+                    // if (
+                    //     subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+                    //     deviceid.toLowerCase() != device.deviceid.toLowerCase()
+                    // ) return
+                    // var zoneCount = parseInt('0x' + _g.getadditional(msg, 0))
+                    // var channelCount = parseInt('0x' + _g.getadditional(msg, zoneCount + 1))
+                    // var deviceChannelArea = parseInt(parseInt(device.channel) / 8)
+                    // var channelStatus = parseInt('0x' + _g.getadditional(msg, zoneCount + 1 + deviceChannelArea + 1)).toString(2)
+                    // var deviceChannel = parseInt(device.channel) - (deviceChannelArea * 8)
+                    // var deviceChannelStatus = channelStatus.charAt(deviceChannel - 1)
+                    // deviceProperty.on_off = deviceChannelStatus == "1" ? true : false
+                    break
+                case "e3d9":
+                    if (
+                        subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+                        deviceid.toLowerCase() != device.deviceid.toLowerCase()
+                    ) return
+                    var channel = _g.getadditional(msg, 2)
+                    if (device.channel != channel) return
+                    var operatorKind = _g.getadditional(msg, 0)
+                    var operatorResult = _g.getadditional(msg, 1)
+                    switch (operatorKind) {
+                        case controlOnAndOff:
+                            deviceProperty.on_off = operatorResult == "01" ? true : false
+                            break
+                        case controlModel:
+                            switch (operatorResult) {
+                                case '01':
+                                    deviceProperty.mode = 'manual'
+                                    break
+                                case '02':
+                                    deviceProperty.mode = 'day'
+                                    break
+                                case '03':
+                                    deviceProperty.mode = 'night'
+                                    break
+                                case '04':
+                                    deviceProperty.mode = 'away'
+                                    break
+                                case '05':
+                                    deviceProperty.mode = 'alarm'
+                                    break
+                            }
+                            break
+                        case controlTemp:
+                            deviceProperty.manualTemperature = toTmp(operatorResult)
 
-                                switch (operatorResult) {
-                                    case '01':
-                                        deviceProperty.mode = 'manual'
-                                        break
-                                    case '02':
-                                        deviceProperty.mode = 'day'
-                                        break
-                                    case '03':
-                                        deviceProperty.mode = 'night'
-                                        break
-                                    case '04':
-                                        deviceProperty.mode = 'away'
-                                        break
-                                    case '05':
-                                        deviceProperty.mode = 'alarm'
-                                        break
-                                }
-                                break;
-                        }
-                        break
-                    case "e3e8":
-                        if (_g.getadditional(msg, 0)) {
-                            return
-                        }
-                        if (subnetid != deviceProperty.insideSensor.targetSubnetID || deviceid != deviceProperty.insideSensor.targetSubnetID) {
-                            return
-                        }
-                        var insideChannel = parseInt('0x' + deviceProperty.insideSensor.channel);
-                        var outsideChannel = parseInt('0x' + device.outsideSensor.channel);
+                            break
+                    }
+                    break
+                case "03c8":
+                    if (
+                        subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+                        deviceid.toLowerCase() != device.deviceid.toLowerCase()
+                    ) return
+                    var channel = _g.getadditional(msg, 0)
+                    if (device.channel != channel) return
+                    var manualTemperature = toTmp(_g.getadditional(msg, 1))
+                    var dayTemperature = toTmp(_g.getadditional(msg, 3))
+                    var nightTemperature = toTmp(_g.getadditional(msg, 5))
+                    var awayTemperature = toTmp(_g.getadditional(msg, 7))
+                    deviceProperty.manualTemperature = manualTemperature
+                    deviceProperty.dayTemperature = dayTemperature
+                    deviceProperty.nightTemperature = nightTemperature
+                    deviceProperty.awayTemperature = awayTemperature
+                    deviceProperty.insideSensor = {
+                        targetSubnetID: _g.getadditional(msg, 9),
+                        targetDeviceID: _g.getadditional(msg, 10),
+                        channel: _g.getadditional(msg, 11),
+                    }
+                    var operatorCodefst = "E3",
+                        operatorCodesec = "E7",
+                        additionalContentData = ["01"]
+                    api.apiGet('udp/sendUdp.php', api.getUdp(deviceProperty.insideSensor, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
+                    })
+                    break
+                case "03ca":
+                    if (
+                        subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+                        deviceid.toLowerCase() != device.deviceid.toLowerCase()
+                    ) return
+                    var operatorCodefst = "03",
+                        operatorCodesec = "CB",
+                        additionalContentData = []
+                    api.apiGet('udp/sendUdp.php', api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
+                    })
+                    break
+                case "03cc":
+                    if (
+                        subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+                        deviceid.toLowerCase() != device.deviceid.toLowerCase()
+                    ) return
+                    var dayTimeHour = parseInt('0x' + _g.getadditional(msg, 0))
+                    var dayTimeMinute = parseInt('0x' + _g.getadditional(msg, 1))
+                    var nightTimeHour = parseInt('0x' + _g.getadditional(msg, 2))
+                    var nightTimeMinute = parseInt('0x' + _g.getadditional(msg, 3))
+                    deviceProperty.dayTime = dayTimeHour + ':' + dayTimeMinute
+                    deviceProperty.nightTime = nightTimeHour + ':' + nightTimeMinute
+                    break
+                case "e3db":
+                    if (
+                        subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+                        deviceid.toLowerCase() != device.deviceid.toLowerCase()
+                    ) return
+                    channel = _g.getadditional(msg, 2)
+                    if (device.channel != channel) {
+                        return
+                    }
+                    operatorKind = _g.getadditional(msg, 0)
+                    operatorResult = _g.getadditional(msg, 1)
+                    switch (operatorKind) {
+                        case controlOnAndOff:
+                            deviceProperty.on_off = operatorResult == "01" ? true : false
+                            break;
+                        case controlModel:
 
-                        deviceProperty.insideTemperature = _g.getadditional(msg, insideChannel + 8) ? (0 - parseInt('0x' + _g.getadditional(msg, insideChannel))) : parseInt('0x' + _g.getadditional(msg, insideChannel))
+                            switch (operatorResult) {
+                                case '01':
+                                    deviceProperty.mode = 'manual'
+                                    break
+                                case '02':
+                                    deviceProperty.mode = 'day'
+                                    break
+                                case '03':
+                                    deviceProperty.mode = 'night'
+                                    break
+                                case '04':
+                                    deviceProperty.mode = 'away'
+                                    break
+                                case '05':
+                                    deviceProperty.mode = 'alarm'
+                                    break
+                            }
+                            break;
+                    }
+                    break
+                case "e3e8":
+                    // if (_g.getadditional(msg, 0)) {
+                    //     return
+                    // }
+                    if (subnetid.toLowerCase() != deviceProperty.insideSensor.targetSubnetID.toLowerCase() || deviceid.toLowerCase() != deviceProperty.insideSensor.targetDeviceID.toLowerCase()) {
+                        return
+                    }
+                    var insideChannel = parseInt('0x' + deviceProperty.insideSensor.channel);
+                    var outsideChannel = parseInt('0x' + device.outsideSensor.channel);
 
-                        deviceProperty.outsideTemperature = _g.getadditional(msg, outsideChannel + 8) ? (0 - parseInt('0x' + _g.getadditional(msg, outsideChannel))) : parseInt('0x' + _g.getadditional(msg, outsideChannel))
-                        break
-                }
+                    deviceProperty.insideTemperature = _g.getadditional(msg, insideChannel + 8) ? (0 - parseInt('0x' + _g.getadditional(msg, insideChannel))) : parseInt('0x' + _g.getadditional(msg, insideChannel))
+
+                    deviceProperty.outsideTemperature = _g.getadditional(msg, outsideChannel + 8) ? (0 - parseInt('0x' + _g.getadditional(msg, outsideChannel))) : parseInt('0x' + _g.getadditional(msg, outsideChannel))
+                    break
             }
+
         });
     },
     readOpen(device) {
@@ -323,7 +359,7 @@ const acApi = {
                 deviceid.toLowerCase() == device.deviceid.toLowerCase()
             ) {
                 var operatorCode = msg.substr(42, 4).toLowerCase();
-                if (operatorCode != "e3d9") return
+                if (operatorCode != "e3d9" && operatorCode != "e3db") return
                 var channel = _g.getadditional(msg, 2)
                 if (device.channel != channel) return
                 var operatorKind = _g.getadditional(msg, 0)

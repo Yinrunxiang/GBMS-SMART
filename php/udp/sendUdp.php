@@ -37,6 +37,7 @@ if ($_SERVER['SERVER_NAME'] == "localhost") {
     $host_ip = $_SERVER['SERVER_NAME'];
 }
 new UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
+// usleep(300000);
 // $hear = $udpSocket->UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
 // $hear = $udpSocket->UdpSocket($host_ip, '6000', $dest_address, $dest_port, $msg);
 // echo $hear;
