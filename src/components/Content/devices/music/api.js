@@ -282,7 +282,7 @@ const musicApi = {
                 deviceProperty.albumlist = albumList
                 // console.log(deviceProperty.albumlist)
               }
-            }, 500)
+            }, 2000)
           }
 
         }
@@ -338,7 +338,7 @@ const musicApi = {
                   deviceProperty.musicLoading = false
                   Lockr.set('music_' + device.id + '_' + deviceProperty.source, deviceProperty)
                 }
-              }, 1000)
+              }, 2000)
             }
           }
 

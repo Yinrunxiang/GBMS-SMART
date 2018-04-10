@@ -18,8 +18,8 @@ $additionalContentData = isset($_REQUEST["additionalContentData"]) ? $_REQUEST["
 if ($_REQUEST["udp_type"] == "1") {
     $dest_address = $_REQUEST["dest_address"] ? $_REQUEST["dest_address"] : '255.255.255.255';
     $dest_port = 8888;
-    $macAddress = $_REQUEST["macAddress"] ?$_REQUEST["macAddress"] : [];
-}else{
+    $macAddress = $_REQUEST["macAddress"] ? $_REQUEST["macAddress"] : [];
+} else {
     $dest_address = '255.255.255.255';
     $dest_port = 6000;
     $macAddress = [];
@@ -37,7 +37,7 @@ if ($_SERVER['SERVER_NAME'] == "localhost") {
     $host_ip = $_SERVER['SERVER_NAME'];
 }
 new UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
-// usleep(300000);
+usleep(300000);
 // $hear = $udpSocket->UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
 // $hear = $udpSocket->UdpSocket($host_ip, '6000', $dest_address, $dest_port, $msg);
 // echo $hear;
