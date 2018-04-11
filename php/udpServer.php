@@ -234,10 +234,10 @@ class udpServer
                             $type = 'operation_1';
                             break;
                         case "07":
-                            $type = 'operation_2';
+                            $type = 'operation_1';
                             break;
                         case "08":
-                            $type = 'operation_3';
+                            $type = 'operation_1';
                             break;
                     }
 

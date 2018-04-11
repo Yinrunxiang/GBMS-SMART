@@ -1,4 +1,4 @@
-import api from "../../../../assets/js/api";
+import api from "../api";
 const cutainApi = {
   get_switch_change(val, device, deviceProperty) {
     if (val) {
@@ -34,34 +34,22 @@ const cutainApi = {
   },
   switch_change(val, device, deviceProperty) {
     const data = this.get_switch_change(val, device, deviceProperty)
-    // console.log(data)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   stop(val, device, deviceProperty) {
     const data = this.get_stop(val, device, deviceProperty)
-    // console.log(data)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-    });
+    api.sendUdp(device, data)
   },
   slider_change(val, device, deviceProperty) {
     const data = this.get_slider_change(val, device, deviceProperty)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   readStatus(device, deviceProperty) {
     var operatorCodefst = "00",
       operatorCodesec = "33",
       additionalContentData = []
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
     // var socket = window.socket("http://" + document.domain + ":2120");
     // window.socketio.removeAllListeners("new_msg");
     window.socketio.on("new_msg", function (msg) {
@@ -104,10 +92,7 @@ const cutainApi = {
       operatorCodesec = "33",
       additionalContentData = []
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
     // var socket = window.socket("http://" + document.domain + ":2120");
     // window.socketio.removeAllListeners("new_msg");
     window.socketio.on("new_msg", function (msg) {

@@ -4,7 +4,7 @@
             <div v-show="!mood.add" style="line-height:36px" >
               <span>{{mood.mood}}</span>
               <a  class="fa fa-close fr m-l-10 m-t-5" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>
-              <el-button type="primary" @click="run(mood.mood)" class="fr">Run</el-button>
+              <el-button type="primary" @click="run(mood.deviceList)" class="fr">Run</el-button>
                   <!-- <el-switch class="fr" v-model="mood.on_off" @change="switch_change(mood.on_off,mood.deviceList)">
                   </el-switch> -->
             </div>
@@ -49,6 +49,7 @@
 
 <script>
 import http from "../../assets/js/http";
+import udpArr from "../Content/devices/udpArr";
 import ac from "../Content/devices/ac/api";
 import light from "../Content/devices/light/api";
 import led from "../Content/devices/led/api";
@@ -75,131 +76,21 @@ export default {
   },
   // props: ['device'],
   methods: {
-    run(mood) {
-      var data = {
-        params: {
-          mood: mood,
-          address: this.room.address,
-          floor: this.room.floor,
-          room: this.room.room,
-        }
-      };
-      this.apiGet("device/mood.php?action=run", data).then(res => {
-      });
-    },
-    // switch_change(val, deviceList) {
-    //   var udpArr = [];
-    //   if (val) {
-    //     for (var device of deviceList) {
-    //       switch (device.devicetype) {
-    //         case "ac":
-    //           if (device.status_1 == "on") {
-    //             udpArr.push(ac.get_switch_change(true, device));
-    //             switch (device.status_2) {
-    //               case "cool":
-    //                 udpArr.push(ac.get_coolbtn(device));
-    //                 udpArr.push(ac.get_cooltmp_change(device.status_4, device));
-    //                 break;
-    //               case "fan":
-    //                 udpArr.push(ac.get_fanbtn(device));
-    //                 udpArr.push(ac.get_cooltmp_change(device.status_4, device));
-    //                 break;
-    //               case "heat":
-    //                 udpArr.push(ac.get_heatbtn(device));
-    //                 udpArr.push(ac.get_heattmp_change(device.status_5, device));
-    //                 break;
-    //               case "auto":
-    //                 udpArr.push(ac.get_autobtn(device));
-    //                 udpArr.push(ac.get_autotmp_change(device.status_6, device));
-    //                 break;
-    //             }
-    //             switch (device.status_3) {
-    //               case "wind_auto":
-    //                 udpArr.push(ac.get_wind_change("0", device));
-    //                 break;
-    //               case "high":
-    //                 udpArr.push(ac.get_wind_change("1", device));
-    //                 break;
-    //               case "medial":
-    //                 udpArr.push(ac.get_wind_change("2", device));
-    //                 break;
-    //               case "low":
-    //                 udpArr.push(ac.get_wind_change("3", device));
-    //                 break;
-    //             }
-    //             // udpArr.push(ac.get_cooltmp_change(device.status_4, device));
-    //             // udpArr.push(ac.get_heattmp_change(device.status_5, device));
-    //             // udpArr.push(ac.get_autotmp_change(device.status_6, device));
-    //           } else {
-    //             udpArr.push(ac.get_switch_change(false, device));
-    //           }
-    //           break;
-    //         case "light":
-    //           if (device.status_1 == "on") {
-    //             var deviceProperty = {
-    //               brightness: 100
-    //             };
-    //             udpArr.push(
-    //               light.get_switch_change(true, device, deviceProperty)
-    //             );
-    //             // udpArr.push(light.get_slider_change(true, device));
-    //           } else {
-    //             var deviceProperty = {
-    //               brightness: 0
-    //             };
-    //             udpArr.push(
-    //               light.get_switch_change(false, device, deviceProperty)
-    //             );
-    //           }
-    //           break;
-    //         case "led":
-    //           if (device.status_1 == "on") {
-    //             var deviceProperty = {
-    //               color: device.status_2
-    //             };
-    //             udpArr.push(
-    //               led.get_switch_change(true, device, deviceProperty)
-    //             );
-    //             // udpArr.push(light.get_slider_change(true, device));
-    //           } else {
-    //             var deviceProperty = {
-    //               color: "#000000"
-    //             };
-    //             udpArr.push(
-    //               led.get_switch_change(false, device, deviceProperty)
-    //             );
-    //           }
-    //           break;
-    //         case "curtain":
-    //           if (device.status_1 == "on") {
-    //             udpArr.push(curtain.get_switch_change(true, device));
-    //             // udpArr.push(light.get_slider_change(true, device));
-    //           } else {
-    //             udpArr.push(curtain.get_switch_change(false, device));
-    //           }
-    //           break;
-    //         case "music":
-    //           break;
-    //       }
+    // run(mood) {
+    //   var data = {
+    //     params: {
+    //       mood: mood,
+    //       address: this.room.address,
+    //       floor: this.room.floor,
+    //       room: this.room.room,
     //     }
-    //   } else {
-    //     this.$emit("off", true);
-    //   }
-    //   var len = udpArr.length;
-    //   // console.log(udpArr)
-    //   var i = 0;
-    //   var vm = this;
-    //   var forudpArr = setInterval(function() {
-    //     vm.apiGet("udp/sendUdp.php", udpArr[i]).then(res => {
-    //       // console.log("res = ", _g.j2s(res));
-    //       // _g.closeGlobalLoading()
-    //     });
-    //     i++;
-    //     if (i >= len) {
-    //       clearInterval(forudpArr);
-    //     }
-    //   }, 100);
+    //   };
+    //   this.apiGet("device/mood.php?action=run", data).then(res => {
+    //   });
     // },
+    run(deviceList) {
+      udpArr.sendUdpArr(deviceList)
+    },
     closeDialog() {
       this.$emit("close", false);
     },

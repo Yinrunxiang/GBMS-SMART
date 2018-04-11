@@ -1,4 +1,4 @@
-import api from "../../../../assets/js/api";
+import api from "../api";
 const lightApi = {
   get_switch_change(val, device, deviceProperty) {
     if (val) {
@@ -23,30 +23,18 @@ const lightApi = {
   },
   switch_change(val, device, deviceProperty) {
     const data = this.get_switch_change(val, device, deviceProperty)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   slider_change(val, device, deviceProperty) {
     const data = this.get_slider_change(val, device, deviceProperty)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   readStatus(device, deviceProperty) {
     var operatorCodefst = "00",
       operatorCodesec = "33",
       additionalContentData = []
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    // console.log(device);
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
-    // var socket = window.socket("http://" + document.domain + ":2120");
-    // window.socketio.removeAllListeners("new_msg");
+    api.sendUdp(device, data)
     window.socketio.on("new_msg", function (msg) {
       var subnetid = msg.substr(34, 2);
       var deviceid = msg.substr(36, 2);
@@ -133,13 +121,7 @@ const lightApi = {
       operatorCodesec = "33",
       additionalContentData = []
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    // console.log(device);
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
-    // var socket = window.socket("http://" + document.domain + ":2120");
-    // window.socketio.removeAllListeners("new_msg");
+    api.sendUdp(device, data)
     window.socketio.on("new_msg", function (msg) {
       var subnetid = msg.substr(34, 2);
       var deviceid = msg.substr(36, 2);

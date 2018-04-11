@@ -50,6 +50,7 @@
 <script>
 import http from "../../../assets/js/http.js";
 import list from "../../../assets/js/list.js";
+import udpArr from "../devices/udpArr"
 import add from "./add";
 export default {
   //  currentPage        页码
@@ -77,11 +78,7 @@ export default {
         params: macro
       };
       this.apiGet("device/macro.php?action=run", data).then(res => {
-        // if (res[0]) {
-        //   _g.toastMsg("success", res[1]);
-        // } else {
-        //   _g.toastMsg("error", res[1]);
-        // }
+        udpArr.sendUdpArr(res)
       });
     },
     goback(bool) {

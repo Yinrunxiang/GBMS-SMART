@@ -142,10 +142,17 @@ switch ($action)
     $macro = isset($_REQUEST["macro"]) ? $_REQUEST["macro"] : '';
     $sql="SELECT a.id as macro_id,a.device as id,subnetid,deviceid,channel,channel_spare,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,ip,port,mac,a.time as time,c.operation as udp_type  FROM  macro_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where  a.macro = '".$id."' order by a.id";
     $result = mysqli_query($con,$sql);
+    $results = array();
     while ($row = mysqli_fetch_assoc($result)) {
-        $UDP->sendStatusUdp($row);
-        // usleep(300000);
+        $results[] = $row;
     }
+    $json_results = str_replace("\/","/",json_encode($results)); 
+    echo $json_results;
+    // $result = mysqli_query($con,$sql);
+    // while ($row = mysqli_fetch_assoc($result)) {
+    //     $UDP->sendStatusUdp($row);
+    //     // usleep(300000);
+    // }
     break; 
 };
 mysqli_close($con);

@@ -1,4 +1,4 @@
-import api from "../../../../assets/js/api";
+import api from "../api";
 const lightApi = {
   switch_change(val, device) {
     if (val) {
@@ -7,10 +7,7 @@ const lightApi = {
           operatorCodesec = "31",
           additionalContentData = [_g.toHex(device.operation_6), "64"]
         var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-        api.apiGet("udp/sendUdp.php", data).then(res => {
-          // console.log("res = ", _g.j2s(res));
-          // _g.closeGlobalLoading()
-        });
+        api.sendUdp(device, data)
       }
     } else {
       if (device.operation_6) {
@@ -18,10 +15,7 @@ const lightApi = {
           operatorCodesec = "31",
           additionalContentData = [_g.toHex(device.operation_7), "64"]
         var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-        api.apiGet("udp/sendUdp.php", data).then(res => {
-          // console.log("res = ", _g.j2s(res));
-          // _g.closeGlobalLoading()
-        });
+        api.sendUdp(device, data)
       }
     }
   },
@@ -30,10 +24,7 @@ const lightApi = {
       operatorCodesec = "31",
       additionalContentData = [_g.toHex(value), "64"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log(res);
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   }
 }
 

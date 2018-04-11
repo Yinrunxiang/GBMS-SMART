@@ -1,4 +1,4 @@
-import api from "../../../../assets/js/api";
+import api from "../api";
 const lightApi = {
     get_command(val, device) {
         if (val.type == '04' || val.type == '08') {
@@ -35,10 +35,7 @@ const lightApi = {
     send_command(val, device) {
         const data = this.get_command(val, device)
         // console.log(data)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
 
     readStatus(val, device, deviceProperty) {
@@ -54,13 +51,7 @@ const lightApi = {
                 dest_port: device.port ? device.port : ""
             }
         };
-        // console.log(device);
-        api.apiGet("udp/sendUdp.php", data).then(res => {
-            // console.log("res = ", _g.j2s(res));
-            // _g.closeGlobalLoading()
-        });
-        // var socket = window.socket("http://" + document.domain + ":2120");
-        // window.socketio.removeAllListeners("new_msg");
+        api.sendUdp(device, data)
         window.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);
@@ -104,13 +95,7 @@ const lightApi = {
                 dest_port: device.port ? device.port : ""
             }
         };
-        // console.log(device);
-        api.apiGet("udp/sendUdp.php", data).then(res => {
-            // console.log("res = ", _g.j2s(res));
-            // _g.closeGlobalLoading()
-        });
-        // var socket = window.socket("http://" + document.domain + ":2120");
-        // window.socketio.removeAllListeners("new_msg");
+        api.sendUdp(device, data)
         window.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);

@@ -1,4 +1,4 @@
-import api from "../../../../assets/js/api";
+import api from "../api";
 function toTmp(tmp) {
     tmp = parseInt('0x' + tmp)
     tmp = tmp >= 128 ? -256 + tmp : tmp
@@ -74,77 +74,47 @@ const acApi = {
     },
     switch_change(val, device, deviceProperty) {
         const data = this.get_switch_change(val, device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     autotmp_change(val, device, deviceProperty) {
 
         const data = this.get_autotmp_change(val, device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     cooltmp_change(val, device, deviceProperty) {
 
         const data = this.get_cooltmp_change(val, device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     heattmp_change(val, device, deviceProperty) {
 
         const data = this.get_heattmp_change(val, device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     wind_change(val, device, deviceProperty) {
 
         const data = this.get_wind_change(val, device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     autobtn(device, deviceProperty) {
         const data = this.get_autobtn(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     fanbtn(device, deviceProperty) {
         const data = this.get_fanbtn(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     coolbtn(device, deviceProperty) {
         const data = this.get_coolbtn(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     heatbtn(device, deviceProperty) {
         const data = this.get_heatbtn(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     readTmpRange(device, deviceProperty) {
         const data = this.get_readTmpRange(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     readStatus(device, deviceProperty) {
         var operatorCodefst = "E0",
@@ -152,12 +122,7 @@ const acApi = {
             additionalContentData = ["00"]
         var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         // console.log(device)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
-        // var socket = window.socket("http://" + document.domain + ":2120");
-        // window.socketio.removeAllListeners("new_msg");
+        api.sendUdp(device, data)
         window.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);
@@ -321,12 +286,7 @@ const acApi = {
             operatorCodesec = "EC",
             additionalContentData = ["00"]
         var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
-        // var socket = window.socket("http://" + document.domain + ":2120");
-        // window.socketio.removeAllListeners("new_msg");
+        api.sendUdp(device, data)
         window.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);

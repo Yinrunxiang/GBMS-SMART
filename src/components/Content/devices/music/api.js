@@ -1,4 +1,4 @@
-import api from "../../../../assets/js/api";
+import api from "../api";
 
 function strToarr(str) {
   var len = str.length / 2;
@@ -42,11 +42,7 @@ const musicApi = {
       operatorCodesec = "18",
       additionalContentData = ["01", source]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      console.log(res)
-      // console.log('res = ', _g.j2s(res))
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   vol_change(val, device, deviceProperty) {
     deviceProperty.vol = val;
@@ -56,30 +52,21 @@ const musicApi = {
       operatorCodesec = "18",
       additionalContentData = ["05", "01", "03", _g.toHex(val)]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   pre(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["04", "01", "00", "00"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log('res = ', _g.j2s(res))
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   next(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["04", "02", "00", "00"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log('res = ', _g.j2s(res))
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   switch_change(val, device) {
     device.on_off = val;
@@ -98,10 +85,7 @@ const musicApi = {
         var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         break
     }
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   play(device) {
     device.on_off = true;
@@ -109,10 +93,7 @@ const musicApi = {
       operatorCodesec = "18",
       additionalContentData = ["04", "03", "00", "00"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log("res = ", _g.j2s(res));
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   pause(device) {
     device.on_off = false;
@@ -120,50 +101,35 @@ const musicApi = {
       operatorCodesec = "18",
       additionalContentData = ["04", "04", "00", "00"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log('res = ', _g.j2s(res))
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   random(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["02", "01"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log('res = ', _g.j2s(res))
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   single(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["02", "02"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log('res = ', _g.j2s(res))
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   allmusic(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["02", "04"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log('res = ', _g.j2s(res))
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
   selectSong(device, deviceProperty, song) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["06", song.albumNo, song.songNoHigh, song.songNoLow]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log('res = ', _g.j2s(res))
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
   },
 
   readStatus(device, deviceProperty) {
@@ -177,10 +143,7 @@ const musicApi = {
       operatorCodesec = "E0",
       additionalContentData = [deviceProperty.source]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    api.apiGet("udp/sendUdp.php", data).then(res => {
-      // console.log('res = ', _g.j2s(res))
-      // _g.closeGlobalLoading()
-    });
+    api.sendUdp(device, data)
     window.socketio.on("new_msg", function (msg) {
       var msglen = msg.length;
       var stop = msglen - 4;
@@ -204,11 +167,7 @@ const musicApi = {
             var operatorCodefst = "02",
               operatorCodesec = "E2"
             var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-            api.apiGet("udp/sendUdp.php", data).then(res => {
-              // console.log('res = ', _g.j2s(res))
-              // _g.closeGlobalLoading()
-            });
-            // console.log("02E1");
+            api.sendUdp(device, data)
           }
 
         }
@@ -253,10 +212,7 @@ const musicApi = {
                 operatorCodesec = "E4",
                 additionalContentData = [source, key]
               var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-              api.apiGet("udp/sendUdp.php", data).then(res => {
-                // console.log('res = ', _g.j2s(res))
-                // _g.closeGlobalLoading()
-              });
+              api.sendUdp(device, data)
             }
             var albumInterval = setInterval(function () {
               var check = true
@@ -267,10 +223,7 @@ const musicApi = {
                     operatorCodesec = "E4",
                     additionalContentData = [source, key]
                   var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-                  api.apiGet("udp/sendUdp.php", data).then(res => {
-                    // console.log('res = ', _g.j2s(res))
-                    // _g.closeGlobalLoading()
-                  });
+                  api.sendUdp(device, data)
                 }
               }
               if (check) {
@@ -302,10 +255,7 @@ const musicApi = {
                   operatorCodesec = "E6",
                   additionalContentData = [source, albumno, _g.toHex(i)]
                 var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-                api.apiGet("udp/sendUdp.php", data).then(res => {
-                  // console.log('res = ', _g.j2s(res))
-                  // _g.closeGlobalLoading()
-                });
+                api.sendUdp(device, data)
               }
               var songInterval = setInterval(function () {
                 var check = true
@@ -316,10 +266,7 @@ const musicApi = {
                       operatorCodesec = "E6",
                       additionalContentData = [source, key.substr(0, 2), key.substr(2, 2)]
                     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-                    api.apiGet("udp/sendUdp.php", data).then(res => {
-                      // console.log('res = ', _g.j2s(res))
-                      // _g.closeGlobalLoading()
-                    });
+                    api.sendUdp(device, data)
                   }
                 }
                 if (check) {

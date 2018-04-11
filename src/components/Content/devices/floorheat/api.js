@@ -1,4 +1,4 @@
-import api from "../../../../assets/js/api";
+import api from "../api";
 function toTmp(tmp) {
     tmp = parseInt('0x' + tmp)
     tmp = tmp >= 128 ? -256 + tmp : tmp
@@ -90,66 +90,39 @@ const acApi = {
     },
     switch_change(val, device, deviceProperty) {
         const data = this.get_switch_change(val, device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     addTemperatureButtonClick(device, deviceProperty) {
         const data = this.get_addTemperatureButtonClick(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     reduceTemperatureButtonClick(device, deviceProperty) {
         const data = this.get_reduceTemperatureButtonClick(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     manualButtonClick(device, deviceProperty) {
         const data = this.get_manualButtonClick(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     dayButtonClick(device, deviceProperty) {
         const data = this.get_dayButtonClick(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     nightButtonClick(device, deviceProperty) {
         const data = this.get_nightButtonClick(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     awayButtonClick(device, deviceProperty) {
         const data = this.get_awayButtonClick(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     alarmButtonClick(device, deviceProperty) {
         const data = this.get_alarmButtonClick(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     timeChange(device, deviceProperty) {
         const data = this.get_timeChange(device, deviceProperty)
-        api.apiGet('udp/sendUdp.php', data).then((res) => {
-            // console.log('res = ', _g.j2s(res))
-            // _g.closeGlobalLoading()
-        })
+        api.sendUdp(device, data)
     },
     readStatus(device, deviceProperty) {
         console.log('floorheatApi')
@@ -157,32 +130,27 @@ const acApi = {
         var operatorCodefst = "03",
             operatorCodesec = "CB",
             additionalContentData = []
-        api.apiGet('udp/sendUdp.php', api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-        })
+        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
         // 读取模式匹配温度与传感器的地址
         var operatorCodefst = "03",
             operatorCodesec = "C7",
             additionalContentData = [device.channel]
-        api.apiGet('udp/sendUdp.php', api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-        })
+        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
         // 读取室外温度 (读摄氏温度)
         var operatorCodefst = "E3",
             operatorCodesec = "E7",
             additionalContentData = ["01"]
-        api.apiGet('udp/sendUdp.php', api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-        })
+        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
         // 读取开关状态
         var operatorCodefst = "E3",
             operatorCodesec = "DA",
             additionalContentData = [controlOnAndOff, device.channel]
-        api.apiGet('udp/sendUdp.php', api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-        })
+        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
         // 读取模式状态
         var operatorCodefst = "E3",
             operatorCodesec = "DA",
             additionalContentData = [controlModel, device.channel]
-        api.apiGet('udp/sendUdp.php', api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-        })
+        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
         window.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);
@@ -263,8 +231,7 @@ const acApi = {
                     var operatorCodefst = "E3",
                         operatorCodesec = "E7",
                         additionalContentData = ["01"]
-                    api.apiGet('udp/sendUdp.php', api.getUdp(deviceProperty.insideSensor, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-                    })
+                    api.sendUdp(device, api.getUdp(deviceProperty.insideSensor, operatorCodefst, operatorCodesec, additionalContentData))
                     break
                 case "03ca":
                     if (
@@ -274,8 +241,7 @@ const acApi = {
                     var operatorCodefst = "03",
                         operatorCodesec = "CB",
                         additionalContentData = []
-                    api.apiGet('udp/sendUdp.php', api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-                    })
+                    api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
                     break
                 case "03cc":
                     if (
@@ -348,8 +314,7 @@ const acApi = {
         var operatorCodefst = "E3",
             operatorCodesec = "DA",
             additionalContentData = [controlOnAndOff, device.channel]
-        api.apiGet('udp/sendUdp.php', api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)).then((res) => {
-        })
+        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
         window.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);
