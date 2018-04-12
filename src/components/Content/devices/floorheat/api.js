@@ -126,31 +126,58 @@ const acApi = {
     },
     readStatus(device, deviceProperty) {
         console.log('floorheatApi')
+        var udpArr = []
         // 读取定时器模式下的开始与结束时间
         var operatorCodefst = "03",
             operatorCodesec = "CB",
             additionalContentData = []
-        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+        var udpObj = {
+            device: device,
+            data: data
+        }
+        udpArr.push(udpObj)
         // 读取模式匹配温度与传感器的地址
         var operatorCodefst = "03",
             operatorCodesec = "C7",
             additionalContentData = [device.channel]
-        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+        var udpObj = {
+            device: device,
+            data: data
+        }
+        udpArr.push(udpObj)
         // 读取室外温度 (读摄氏温度)
         var operatorCodefst = "E3",
             operatorCodesec = "E7",
             additionalContentData = ["01"]
-        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+        var udpObj = {
+            device: device,
+            data: data
+        }
+        udpArr.push(udpObj)
         // 读取开关状态
         var operatorCodefst = "E3",
             operatorCodesec = "DA",
             additionalContentData = [controlOnAndOff, device.channel]
-        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+        var udpObj = {
+            device: device,
+            data: data
+        }
+        udpArr.push(udpObj)
         // 读取模式状态
         var operatorCodefst = "E3",
             operatorCodesec = "DA",
             additionalContentData = [controlModel, device.channel]
-        api.sendUdp(device, api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData))
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+        var udpObj = {
+            device: device,
+            data: data
+        }
+        udpArr.push(udpObj)
+        api.sendUdpArr(device, udpArr)
         window.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);

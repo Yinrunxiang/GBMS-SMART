@@ -37,7 +37,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 30px;
+  width: 20px;
   height: 100%;
 }
 .contarl-right-page .left-collect:hover {

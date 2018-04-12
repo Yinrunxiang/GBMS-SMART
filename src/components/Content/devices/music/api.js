@@ -133,6 +133,7 @@ const musicApi = {
   },
 
   readStatus(device, deviceProperty) {
+    var $this = this
     var albumnum = 0;
     var albumNote = 0;
     var albumNoList = {}
@@ -204,18 +205,24 @@ const musicApi = {
               albumNoList[albumNo] = false
               albumCount = albumCount + albumLength + 4
             }
-            // deviceProperty.albumlist = deviceProperty.albumlist.split(".PLS");
-            // console.log(deviceProperty.albumlist);
-
+            var udpArrAlbum = []
             for (var key in albumNoList) {
               var operatorCodefst = "02",
                 operatorCodesec = "E4",
                 additionalContentData = [source, key]
               var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-              api.sendUdp(device, data)
+              var udpObj = {
+                device: device,
+                data: data,
+                key: "album"
+              }
+              udpArrAlbum.push(udpObj)
             }
+            $this.sendUdpArr(udpArrAlbum)
             var albumInterval = setInterval(function () {
               var check = true
+              var udpArrAlbum = []
+              // console.log(albumNoList)
               for (var key in albumNoList) {
                 if (!albumNoList[key]) {
                   check = false
@@ -223,9 +230,15 @@ const musicApi = {
                     operatorCodesec = "E4",
                     additionalContentData = [source, key]
                   var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-                  api.sendUdp(device, data)
+                  var udpObj = {
+                    device: device,
+                    data: data,
+                    key: "album"
+                  }
+                  udpArrAlbum.push(udpObj)
                 }
               }
+              $this.sendUdpArr(udpArrAlbum)
               if (check) {
                 clearInterval(albumInterval)
                 albumList.sort(function (a, b) {
@@ -235,7 +248,7 @@ const musicApi = {
                 deviceProperty.albumlist = albumList
                 // console.log(deviceProperty.albumlist)
               }
-            }, 2000)
+            }, 5000)
           }
 
         }
@@ -248,17 +261,26 @@ const musicApi = {
               albumNoList[albumno] = true
 
               songpack = parseInt("0x" + songpack);
-
+              var udpArrSong = []
               for (var i = 1; i <= songpack; i++) {
                 songNoList[albumno + _g.toHex(i)] = false
                 var operatorCodefst = "02",
                   operatorCodesec = "E6",
                   additionalContentData = [source, albumno, _g.toHex(i)]
                 var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-                api.sendUdp(device, data)
+                // api.sendUdp(device, data)
+                var udpObj = {
+                  device: device,
+                  data: data,
+                  key: "song"
+                }
+                udpArrSong.push(udpObj)
               }
+              $this.sendUdpArr(udpArrSong)
               var songInterval = setInterval(function () {
                 var check = true
+                var udpArrSong = []
+                // console.log(songNoList)
                 for (var key in songNoList) {
                   if (!songNoList[key]) {
                     check = false
@@ -266,9 +288,17 @@ const musicApi = {
                       operatorCodesec = "E6",
                       additionalContentData = [source, key.substr(0, 2), key.substr(2, 2)]
                     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-                    api.sendUdp(device, data)
+                    // api.sendUdp(device, data)
+                    var udpObj = {
+                      device: device,
+                      data: data,
+                      key: "song"
+                    }
+                    udpArrSong.push(udpObj)
                   }
                 }
+                
+                $this.sendUdpArr(udpArrSong)
                 if (check) {
                   clearInterval(songInterval)
                   // var hash = {};
@@ -285,7 +315,7 @@ const musicApi = {
                   deviceProperty.musicLoading = false
                   Lockr.set('music_' + device.id + '_' + deviceProperty.source, deviceProperty)
                 }
-              }, 2000)
+              }, 5000)
             }
           }
 
@@ -331,7 +361,86 @@ const musicApi = {
         }
       }
     });
-  }
+  },
+  sendUdpArr(arr) {
+    if(!arr || arr.length ==0) return
+    var $this = this
+    var arrIndex = 0
+    var arrIndex = 0
+    var sendUdp = function (device, data, type, key) {
+      if (!type || type == "") {
+        api.apiGet("udp/sendUdp.php", data).then(res => {
+        });
+      } else {
+        var pass = false
+        var index = 1
+        var operatorCode = data.params.operatorCodefst + data.params.operatorCodesec
+        operatorCode = _g.toHex(parseInt('0x' + operatorCode) + 1)
+        if (operatorCode.length < 4) {
+          var zero = ""
+          for (var i = 0; i < 4 - operatorCode.length; i++) {
+            zero = zero + '0'
+          }
+          operatorCode = zero + operatorCode
+        }
+        window.socketio.on("new_msg", function (msg) {
+          var subnetid = msg.substr(34, 2);
+          var deviceid = msg.substr(36, 2);
+          if (
+            subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+            deviceid.toLowerCase() != device.deviceid.toLowerCase()
+          ) return
+          var operatorCodeCurrent = msg.substr(42, 4)
+          if (operatorCodeCurrent != operatorCode) return
+          if (key == "album") {
+            var source = _g.getadditional(msg, 0)
+            var albumNo = _g.getadditional(msg, 1)
+            if (data.params.additionalContentData[0] != source || data.params.additionalContentData[1] != albumNo) return
+          } else if(key == "song") {
+            var source = _g.getadditional(msg, 2)
+            var albumNo = _g.getadditional(msg, 3)
+            var songNo = _g.getadditional(msg, 4)
+            if (data.params.additionalContentData[0] != source || data.params.additionalContentData[1] != albumNo || data.params.additionalContentData[2] != songNo) return
+          }
+
+          pass = true
+        })
+
+        var sendUdpFor = setInterval(function () {
+          if (pass || index > 3) {
+            clearInterval(sendUdpFor);
+            arrIndex++
+            if (arr[arrIndex]) {
+              if (arr[arrIndex].device.time && parseInt(arr[arrIndex].device.time) > 0) {
+                var time = parseInt(arr[arrIndex].device.time) * 1000
+                var timeCode = function () {
+                  sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
+                }
+                setTimeout(timeCode, time)
+              } else {
+                sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
+              }
+            }
+            return;
+          }
+          api.apiGet("udp/sendUdp.php", data).then(res => {
+          });
+          index++
+        }, 100);
+      }
+
+    }
+    if (arr[arrIndex].device.time && parseInt(arr[arrIndex].device.time) > 0) {
+      var time = parseInt(arr[arrIndex].device.time) * 1000
+      var timeCode = function () {
+        sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
+      }
+      setTimeout(timeCode, time)
+    } else {
+      sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
+    }
+
+  },
 };
 
 export default musicApi;
