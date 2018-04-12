@@ -1,6 +1,6 @@
 <template>
 	<div class="panel m-w-1280" @click="hideRightPage()">
-    <span class="version">ver 1.4.3</span>
+    <span class="version">ver {{version}}</span>
 		<el-col :span="24" class="panel-top">
 			<el-col class="w-180">
 				<template v-if="logo_type == '1'">
@@ -179,7 +179,8 @@ export default {
       title: "",
       logo_type: null,
       dataReady: false,
-      showChange: false
+      showChange: false,
+      version:"",
     };
   },
   methods: {
@@ -289,7 +290,7 @@ export default {
         }
       };
       this.apiGet("device/index.php?updateDatabase", data).then(res => {
-        // console.log(res);
+        this.version = res
       });
     },
     countryArr() {

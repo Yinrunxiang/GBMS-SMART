@@ -391,6 +391,18 @@ switch ($action) {
         echo $json_results;
         break;
     case "updateDatabase":
+        $version = '1.5.1';
+        echo $version;
+        $selectVersion = "select udp_flag as version from udp";
+        $result = mysqli_query($con, $selectVersion);
+        $row = mysqli_fetch_assoc($result);
+        if ($row && $row["version"] == $version) return;
+        $updateVersion = "";
+        if ($row) {
+            $updateVersion = "update udp set udp_flag = '" . $version . "'";
+        } else {
+            $updateVersion = "insert into udp (udp_flag) values ('" . $version . "')";
+        }
         $createMacro = "CREATE TABLE if not exists `macro` (`id` int(11) NOT NULL AUTO_INCREMENT,`macro` varchar(30) DEFAULT NULL,PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC; ";
         $createMacroComment = " CREATE TABLE if not exists `macro_command` ( `id` int(11) NOT NULL AUTO_INCREMENT,  `macro` varchar(30) DEFAULT NULL, `device` varchar(50) DEFAULT NULL, `on_off` varchar(1) DEFAULT NULL, `mode` varchar(20) DEFAULT NULL, `grade` varchar(20) DEFAULT NULL, `status_1` varchar(20) DEFAULT NULL, `status_2` varchar(20) DEFAULT NULL, `status_3` varchar(20) DEFAULT NULL, `status_4` varchar(20) DEFAULT NULL, `status_5` varchar(20) DEFAULT NULL, `time` varchar(10) DEFAULT NULL, PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC; ";
         $createIrOperation = "CREATE TABLE if not exists `ir_operation` ( `id` int(11) NOT NULL AUTO_INCREMENT, `device` varchar(50) DEFAULT NULL, `ir_key` varchar(20) DEFAULT NULL, `ir_name` varchar(20) DEFAULT NULL, `ir_value` varchar(20) DEFAULT NULL,  PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8; ";
@@ -411,6 +423,7 @@ switch ($action) {
         $addMoodOnOff = "alter table mood add on_off varchar(1); ";
         $addMoodMode = "alter table mood add mode varchar(20); ";
         $addMoodGrade = "alter table mood add grade varchar(20); ";
+        mysqli_query($con, $updateVersion);
         mysqli_query($con, $createMacro);
         mysqli_query($con, $createMacroComment);
         mysqli_query($con, $createIrOperation);
