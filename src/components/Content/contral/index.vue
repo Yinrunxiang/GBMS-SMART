@@ -138,10 +138,13 @@ export default {
         if (i >= len) {
           clearInterval(forDevice);
         }
-      }, 100);
+      }, 300);
     },
     roomChange(val) {
       var vm = this
+      if(vm.interval){
+        clearInterval(vm.interval);
+      }
       this.room_key = val;
       clearInterval(vm.interval);
       if (typeof val == "string" && val == "") {
@@ -231,9 +234,10 @@ export default {
     mood,
     rightPage
   },
-  destroyed() {
-    clearInterval(this.interval);
-  },
+  // destroyed() {
+  //   console.log('destroyed')
+  //   clearInterval(this.interval);
+  // },
   computed: {
     devices() {
       return this.$store.state.devices;

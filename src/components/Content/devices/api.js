@@ -98,6 +98,10 @@ const api = {
                     ) return
                     var operatorCodeCurrent = msg.substr(42, 4)
                     if (operatorCodeCurrent != operatorCode) return
+                    if (operatorCodeCurrent == '0032') {
+                        var channel = _g.getadditional(msg, 0)
+                        if (device.channel != channel) return
+                    }
                     pass = true
                 })
 
