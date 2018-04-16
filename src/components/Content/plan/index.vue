@@ -142,7 +142,7 @@ export default {
           this.room = value[2];
           break;
       }
-      this.search()
+      this.search();
     },
     //搜索关键字
     search() {
@@ -194,7 +194,7 @@ export default {
         on_off: false,
         starttime: "",
         endtime: "",
-        comment:"",
+        comment: ""
       };
     },
     rowDblclick(row) {
@@ -212,6 +212,12 @@ export default {
       this.thisdevice.channel_spare = this.thisdevice.channel_spare
         ? parseInt("0x" + this.thisdevice.channel_spare)
         : "";
+      if (this.thisdevice.devicetype == "curtain") {
+        this.thisdevice.operation_1 = this.thisdevice.operation_1
+          ? parseInt("0x" + this.thisdevice.operation_1)
+          : "";
+      }
+
       // console.log(this.thisdevice);
       // let url = '/home/plan/update'
       // this.$store.dispatch('setDevice', row)
@@ -356,7 +362,7 @@ export default {
       var start = this.limit * (this.currentPage - 1);
       var end = start + this.limit;
       this.tableData = data.slice(start, end);
-      this.dataCount = data.length
+      this.dataCount = data.length;
     },
     //初始化时统一加载
     init() {

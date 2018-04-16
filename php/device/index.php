@@ -37,6 +37,8 @@ switch ($action) {
         $channel = toHex($channel);
         $channel_spare = isset($_REQUEST["channel_spare"]) ? $_REQUEST["channel_spare"] : '';
         $channel_spare = toHex($channel_spare);
+        $operation_1 = isset($_REQUEST["operation_1"]) ? $_REQUEST["operation_1"] : '';
+        $operation_1 = toHex($operation_1);
         $devicetype = isset($_REQUEST["devicetype"]) ? $_REQUEST["devicetype"] : '';
         $breed = isset($_REQUEST["breed"]) ? $_REQUEST["breed"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
@@ -45,7 +47,7 @@ switch ($action) {
         $x_axis = isset($_REQUEST["x_axis"]) ? $_REQUEST["x_axis"] : '';
         $y_axis = isset($_REQUEST["y_axis"]) ? $_REQUEST["y_axis"] : '';
         $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
-        $sql = "insert into device (device,subnetid,deviceid,channel,channel_spare,address,floor,room,x_axis,y_axis,devicetype,breed,comment,status) values ('" . $device . "','" . $subnetid . "','" . $deviceid . "','" . $channel . "','" . $channel_spare . "','" . $address . "','" . $floor . "','" . $room . "','" . $x_axis . "','" . $y_axis . "','" . $devicetype . "','" . $breed . "','" . $comment . "','enabled')";
+        $sql = "insert into device (device,subnetid,deviceid,channel,channel_spare,operation_1,address,floor,room,x_axis,y_axis,devicetype,breed,comment,status) values ('" . $device . "','" . $subnetid . "','" . $deviceid . "','" . $channel . "','" . $channel_spare . "','" . $operation_1 . "','" . $address . "','" . $floor . "','" . $room . "','" . $x_axis . "','" . $y_axis . "','" . $devicetype . "','" . $breed . "','" . $comment . "','enabled')";
         if (!mysqli_query($con, $sql)) {
             $message = [];
             $message[0] = false;
@@ -78,6 +80,8 @@ switch ($action) {
         $channel = toHex($channel);
         $channel_spare = isset($_REQUEST["channel_spare"]) ? $_REQUEST["channel_spare"] : '';
         $channel_spare = toHex($channel_spare);
+        $operation_1 = isset($_REQUEST["operation_1"]) ? $_REQUEST["operation_1"] : '';
+        $operation_1 = toHex($operation_1);
         $devicetype = isset($_REQUEST["devicetype"]) ? $_REQUEST["devicetype"] : '';
         $breed = isset($_REQUEST["breed"]) ? $_REQUEST["breed"] : '';
         $address = isset($_REQUEST["address"]) ? $_REQUEST["address"] : '';
@@ -86,7 +90,12 @@ switch ($action) {
         $x_axis = isset($_REQUEST["x_axis"]) ? $_REQUEST["x_axis"] : '';
         $y_axis = isset($_REQUEST["y_axis"]) ? $_REQUEST["y_axis"] : '';
         $comment = isset($_REQUEST["comment"]) ? $_REQUEST["comment"] : '';
-        $sql = "update device set device = '" . $device . "', subnetid = '" . $subnetid . "', deviceid = '" . $deviceid . "', channel = '" . $channel . "',channel_spare = '" . $channel_spare . "', devicetype = '" . $devicetype . "', breed = '" . $breed . "', address = '" . $address . "', floor = '" . $floor . "', room = '" . $room . "', x_axis = '" . $x_axis . "', y_axis = '" . $y_axis . "', comment = '" . $comment . "' where id = '" . $id . "'";
+        if($devicetype == 'curtain'){
+            $sql = "update device set device = '" . $device . "', subnetid = '" . $subnetid . "', deviceid = '" . $deviceid . "', channel = '" . $channel . "',channel_spare = '" . $channel_spare . "',operation_1 = '" . $operation_1 . "', devicetype = '" . $devicetype . "', breed = '" . $breed . "', address = '" . $address . "', floor = '" . $floor . "', room = '" . $room . "', x_axis = '" . $x_axis . "', y_axis = '" . $y_axis . "', comment = '" . $comment . "' where id = '" . $id . "'";
+        }
+        else{
+            $sql = "update device set device = '" . $device . "', subnetid = '" . $subnetid . "', deviceid = '" . $deviceid . "', channel = '" . $channel . "',channel_spare = '" . $channel_spare . "', devicetype = '" . $devicetype . "', breed = '" . $breed . "', address = '" . $address . "', floor = '" . $floor . "', room = '" . $room . "', x_axis = '" . $x_axis . "', y_axis = '" . $y_axis . "', comment = '" . $comment . "' where id = '" . $id . "'";
+        }
         if (!mysqli_query($con, $sql)) {
             $message = [];
             $message[0] = false;

@@ -34,10 +34,13 @@
                                 ]">
                 <el-input type="channel" v-model="form.channel" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item v-show="form.devicetype == 'curtain'" label="Channel Spare" prop="channel_spare" :rules="[
-                                  { required: true, message: 'The Channel Spare must not be null'}
+            <el-form-item v-show="form.devicetype == 'curtain'" label="Channel" prop="channel_spare" :rules="[
+                                  { required: true, message: 'The Channel must not be null'}
                                 ]">
                 <el-input type="channel_spare" v-model="form.channel_spare" class="h-40 w-200"></el-input>
+            </el-form-item>
+            <el-form-item v-show="form.devicetype == 'curtain'" label="Channel" prop="operation_1">
+                <el-input type="operation_1" v-model="form.operation_1" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item v-show="notHotel" label="Building">
               <template slot="prepend">Http://</template>
@@ -122,7 +125,7 @@ export default {
         { label: "Curtain", value: "curtain" },
         { label: "Music", value: "music" },
         { label: "IR", value: "ir" },
-        { label: "Security", value: "security" },
+        { label: "Security", value: "security" }
         // { label: "FloorHeat", value: "floorheat" }
       ]
     };
@@ -135,6 +138,11 @@ export default {
       this.form.channel_spare = _g.toHex(
         this.form.channel_spare ? this.form.channel_spare : 0
       );
+      if (this.form.devicetype == "curtain") {
+        this.form.operation_1 = _g.toHex(
+          this.form.operation_1 ? this.form.operation_1 : 0
+        );
+      }
       this.$emit("changeUpdate", false);
     },
     commit(form) {
@@ -142,12 +150,12 @@ export default {
       // this.form.deviceid = _g.toHex(this.form.deviceid)
       // this.form.channel = _g.toHex(this.form.channel)
       // this.form.channel_spare = _g.toHex(this.form.channel_spare ? this.form.channel_spare : 0)
-      if( this.form.comment.length  > 120){
+      if (this.form.comment.length > 120) {
         this.$message({
           message: "The length of the comment can not exceed 100 characters",
-          type: 'error'
+          type: "error"
         });
-        return
+        return;
       }
       this.isLoading = !this.isLoading;
       var vm = this;

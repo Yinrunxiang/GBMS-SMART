@@ -14,6 +14,12 @@ const cutainApi = {
     }
   },
   get_stop(val, device, deviceProperty) {
+    if (device.operation_1 && device.operation_1 != '') {
+      var operatorCodefst = "00",
+        operatorCodesec = "31",
+        additionalContentData = [device.operation_1, "64", "00", "00"]
+      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    }
     if (val) {
       var operatorCodefst = "00",
         operatorCodesec = "31",

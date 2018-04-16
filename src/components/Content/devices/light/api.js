@@ -45,12 +45,20 @@ const lightApi = {
       ) {
         var msg1 = msg.substr(42, 4);
         switch (msg1) {
+          case "EFFF":
+            var operatorCodefst = "00",
+              operatorCodesec = "33",
+              additionalContentData = []
+            var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+            api.sendUdp(device, data)
+            break
           case "0032":
             var channel = msg.substr(50, 2);
             if (channel.toLowerCase() == device.channel.toLowerCase()) {
               var msg2 = msg.substr(54, 2);
               if (msg2 != "00") {
                 deviceProperty.on_off = true;
+                deviceProperty.brightness = parseInt("0x" + msg2);
               } else {
                 deviceProperty.on_off = false;
                 deviceProperty.brightness = 0;
