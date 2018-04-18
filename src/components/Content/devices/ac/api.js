@@ -214,7 +214,7 @@ const acApi = {
                         //local flag
                         var flag = msg.substr(58, 2);
                         //当前温度current
-                        var current = msg.substr(60, 2);
+                        var current = msg.substr(58, 2);
                         deviceProperty.tmp = toTmp(current)
                         break;
                     case "e3d9":
@@ -377,7 +377,7 @@ const acApi = {
                     //local flag
                     var flag = msg.substr(58, 2);
                     //当前温度current
-                    var current = msg.substr(60, 2);
+                    var current = msg.substr(58, 2);
                     device.tmp = parseInt("0x" + current)
                 } else if (msg1.toLowerCase() == "e3d9") {
                     var type = msg.substr(50, 2);
