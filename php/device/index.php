@@ -400,7 +400,7 @@ switch ($action) {
         echo $json_results;
         break;
     case "updateDatabase":
-        $version = '1.5.1';
+        $version = '1.6.1';
         echo $version;
         $selectVersion = "select udp_flag as version from udp";
         $result = mysqli_query($con, $selectVersion);
