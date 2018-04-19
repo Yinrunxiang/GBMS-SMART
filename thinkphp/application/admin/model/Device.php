@@ -21,14 +21,6 @@ class Device extends Common
     protected $insert = [
         'status' => 1,
     ];
-    /**
-     * 获取用户所属所有用户组
-     * @param  array $param [description]
-     */
-//    public function groups()
-//    {
-//        return $this->belongsToMany('group', '__ADMIN_ACCESS__', 'group_id', 'user_id');
-//    }
 
     /**
      * [getDataList 列表]
@@ -75,11 +67,6 @@ class Device extends Common
      */
     public function createData($param)
     {
-        if (empty($param['department_name'])) {
-            $this->error = 'Please check at least one department';
-            return false;
-        }
-
        // 验证
         $validate = validate($this->name);
         if (!$validate->check($param)) {
@@ -89,16 +76,7 @@ class Device extends Common
 
         $this->startTrans();
         try {
-            $param['doctor_password'] = user_md5($param['doctor_password']);
             $this->data($param)->allowField(true)->save();
-
-//			foreach ($param['doctor'] as $k => $v) {
-//				$userGroup['user_id'] = $this->id;
-//				$userGroup['group_id'] = $v;
-//				$userGroups[] = $userGroup;
-//			}
-//			Db::name('admin_access')->insertAll($userGroups);
-
             $this->commit();
             return true;
         } catch (\Exception $e) {
@@ -112,9 +90,9 @@ class Device extends Common
      * 通过id修改设备
      * @param  array $param [description]
      */
-    public function updateDataById($param, $user_id)
+    public function updateDataById($param, $id)
     {
-        $checkData = $this->get($user_id);
+        $checkData = $this->get($id);
         if (!$checkData) {
             $this->error = 'This data is not available';
             return false;
@@ -122,7 +100,7 @@ class Device extends Common
         $this->startTrans();
 
         try {
-            $this->allowField(true)->save($param, ['user_id' => $user_id]);
+            $this->allowField(true)->save($param, ['id' => $id]);
             $this->commit();
             return true;
 
@@ -132,5 +110,110 @@ class Device extends Common
             return false;
         }
     }
+    /**
+     * 通过id更新设备位置
+     * @param  array $param [description]
+     */
+    public function updateLocationById($param, $id)
+    {
+        $this->startTrans();
+
+        try {
+            $this->allowField(true)->save($param, ['id' => $id]);
+            $this->commit();
+            return true;
+
+        } catch (\Exception $e) {
+            $this->rollback();
+            $this->error = 'Update failure';
+            return false;
+        }
+    }
+    /**
+     * 修改LED颜色
+     * @param  array $param [description]
+     */
+    public function setColor($param, $id)
+    {
+        $this->startTrans();
+
+        try {
+            $this->allowField(true)->save(['mode' => $param['color']], ['id' => $id]);
+            $this->commit();
+            return true;
+
+        } catch (\Exception $e) {
+            $this->rollback();
+            $this->error = 'Update failure';
+            return false;
+        }
+    }
+    /**
+     * 获取IR的操作指令
+     * @param  array $param [description]
+     */
+    public function getIrOperation($id)
+    {
+        $data['list'] = Db::table('ir_operation')->where('id', $id)->select();
+        return $data;
+    }
+    /**
+     * 新增IR操作指令
+     * @param  array $param [description]
+     */
+    public function insertIrOperation($param)
+    {
+        try {
+            Db::table('ir_operation')->insert($param);
+            return true;
+
+        } catch (\Exception $e) {
+            $this->error = 'Update failure';
+            return false;
+        }
+    }
+    /**
+     * 更新IR操作指令
+     * @param  array $param [description]
+     */
+    public function updateIrOperation($param, $id)
+    {
+        try {
+            Db::table('ir_operation')->where('id', $id)->update($param);
+            return true;
+
+        } catch (\Exception $e) {
+            $this->error = 'Update failure';
+            return false;
+        }
+    }
+    /**
+     * 修改设备运行时间
+     * @param  array $param [description]
+     */
+    public function setTime($param, $id)
+    {
+        $this->startTrans();
+        $data = $param['selection'];
+        $data = json_decode($data);
+        $this->startTrans();
+        try {
+            if ($param['type'] == "start") {
+                $this->allowField(['starttime'])->save(['starttime' => $data->starttime], ['id' => $id]);
+            } else {
+                $this->allowField(['endtime'])->save(['endtime' => $data->endtime], ['id' => $id]);
+            }
+            $this->commit();
+            return true;
+
+        } catch (\Exception $e) {
+            $this->rollback();
+            $this->error = 'Update failure';
+            return false;
+        }
+
+
+    }
+    
 
 }
