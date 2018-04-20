@@ -13,9 +13,19 @@ class Common extends Model
 {
 	
 	/**
+	 * [getDataList 获取数据]
+	 * @param     string                   $id [主键]
+	 * @return    [array]                       
+	 */
+	public function getDataList($keywords, $page, $limit)
+    {
+        $list = $this
+            ->select();
+        $data['list'] = $list;
+        return $data;
+    }
+	/**
 	 * [getDataById 根据主键获取详情]
-	 * @linchuangbin
-	 * @DateTime  2017-02-10T21:16:34+0800
 	 * @param     string                   $id [主键]
 	 * @return    [array]                       
 	 */
@@ -31,8 +41,6 @@ class Common extends Model
 
 	/**
 	 * [createData 新建]
-	 * @linchuangbin
-	 * @DateTime  2017-02-10T21:19:06+0800
 	 * @param     array                    $param [description]
 	 * @return    [array]                         [description]
 	 */
@@ -56,8 +64,6 @@ class Common extends Model
 
 	/**
 	 * [updateDataById 编辑]
-	 * @linchuangbin
-	 * @DateTime  2017-02-10T21:24:49+0800
 	 * @param     [type]                   $param [description]
 	 * @param     [type]                   $id    [description]
 	 * @return    [type]                          [description]
@@ -88,8 +94,6 @@ class Common extends Model
 
 	/**
 	 * [delDataById 根据id删除数据]
-	 * @linchuangbin
-	 * @DateTime  2017-02-11T20:57:55+0800
 	 * @param     string                   $id     [主键]
 	 * @param     boolean                  $delSon [是否删除子孙数据]
 	 * @return    [type]                           [description]
@@ -118,8 +122,6 @@ class Common extends Model
 
 	/**
 	 * [delDatas 批量删除数据]
-	 * @linchuangbin
-	 * @DateTime  2017-02-11T20:59:34+0800
 	 * @param     array                   $ids    [主键数组]
 	 * @param     boolean                 $delSon [是否删除子孙数据]
 	 * @return    [type]                          [description]
@@ -153,8 +155,6 @@ class Common extends Model
 
 	/**
 	 * [enableDatas 批量启用、禁用]
-	 * @AuthorHTL
-	 * @DateTime  2017-02-11T21:01:58+0800
 	 * @param     string                   $ids    [主键数组]
 	 * @param     integer                  $status [状态1启用0禁用]
 	 * @param     [boolean]                $delSon [是否删除子孙数组]

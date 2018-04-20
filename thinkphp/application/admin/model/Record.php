@@ -26,29 +26,37 @@ class Record extends Common
      * @param     [number]                   $limit    [t每页数量]
      * @return    [array]                             [description]
      */
-    public function getDataCount($param)
+    public function getDataCount($beginDate, $endDate)
     {
         $map = [];
         //根据keywords筛选信息
-            $map['record_date'] = ['>=', '%' . $param['beginDate'] . '%'];
-            $map['record_date'] = ['<', '%' . $param['endDate'] . '%'];
-            $map['devicetype'] = ['in', ["ac","light"]];
+        if(!empty($beginDate)){
+            $map['record_date'] = ['>=', '%' . $beginDate. '%'];
+        }
+        if(!empty($endDate)){
+            $map['record_date'] = ['<', '%' . $endDate . '%'];
+        }
+        $map['devicetype'] = ['in', ["ac", "light"]];
         $dataCount = $this
             ->where($map)
             ->count('id');
 
         return $dataCount;
     }
-    public function getDataList($start,$end,$beginDate,$endDate)
+    public function getDataList($start, $end, $beginDate, $endDate)
     {
         $map = [];
         //根据keywords筛选信息
-            $map['record_date'] = ['>=', '%' . $beginDate . '%'];
-            $map['record_date'] = ['<', '%' . $endDate . '%'];
-            $map['devicetype'] = ['in', ["ac","light"]];
+        if(!empty($beginDate)){
+            $map['record_date'] = ['>=',  $beginDate];
+        }
+        if(!empty($endDate)){
+            $map['record_date'] = ['<', $endDate];
+        }
+        $map['devicetype'] = ['in', ["ac", "light"]];
         $data = $this
             ->where($map)
-            ->limit($start,$end)
+            ->limit($start, $end)
             ->select();
 
         return $data;
