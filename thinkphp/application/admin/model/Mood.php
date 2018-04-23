@@ -34,34 +34,49 @@ class Mood extends Common
     }
 
     /**
-     * [getDataById 根据主键获取详情]
-     */
-    public function getDataById($id = '')
-    {
-        $data = $this->get($id);
-        if (!$data) {
-            $this->error = 'This data is not available';
-            return false;
-        }
-        return $data;
-    }
-
-    /**
      * 创建设备
      * @param  array $param [description]
      */
     public function createData($param)
     {
-       // 验证
-        $validate = validate($this->name);
-        if (!$validate->check($param)) {
-            $this->error = $validate->getError();
-            return false;
+        $mood = $param['mood'];
+        $address = $param['address'];
+        $floor = $param['floor'];
+        $room = $param['room'];
+        $devicetypes = $param['devicetypes'];
+        $curtains = $param['curtains'];
+        // // 验证
+        // $validate = validate($this->name);
+        // if (!$validate->check($param)) {
+        //     $this->error = $validate->getError();
+        //     return false;
+        // }
+        $map = [];
+        $map['mood'] = ['=', $mood];
+        $map['address'] = ['=', $address];
+        $map['floor'] = ['=', $floor];
+        $map['room'] = ['=', $room];
+        $getMoodCount = $this->where($map)->count();
+        if ($getMoodCount > 0) {
+            $this->error = 'mood name already exists';
+            return;
         }
-
         $this->startTrans();
         try {
-            $this->data($param)->allowField(true)->save();
+            foreach ($devicetypes as $k => $v) {
+                $map = [];
+                $map['address'] = ['=', $address];
+                $map['floor'] = ['=', $floor];
+                $map['room'] = ['=', $room];
+                $map['devicetype'] = ['=', $v];
+                $data = Db::table('device') . field("'" . $mood . "' as mood,'" . $address . "' as address,'" . $floor . "' as floor,'" . $room . "' as room,id,case when on_off = 'on' then '1' when on_off='off' or on_off='' or on_off is null then '0' end as on_off,mode,grade,operation_1,operation_2,operation_3")->where($map)->select();
+                $this->data($data)->insert();
+            }
+            foreach ($curtains as $k => $v) {
+                $curtain = $v;
+                $on_off = $curtain->on_off ? '1' : '0';
+                $this->data(['on_off' => $on_off])->update();
+            }
             $this->commit();
             return true;
         } catch (\Exception $e) {
@@ -75,23 +90,23 @@ class Mood extends Common
      * 通过id修改设备
      * @param  array $param [description]
      */
-    public function updateDataById($param, $id)
+    public function delDatas($param)
     {
-        $checkData = $this->get($id);
-        if (!$checkData) {
-            $this->error = 'This data is not available';
-            return false;
-        }
+        $map = [];
+        $map['mood'] = ['=', $mood];
+        $map['address'] = ['=', $address];
+        $map['floor'] = ['=', $floor];
+        $map['room'] = ['=', $room];
         $this->startTrans();
 
         try {
-            $this->allowField(true)->save($param, ['id' => $id]);
+            $this->where($map)->delete();
             $this->commit();
             return true;
 
         } catch (\Exception $e) {
             $this->rollback();
-            $this->error = 'Update failure';
+            $this->error = 'Delete failure';
             return false;
         }
     }
