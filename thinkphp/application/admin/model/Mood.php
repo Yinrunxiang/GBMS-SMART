@@ -22,14 +22,13 @@ class Mood extends Common
         $map['mood.address'] = ['=', $address];
         $map['mood.floor'] = ['=', $floor];
         $map['mood.room'] = ['=', $room];
-        $list = $this
+        $data = $this
             ->alias('mood')
             ->join('device device', 'mood.device=device.id', 'LEFT')
             ->join('address address', 'device.address=address.address', 'LEFT')
             ->where($map)
             ->field('mood.*,subnetid,deviceid,channel,channel_spare,devicetype,mac,ip,port')
             ->select();
-        $data['list'] = $list;
         return $data;
     }
 

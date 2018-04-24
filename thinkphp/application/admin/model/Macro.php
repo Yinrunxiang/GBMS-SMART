@@ -32,25 +32,22 @@ class Marco extends Common
         if ($keywords) {
             $map['macro'] = ['like', '%' . $keywords . '%'];
         }
-        $list = $this->where($map);
+        $data = $this->where($map);
 
         // 若有分页
         if ($page && $limit) {
-            $list = $list->page($page, $limit);
+            $data = $data->page($page, $limit);
         }
-
-        $list = $list->select();
-
-        $data['list'] = $list;
-
+        $data = $data->select();
         return $data;
     }
 
     /**
      * [getDataById 根据主键获取详情]
      */
-    public function getCommand($id = '')
+    public function getDataById($param)
     {
+        $id = $param['id'];
         Db::table('macro_command')
             ->alias('a')
             ->join('device b', 'a.device = b.id', 'left')
@@ -70,8 +67,9 @@ class Marco extends Common
     /**
      * [getDataById 根据主键获取详情]
      */
-    public function run($id = '')
+    public function run($param)
     {
+        $id = $param['id'];
         Db::table('macro_command')
             ->alias('a')
             ->join('device b', 'a.device = b.id', 'left')
@@ -79,12 +77,11 @@ class Marco extends Common
             ->field('a.id as macro_id,a.device as id,subnetid,deviceid,channel,channel_spare,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,ip,port,mac,a.time as time,c.operation as udp_type')
             ->where('macro', '=', $id)
             ->select();
-        $list = $this->where('macro', '=', $id)->select();
-        if (!$list) {
+        $data = $this->where('macro', '=', $id)->select();
+        if (!$data) {
             $this->error = 'This data is not available';
             return false;
         }
-        $data['list'] = $list;
         return $data;
     }
 
@@ -106,7 +103,7 @@ class Marco extends Common
 
         $this->startTrans();
         try {
-            
+
             if (empty($id)) {
                 $this->data(['macro' => $macro])->insert();
                 $id = $this->max('id')->get();

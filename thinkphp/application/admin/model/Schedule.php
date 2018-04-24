@@ -27,6 +27,14 @@ class Schedule extends Common
         return $data;
     }
 
+    public function getCommandList($param)
+    {
+        $schedule = $param['schedule'];
+        $map = ['schedule' => ['=', $schedule]];
+        $data = $this->alias('a')->join('device b','a.device = b.id','left')->join('room c','b.room = c.room and b.address = c.address and b.floor = c.floor','left')->where($map)->file('schedule,a.id as schedule_id,a.device as id,subnetid,deviceid,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name')->select();
+        return $data;
+    }
+
     /**
      * 创建设备
      * @param  array $param [description]
@@ -46,37 +54,19 @@ class Schedule extends Common
         $sat = $param['sat'];
         $sun = $param['sun'];
         $devices = $param['devices'];
-        // // 验证
-        // $validate = validate($this->name);
-        // if (!$validate->check($param)) {
-        //     $this->error = $validate->getError();
-        //     return false;
-        // }
-        $map = [];
-        $map['mood'] = ['=', $mood];
-        $map['address'] = ['=', $address];
-        $map['floor'] = ['=', $floor];
-        $map['room'] = ['=', $room];
-        $getMoodCount = $this->where($map)->count();
-        if ($getMoodCount > 0) {
-            $this->error = 'mood name already exists';
-            return;
-        }
         $this->startTrans();
         try {
-            foreach ($devicetypes as $k => $v) {
-                $map = [];
-                $map['address'] = ['=', $address];
-                $map['floor'] = ['=', $floor];
-                $map['room'] = ['=', $room];
-                $map['devicetype'] = ['=', $v];
-                $data = Db::table('device') . field("'" . $mood . "' as mood,'" . $address . "' as address,'" . $floor . "' as floor,'" . $room . "' as room,id,case when on_off = 'on' then '1' when on_off='off' or on_off='' or on_off is null then '0' end as on_off,mode,grade,operation_1,operation_2,operation_3")->where($map)->select();
-                $this->data($data)->insert();
+            if (empty($id)) {
+                $this->data($param)->insert();
+                $id = $this->max('id')->get();
+            } else {
+                $this->data(['schedule' => $schedule])->where('id', $id)->update();
+                Db::table('schedule_command')->where('schedule', $id)->delete();
             }
-            foreach ($curtains as $k => $v) {
-                $curtain = $v;
-                $on_off = $curtain->on_off ? '1' : '0';
-                $this->data(['on_off' => $on_off])->update();
+            foreach ($devices as $k => $v) {
+                $device = json_decode($v);
+                $data = ['schedeule' => $id, 'device' => $device->id, 'on_off' => $device->on_off, 'mode' => $device->mode, 'grade' => $device->grade, 'status_1' => $device->operation_1, 'status_2' => $device->operation_2, 'status_3' => $device->operation_3, 'status_4' => $device->operation_4, 'status_5' => $device->operation_5, 'time' => $device->time];
+                Db::table('marco_command')->data($data)->insert();
             }
             $this->commit();
             return true;
@@ -87,27 +77,42 @@ class Schedule extends Common
         }
     }
 
-    /**
-     * 通过id修改设备
+   /**
+     * 删除Schedule
      * @param  array $param [description]
      */
-    public function delDatas($param)
+    public function delDataById($param)
     {
-        $map = [];
-        $map['mood'] = ['=', $mood];
-        $map['address'] = ['=', $address];
-        $map['floor'] = ['=', $floor];
-        $map['room'] = ['=', $room];
+        $ids = $param['ids'];
         $this->startTrans();
-
         try {
-            $this->where($map)->delete();
+            foreach ($ids as $k => $v) {
+                $this->where('id', '=', $v)->delete();
+                Db::table('schedule_command')->where('schedule', '=', $v)->delete();
+            }
             $this->commit();
             return true;
-
         } catch (\Exception $e) {
             $this->rollback();
-            $this->error = 'Delete failure';
+            $this->error = 'Add failure';
+            return false;
+        }
+    }
+    /**
+     * 删除Macro
+     * @param  array $param [description]
+     */
+    public function delCommandById($param)
+    {
+        $id = $param['id'];
+        $this->startTrans();
+        try {
+            Db::table('schedule_command')->where('schedule', '=', $id)->delete();
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->rollback();
+            $this->error = 'Add failure';
             return false;
         }
     }

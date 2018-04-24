@@ -17,17 +17,6 @@ class Room extends ApiCommon
         return resultArray(['data' => $data]);
     }
 
-    public function read()
-    {
-        $roomModel = model('Room');
-        $param = $this->param;
-        $data = $roomModel->getDataById($param['id']);
-        if (!$data) {
-            return resultArray(['error' => $roomModel->getError()]);
-        } 
-        return resultArray(['data' => $data]);
-    }
-
    public function save()
    {
        $roomModel = model('Room');
@@ -43,7 +32,7 @@ class Room extends ApiCommon
     {
         $roomModel = model('Room');
         $param = $this->param;
-        $data = $roomModel->updateDataById($param, $param['id']);
+        $data = $roomModel->updateDataById($param);
         if (!$data) {
             return resultArray(['error' => $roomModel->getError()]);
         } 
@@ -54,18 +43,7 @@ class Room extends ApiCommon
     {
         $roomModel = model('Room');
         $param = $this->param;
-        $data = $roomModel->delDataById($param['id']);
-        if (!$data) {
-            return resultArray(['error' => $roomModel->getError()]);
-        } 
-        return resultArray(['data' => 'Delete success']);
-    }
-
-    public function deletes()
-    {
-        $roomModel = model('Room');
-        $param = $this->param;
-        $data = $roomModel->delDatas($param['ids']);
+        $data = $roomModel->delDatas($param);
         if (!$data) {
             return resultArray(['error' => $roomModel->getError()]);
         } 

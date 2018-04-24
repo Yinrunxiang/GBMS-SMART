@@ -17,17 +17,6 @@ class Address extends ApiCommon
         return resultArray(['data' => $data]);
     }
 
-    public function read()
-    {
-        $addressModel = model('Address');
-        $param = $this->param;
-        $data = $addressModel->getDataById($param['id']);
-        if (!$data) {
-            return resultArray(['error' => $addressModel->getError()]);
-        } 
-        return resultArray(['data' => $data]);
-    }
-
    public function save()
    {
        $addressModel = model('Address');
@@ -43,29 +32,17 @@ class Address extends ApiCommon
     {
         $addressModel = model('Address');
         $param = $this->param;
-        $data = $addressModel->updateDataById($param, $param['id']);
+        $data = $addressModel->updateDataById($param);
         if (!$data) {
             return resultArray(['error' => $addressModel->getError()]);
         } 
         return resultArray(['data' => 'Update success']);
     }
-
     public function delete()
     {
         $addressModel = model('Address');
         $param = $this->param;
-        $data = $addressModel->delDataById($param['id']);
-        if (!$data) {
-            return resultArray(['error' => $addressModel->getError()]);
-        } 
-        return resultArray(['data' => 'Delete success']);
-    }
-
-    public function deletes()
-    {
-        $addressModel = model('Address');
-        $param = $this->param;
-        $data = $addressModel->delDatas($param['ids']);
+        $data = $addressModel->delDatas($param);
         if (!$data) {
             return resultArray(['error' => $addressModel->getError()]);
         } 

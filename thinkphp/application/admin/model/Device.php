@@ -33,33 +33,16 @@ class Device extends Common
      */
     public function getDataList($keywords, $page, $limit)
     {
-        $dataCount = $this
-            ->alias('device')
-            ->count('device.id');
-        $list = $this
+        $data = $this
             ->alias('device')
             ->join('address address', 'device.address=address.address', 'LEFT')
             ->join('room room', 'address.address = room.address and address.floor = room.floor and address.room = room.room', 'LEFT')
             ->field('a.id,maxid,device,subnetid,deviceid,channel,channel_spare,b.id as addressid,mac,ip,port,b.lat,b.lng,a.floor,a.room,devicetype,case when on_off = "on" then now() - run_date else null end as run_time,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,a.floor,a.room,room_name,x_axis,y_axis,operation_1,operation_2,operation_3,operation_4,operation_5,operation_6,operation_7,operation_8,operation_9,operation_10,operation_11,operation_12,operation_13,operation_14,operation_15,operation_16,operation_17,operation_18,operation_19,operation_20,operation_21,a.comment,b.operation as udp_type')
             ->select();
-        $data['list'] = $list;
-        $data['dataCount'] = $dataCount;
 
         return $data;
     }
 
-    /**
-     * [getDataById 根据主键获取详情]
-     */
-    public function getDataById($id = '')
-    {
-        $data = $this->get($id);
-        if (!$data) {
-            $this->error = 'This data is not available';
-            return false;
-        }
-        return $data;
-    }
 
     /**
      * 创建设备
@@ -116,6 +99,7 @@ class Device extends Common
      */
     public function updateLocationById($param, $id)
     {
+        $id = $param['id'];
         $this->startTrans();
 
         try {
@@ -133,8 +117,9 @@ class Device extends Common
      * 修改LED颜色
      * @param  array $param [description]
      */
-    public function setColor($param, $id)
+    public function setColor($param)
     {
+        $id = $param['id'];
         $this->startTrans();
 
         try {
@@ -154,6 +139,7 @@ class Device extends Common
      */
     public function getIrOperation($id)
     {
+        $id = $param['id'];
         $data['list'] = Db::table('ir_operation')->where('id', $id)->select();
         return $data;
     }
@@ -176,8 +162,9 @@ class Device extends Common
      * 更新IR操作指令
      * @param  array $param [description]
      */
-    public function updateIrOperation($param, $id)
+    public function updateIrOperation($param)
     {
+        $id = $param['id'];
         try {
             Db::table('ir_operation')->where('id', $id)->update($param);
             return true;
@@ -191,9 +178,9 @@ class Device extends Common
      * 修改设备运行时间
      * @param  array $param [description]
      */
-    public function setTime($param, $id)
+    public function setTime($param)
     {
-        $this->startTrans();
+        $id = $param['id'];
         $data = $param['selection'];
         $data = json_decode($data);
         $this->startTrans();

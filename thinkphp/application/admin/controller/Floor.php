@@ -7,67 +7,45 @@
 
 namespace app\admin\controller;
 
-class Floor extends ApiCommon
+class Room extends ApiCommon
 {
 
     public function index()
     {   
-        $floorModel = model('Floor');
-        $data = $floorModel->getDataList();
+        $roomModel = model('Room');
+        $data = $roomModel->getDataList();
         return resultArray(['data' => $data]);
     }
 
     public function read()
     {
-        $floorModel = model('Floor');
+        $roomModel = model('Room');
         $param = $this->param;
-        $data = $floorModel->getDataById($param['id']);
+        $data = $roomModel->getDataById($param);
         if (!$data) {
-            return resultArray(['error' => $floorModel->getError()]);
+            return resultArray(['error' => $roomModel->getError()]);
         } 
         return resultArray(['data' => $data]);
     }
 
-   public function save()
-   {
-       $floorModel = model('Floor');
-       $param = $this->param;
-       $data = $floorModel->createData($param);
-       if (!$data) {
-           return resultArray(['error' => $floorModel->getError()]);
-       }
-       return resultArray(['data' => 'Add success']);
-   }
-
     public function update()
     {
-        $floorModel = model('Floor');
+        $roomModel = model('Room');
         $param = $this->param;
-        $data = $floorModel->updateDataById($param, $param['id']);
+        $data = $roomModel->updateDataById($param);
         if (!$data) {
-            return resultArray(['error' => $floorModel->getError()]);
+            return resultArray(['error' => $roomModel->getError()]);
         } 
         return resultArray(['data' => 'Update success']);
     }
-
+    
     public function delete()
     {
-        $floorModel = model('Floor');
+        $roomModel = model('Room');
         $param = $this->param;
-        $data = $floorModel->delDataById($param['id']);
+        $data = $roomModel->delDatas($param);
         if (!$data) {
-            return resultArray(['error' => $floorModel->getError()]);
-        } 
-        return resultArray(['data' => 'Delete success']);
-    }
-
-    public function deletes()
-    {
-        $floorModel = model('Floor');
-        $param = $this->param;
-        $data = $floorModel->delDatas($param['ids']);
-        if (!$data) {
-            return resultArray(['error' => $floorModel->getError()]);
+            return resultArray(['error' => $roomModel->getError()]);
         } 
         return resultArray(['data' => 'Delete success']);
     }   

@@ -25,29 +25,29 @@ class Device extends ApiCommon
     {
         $deviceModel = model('Device');
         $param = $this->param;
-        $data = $deviceModel->getDataById($param['id']);
+        $data = $deviceModel->getDataById($param);
         if (!$data) {
             return resultArray(['error' => $deviceModel->getError()]);
         } 
         return resultArray(['data' => $data]);
     }
 
-//    public function save()
-//    {
-//        $deviceModel = model('Device');
-//        $param = $this->param;
-//        $data = $deviceModel->createData($param);
-//        if (!$data) {
-//            return resultArray(['error' => $deviceModel->getError()]);
-//        }
-//        return resultArray(['data' => 'Add success']);
-//    }
+   public function save()
+   {
+       $deviceModel = model('Device');
+       $param = $this->param;
+       $data = $deviceModel->createData($param);
+       if (!$data) {
+           return resultArray(['error' => $deviceModel->getError()]);
+       }
+       return resultArray(['data' => 'Add success']);
+   }
 
     public function update()
     {
         $deviceModel = model('Device');
         $param = $this->param;
-        $data = $deviceModel->updateDataById($param, $param['id']);
+        $data = $deviceModel->updateDataById($param);
         if (!$data) {
             return resultArray(['error' => $deviceModel->getError()]);
         } 
@@ -58,7 +58,7 @@ class Device extends ApiCommon
     {
         $deviceModel = model('Device');
         $param = $this->param;
-        $data = $deviceModel->delDataById($param['id']);
+        $data = $deviceModel->delDataById($param);
         if (!$data) {
             return resultArray(['error' => $deviceModel->getError()]);
         } 
@@ -69,23 +69,71 @@ class Device extends ApiCommon
     {
         $deviceModel = model('Device');
         $param = $this->param;
-        $data = $deviceModel->delDatas($param['ids']);
+        $data = $deviceModel->delDatas($param);
         if (!$data) {
             return resultArray(['error' => $deviceModel->getError()]);
         } 
         return resultArray(['data' => 'Delete success']);
     }
-
-    public function enables()
+    public function updateLocationById()
     {
         $deviceModel = model('Device');
         $param = $this->param;
-        $data = $deviceModel->enableDatas($param['ids'], $param['status']);
+        $data = $deviceModel->updateLocationById($param);
         if (!$data) {
             return resultArray(['error' => $deviceModel->getError()]);
         } 
-        return resultArray(['data' => 'Successful operation']);
+        return resultArray(['data' => 'Delete success']);
     }
-    
+    public function setColor()
+    {
+        $deviceModel = model('Device');
+        $param = $this->param;
+        $data = $deviceModel->setColor($param);
+        if (!$data) {
+            return resultArray(['error' => $deviceModel->getError()]);
+        } 
+        return resultArray(['data' => 'Delete success']);
+    }
+    public function getIrOperation()
+    {
+        $deviceModel = model('Device');
+        $param = $this->param;
+        $data = $deviceModel->getIrOperation($param);
+        if (!$data) {
+            return resultArray(['error' => $deviceModel->getError()]);
+        } 
+        return resultArray(['data' => 'Delete success']);
+    }
+    public function insertIrOperation()
+    {
+        $deviceModel = model('Device');
+        $param = $this->param;
+        $data = $deviceModel->insertIrOperation($param);
+        if (!$data) {
+            return resultArray(['error' => $deviceModel->getError()]);
+        } 
+        return resultArray(['data' => 'Delete success']);
+    }
+    public function updateIrOperation()
+    {
+        $deviceModel = model('Device');
+        $param = $this->param;
+        $data = $deviceModel->updateIrOperation($param);
+        if (!$data) {
+            return resultArray(['error' => $deviceModel->getError()]);
+        } 
+        return resultArray(['data' => 'Delete success']);
+    }
+    public function setTime()
+    {
+        $deviceModel = model('Device');
+        $param = $this->param;
+        $data = $deviceModel->setTime($param);
+        if (!$data) {
+            return resultArray(['error' => $deviceModel->getError()]);
+        } 
+        return resultArray(['data' => 'Delete success']);
+    }
 }
  

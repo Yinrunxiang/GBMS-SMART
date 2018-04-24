@@ -9,29 +9,28 @@ namespace app\admin\model;
 
 use think\Model;
 
-class Common extends Model 
+class Common extends Model
 {
-	
+
 	/**
 	 * [getDataList 获取数据]
 	 * @param     string                   $id [主键]
 	 * @return    [array]                       
 	 */
 	public function getDataList($keywords, $page, $limit)
-    {
-        $list = $this
-            ->select();
-        $data['list'] = $list;
-        return $data;
-    }
+	{
+		$data = $this
+			->select();
+		return $data;
+	}
 	/**
 	 * [getDataById 根据主键获取详情]
 	 * @param     string                   $id [主键]
 	 * @return    [array]                       
 	 */
-	public function getDataById($id = '')
+	public function getDataById($param)
 	{
-		$data = $this->get($id);
+		$data = $this->get($param['id']);
 		if (!$data) {
 			$this->error = 'This data is not available';
 			return false;
@@ -56,7 +55,7 @@ class Common extends Model
 		try {
 			$this->data($param)->allowField(true)->save();
 			return true;
-		} catch(\Exception $e) {
+		} catch (\Exception $e) {
 			$this->error = 'Add failure';
 			return false;
 		}
@@ -68,9 +67,9 @@ class Common extends Model
 	 * @param     [type]                   $id    [description]
 	 * @return    [type]                          [description]
 	 */
-	public function updateDataById($param, $id)
+	public function updateDataById($param)
 	{
-		$checkData = $this->get($id);
+		$checkData = $this->get($param['id']);
 		if (!$checkData) {
 			$this->error = 'This data is not available';
 			return false;
@@ -84,9 +83,9 @@ class Common extends Model
 		}
 
 		try {
-			$this->allowField(true)->save($param, [$this->getPk() => $id]);
+			$this->allowField(true)->save($param, [$this->getPk() => $param['id']]);
 			return true;
-		} catch(\Exception $e) {
+		} catch (\Exception $e) {
 			$this->error = 'Update failure';
 			return false;
 		}
@@ -98,26 +97,19 @@ class Common extends Model
 	 * @param     boolean                  $delSon [是否删除子孙数据]
 	 * @return    [type]                           [description]
 	 */
-	public function delDataById($id = '', $delSon = false)
+	public function delDataById($param)
 	{
 
 		$this->startTrans();
 		try {
-			$this->where($this->getPk(), $id)->delete();
-			if ($delSon && is_numeric($id)) {
-				// 删除子孙
-				$childIds = $this->getAllChild($id);
-				if($childIds){
-					$this->where($this->getPk(), 'in', $childIds)->delete();
-				}
-			}
+			$this->where($this->getPk(), $param['id'])->delete();
 			$this->commit();
 			return true;
-		} catch(\Exception $e) {
+		} catch (\Exception $e) {
 			$this->error = 'Delete failure';
 			$this->rollback();
 			return false;
-		}		
+		}
 	}
 
 	/**
@@ -126,8 +118,9 @@ class Common extends Model
 	 * @param     boolean                 $delSon [是否删除子孙数据]
 	 * @return    [type]                          [description]
 	 */
-	public function delDatas($ids = [], $delSon = false)
+	public function delDatas($param)
 	{
+		$ids = $param['ids'];
 		if (empty($ids)) {
 			$this->error = 'Please select data';
 			return false;
@@ -149,55 +142,10 @@ class Common extends Model
 		} catch (\Exception $e) {
 			$this->error = 'Delete failure';
 			return false;
-		}		
+		}
 
 	}
 
-	/**
-	 * [enableDatas 批量启用、禁用]
-	 * @param     string                   $ids    [主键数组]
-	 * @param     integer                  $status [状态1启用0禁用]
-	 * @param     [boolean]                $delSon [是否删除子孙数组]
-	 * @return    [type]                           [description]
-	 */
-	public function enableDatas($ids = [], $status = 1, $delSon = false)
-	{
-		if (empty($ids)) {
-			$this->error = 'Please select data';
-			return false;
-		}
-
-		// 查找所有子元素
-		if ($delSon && $status === '0') {
-			foreach ($ids as $k => $v) {
-				$childIds = $this->getAllChild($v);
-				$ids = array_merge($ids, $childIds);
-			}
-			$ids = array_unique($ids);
-		}
-		try {
-			$this->where($this->getPk(),'in',$ids)->setField('status', $status);
-			return true;
-		} catch (\Exception $e) {
-			$this->error = 'implement failure';
-			return false;
-		}
-	}
-
-	/**
-	 * 获取所有子孙
-	 */
-	public function getAllChild($id, &$data = [])
-	{
-		$map['pid'] = $id;
-		$childIds = $this->where($map)->column($this->getPk());
-		if (!empty($childIds)) {
-			foreach ($childIds as $v) {
-				$data[] = $v;
-				$this->getAllChild($v, $data);
-			}
-		}
-		return $data;
-	}		
+	
 
 }
