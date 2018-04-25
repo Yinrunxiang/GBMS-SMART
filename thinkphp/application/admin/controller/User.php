@@ -10,7 +10,7 @@ namespace app\admin\controller;
 class User extends ApiCommon
 {
 
-    public function index()
+    public function login()
     {
         $userModel = model('User');
         $param = $this->param;

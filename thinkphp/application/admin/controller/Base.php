@@ -14,45 +14,45 @@ use think\Request;
 class Base extends Common
 {
     public function login()
-    {   
+    {
         $userModel = model('User');
         $param = $this->param;
         $name = $param['name'];
         $password = $param['password'];
-//        $verifyCode = !empty($param['verifyCode'])? $param['verifyCode']: '';
-        $isRemember = !empty($param['isRemember'])? $param['isRemember']: '';
+        //$verifyCode = !empty($param['verifyCode'])? $param['verifyCode']: '';
+        $isRemember = !empty($param['isRemember']) ? $param['isRemember'] : '';
         $data = $userModel->login($name, $password, $isRemember);
         if (!$data) {
             return resultArray(['error' => $userModel->getError()]);
-        } 
+        }
         return resultArray(['data' => $data]);
     }
 
     public function relogin()
-    {   
+    {
         $userModel = model('User');
         $param = $this->param;
         $data = decrypt($param['rememberKey']);
         $name = $data['name'];
         $password = $data['password'];
 
-        $data = $userModel->login($name, $password,  true, true);
+        $data = $userModel->login($name, $password, true, true);
         if (!$data) {
             return resultArray(['error' => $userModel->getError()]);
-        } 
+        }
         return resultArray(['data' => $data]);
-    }    
+    }
 
     public function logout()
     {
         $param = $this->param;
-        cache('Auth_'.$param['authkey'], null);
-        return resultArray(['data'=>'Exit successfully']);
+        cache('Auth_' . $param['authkey'], null);
+        return resultArray(['data' => 'Exit successfully']);
     }
 
     public function getConfigs()
     {
-        $systemConfig = cache('DB_CONFIG_DATA'); 
+        $systemConfig = cache('DB_CONFIG_DATA');
         if (!$systemConfig) {
             //获取所有系统配置
             $systemConfig = model('admin/SystemConfig')->getDataList();
@@ -78,7 +78,7 @@ class Base extends Common
         $data = $userModel->setInfo($auth_key, $old_pwd, $new_pwd);
         if (!$data) {
             return resultArray(['error' => $userModel->getError()]);
-        } 
+        }
         return resultArray(['data' => $data]);
     }
 
@@ -86,7 +86,7 @@ class Base extends Common
     public function miss()
     {
         if (Request::instance()->isOptions()) {
-            return ;
+            return;
         } else {
             echo 'Smart-hospital接口';
         }

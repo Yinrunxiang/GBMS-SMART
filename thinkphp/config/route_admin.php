@@ -19,7 +19,14 @@ return [
         'admin/marco' => 'admin/marco',
         'admin/schedule' => 'admin/schedule',
     ],
-
+    // 【基础】登录
+	'admin/base/login' => ['admin/base/login', ['method' => 'POST']],
+	// 【基础】记住登录
+	'admin/base/relogin'	=> ['admin/base/relogin', ['method' => 'POST']],
+	// 【基础】修改密码
+	'admin/base/setInfo' => ['admin/base/setInfo', ['method' => 'POST']],
+	// 【基础】退出登录
+	'admin/base/logout' => ['admin/base/logout', ['method' => 'POST']],
 	// 【设备】修改设备位置
     'admin/device/updateLocationById' => ['admin/device/updateLocationById', ['method' => 'POST']],
 	// 【设备】修改LED颜色
@@ -38,7 +45,6 @@ return [
     'admin/macro/run' => ['admin/macro/run', ['method' => 'POST']],
     // 【Schedule】根据命令ID删除数据
     'admin/macro/delCommandById' => ['admin/macro/delCommandById', ['method' => 'POST']],
-
 	// MISS路由
     '__miss__' => 'admin/base/miss',
 ];

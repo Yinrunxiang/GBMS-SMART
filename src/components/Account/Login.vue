@@ -17,104 +17,92 @@
 </template>
 
 <script>
-import http from '../../assets/js/http'
+import http from "../../assets/js/http";
 
 export default {
   data() {
     return {
-      systemName: 'SMART GBMS',
+      systemName: "SMART GBMS",
       loading: false,
       form: {
-        username: '',
-        password: '',
+        username: "",
+        password: ""
       },
       rules2: {
         username: [
-          { required: true, message: 'Please enter your account', trigger: 'blur' }
+          {
+            required: true,
+            message: "Please enter your account",
+            trigger: "blur"
+          }
         ],
         password: [
-          { required: true, message: 'Please enter your password', trigger: 'blur' }
+          {
+            required: true,
+            message: "Please enter your password",
+            trigger: "blur"
+          }
         ]
       },
       checked: false
-    }
+    };
   },
   methods: {
     handleSubmit2(form) {
-      if (this.loading) return
-      this.$refs.form.validate((valid) => {
+      if (this.loading) return;
+      this.$refs.form.validate(valid => {
         if (valid) {
-          this.loading = !this.loading
-
-          let data = {
-            params: {
-              username: this.form.username,
-              password: this.form.password
-            }
-
-          }
+          this.loading = !this.loading;
+          let data = {};
+            data.username = this.form.username;
+            data.password = this.form.password;
           if (this.checked) {
-            data.params.isRemember = 1
+            data.isRemember = 1;
           } else {
-            data.params.isRemember = 0
+            data.isRemember = 0;
           }
-          this.apiGet('account/account.php?action=login', data).then((res) => {
-            if (!res[0]) {
-              this.loading = !this.loading
-              _g.toastMsg('error', "Login error")
+          this.apiPost("admin/base/login", data).then(res => {
+            if (res.code != 200) {
+              this.loading = !this.loading;
+              this.handleError(res);
             } else {
-              // this.refreshVerify()
               if (this.checked) {
-                Cookies.set('rememberPwd', true, { expires: 1 })
+                Cookies.set("rememberPwd", true, { expires: 1 });
               }
-              this.resetCommonData(res[0])
-              _g.toastMsg('success', 'Login success')
+              this.resetCommonData(res.data);
+              _g.toastMsg("success", "登录成功");
             }
-          })
+          });
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
     checkIsRememberPwd() {
-      if (Cookies.get('rememberPwd')) {
-        var username = Lockr.get('username')
-        var password = Lockr.get('password')
-        var database_name = Lockr.get('database_name')
+      if (Cookies.get("rememberPwd")) {
         let data = {
-          params: {
-            username: username,
-            password: password,
-            database_name:database_name,
-          }
-
-        }
-        this.apiGet('account/account.php?action=login', data).then((res) => {
-          // console.log(res)
-          if (res[0]) {
-            this.resetCommonData(res[0])
-          }
-
-        })
+          rememberKey: Lockr.get("rememberKey")
+        };
+        this.apiPost("admin/base/relogin", data).then(res => {
+          this.handelResponse(res, data => {
+            this.resetCommonData(data);
+          });
+        });
       }
     }
   },
   created() {
-    console.log('login')
-    // var username = Lockr.get('username')
-    // var password = Lockr.get('password')
-    // if (username )
-    this.checkIsRememberPwd()
+    this.checkIsRememberPwd();
   },
   mounted() {
-    // window.addEventListener('keyup', (e) => {
-    //   if (e.keyCode === 13) {
-    //     this.handleSubmit2('form')
-    //   }
-    // })
+    window.addEventListener("keyup", e => {
+      if (e.keyCode === 13) {
+        this.handleSubmit2("form");
+      }
+    });
   },
   mixins: [http]
-}
+};
 </script>
 
 <style>
@@ -132,10 +120,10 @@ export default {
   -moz-border-radius: 5px;
   background-clip: padding-box;
   margin-bottom: 20px;
-  background-color: #F9FAFC;
+  background-color: #f9fafc;
   margin: 120px auto;
   width: 400px;
-  border: 2px solid #8492A6;
+  border: 2px solid #8492a6;
 }
 
 .title {

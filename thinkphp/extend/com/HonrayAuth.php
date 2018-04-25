@@ -132,7 +132,7 @@ class HonrayAuth{
             //规则列表结果保存到缓存
             $cache_info = cache('Auth_'.$this->auth_key);
             $cache_info['_AUTH_LIST_'] = $authList;
-            cache('Auth_'.$this->auth_key, $cache_info, config('LOGIN_SESSION_VALID'));
+            cache('Auth_'.$this->auth_key, $cache_info, 2592000);
         }
 
         return $authList; 
@@ -171,7 +171,7 @@ class HonrayAuth{
 
         //规则列表结果保存到缓存
         $cache['_AUTH_LIST_'] = $authList;
-        cache('Auth_'.$this->auth_key, $cache, config('LOGIN_SESSION_VALID'));
+        cache('Auth_'.$this->auth_key, $cache, 2592000);
         return $cache['_AUTH_LIST_'];
     }
 }

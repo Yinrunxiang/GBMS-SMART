@@ -18,10 +18,31 @@ class User extends Common
      * 为了数据库的整洁，同时又不影响Model和Controller的名称
      * 我们约定每个模块的数据表都加上相同的前缀，比如微信模块用weixin作为数据表前缀
      */
+    protected $connection = [
+        // 数据库类型
+        'type'        => 'mysql',
+        // 数据库连接DSN配置
+        'dsn'         => '',
+        // 服务器地址
+        'hostname'    => '127.0.0.1',
+        // 数据库名
+        'database'    => 'user',
+        // 数据库用户名
+        'username'    => 'root',
+        // 数据库密码
+        'password'    => 'root',
+        // 数据库连接端口
+        'hostport'    => '3306',
+        // 数据库连接参数
+        'params'      => [],
+        // 数据库编码默认采用utf8
+        'charset'     => 'utf8',
+        // 数据库表前缀
+        'prefix'      => '',
+    ];
     protected $name = 'user';
     protected $createTime = 'create_time';
     protected $updateTime = false;
-    protected $autoWriteTimestamp = true;
     protected $insert = [
         'status' => 1,
     ];
@@ -90,12 +111,6 @@ class User extends Common
     public function createData($param)
     {
 
-        if (empty($param['type'])) {
-
-            $this->error = 'Please check the user type';
-            return false;
-        }
-
         // 验证
         $validate = validate($this->name);
         if (!$validate->check($param)) {
@@ -124,20 +139,17 @@ class User extends Common
      * 通过id修改用户
      * @param  array $param [description]
      */
-    public function updateDataById($param, $id)
+    public function updateDataById($param)
     {
+        $id = $param['id'];
         // 不能操作超级管理员
-        if ($id == 1) {
-            $this->error = 'Illegal operation';
-            return false;
-        }
-        // $checkData = $this->get($id);
-        // if (!$checkData) {
-        //     $this->error = 'This data is not available';
+        // if ($id == 1) {
+        //     $this->error = 'Illegal operation';
         //     return false;
         // }
-        if (empty($param['type'])) {
-            $this->error = 'Please check the user type';
+        $checkData = $this->get($id);
+        if (!$checkData) {
+            $this->error = 'This data is not available';
             return false;
         }
         $this->startTrans();
@@ -167,10 +179,10 @@ class User extends Common
      * @param     Boolean $type [是否重复登录]
      * @return    [type]                               [description]
      */
-    public function login($tel, $password, $isRemember = false, $type = false)
+    public function login($username, $password, $isRemember = false, $type = false)
     {
-        if (!$tel) {
-            $this->error = 'Account cannot be empty';
+        if (!$username) {
+            $this->error = 'Username cannot be empty';
             return false;
         }
         if (!$password) {
@@ -189,7 +201,7 @@ class User extends Common
 //            }
 //        }
 
-        $map['tel'] = $tel;
+        $map['username'] = $username;
         $userInfo = $this->where($map)->find();
         if (!$userInfo) {
             $this->error = 'Account does not exist';
@@ -214,10 +226,10 @@ class User extends Common
         session_start();
         $info['userInfo'] = $userInfo;
         $info['sessionId'] = session_id();
-        $authKey = user_md5($userInfo['tel'] . $userInfo['password'] . $info['sessionId']);
+        $authKey = user_md5($userInfo['username'] . $userInfo['password'] . $info['sessionId']);
         $info['authKey'] = $authKey;
         cache('Auth_' . $authKey, null);
-        cache('Auth_' . $authKey, $info, config('LOGIN_SESSION_VALID'));
+        cache('Auth_' . $authKey, $info, 2592000);
         // 返回信息
         $data['authKey'] = $authKey;
         $data['sessionId'] = $info['sessionId'];
@@ -266,7 +278,7 @@ class User extends Common
             $cache['userInfo'] = $userInfo;
             $cache['authKey'] = user_md5($userInfo['tel'] . $userInfo['password'] . session_id());
             cache('Auth_' . $auth_key, null);
-            cache('Auth_' . $cache['authKey'], $cache, config('LOGIN_SESSION_VALID'));
+            cache('Auth_' . $cache['authKey'], $cache, 2592000);
             return $cache['authKey'];//把auth_key传回给前端
         }
 

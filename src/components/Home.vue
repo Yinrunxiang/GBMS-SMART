@@ -224,62 +224,32 @@ export default {
       }
     },
     getAcBreed() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/ac_breed.php", data).then(res => {
+      this.apiGet("admin/ac_breed", {}).then(res => {
         this.$store.dispatch("setAcBreed", res);
       });
     },
     getLightBreed() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/light_breed.php", data).then(res => {
+      this.apiGet("admin/light_breed", {}).then(res => {
         this.$store.dispatch("setLightBreed", res);
       });
     },
     getLedBreed() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/led_breed.php", data).then(res => {
+      this.apiGet("admin/led_breed", {}).then(res => {
         this.$store.dispatch("setLedBreed", res);
       });
     },
     getAddress() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/address.php", data).then(res => {
+      this.apiGet("admin/address", {}).then(res => {
         this.$store.dispatch("setAddress", res);
       });
     },
     getFloor() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/floor.php", data).then(res => {
+      this.apiGet("admin/floor", {}).then(res => {
         this.$store.dispatch("setFloor", res);
       });
     },
     getRoom() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/room.php", data).then(res => {
+      this.apiGet("admin/room", {}).then(res => {
         this.$store.dispatch("setRoom", res);
       });
     },
@@ -650,7 +620,7 @@ export default {
       }
     };
     this.updateDatabase();
-    this.apiGet("device/index.php", data).then(res => {
+    this.apiGet("admin/device", data).then(res => {
       this.$store.dispatch("setDevices", res);
       // var devices = [];
       var maxid = res[0].maxid;

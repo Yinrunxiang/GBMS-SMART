@@ -111,10 +111,15 @@ const apiMethods = {
       }
     },
     resetCommonData(data) {
-      Lockr.set('username', data.username)            // 用户信息
-      Lockr.set('password', data.password)            // 记住密码的加密字符串 
-      Lockr.set('database_name', data.database_name)            // 数据库名 
-      Lockr.set('port', data.port)            // UDP端口号 
+      // Lockr.set('username', data.username)            // 用户信息
+      // Lockr.set('password', data.password)            // 记住密码的加密字符串 
+      // Lockr.set('database_name', data.database_name)            // 数据库名 
+      // Lockr.set('port', data.port)            // UDP端口号 
+      Lockr.set('authKey', data.authKey)              // 权限认证
+      Lockr.set('rememberKey', data.rememberKey)      // 记住密码的加密字符串
+      Lockr.set('userInfo', data.userInfo)            // 用户信息
+      Lockr.set('sessionId', data.sessionId)          // 用户sessionid
+      window.axios.defaults.headers.authKey = Lockr.get('authKey')
       // setTimeout(() => {
         router.replace('/home/global')
       // }, 500)
@@ -141,12 +146,12 @@ const apiMethods = {
       //   routerUrl = data.menusList[0].child[0].child[0].url
       // }
       // setTimeout(() => {
-        // let path = this.$route.path
-        // if (routerUrl != path) {
-        // router.replace('/home/global')
-        // } else {
-        //   _g.shallowRefresh(this.$route.name)
-        // }
+      //   let path = this.$route.path
+      //   if (routerUrl != path) {
+      //   router.replace('/home/global')
+      //   } else {
+      //     _g.shallowRefresh(this.$route.name)
+      //   }
       // }, 500)
     },
     reAjax(url, data) {
