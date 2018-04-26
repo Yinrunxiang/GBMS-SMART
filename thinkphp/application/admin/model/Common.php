@@ -12,38 +12,38 @@ use think\Model;
 class Common extends Model
 { 
     // 设置当前模型的数据库连接
-	protected $connection = [];
-	public function _initialize()
-	{
-		$connection = [
-			// 数据库类型
-			'type' => 'mysql',
-			// 数据库连接DSN配置
-			'dsn' => '',
-			// 服务器地址
-			'hostname' => '127.0.0.1',
-			// 数据库名
-			'database' => $GLOBALS['userInfo']['database'],
-			// 数据库用户名
-			'username' => 'root',
-			// 数据库密码
-			'password' => 'root',
-			// 数据库连接端口
-			'hostport' => '3306',
-			// 数据库连接参数
-			'params' => [],
-			// 数据库编码默认采用utf8
-			'charset' => 'utf8',
-			// 数据库表前缀
-			'prefix' => '',
-		];
-	}
+	// protected $connection = [];
+	// public function _initialize()
+	// {
+	// 	$connection = [
+	// 		// 数据库类型
+	// 		'type' => 'mysql',
+	// 		// 数据库连接DSN配置
+	// 		'dsn' => '',
+	// 		// 服务器地址
+	// 		'hostname' => '127.0.0.1',
+	// 		// 数据库名
+	// 		'database' => 'admin',
+	// 		// 数据库用户名
+	// 		'username' => 'root',
+	// 		// 数据库密码
+	// 		'password' => 'root',
+	// 		// 数据库连接端口
+	// 		'hostport' => '3306',
+	// 		// 数据库连接参数
+	// 		'params' => [],
+	// 		// 数据库编码默认采用utf8
+	// 		'charset' => 'utf8',
+	// 		// 数据库表前缀
+	// 		'prefix' => '',
+	// 	];
+	// }
 	/**
 	 * [getDataList 获取数据]
 	 * @param     string                   $id [主键]
 	 * @return    [array]                       
 	 */
-	public function getDataList($keywords, $page, $limit)
+	public function getDataList($keywords = "", $page=0, $limit=0)
 	{
 		$data = $this
 			->select();

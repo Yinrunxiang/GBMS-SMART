@@ -1,9 +1,9 @@
 const apiMethods = {
   methods: {
     apiGet(url, data) {
-      if(Lockr.get('database_name')){
-        data.params.database_name = Lockr.get('database_name')
-      }
+      // if(Lockr.get('database_name')){
+      //   data.params.database_name = Lockr.get('database_name')
+      // }
       return new Promise((resolve, reject) => {
         axios.get(url, data).then((response) => {
           resolve(response.data)
@@ -18,9 +18,9 @@ const apiMethods = {
       })
     },
     apiPost(url, data) {
-      if(Lockr.get('database_name')){
-        data.database_name = Lockr.get('database_name')
-      }
+      // if(Lockr.get('database_name')){
+      //   data.database_name = Lockr.get('database_name')
+      // }
       return new Promise((resolve, reject) => {
         axios.post(url, data).then((response) => {
           resolve(response.data)

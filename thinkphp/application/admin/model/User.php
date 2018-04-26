@@ -8,16 +8,12 @@
 namespace app\admin\model;
 
 use think\Db;
-use app\admin\model\Common;
+// use app\admin\model\Common;
 use com\verify\HonrayVerify;
 
-class User extends Common
+class User extends \think\Model
 {
-
-    /**
-     * 为了数据库的整洁，同时又不影响Model和Controller的名称
-     * 我们约定每个模块的数据表都加上相同的前缀，比如微信模块用weixin作为数据表前缀
-     */
+    protected $table = 'user';
     protected $connection = [
         // 数据库类型
         'type'        => 'mysql',
@@ -117,15 +113,10 @@ class User extends Common
             $this->error = $validate->getError();
             return false;
         }
-        $max_id = $this->alias('user')->max('user_id');
-        $new_id = $max_id? $max_id+1:1;
-        $param['user_id'] = $new_id;
         $this->startTrans();
         try {
             $param['password'] = user_md5($param['password']);
             $this->data($param)->allowField(true)->save();
-            $doctor['user_id'] =  $new_id;
-            Db::name($param['type'])->insert($doctor);
             $this->commit();
             return true;
         } catch (\Exception $e) {

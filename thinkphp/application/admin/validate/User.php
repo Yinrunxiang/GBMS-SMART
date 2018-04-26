@@ -8,16 +8,13 @@ use think\Validate;
 class User extends Validate{
 
 	protected $rule = array(
-        'tel'  		=> 'require|length:11|unique:user',
-		'name'  		=> 'require|length:1,12',
+		'username'  		=> 'require|length:1,12|unique:user',
 		'password'      	=> 'require',
 	);
 	protected $message = array(
-        'tel.require'    	=> 'Mobile phone number must be filled in',
-        'tel.length'    	=> 'The number of mobile phone is 11 bits',
-        'tel.unique'    	=> 'Mobile phone number already exists',
-		'name.require'    	=> 'User name must be filled in',
-		'name.length'    	=> 'The longest user name is 12 bits',
+		'username.require'    	=> 'Username must be filled in',
+		'username.length'    	=> 'The longest username is 12 bits',
+		'username.unique'    	=> 'Username already exists',
 		'password.require'    	=> 'Password must be filled in',
 	);
 }

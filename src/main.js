@@ -32,10 +32,13 @@ import './assets/css/base.css'
 
 axios.defaults.baseURL = HOST
 axios.defaults.timeout = 1000 * 15
-// axios.defaults.headers.authKey = Lockr.get('authKey')
-// axios.defaults.headers.sessionId = Lockr.get('sessionId')
+axios.defaults.headers.authKey = Lockr.get('authKey')
+axios.defaults.headers.sessionId = Lockr.get('sessionId')
+// axios.defaults.headers['Access-Control-Allow-Origin'] = '*'
+// axios.defaults.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
+// axios.defaults.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, authKey, sessionId'
 axios.defaults.headers['Content-Type'] = 'application/json'
-
+// axios.defaults.headers['Content-Type'] = 'application/json'
 const router = new VueRouter({
   mode: 'history',
   base: __dirname,

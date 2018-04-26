@@ -613,14 +613,9 @@ export default {
     this.getAddress();
     this.getFloor();
     this.getRoom();
-
-    const data = {
-      params: {
-        action: "search"
-      }
-    };
     this.updateDatabase();
-    this.apiGet("admin/device", data).then(res => {
+    this.apiGet("admin/device", {}).then(res => {
+      console.log(res);
       this.$store.dispatch("setDevices", res);
       // var devices = [];
       var maxid = res[0].maxid;

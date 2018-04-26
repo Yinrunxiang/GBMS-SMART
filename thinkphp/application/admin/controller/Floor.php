@@ -7,7 +7,7 @@
 
 namespace app\admin\controller;
 
-class Room extends ApiCommon
+class Floor extends ApiCommon
 {
 
     public function index()

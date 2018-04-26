@@ -17,11 +17,11 @@ class Base extends Common
     {
         $userModel = model('User');
         $param = $this->param;
-        $name = $param['name'];
+        $username = $param['username'];
         $password = $param['password'];
         //$verifyCode = !empty($param['verifyCode'])? $param['verifyCode']: '';
         $isRemember = !empty($param['isRemember']) ? $param['isRemember'] : '';
-        $data = $userModel->login($name, $password, $isRemember);
+        $data = $userModel->login($username, $password, $isRemember);
         if (!$data) {
             return resultArray(['error' => $userModel->getError()]);
         }
@@ -37,6 +37,17 @@ class Base extends Common
         $password = $data['password'];
 
         $data = $userModel->login($name, $password, true, true);
+        if (!$data) {
+            return resultArray(['error' => $userModel->getError()]);
+        }
+        return resultArray(['data' => $data]);
+    }
+
+    public function register()
+    {
+        $userModel = model('User');
+        $param = $this->param;
+        $data = $userModel->createData($param);
         if (!$data) {
             return resultArray(['error' => $userModel->getError()]);
         }

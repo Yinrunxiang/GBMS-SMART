@@ -8,7 +8,7 @@ use think\Validate;
 class Medicine extends Validate{
 
 	protected $rule = array(
-		'name'      	=> 'require',
+	'name'      	=> 'require',
         'type'      	=> 'require',
 	);
 	protected $message = array(
