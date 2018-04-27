@@ -6,7 +6,7 @@
 // +----------------------------------------------------------------------
 
 namespace app\admin\controller;
-
+use think\Db;
 use com\verify\HonrayVerify;
 use app\common\controller\Common;
 use think\Request;
@@ -33,10 +33,10 @@ class Base extends Common
         $userModel = model('User');
         $param = $this->param;
         $data = decrypt($param['rememberKey']);
-        $name = $data['name'];
+        $username = $data['username'];
         $password = $data['password'];
 
-        $data = $userModel->login($name, $password, true, true);
+        $data = $userModel->login($username, $password, true, true);
         if (!$data) {
             return resultArray(['error' => $userModel->getError()]);
         }
@@ -93,13 +93,27 @@ class Base extends Common
         return resultArray(['data' => $data]);
     }
 
+    public function updateDataBase()
+    {
+        $version = '1.6.1';
+        $selectVersion = Db::name('udp')->field('udp_flag')->select();
+        if (count($selectVersion)>0 && $selectVersion[0]["version"] == $version) return;
+        $updateVersion = "";
+        if (count($selectVersion)>0) {
+            Db::name('udp')->data(['udp_id'=>'1','udp_flag'=>$version])->update();
+        } else {
+            Db::name('udp')->data(['udp_id'=>'1','udp_flag'=>$version])->insert();
+        }
+        
+    }
+
     // miss 路由：处理没有匹配到的路由规则
     public function miss()
     {
         if (Request::instance()->isOptions()) {
             return;
         } else {
-            echo 'Smart-hospital接口';
+            echo 'Smart-GBMS Interface';
         }
     }
 }

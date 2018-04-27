@@ -70,7 +70,7 @@ export default {
                 Cookies.set("rememberPwd", true, { expires: 1 });
               }
               this.resetCommonData(res.data);
-              _g.toastMsg("success", "登录成功");
+              _g.toastMsg("success", "Login success");
             }
           });
         } else {

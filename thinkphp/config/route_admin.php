@@ -12,9 +12,9 @@ return [
         'admin/address' => 'admin/address',
         'admin/floor' => 'admin/floor',
         'admin/room' => 'admin/room',
-        'admin/acBreed' => 'admin/acBreed',
-        'admin/ledBreed' => 'admin/ledBreed',
-        'admin/lightBreed' => 'admin/lightBreed',
+        'admin/ac_breed' => 'admin/ac_breed',
+        'admin/led_breed' => 'admin/led_breed',
+        'admin/light_breed' => 'admin/light_breed',
         'admin/mood' => 'admin/mood',
         'admin/marco' => 'admin/marco',
         'admin/schedule' => 'admin/schedule',
@@ -28,7 +28,9 @@ return [
 	// 【基础】退出登录
     'admin/base/logout' => ['admin/base/logout', ['method' => 'POST']],
     // 【基础】退出登录
-	'admin/base/register' => ['admin/base/register', ['method' => 'POST']],
+    'admin/base/register' => ['admin/base/register', ['method' => 'POST']],
+    // 【基础】更新数据库
+	'admin/base/updateDatabase' => ['admin/base/updateDatabase', ['method' => 'POST']],
 	// 【设备】修改设备位置
     'admin/device/updateLocationById' => ['admin/device/updateLocationById', ['method' => 'POST']],
 	// 【设备】修改LED颜色

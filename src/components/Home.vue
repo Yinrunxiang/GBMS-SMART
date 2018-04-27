@@ -180,7 +180,7 @@ export default {
       logo_type: null,
       dataReady: false,
       showChange: false,
-      version:"",
+      version: ""
     };
   },
   methods: {
@@ -200,9 +200,7 @@ export default {
         confirmButtonText: "Yes",
         cancelButtonText: "No"
       }).then(() => {
-        Lockr.rm("username");
-        Lockr.rm("password");
-        Lockr.rm("database_name");
+        Lockr.rm("rememberPwd");
         Cookies.remove("rememberPwd");
         _g.toastMsg("success", "Exit success");
         setTimeout(() => {
@@ -225,42 +223,51 @@ export default {
     },
     getAcBreed() {
       this.apiGet("admin/ac_breed", {}).then(res => {
-        this.$store.dispatch("setAcBreed", res);
+        this.handelResponse(res, data => {
+          this.$store.dispatch("setAcBreed", data);
+        });
       });
     },
     getLightBreed() {
       this.apiGet("admin/light_breed", {}).then(res => {
-        this.$store.dispatch("setLightBreed", res);
+        this.handelResponse(res, data => {
+          this.$store.dispatch("setLightBreed", data);
+        });
       });
     },
     getLedBreed() {
       this.apiGet("admin/led_breed", {}).then(res => {
-        this.$store.dispatch("setLedBreed", res);
+        this.handelResponse(res, data => {
+          this.$store.dispatch("setLedBreed", data);
+        });
       });
     },
     getAddress() {
       this.apiGet("admin/address", {}).then(res => {
-        this.$store.dispatch("setAddress", res);
+        this.handelResponse(res, data => {
+          this.$store.dispatch("setAddress", data);
+        });
       });
     },
     getFloor() {
       this.apiGet("admin/floor", {}).then(res => {
-        this.$store.dispatch("setFloor", res);
+        this.handelResponse(res, data => {
+          this.$store.dispatch("setFloor", data);
+        });
       });
     },
     getRoom() {
       this.apiGet("admin/room", {}).then(res => {
-        this.$store.dispatch("setRoom", res);
+        this.handelResponse(res, data => {
+          this.$store.dispatch("setRoom", data);
+        });
       });
     },
     updateDatabase() {
-      const data = {
-        params: {
-          action: "updateDatabase"
-        }
-      };
-      this.apiGet("device/index.php?updateDatabase", data).then(res => {
-        this.version = res
+      this.apiGet("admin/base/updateDatabase", data).then(res => {
+        this.handelResponse(res, data => {
+          this.version = data;
+        });
       });
     },
     countryArr() {
@@ -615,18 +622,20 @@ export default {
     this.getRoom();
     this.updateDatabase();
     this.apiGet("admin/device", {}).then(res => {
-      console.log(res);
-      this.$store.dispatch("setDevices", res);
-      // var devices = [];
-      var maxid = res[0].maxid;
-      this.$store.dispatch("setMaxid", maxid);
-      // for (var device of res) {
-      //   if (device.status == "enabled") {
-      //     devices.push(device);
-      //   }
-      // }
-      // this.devices = devices
-      this.countryArr();
+      this.handelResponse(res, data => {
+        console.log(data)
+        this.$store.dispatch("setDevices", data);
+        // var devices = [];
+        var maxid = data[0].maxid;
+        this.$store.dispatch("setMaxid", maxid);
+        // for (var device of res) {
+        //   if (device.status == "enabled") {
+        //     devices.push(device);
+        //   }
+        // }
+        // this.devices = devices
+        this.countryArr();
+      });
     });
   },
   components: {

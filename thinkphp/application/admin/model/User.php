@@ -180,7 +180,7 @@ class User extends \think\Model
             $this->error = 'Password cannot be empty';
             return false;
         }
-//        if (config('IDENTIFYING_CODE') && !$type) {
+//       if (config('IDENTIFYING_CODE') && !$type) {
 //            if (!$verifyCode) {
 //                $this->error = '验证码不能为空';
 //                return false;
@@ -208,7 +208,7 @@ class User extends \think\Model
         }
 
         if ($isRemember || $type) {
-            $secret['tel'] = $tel;
+            $secret['username'] = $username;
             $secret['password'] = $password;
             $data['rememberKey'] = encrypt($secret);
         }

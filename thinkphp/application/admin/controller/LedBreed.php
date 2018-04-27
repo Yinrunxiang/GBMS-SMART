@@ -7,82 +7,82 @@
 
 namespace app\admin\controller;
 
-class Device extends ApiCommon
+class LedBreed extends ApiCommon
 {
 
     public function index()
     {   
-        $deviceModel = model('Device');
+        $ledBreedModel = model('LedBreed');
         $param = $this->param;
         $keywords = !empty($param['keywords']) ? $param['keywords']: '';
         $page = !empty($param['page']) ? $param['page']: '';
         $limit = !empty($param['limit']) ? $param['limit']: '';    
-        $data = $deviceModel->getDataList($keywords, $page, $limit);
+        $data = $ledBreedModel->getDataList($keywords, $page, $limit);
         return resultArray(['data' => $data]);
     }
 
     public function read()
     {
-        $deviceModel = model('Device');
+        $ledBreedModel = model('LedBreed');
         $param = $this->param;
-        $data = $deviceModel->getDataById($param['id']);
+        $data = $ledBreedModel->getDataById($param['id']);
         if (!$data) {
-            return resultArray(['error' => $deviceModel->getError()]);
+            return resultArray(['error' => $ledBreedModel->getError()]);
         } 
         return resultArray(['data' => $data]);
     }
 
 //    public function save()
 //    {
-//        $deviceModel = model('Device');
+//        $ledBreedModel = model('LedBreed');
 //        $param = $this->param;
-//        $data = $deviceModel->createData($param);
+//        $data = $ledBreedModel->createData($param);
 //        if (!$data) {
-//            return resultArray(['error' => $deviceModel->getError()]);
+//            return resultArray(['error' => $ledBreedModel->getError()]);
 //        }
 //        return resultArray(['data' => 'Add success']);
 //    }
 
     public function update()
     {
-        $deviceModel = model('Device');
+        $ledBreedModel = model('LedBreed');
         $param = $this->param;
-        $data = $deviceModel->updateDataById($param, $param['id']);
+        $data = $ledBreedModel->updateDataById($param, $param['id']);
         if (!$data) {
-            return resultArray(['error' => $deviceModel->getError()]);
+            return resultArray(['error' => $ledBreedModel->getError()]);
         } 
         return resultArray(['data' => 'Update success']);
     }
 
     public function delete()
     {
-        $deviceModel = model('Device');
+        $ledBreedModel = model('LedBreed');
         $param = $this->param;
-        $data = $deviceModel->delDataById($param['id']);
+        $data = $ledBreedModel->delDataById($param['id']);
         if (!$data) {
-            return resultArray(['error' => $deviceModel->getError()]);
+            return resultArray(['error' => $ledBreedModel->getError()]);
         } 
         return resultArray(['data' => 'Delete success']);
     }
 
     public function deletes()
     {
-        $deviceModel = model('Device');
+        $ledBreedModel = model('LedBreed');
         $param = $this->param;
-        $data = $deviceModel->delDatas($param['ids']);
+        $data = $ledBreedModel->delDatas($param['ids']);
         if (!$data) {
-            return resultArray(['error' => $deviceModel->getError()]);
+            return resultArray(['error' => $ledBreedModel->getError()]);
         } 
         return resultArray(['data' => 'Delete success']);
     }
 
     public function enables()
     {
-        $deviceModel = model('Device');
+        $ledBreedModel = model('LedBreed');
         $param = $this->param;
-        $data = $deviceModel->enableDatas($param['ids'], $param['status']);
+        $data = $ledBreedModel->enableDatas($param['ids'], $param['status']);
         if (!$data) {
-            return resultArray(['error' => $deviceModel->getError()]);
+            return resultArray(['error' => $ledBreedModel->getError()]);
         } 
         return resultArray(['data' => 'Successful operation']);
     }
