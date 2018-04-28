@@ -264,11 +264,7 @@ export default {
       });
     },
     updateDatabase() {
-      this.apiGet("admin/base/updateDatabase", data).then(res => {
-        this.handelResponse(res, data => {
-          this.version = data;
-        });
-      });
+      this.apiGet("admin/base/updateDatabase", {}).then(res => {});
     },
     countryArr() {
       var countryArr = [];
@@ -623,7 +619,7 @@ export default {
     this.updateDatabase();
     this.apiGet("admin/device", {}).then(res => {
       this.handelResponse(res, data => {
-        console.log(data)
+        console.log(data);
         this.$store.dispatch("setDevices", data);
         // var devices = [];
         var maxid = data[0].maxid;
