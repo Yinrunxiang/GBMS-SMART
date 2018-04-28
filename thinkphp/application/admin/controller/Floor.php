@@ -1,8 +1,8 @@
 <?php
 // +----------------------------------------------------------------------
-// | Description: 系统用户
+// | Description: 楼层
 // +----------------------------------------------------------------------
-// | Author: linchuangbin <linchuangbin@honraytech.com>
+// | Author: Jensen
 // +----------------------------------------------------------------------
 
 namespace app\admin\controller;
@@ -12,14 +12,14 @@ class Floor extends ApiCommon
 
     public function index()
     {   
-        $roomModel = model('Room');
+        $roomModel = model('Floor');
         $data = $roomModel->getDataList();
         return resultArray(['data' => $data]);
     }
 
     public function read()
     {
-        $roomModel = model('Room');
+        $roomModel = model('Floor');
         $param = $this->param;
         $data = $roomModel->getDataById($param);
         if (!$data) {
@@ -30,7 +30,7 @@ class Floor extends ApiCommon
 
     public function update()
     {
-        $roomModel = model('Room');
+        $roomModel = model('Floor');
         $param = $this->param;
         $data = $roomModel->updateDataById($param);
         if (!$data) {
@@ -41,7 +41,7 @@ class Floor extends ApiCommon
     
     public function delete()
     {
-        $roomModel = model('Room');
+        $roomModel = model('Floor');
         $param = $this->param;
         $data = $roomModel->delDatas($param);
         if (!$data) {

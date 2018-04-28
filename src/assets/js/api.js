@@ -4,7 +4,7 @@ import led from "../../components/Content/devices/led/api";
 import curtain from "../../components/Content/devices/curtain/api";
 import music from "../../components/Content/devices/music/api";
 const api = {
-  apiGet(url, data) {
+  apiPost(url, data) {
     return new Promise((resolve, reject) => {
       axios.get(url, data).then((response) => {
         resolve(response.data)
@@ -21,12 +21,12 @@ const api = {
   //UDP重发机制
   sendUdp(device, data, type) {
     if (!type || type == "") {
-      this.apiGet("udp/sendUdp.php", data).then(res => {
+      this.apiPost("admin/udp/sendUdp", data).then(res => {
       });
     } else {
       var pass = false
       var index = 1
-      var operatorCode = data.params.operatorCodefst + data.params.operatorCodesec
+      var operatorCode = data.operatorCodefst + data.operatorCodesec
       operatorCode = _g.toHex(parseInt('0x' + operatorCode) + 1)
       if (operatorCode.length < 4) {
         var zero = ""
@@ -52,7 +52,7 @@ const api = {
           clearInterval(sendUdp);
           return;
         }
-        $this.apiGet("udp/sendUdp.php", data).then(res => {
+        $this.apiPost("admin/udp/sendUdp", data).then(res => {
         });
         index++
       }, 100);
@@ -65,12 +65,12 @@ const api = {
     var arrIndex = 0
     var sendUdp = function (device, data, type) {
       if (!type || type == "") {
-        this.apiGet("udp/sendUdp.php", data).then(res => {
+        this.apiPost("admin/udp/sendUdp", data).then(res => {
         });
       } else {
         var pass = false
         var index = 1
-        var operatorCode = data.params.operatorCodefst + data.params.operatorCodesec
+        var operatorCode = data.operatorCodefst + data.operatorCodesec
         operatorCode = _g.toHex(parseInt('0x' + operatorCode) + 1)
         if (operatorCode.length < 4) {
           var zero = ""
@@ -100,7 +100,7 @@ const api = {
             }
             return;
           }
-          $this.apiGet("udp/sendUdp.php", data).then(res => {
+          $this.apiPost("admin/udp/sendUdp", data).then(res => {
           });
           index++
         }, 100);

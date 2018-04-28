@@ -32,7 +32,6 @@ const commonFn = {
   },
   sendUdp(operatorCodefst, operatorCodesec, targetSubnetID, targetDeviceID, additionalContentData, macAddress, dest_address, dest_port) {
     let data = {
-      params: {
         operatorCodefst: operatorCodefst,
         operatorCodesec: operatorCodesec,
         targetSubnetID: targetSubnetID,
@@ -41,9 +40,8 @@ const commonFn = {
         macAddress: macAddress ? macAddress.split(".") : "",
         dest_address: dest_address ? dest_address.split(".") : "",
         dest_port: dest_port ? dest_port.split(".") : ""
-      }
     };
-    api.apiGet("udp/sendUdp.php", data).then(res => {
+    api.apiPost("admin/udp/sendUdp", data).then(res => {
       // console.log("res = ", _g.j2s(res));
       // _g.closeGlobalLoading()
     });

@@ -31,7 +31,7 @@ const musicApi = {
     //         dest_port: device.port ? device.port.split(".") : "",
     //     }
     // }
-    // api.apiGet('udp/sendUdp.php', data).then((res) => {
+    // api.apiGet('dmin/udp/sendUdp', data).then((res) => {
     //     // console.log('res = ', _g.j2s(res))
     //     // _g.closeGlobalLoading()
     // })
@@ -369,12 +369,12 @@ const musicApi = {
     var arrIndex = 0
     var sendUdp = function (device, data, type, key) {
       if (!type || type == "") {
-        api.apiGet("udp/sendUdp.php", data).then(res => {
+        api.apiPost("admin/udp/sendUdp", data).then(res => {
         });
       } else {
         var pass = false
         var index = 1
-        var operatorCode = data.params.operatorCodefst + data.params.operatorCodesec
+        var operatorCode = data.operatorCodefst + data.operatorCodesec
         operatorCode = _g.toHex(parseInt('0x' + operatorCode) + 1)
         if (operatorCode.length < 4) {
           var zero = ""
@@ -395,12 +395,12 @@ const musicApi = {
           if (key == "album") {
             var source = _g.getadditional(msg, 0)
             var albumNo = _g.getadditional(msg, 1)
-            if (data.params.additionalContentData[0] != source || data.params.additionalContentData[1] != albumNo) return
+            if (data.additionalContentData[0] != source || data.additionalContentData[1] != albumNo) return
           } else if(key == "song") {
             var source = _g.getadditional(msg, 2)
             var albumNo = _g.getadditional(msg, 3)
             var songNo = _g.getadditional(msg, 4)
-            if (data.params.additionalContentData[0] != source || data.params.additionalContentData[1] != albumNo || data.params.additionalContentData[2] != songNo) return
+            if (data.additionalContentData[0] != source || data.additionalContentData[1] != albumNo || data.additionalContentData[2] != songNo) return
           }
 
           pass = true
@@ -423,7 +423,7 @@ const musicApi = {
             }
             return;
           }
-          api.apiGet("udp/sendUdp.php", data).then(res => {
+          api.apiPost("admin/udp/sendUdp", data).then(res => {
           });
           index++
         }, 100);

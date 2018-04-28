@@ -2,7 +2,7 @@ const apiMethods = {
   methods: {
     apiGet(url, data) {
       // if(Lockr.get('database_name')){
-      //   data.params.database_name = Lockr.get('database_name')
+      //   data.database_name = Lockr.get('database_name')
       // }
       return new Promise((resolve, reject) => {
         axios.get(url, data).then((response) => {

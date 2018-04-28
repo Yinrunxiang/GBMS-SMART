@@ -22,7 +22,7 @@ case "login":
     $username = $username = isset($_REQUEST["username"]) ? $_REQUEST["username"] : '';
     $password = $password = isset($_REQUEST["password"]) ? $_REQUEST["password"] : '';
 
-        $sql = "SELECT * FROM user where username ='".$username."' and password ='".$password."' ";
+        $sql = "SELECT * FROM user where username ='".$username."' and password ='".$password."'";
         $result = mysqli_query($con,$sql);
         $data = array();
         while ($row = mysqli_fetch_assoc($result)) {

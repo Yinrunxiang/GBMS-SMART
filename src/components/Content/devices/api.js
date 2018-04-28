@@ -1,6 +1,6 @@
 
 const api = {
-    apiGet(url, data) {
+    apiPost(url, data) {
         return new Promise((resolve, reject) => {
             axios.get(url, data).then((response) => {
                 resolve(response.data)
@@ -18,7 +18,6 @@ const api = {
 
     getUdp(device, operatorCodefst, operatorCodesec, additionalContentData) {
         const data = {
-            params: {
                 operatorCodefst: operatorCodefst,
                 operatorCodesec: operatorCodesec,
                 targetSubnetID: device.subnetid,
@@ -28,18 +27,17 @@ const api = {
                 dest_address: device.ip ? device.ip : "",
                 dest_port: device.port ? device.port : "",
                 udp_type: device.udp_type ? device.udp_type : ""
-            }
         }
         return data
     },
     sendUdp(device, data, type) {
         if (!type || type == "") {
-            api.apiGet("udp/sendUdp.php", data).then(res => {
+            api.apiPost("admin/udp/sendUdp", data).then(res => {
             });
         } else {
             var pass = false
             var index = 1
-            var operatorCode = data.params.operatorCodefst + data.params.operatorCodesec
+            var operatorCode = data.operatorCodefst + data.operatorCodesec
             operatorCode = _g.toHex(parseInt('0x' + operatorCode) + 1)
             if (operatorCode.length < 4) {
                 var zero = ""
@@ -64,7 +62,7 @@ const api = {
                     clearInterval(sendUdp);
                     return;
                 }
-                api.apiGet("udp/sendUdp.php", data).then(res => {
+                api.apiPost("admin/udp/sendUdp", data).then(res => {
                 });
                 index++
             }, 100);
@@ -75,12 +73,12 @@ const api = {
         var arrIndex = 0
         var sendUdp = function (device, data, type) {
             if (!type || type == "") {
-                api.apiGet("udp/sendUdp.php", data).then(res => {
+                api.apiPost("admin/udp/sendUdp", data).then(res => {
                 });
             } else {
                 var pass = false
                 var index = 1
-                var operatorCode = data.params.operatorCodefst + data.params.operatorCodesec
+                var operatorCode = data.operatorCodefst + data.operatorCodesec
                 operatorCode = _g.toHex(parseInt('0x' + operatorCode) + 1)
                 if (operatorCode.length < 4) {
                     var zero = ""
@@ -122,7 +120,7 @@ const api = {
                         }
                         return;
                     }
-                    api.apiGet("udp/sendUdp.php", data).then(res => {
+                    api.apiPost("admin/udp/sendUdp", data).then(res => {
                     });
                     index++
                 }, 100);

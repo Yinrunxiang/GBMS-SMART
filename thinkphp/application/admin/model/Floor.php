@@ -1,8 +1,8 @@
 <?php
 // +----------------------------------------------------------------------
-// | Description: 用户
+// | Description: 楼层
 // +----------------------------------------------------------------------
-// | Author: GBMS-SMART
+// | Author: Jensen
 // +----------------------------------------------------------------------
 
 namespace app\admin\model;
@@ -15,4 +15,11 @@ class Floor extends Common
 {
 
     protected $name = 'floor';
+
+    public function getDataList($keywords = "", $page=0, $limit=0)
+	{
+		$data = $this
+			->order('floor'+'0')->select();
+		return $data;
+	}
 }

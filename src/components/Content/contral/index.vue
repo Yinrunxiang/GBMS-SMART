@@ -16,7 +16,7 @@
                                 <el-badge :value="address.warn" class="address-badge-div">
                                     <el-menu-item :index="address.name" @click="menuClick">
                                         {{address.name}}</el-menu-item>
-                                </el-badge>
+                                </el-badge> 
                             </div>
 
                         </el-submenu>
@@ -141,8 +141,8 @@ export default {
       }, 300);
     },
     roomChange(val) {
-      var vm = this
-      if(vm.interval){
+      var vm = this;
+      if (vm.interval) {
         clearInterval(vm.interval);
       }
       this.room_key = val;
@@ -150,34 +150,27 @@ export default {
       if (typeof val == "string" && val == "") {
         return;
       }
-      // window.socketio.removeAllListeners("new_msg");
-      // console.log(val)
-
-      var vm = this;
+      var deviceOpenList = [];
+      console.log(vm.$refs.devicelist);
       for (var devicelist of vm.$refs.devicelist) {
         if (devicelist.$attrs.room == val) {
-          var i = 0;
-          var devices = devicelist.$refs.device;
-          this.roomDevices = devices;
-          var len = devices.length;
-          if (len > 0) {
-            vm.interval = setInterval(function() {
-              devices[i].readOpen();
-              i = i + 1;
-              if (i >= len) {
-                clearInterval(vm.interval);
-                return;
-              }
-            }, 300);
-          }
+          deviceOpenList = deviceOpenList.concat(devicelist.$refs.device);
         }
       }
-
-      // for (var device of deviceList) {
-      //     // setTimeout(device.readOpen(),2000)
-      //     device.readOpen()
-      //     // console.log('OK')
-      // }
+      
+      this.roomDevices = deviceOpenList;
+      var i = 0;
+      var len = deviceOpenList.length;
+      if (len > 0) {
+        vm.interval = setInterval(function() {
+          deviceOpenList[i].readOpen();
+          i = i + 1;
+          if (i >= len) {
+            clearInterval(vm.interval);
+            return;
+          }
+        }, 300);
+      }
     },
     deviceWarn() {
       var warn = 0;
@@ -240,12 +233,14 @@ export default {
   // },
   computed: {
     devices() {
+      console.log(this.$store.state.devices)
       return this.$store.state.devices;
     },
     showRightPage() {
       return this.$store.state.showRightPage;
     },
     countryArr() {
+      console.log(this.$store.state.countryArr)
       var countryArr = this.$store.state.countryArr;
       // var countryArr = []
       // countryArr.concat(this.$store.state.countryArr)
