@@ -15,12 +15,6 @@ class Device extends Common
 {
 
     protected $name = 'device';
-    protected $createTime = 'create_time';
-    protected $updateTime = false;
-    protected $autoWriteTimestamp = true;
-    protected $insert = [
-        'status' => 1,
-    ];
 
     /**
      * [getDataList 列表]
@@ -73,8 +67,9 @@ class Device extends Common
      * 通过id修改设备
      * @param  array $param [description]
      */
-    public function updateDataById($param, $id)
+    public function updateDataById($param)
     {
+        $id = $param['id'];
         $checkData = $this->get($id);
         if (!$checkData) {
             $this->error = 'This data is not available';
@@ -97,7 +92,7 @@ class Device extends Common
      * 通过id更新设备位置
      * @param  array $param [description]
      */
-    public function updateLocationById($param, $id)
+    public function updateLocationById($param)
     {
         $id = $param['id'];
         $this->startTrans();
@@ -201,6 +196,6 @@ class Device extends Common
 
 
     }
-    
+
 
 }

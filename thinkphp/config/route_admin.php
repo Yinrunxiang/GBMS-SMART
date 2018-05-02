@@ -32,7 +32,11 @@ return [
     // 【基础】更新数据库
     'admin/base/updateDatabase' => ['admin/base/updateDatabase', ['method' => 'POST']],
     // 【UDP】发送UDP
-	'admin/udp/sendUdp' => ['admin/udp/sendUdp', ['method' => 'POST']],
+    'admin/udp/sendUdp' => ['admin/udp/sendUdp', ['method' => 'POST']],
+    // // 【设备】修改设备位置
+    // 'admin/device/save' => ['admin/device/save', ['method' => 'POST']],
+    // // 【设备】修改设备位置
+    // 'admin/device/update' => ['admin/device/update', ['method' => 'PUT']],
 	// 【设备】修改设备位置
     'admin/device/updateLocationById' => ['admin/device/updateLocationById', ['method' => 'POST']],
 	// 【设备】修改LED颜色

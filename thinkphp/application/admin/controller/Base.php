@@ -113,7 +113,7 @@ class Base extends Common
         if (Request::instance()->isOptions()) {
             return;
         } else {
-            echo 'Smart-GBMS Interface';
+            echo 'SMART-GBMS Interface';
         }
     }
 }

@@ -159,15 +159,11 @@ export default {
       }
       this.isLoading = !this.isLoading;
       var vm = this;
-      const data = {
-        params: this.form
-      };
+      const data =  this.form;
       if (this.form.id) {
-        this.apiGet("device/index.php?action=update", data).then(res => {
-          // _g.clearVuex('setRules')
-          // console.log(res);
-
-          if (res[0]) {
+        this.apiPut("admin/device/",this.form.id, data).then(res => {
+          this.isLoading = !this.isLoading;
+          this.handelResponse(res, data => {
             var devices = this.$store.state.devices;
             for (var i = 0; i < devices.length; i++) {
               if (devices[i].id == this.form.id) {
@@ -175,22 +171,14 @@ export default {
               }
             }
             vm.$store.dispatch("setDevices", devices);
-            _g.toastMsg("success", res[1]);
+            _g.toastMsg("success", data);
             vm.goback();
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
-          // for (var key in this.form) {
-          //     this.form[key] = ""
-          // }
-          this.isLoading = !this.isLoading;
+          });
         });
       } else {
-        this.apiGet("device/index.php?action=insert", data).then(res => {
-          // _g.clearVuex('setRules')
-          // console.log(res);
-
-          if (res[0]) {
+        this.apiPost("admin/device", data).then(res => {
+          this.isLoading = !this.isLoading;
+          this.handelResponse(res, data => {
             var devices = vm.$store.state.devices;
             var addressList = vm.$store.state.address;
             for (var address of addressList) {
@@ -233,15 +221,9 @@ export default {
             devices.push(vm.form);
             this.$emit("newDevice", vm.form);
             vm.$store.dispatch("setDevices", devices);
-            _g.toastMsg("success", res[1]);
+            _g.toastMsg("success", data);
             vm.goback();
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
-          // for (var key in this.form) {
-          //     this.form[key] = ""
-          // }
-          vm.isLoading = !vm.isLoading;
+          });
         });
       }
     },
