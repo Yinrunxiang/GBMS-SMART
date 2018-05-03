@@ -291,7 +291,7 @@ export default {
     dateChange() {
       this.macro.time_1 = _g.formatDate(this.macro.time_1);
     },
-    sourceChange(command){
+    sourceChange(command) {
       command.deviceProperty.source = command.operation_2;
       command.operation_3 = "";
       command.operation_4 = "";
@@ -312,12 +312,12 @@ export default {
         musicApi.readStatus(command, command.deviceProperty);
       }
     },
-    albumChange(command){
-      command.deviceProperty.songList = []
+    albumChange(command) {
+      command.deviceProperty.songList = [];
       command.operation_4 = "";
-      for(var song of command.deviceProperty.songListAll){
-        if(song.albumNo == command.operation_3){
-          command.deviceProperty.songList.push(song)
+      for (var song of command.deviceProperty.songListAll) {
+        if (song.albumNo == command.operation_3) {
+          command.deviceProperty.songList.push(song);
         }
       }
     },
@@ -364,16 +364,6 @@ export default {
     selectItem(val) {
       for (var device of val) {
         if (this.devicesId.indexOf(device.id) == -1) {
-          // this.$set(device,"operation_1", device.operation_1 ? device.operation_1 : "");
-          // this.$set(device,"operation_2", device.operation_2 ? device.operation_2 : "");
-          // this.$set(device,"operation_3", device.operation_3 ? device.operation_3 : "");
-          // this.$set(device,"operation_4", device.operation_4 ? device.operation_4 : "");
-          // this.$set(device,"operation_5", device.operation_5 ? device.operation_5 : "");
-          // device.operation_1 = "";
-          // device.operation_2 = "";
-          // device.operation_3 = "";
-          // device.operation_4 = "";
-          // device.operation_5 = "";
           if (device.devicetype == "ac") {
             device.operation_1 = device.operation_1
               ? parseInt(device.operation_1)
@@ -391,16 +381,15 @@ export default {
             var musicObj = Lockr.get(
               "music_" + device.id + "_" + device.operation_2
             );
-            device.deviceProperty = {}
-            if(musicObj){
+            device.deviceProperty = {};
+            if (musicObj) {
               device.deviceProperty = musicObj;
-            }
-            else{
-              device.deviceProperty.source = device.operation_2
-              device.deviceProperty.albumlist = []
-              device.deviceProperty.songList = []
-              device.deviceProperty.songListAll = []
-              musicApi.readStatus(device,device.deviceProperty);
+            } else {
+              device.deviceProperty.source = device.operation_2;
+              device.deviceProperty.albumlist = [];
+              device.deviceProperty.songList = [];
+              device.deviceProperty.songListAll = [];
+              musicApi.readStatus(device, device.deviceProperty);
             }
           }
           if (device.devicetype == "light") {
@@ -418,10 +407,7 @@ export default {
           id: scope.row.macro_id
         }
       };
-      this.apiGet(
-        "device/macro.php?action=delete_command",
-        data
-      ).then(res => {
+      this.apiGet("device/macro.php?action=delete_command", data).then(res => {
         if (res[0]) {
           _g.toastMsg("success", res[1]);
           this.search_command();
@@ -440,42 +426,30 @@ export default {
         return;
       }
       this.isLoading = true;
-      var devices = []
+      var devices = [];
       for (var command of this.commands) {
-        var device= {}
-        device.id = command.id
+        var device = {};
+        device.id = command.id;
         device.on_off = command.on_off ? "1" : "0";
-        device.mode = command.mode
-        device.grade = command.grade
-        device.operation_1 = command.operation_1
-        device.operation_2 = command.operation_2
-        device.operation_3 = command.operation_3
-        device.operation_4 = command.operation_4
-        device.operation_5 = command.operation_5
-        device.time = command.time
-        devices.push(device)
+        device.mode = command.mode;
+        device.grade = command.grade;
+        device.operation_1 = command.operation_1;
+        device.operation_2 = command.operation_2;
+        device.operation_3 = command.operation_3;
+        device.operation_4 = command.operation_4;
+        device.operation_5 = command.operation_5;
+        device.time = command.time;
+        devices.push(device);
       }
-      this.macro.devices = devices
+      this.macro.devices = devices;
 
-      const data = {
-        params: this.macro
-      };
+      const data = this.macro;
       // console.log(data);
-      this.apiGet(
-        "device/macro.php?action=insert_command",
-        data
-      ).then(res => {
-        if (res[0]) {
-          _g.toastMsg("success", res[1]);
+      this.apiPost("admin/macro", data).then(res => {
+        this.handelResponse(res, data => {
+          _g.toastMsg("success", data);
           this.goback();
-        } else {
-          this.isLoading = true;
-          _g.toastMsg("error", res[1]);
-        }
-        // for (var key in this.form) {
-        //     this.form[key] = ""
-        // }
-        // this.isLoading = !this.isLoading;
+        });
       });
     },
     getAllDevices() {
@@ -507,65 +481,59 @@ export default {
       }
       this.commands = [];
       this.devicesId = [];
-      const data = {
-        params: {
-          macro: this.macro.id
-        }
-      };
       var vm = this;
-      this.apiGet(
-        "device/macro.php?action=search_command",
-        data
-      ).then(res => {
-        for (var command of res) {
-          command.time = command.time? parseInt(command.time):0
-          vm.devicesId.push(command.id);
-          for (var index in vm.tableData) {
-            if (vm.tableData[index].id == command.id) {
-              vm.$refs.deviceTable.toggleRowSelection(
-                vm.tableData[index],
-                true
-              );
+      this.apiGet("admin/macro/" + this.macro.id, {}).then(res => {
+        this.handelResponse(res, data => {
+          for (var command of data) {
+            command.time = command.time ? parseInt(command.time) : 0;
+            vm.devicesId.push(command.id);
+            for (var index in vm.tableData) {
+              if (vm.tableData[index].id == command.id) {
+                vm.$refs.deviceTable.toggleRowSelection(
+                  vm.tableData[index],
+                  true
+                );
+              }
             }
-          }
-          command.on_off = command.on_off == "1" ? true : false;
-          command.operation_1 = parseInt(command.status_1);
-          command.operation_2 = parseInt(command.status_2);
-          command.operation_3 = parseInt(command.status_3);
-          command.operation_4 = parseInt(command.status_4);
-          command.operation_5 = parseInt(command.status_5);
-          if (command.devicetype == "ac") {
+            command.on_off = command.on_off == "1" ? true : false;
             command.operation_1 = parseInt(command.status_1);
             command.operation_2 = parseInt(command.status_2);
             command.operation_3 = parseInt(command.status_3);
-          }
-          if (command.devicetype == "music") {
-            command.operation_1 = command.status_1
-              ? parseInt(command.status_1)
-              : 0;
-            command.operation_2 = command.status_2 ? command.status_2 : "01";
-            command.operation_3 = command.status_3;
-            command.operation_4 = command.status_4;
-            var musicObj = Lockr.get(
-              "music_" + command.id + "_" + command.operation_2
-            );
-            command.deviceProperty = {}
-            if (musicObj) {
-              command.deviceProperty = musicObj;
-            } else {
-              command.deviceProperty.source = command.status_2;
-              command.deviceProperty.albumlist = [];
-              command.deviceProperty.songList = [];
-              command.deviceProperty.songListAll = [];
-              musicApi.readStatus(command, command.deviceProperty);
+            command.operation_4 = parseInt(command.status_4);
+            command.operation_5 = parseInt(command.status_5);
+            if (command.devicetype == "ac") {
+              command.operation_1 = parseInt(command.status_1);
+              command.operation_2 = parseInt(command.status_2);
+              command.operation_3 = parseInt(command.status_3);
             }
+            if (command.devicetype == "music") {
+              command.operation_1 = command.status_1
+                ? parseInt(command.status_1)
+                : 0;
+              command.operation_2 = command.status_2 ? command.status_2 : "01";
+              command.operation_3 = command.status_3;
+              command.operation_4 = command.status_4;
+              var musicObj = Lockr.get(
+                "music_" + command.id + "_" + command.operation_2
+              );
+              command.deviceProperty = {};
+              if (musicObj) {
+                command.deviceProperty = musicObj;
+              } else {
+                command.deviceProperty.source = command.status_2;
+                command.deviceProperty.albumlist = [];
+                command.deviceProperty.songList = [];
+                command.deviceProperty.songListAll = [];
+                musicApi.readStatus(command, command.deviceProperty);
+              }
+            }
+            if (command.devicetype == "light") {
+              command.mode = parseInt(command.mode);
+            }
+            vm.commands.push(command);
           }
-          if (command.devicetype == "light") {
-            command.mode = parseInt(command.mode);
-          }
-          vm.commands.push(command);
-        }
-        vm.isLoading = false;
+          vm.isLoading = false;
+        });
       });
     }
   },

@@ -44,6 +44,13 @@ class Device extends Common
      */
     public function createData($param)
     {
+        $param['subnetid'] = toHex($param['subnetid']);
+        $param['deviceid'] = toHex($param['deviceid']);
+        $param['channel'] = toHex($param['channel']);
+        $param['channel_spare'] = toHex($param['channel_spare']);
+        if ($param['devicetype'] == 'curtain') {
+            $param['operation_1'] = toHex($param['operation_1']);
+        }
        // 验证
         $validate = validate($this->name);
         if (!$validate->check($param)) {
@@ -70,20 +77,23 @@ class Device extends Common
     public function updateDataById($param)
     {
         $id = $param['id'];
+        $param['subnetid'] = toHex($param['subnetid']);
+        $param['deviceid'] = toHex($param['deviceid']);
+        $param['channel'] = toHex($param['channel']);
+        $param['channel_spare'] = toHex($param['channel_spare']);
+        if ($param['devicetype'] == 'curtain') {
+            $param['operation_1'] = toHex($param['operation_1']);
+        }
         $checkData = $this->get($id);
         if (!$checkData) {
             $this->error = 'This data is not available';
             return false;
         }
-        $this->startTrans();
-
         try {
             $this->allowField(true)->save($param, ['id' => $id]);
-            $this->commit();
             return true;
 
         } catch (\Exception $e) {
-            $this->rollback();
             $this->error = 'Update failure';
             return false;
         }
@@ -95,6 +105,7 @@ class Device extends Common
     public function updateLocationById($param)
     {
         $id = $param['id'];
+        return $id . '123';
         $this->startTrans();
 
         try {

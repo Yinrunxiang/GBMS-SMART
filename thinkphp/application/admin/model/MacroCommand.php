@@ -11,10 +11,10 @@ use think\Db;
 use app\admin\model\Common;
 use com\verify\HonrayVerify;
 
-class Macro extends Common
+class MacroCommand extends Common
 {
 
-    protected $name = 'macro';
+    protected $name = 'macro_command';
 
     /**
      * [getDataList 列表]
@@ -25,25 +25,47 @@ class Macro extends Common
      * @param     [number]                   $limit    [t每页数量]
      * @return    [array]                             [description]
      */
-    public function getDataList($keywords="", $page=0, $limit=0)
+    public function getDataList($param)
     {
-        $map = [];
-        //根据keywords筛选Macro信息
-        if ($keywords) {
-            $map['macro'] = ['like', '%' . $keywords . '%'];
-        }
-        $data = $this->where($map);
 
-        // 若有分页
-        if ($page && $limit) {
-            $data = $data->page($page, $limit);
+        $macro = $param['id'];
+        $map = [];
+        $map['macro'] = ['=', $macro];
+        $data = $this->alias('a')
+            ->join('device b', 'a.device = b.id', 'left')
+            ->join('room c', 'b.room = c.room and b.address = c.address and b.floor = c.floor', 'left')
+            ->field('macro,a.id as macro_id,a.device as id,subnetid,deviceid,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name,a.time')
+            ->where($map)
+            ->select();
+        if (!$data) {
+            $this->error = 'This data is not available';
+            return false;
         }
-        $data = $data->select();
         return $data;
     }
 
     /**
-     * 创建Macro
+     * [getDataById 根据主键获取详情]
+     */
+    public function run($param)
+    {
+        $marco = $param['marco'];
+
+        $data = $this->alias('a')
+            ->join('device b', 'a.device = b.id', 'left')
+            ->join('address c', 'b.address = c.address', 'left')
+            ->field('a.id as macro_id,a.device as id,subnetid,deviceid,channel,channel_spare,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,ip,port,mac,a.time as time,c.operation as udp_type')
+            ->where('macro', '=', $marco)
+            ->select();
+        if (!$data) {
+            $this->error = 'This data is not available';
+            return false;
+        }
+        return $data;
+    }
+
+    /**
+     * 创建MacroCommand
      * @param  array $param [description]
      */
     public function createData($param)
@@ -83,7 +105,7 @@ class Macro extends Common
     }
 
     /**
-     * 删除Macro
+     * 删除MacroCommand
      * @param  array $param [description]
      */
     public function delDataById($param)
@@ -104,7 +126,7 @@ class Macro extends Common
         }
     }
     /**
-     * 删除Macro
+     * 删除MacroCommand
      * @param  array $param [description]
      */
     public function delCommandById($param)

@@ -16,7 +16,7 @@ return [
         'admin/led_breed' => 'admin/led_breed',
         'admin/light_breed' => 'admin/light_breed',
         'admin/mood' => 'admin/mood',
-        'admin/marco' => 'admin/marco',
+        'admin/macro' => 'admin/macro',
         'admin/schedule' => 'admin/schedule',
     ],
     // 【基础】登录
@@ -36,7 +36,7 @@ return [
     // // 【设备】修改设备位置
     // 'admin/device/save' => ['admin/device/save', ['method' => 'POST']],
     // // 【设备】修改设备位置
-    // 'admin/device/update' => ['admin/device/update', ['method' => 'PUT']],
+    // 'admin/device/update' => ['admin/device/update', ['method' => 'POST']],
 	// 【设备】修改设备位置
     'admin/device/updateLocationById' => ['admin/device/updateLocationById', ['method' => 'POST']],
 	// 【设备】修改LED颜色
@@ -49,6 +49,8 @@ return [
     'admin/device/updateIrOperation' => ['admin/device/updateIrOperation', ['method' => 'POST']],
     // 【设备】设置运行时间
     'admin/device/setTime' => ['admin/device/setTime', ['method' => 'POST']],
+    // 【Macro】获取Macro命令
+    'admin/macro/run' => ['admin/macro/run', ['method' => 'GET']],
     // 【Macro】根据命令ID删除数据
     'admin/macro/delCommandById' => ['admin/macro/delCommandById', ['method' => 'POST']],
     // 【Macro】执行Mood

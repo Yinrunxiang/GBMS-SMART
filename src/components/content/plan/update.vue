@@ -150,7 +150,7 @@ export default {
       // this.form.deviceid = _g.toHex(this.form.deviceid)
       // this.form.channel = _g.toHex(this.form.channel)
       // this.form.channel_spare = _g.toHex(this.form.channel_spare ? this.form.channel_spare : 0)
-      if (this.form.comment.length > 120) {
+      if (this.form.comment && this.form.comment.length > 120) {
         this.$message({
           message: "The length of the comment can not exceed 100 characters",
           type: "error"

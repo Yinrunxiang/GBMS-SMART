@@ -50,7 +50,7 @@
 <script>
 import http from "../../../assets/js/http.js";
 import list from "../../../assets/js/list.js";
-import udpArr from "../devices/udpArr"
+import udpArr from "../devices/udpArr";
 import add from "./add";
 export default {
   //  currentPage        页码
@@ -78,7 +78,7 @@ export default {
         params: macro
       };
       this.apiGet("device/macro.php?action=run", data).then(res => {
-        udpArr.sendUdpArr(res)
+        udpArr.sendUdpArr(res);
       });
     },
     goback(bool) {
@@ -142,10 +142,11 @@ export default {
           limit: this.limit
         }
       };
-      this.apiGet("device/macro.php?action=search", data).then(res => {
-        var macro = res;
-        this.tableData = macro;
-        this.isLoading = false;
+      this.apiGet("admin/macro", data).then(res => {
+        this.handelResponse(res, data => {
+          this.tableData = data;
+          this.isLoading = false;
+        });
       });
     },
     //初始化时统一加载

@@ -3,7 +3,7 @@
 /**
  * 行为绑定
  */
-\think\Hook::add('app_init','app\\common\\behavior\\InitConfigBehavior');
+\think\Hook::add('app_init', 'app\\common\\behavior\\InitConfigBehavior');
 
 /**
  * 返回对象
@@ -11,7 +11,7 @@
  */
 function resultArray($array)
 {
-    if(isset($array['data'])) {
+    if (isset($array['data'])) {
         $array['error'] = '';
         $code = 200;
     } elseif (isset($array['error'])) {
@@ -19,8 +19,8 @@ function resultArray($array)
         $array['data'] = '';
     }
     return [
-        'code'  => $code,
-        'data'  => $array['data'],
+        'code' => $code,
+        'data' => $array['data'],
         'error' => $array['error']
     ];
 }
@@ -29,7 +29,7 @@ function resultArray($array)
  * 调试方法
  * @param  array   $data  [description]
  */
-function p($data,$die=1)
+function p($data, $die = 1)
 {
     echo "<pre>";
     print_r($data);
@@ -46,5 +46,16 @@ function p($data,$die=1)
 function user_md5($str, $auth_key = '')
 {
     return '' === $str ? '' : md5(sha1($str) . $auth_key);
+}
+
+function toHex($num)
+{
+    if (!$num || $num == "")
+        return "";
+    $num = dechex($num);
+    if (strlen($num) < 2) {
+        $num = '0' . $num;
+    }
+    return $num;
 }
 
