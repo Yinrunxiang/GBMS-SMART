@@ -5,14 +5,13 @@ use think\Validate;
 /**
 * 设置模型
 */
-class Macro extends Validate{
+class MacroCommand extends Validate{
 
 	protected $rule = array(
-		'macro'  		=> 'require|length:0,30|unique:macro',
+		'macro'  		=> 'require|length:0,30',
 	);
 	protected $message = array(
 		'macro.require'    	=> 'macro name must be filled in',
 		'macro.length'    	=> 'macro name length is from 1 to 30 bits',
-		'macro.unique'    	=> 'macro name already exists',
 	);
 }

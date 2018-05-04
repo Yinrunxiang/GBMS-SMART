@@ -25,8 +25,11 @@ class Macro extends Common
      * @param     [number]                   $limit    [t每页数量]
      * @return    [array]                             [description]
      */
-    public function getDataList($keywords="", $page=0, $limit=0)
+    public function getDataList($keywords = "", $page = 0, $limit = 0)
     {
+        $keywords = $param['keywords'];
+        $limit = $param['limit'];
+        $page = $param['page'];
         $map = [];
         //根据keywords筛选Macro信息
         if ($keywords) {
@@ -50,31 +53,25 @@ class Macro extends Common
     {
         $id = $param['id'];
         $macro = $param['macro'];
-        $devices = $param['devices'];
+        $newID= "";
        // 验证
         $validate = validate($this->name);
         if (!$validate->check($param)) {
             $this->error = $validate->getError();
             return false;
         }
-
         $this->startTrans();
         try {
 
             if (empty($id)) {
-                $this->data(['macro' => $macro])->insert();
-                $id = $this->max('id')->get();
+                // $this->data(['macro' => $macro])->insert();
+                $newID = $this->insertGetId(['macro' => $macro]);
             } else {
-                $this->data(['macro' => $macro])->where('id', $id)->update();
-                Db::table('marco_command')->where('marco', $id)->delete();
-            }
-            foreach ($devices as $k => $v) {
-                $device = json_decode($v);
-                $data = ['macro' => $id, 'device' => $device->id, 'on_off' => $device->on_off, 'mode' => $device->mode, 'grade' => $device->grade, 'status_1' => $device->operation_1, 'status_2' => $device->operation_2, 'status_3' => $device->operation_3, 'status_4' => $device->operation_4, 'status_5' => $device->operation_5, 'time' => $device->time];
-                Db::table('marco_command')->data($data)->insert();
+                $this->allowField(true)->data(['macro' => $macro])->where('id', $id)->update();
             }
             $this->commit();
-            return true;
+            $data = [true, $newID];
+            return $data;
         } catch (\Exception $e) {
             $this->rollback();
             $this->error = 'Add failure';
@@ -86,39 +83,33 @@ class Macro extends Common
      * 删除Macro
      * @param  array $param [description]
      */
-    public function delDataById($param)
+    public function delDatas($param)
     {
         $ids = $param['ids'];
         $this->startTrans();
         try {
             foreach ($ids as $k => $v) {
-                $this->where('id', '=', $v)->delete();
-                Db::table('marco_command')->where('marco', '=', $v)->delete();
+                $this->where('id', $v)->delete();
             }
             $this->commit();
             return true;
         } catch (\Exception $e) {
             $this->rollback();
-            $this->error = 'Add failure';
+            $this->error = 'Delete failure';
             return false;
         }
     }
+
+
     /**
      * 删除Macro
      * @param  array $param [description]
      */
-    public function delCommandById($param)
+    public function getNewID()
     {
-        $id = $param['id'];
-        $this->startTrans();
-        try {
-            Db::table('marco_command')->where('id', '=', $id)->delete();
-            $this->commit();
-            return true;
-        } catch (\Exception $e) {
-            $this->rollback();
-            $this->error = 'Add failure';
-            return false;
-        }
+        $newID = $this->max('id')->select();
+        return $newID;
     }
+
+
 }

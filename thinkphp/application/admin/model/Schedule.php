@@ -16,14 +16,20 @@ class Schedule extends Common
 
     protected $name = 'schedule';
 
-    public function getDataList($param)
+    public function getDataList($keywords,$page,$limit)
     {
-        $schedule = $param['schedule'];
-        $limit = $param['limit'];
-        $page = $param['page'];
         $map = [];
-        $map['schedule'] = ['like', '%' . $schedule . '%'];
-        $data = $this->where($map)->limit($page, $limit)->select();
+        //根据keywords筛选Macro信息
+        if ($keywords) {
+            $map['schedule'] = ['like', '%' . $keywords . '%'];
+        }
+        $data = $this->where($map);
+
+        // 若有分页
+        if ($page && $limit) {
+            $data = $data->page($page, $limit);
+        }
+        $data = $data->select();
         return $data;
     }
 
@@ -53,20 +59,13 @@ class Schedule extends Common
         $fri = $param['fri'];
         $sat = $param['sat'];
         $sun = $param['sun'];
-        $devices = $param['devices'];
+        $data = ["schedule"=>$schedule,"type"=>$type,"time_1"=>$time_1,"time_2"=>$time_2,"mon"=>$mon,"tues"=>$tues,"wed"=>$wed,"thur"=>$thur,"fri"=>$fri,"sat"=>$sat,"sun"=>$sun];
         $this->startTrans();
         try {
             if (empty($id)) {
-                $this->data($param)->insert();
-                $id = $this->max('id')->get();
+                $newID - $this->insertGetId($data);
             } else {
-                $this->data(['schedule' => $schedule])->where('id', $id)->update();
-                Db::table('schedule_command')->where('schedule', $id)->delete();
-            }
-            foreach ($devices as $k => $v) {
-                $device = json_decode($v);
-                $data = ['schedeule' => $id, 'device' => $device->id, 'on_off' => $device->on_off, 'mode' => $device->mode, 'grade' => $device->grade, 'status_1' => $device->operation_1, 'status_2' => $device->operation_2, 'status_3' => $device->operation_3, 'status_4' => $device->operation_4, 'status_5' => $device->operation_5, 'time' => $device->time];
-                Db::table('marco_command')->data($data)->insert();
+                $this->allowField(true)->data($data)->where('id', $id)->update();
             }
             $this->commit();
             return true;
@@ -81,38 +80,19 @@ class Schedule extends Common
      * 删除Schedule
      * @param  array $param [description]
      */
-    public function delDataById($param)
+    public function delDatas($param)
     {
         $ids = $param['ids'];
         $this->startTrans();
         try {
             foreach ($ids as $k => $v) {
-                $this->where('id', '=', $v)->delete();
-                Db::table('schedule_command')->where('schedule', '=', $v)->delete();
+                $this->where('id', $v)->delete();
             }
             $this->commit();
             return true;
         } catch (\Exception $e) {
             $this->rollback();
-            $this->error = 'Add failure';
-            return false;
-        }
-    }
-    /**
-     * 删除Macro
-     * @param  array $param [description]
-     */
-    public function delCommandById($param)
-    {
-        $id = $param['id'];
-        $this->startTrans();
-        try {
-            Db::table('schedule_command')->where('schedule', '=', $id)->delete();
-            $this->commit();
-            return true;
-        } catch (\Exception $e) {
-            $this->rollback();
-            $this->error = 'Add failure';
+            $this->error = 'Delete failure';
             return false;
         }
     }

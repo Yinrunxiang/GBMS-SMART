@@ -11,10 +11,10 @@ use think\Db;
 use app\admin\model\Common;
 use com\verify\HonrayVerify;
 
-class MacroCommand extends Common
+class ScheduleCommand extends Common
 {
 
-    protected $name = 'macro_command';
+    protected $name = 'schedule_command';
 
     /**
      * [getDataList 列表]
@@ -28,14 +28,14 @@ class MacroCommand extends Common
     public function getDataList($param)
     {
 
-        $macro = $param['id'];
+        $schedule = $param['id'];
         $map = [];
-        $map['macro'] = ['=', $macro];
+        $map['schedule'] = ['=', $schedule];
         $data = $this->alias('a')
             ->join('device b', 'a.device = b.id', 'left')
             ->join('room c', 'b.room = c.room and b.address = c.address and b.floor = c.floor', 'left')
-            ->field('macro,a.id as macro_id,a.device as id,subnetid,deviceid,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name,a.time')
             ->where($map)
+            ->file('schedule,a.id as schedule_id,a.device as id,subnetid,deviceid,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name')
             ->select();
         if (!$data) {
             $this->error = 'This data is not available';
@@ -45,34 +45,13 @@ class MacroCommand extends Common
     }
 
     /**
-     * [getDataById 根据主键获取详情]
-     */
-    public function run($param)
-    {
-        $macro = $param['id'];
-        $map = [];
-        $map['macro'] = ['=', $macro];
-        $data = $this->alias('a')
-            ->join('device b', 'a.device = b.id', 'left')
-            ->join('address c', 'b.address = c.address', 'left')
-            ->field('a.id as macro_id,a.device as id,subnetid,deviceid,channel,channel_spare,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,ip,port,mac,a.time as time,c.operation as udp_type')
-            ->where($map)
-            ->select();
-        if (!$data) {
-            $this->error = 'This data is not available';
-            return false;
-        }
-        return $data;
-    }
-
-    /**
-     * 创建MacroCommand
+     * 创建ScheduleCommand
      * @param  array $param [description]
      */
     public function createData($param, $newID)
     {
         $id = $param['id'];
-        $macro = $param['macro'];
+        $schedule = $param['schedule'];
         $devices = $param['devices'];
        // 验证
         $validate = validate($this->name);
@@ -85,7 +64,7 @@ class MacroCommand extends Common
         try {
 
             if (!empty($id)) {
-                $this->where('macro', $id)->delete();
+                $this->where('schedule', $id)->delete();
 
             } else {
                 $id = $newID;
@@ -93,7 +72,7 @@ class MacroCommand extends Common
             $list = [];
             foreach ($devices as $k => $v) {
                 $device = $v;
-                $data = ['macro' => $id, 'device' => $device['id'], 'on_off' => $device['on_off'], 'mode' => $device['mode'], 'grade' => $device['grade'], 'status_1' => $device['operation_1'], 'status_2' => $device['operation_2'], 'status_3' => $device['operation_3'], 'status_4' => $device['operation_4'], 'status_5' => $device['operation_5'], 'time' => $device['time']];
+                $data = ['schedule' => $id, 'device' => $device['id'], 'on_off' => $device['on_off'], 'mode' => $device['mode'], 'grade' => $device['grade'], 'status_1' => $device['operation_1'], 'status_2' => $device['operation_2'], 'status_3' => $device['operation_3'], 'status_4' => $device['operation_4'], 'status_5' => $device['operation_5'], 'time' => $device['time']];
                 array_push($list, $data);
 
             }
@@ -107,7 +86,7 @@ class MacroCommand extends Common
         }
     }
     /**
-     * 删除MacroCommand
+     * 删除ScheduleCommand
      * @param  array $param [description]
      */
     public function delCommandById($param)
@@ -126,14 +105,14 @@ class MacroCommand extends Common
     }
 
     /**
-     * 删除Macro
+     * 删除Schedule
      * @param  array $param [description]
      */
     public function delDatas($param)
     {
         $ids = $param['ids'];
         $map = [];
-        $map['macro'] = ['in', $ids];
+        $map['schedule'] = ['in', $ids];
         $this->startTrans();
         try {
 

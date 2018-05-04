@@ -1,6 +1,6 @@
 <?php
 // +----------------------------------------------------------------------
-// | Description: 计划任务
+// | Description: 场景
 // +----------------------------------------------------------------------
 // | Author: Jensen
 // +----------------------------------------------------------------------
@@ -12,51 +12,63 @@ class Schedule extends ApiCommon
 
     public function index()
     {
-        $moodModel = model('Schedule');
-        $data = $moodModel->getDataList();
+        $scheduleModel = model('Schedule');
+        $param = $this->param;
+        $keywords = !empty($param['keywords']) ? $param['keywords']: '';
+        $page = !empty($param['page']) ? $param['page']: '';
+        $limit = !empty($param['limit']) ? $param['limit']: '';
+        $data = $scheduleModel->getDataList($keywords,$page,$limit);
         return resultArray(['data' => $data]);
     }
-    
     public function read()
     {
-        $moodModel = model('Schedule');
+        $scheduleCommandModel = model('ScheduleCommand');
         $param = $this->param;
-        $data = $moodModel->getCommandList($param);
-        if (!$data) {
-            return resultArray(['error' => $moodModel->getError()]);
-        }
-        return resultArray(['data' => 'Add success']);
+        $data = $scheduleCommandModel->getDataList($param);
+        return resultArray(['data' => $data]);
     }
-
     public function save()
     {
-        $moodModel = model('Schedule');
         $param = $this->param;
-        $data = $moodModel->createData($param);
+        // $devices = $param['devices'];
+        // return resultArray(['data' => $param ]);
+        $scheduleModel = model('Schedule');
+        $data = $scheduleModel->createData($param);
+        if (!$data[0]) {
+            return resultArray(['error' => $scheduleModel->getError()]);
+        }
+        $newID = $data[1];
+        $scheduleCommandModel = model('ScheduleCommand');
+        
+        $data = $scheduleCommandModel->createData($param,$newID);
         if (!$data) {
-            return resultArray(['error' => $moodModel->getError()]);
+            return resultArray(['error' => $scheduleCommandModel->getError()]);
         }
         return resultArray(['data' => 'Add success']);
     }
-
-    public function delete()
+    public function deleteSchedule()
     {
-        $moodModel = model('Schedule');
+        $scheduleModel = model('Schedule');
         $param = $this->param;
-        $data = $moodModel->delDataById($param);
+        $data = $scheduleModel->delDatas($param);
         if (!$data) {
-            return resultArray(['error' => $moodModel->getError()]);
+            return resultArray(['error' => $scheduleModel->getError()]);
+        }
+        $scheduleCommandModel = model('ScheduleCommand');
+        $param = $this->param;
+        $data = $scheduleCommandModel->delDatas($param);
+        if (!$data) {
+            return resultArray(['error' => $scheduleCommandModel->getError()]);
         }
         return resultArray(['data' => 'Delete success']);
     }
-
-    public function delCommandById()
+    public function deleteCommand()
     {
-        $moodModel = model('Schedule');
+        $scheduleCommandModel = model('ScheduleCommand');
         $param = $this->param;
-        $data = $moodModel->delCommandById($param);
+        $data = $scheduleCommandModel->delCommandById($param);
         if (!$data) {
-            return resultArray(['error' => $moodModel->getError()]);
+            return resultArray(['error' => $scheduleCommandModel->getError()]);
         }
         return resultArray(['data' => 'Delete success']);
     }

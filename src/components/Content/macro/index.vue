@@ -74,11 +74,11 @@ export default {
   },
   methods: {
     run(macro) {
-      const data = {
-        params: macro
-      };
-      this.apiGet("device/macro.php?action=run", data).then(res => {
-        udpArr.sendUdpArr(res);
+      const data =  macro
+      this.apiPost("admin/macro/run", data).then(res => {
+        this.handelResponse(res,data=>{
+           udpArr.sendUdpArr(data);
+        })
       });
     },
     goback(bool) {
@@ -89,8 +89,7 @@ export default {
       this.add = true;
       this.setting = true;
       var data = {
-        schedule: "",
-        type: ""
+        id: ""
       };
       this.selectData = data;
     },
@@ -117,17 +116,13 @@ export default {
             ids.push(selection.id);
           }
           const data = {
-            params: {
-              ids: ids
-            }
+            ids: ids
           };
-          this.apiGet("device/macro.php?action=delete", data).then(res => {
-            if (res[0]) {
+          this.apiPost("admin/macro/deleteMacro", data).then(res => {
+            this.handelResponse(res, data => {
               this.init();
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
+              _g.toastMsg("success", data);
+            });
           });
         })
         .catch(() => {

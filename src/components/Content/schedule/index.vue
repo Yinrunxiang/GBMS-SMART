@@ -71,12 +71,12 @@ export default {
       add: true,
       setting: false,
       selectData: {},
-      isLoading:true,
+      isLoading: true
     };
   },
   methods: {
     goback(bool) {
-      this.init()
+      this.init();
       this.setting = bool;
     },
     addressSetting() {
@@ -121,17 +121,13 @@ export default {
             ids.push(selection.id);
           }
           const data = {
-            params: {
               ids: ids
-            }
           };
-          this.apiGet("device/schedule.php?action=delete", data).then(res => {
-            if (res[0]) {
+          this.apiPost("admin/schedule/deleteSchedule", data).then(res => {
+            this.handelResponse(res, data => {
               this.init();
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
+              _g.toastMsg("success", data);
+            })
           });
         })
         .catch(() => {
@@ -146,39 +142,41 @@ export default {
           limit: this.limit
         }
       };
-      this.apiGet("device/schedule.php?action=search", data).then(res => {
-        var schedules = res;
-        for (var schedule of schedules) {
-          schedule.week = [];
-          if (schedule.mon == "1") {
-            schedule.week.push("mon");
+      this.apiGet("admin/schedule", data).then(res => {
+        this.handelResponse(res, data => {
+          var schedules = data;
+          for (var schedule of schedules) {
+            schedule.week = [];
+            if (schedule.mon == "1") {
+              schedule.week.push("mon");
+            }
+            if (schedule.tues == "1") {
+              schedule.week.push("tues");
+            }
+            if (schedule.wed == "1") {
+              schedule.week.push("wed");
+            }
+            if (schedule.thur == "1") {
+              schedule.week.push("thur");
+            }
+            if (schedule.fri == "1") {
+              schedule.week.push("fri");
+            }
+            if (schedule.sat == "1") {
+              schedule.week.push("sat");
+            }
+            if (schedule.sun == "1") {
+              schedule.week.push("sun");
+            }
+            // for (var command of commands) {
+            //   if (schedule.id == command.schedule) {
+            //     schedule.devices.push[command];
+            //   }
+            // }
           }
-          if (schedule.tues == "1") {
-            schedule.week.push("tues");
-          }
-          if (schedule.wed == "1") {
-            schedule.week.push("wed");
-          }
-          if (schedule.thur == "1") {
-            schedule.week.push("thur");
-          }
-          if (schedule.fri == "1") {
-            schedule.week.push("fri");
-          }
-          if (schedule.sat == "1") {
-            schedule.week.push("sat");
-          }
-          if (schedule.sun == "1") {
-            schedule.week.push("sun");
-          }
-          // for (var command of commands) {
-          //   if (schedule.id == command.schedule) {
-          //     schedule.devices.push[command];
-          //   }
-          // }
-        }
-        this.tableData = schedules;
-        this.isLoading = false
+          this.tableData = schedules;
+        });
+        this.isLoading = false;
       });
     },
     //初始化时统一加载

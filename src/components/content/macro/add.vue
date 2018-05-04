@@ -192,7 +192,7 @@ export default {
       floor: "",
       room: "",
       time: "",
-      isLoading: true,
+      isLoading: false,
       modes: [
         {
           value: "cool",
@@ -402,22 +402,14 @@ export default {
       }
     },
     deleteCommand(scope) {
-      const data = {
-        params: {
-          id: scope.row.macro_id
-        }
+      var data = {
+        id: scope.row.macro_id
       };
-      this.apiGet("device/macro.php?action=delete_command", data).then(res => {
-        if (res[0]) {
-          _g.toastMsg("success", res[1]);
+      this.apiPost("admin/macro/deleteCommand", data).then(res => {
+        this.handelResponse(res, data => {
+          _g.toastMsg("success", data);
           this.search_command();
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
-        // for (var key in this.form) {
-        //     this.form[key] = ""
-        // }
-        // this.isLoading = !this.isLoading;
+        });
       });
     },
     save() {
@@ -450,6 +442,7 @@ export default {
           _g.toastMsg("success", data);
           this.goback();
         });
+        this.isLoading = false;
       });
     },
     getAllDevices() {
@@ -476,6 +469,11 @@ export default {
       this.getAllDevices();
     },
     search_command() {
+      if (!this.macro.id) {
+        this.isLoading = false;
+        return;
+        
+      }
       for (var device of this.tableData) {
         this.$refs.deviceTable.toggleRowSelection(device, false);
       }
@@ -485,6 +483,7 @@ export default {
       this.apiGet("admin/macro/" + this.macro.id, {}).then(res => {
         this.handelResponse(res, data => {
           for (var command of data) {
+            command.id = parseInt(command.id);
             command.time = command.time ? parseInt(command.time) : 0;
             vm.devicesId.push(command.id);
             for (var index in vm.tableData) {

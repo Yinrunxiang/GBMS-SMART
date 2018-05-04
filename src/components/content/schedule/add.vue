@@ -340,7 +340,7 @@ export default {
     dateChange() {
       this.schedule.time_1 = _g.formatDate(this.schedule.time_1);
     },
-    sourceChange(command){
+    sourceChange(command) {
       command.deviceProperty.source = command.operation_2;
       command.operation_3 = "";
       command.operation_4 = "";
@@ -361,12 +361,12 @@ export default {
         musicApi.readStatus(command, command.deviceProperty);
       }
     },
-    albumChange(command){
-      command.deviceProperty.songList = []
+    albumChange(command) {
+      command.deviceProperty.songList = [];
       command.operation_4 = "";
-      for(var song of command.deviceProperty.songListAll){
-        if(song.albumNo == command.operation_3){
-          command.deviceProperty.songList.push(song)
+      for (var song of command.deviceProperty.songListAll) {
+        if (song.albumNo == command.operation_3) {
+          command.deviceProperty.songList.push(song);
         }
       }
     },
@@ -440,16 +440,15 @@ export default {
             var musicObj = Lockr.get(
               "music_" + device.id + "_" + device.operation_2
             );
-            device.deviceProperty = {}
-            if(musicObj){
+            device.deviceProperty = {};
+            if (musicObj) {
               device.deviceProperty = musicObj;
-            }
-            else{
-              device.deviceProperty.source = device.operation_2
-              device.deviceProperty.albumlist = []
-              device.deviceProperty.songList = []
-              device.deviceProperty.songListAll = []
-              musicApi.readStatus(device,device.deviceProperty);
+            } else {
+              device.deviceProperty.source = device.operation_2;
+              device.deviceProperty.albumlist = [];
+              device.deviceProperty.songList = [];
+              device.deviceProperty.songListAll = [];
+              musicApi.readStatus(device, device.deviceProperty);
             }
           }
           if (device.devicetype == "light") {
@@ -463,25 +462,14 @@ export default {
     },
     deleteCommand(scope) {
       const data = {
-        params: {
-          id: scope.row.schedule_id
-        }
+        id: scope.row.schedule_id
       };
-      this.apiGet(
-        "device/schedule.php?action=delete_command",
-        data
-      ).then(res => {
-        if (res[0]) {
-          _g.toastMsg("success", res[1]);
+      this.apiPost("device/schedule/deleteCommand", data).then(
+        this.handelResponse(res, data => {
+          _g.toastMsg("success", data);
           this.search_command();
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
-        // for (var key in this.form) {
-        //     this.form[key] = ""
-        // }
-        // this.isLoading = !this.isLoading;
-      });
+        })
+      );
     },
     save() {
       if (this.schedule.schedule == "" || this.schedule.type == "") {
@@ -523,41 +511,30 @@ export default {
           this.schedule.sun = "1";
         }
       }
-      var devices = []
+      var devices = [];
       for (var command of this.commands) {
-        var device= {}
-        device.id = command.id
+        var device = {};
+        device.id = command.id;
         device.on_off = command.on_off ? "1" : "0";
-        device.mode = command.mode
-        device.grade = command.grade
-        device.operation_1 = command.operation_1
-        device.operation_2 = command.operation_2
-        device.operation_3 = command.operation_3
-        device.operation_4 = command.operation_4
-        device.operation_5 = command.operation_5
-        devices.push(device)
+        device.mode = command.mode;
+        device.grade = command.grade;
+        device.operation_1 = command.operation_1;
+        device.operation_2 = command.operation_2;
+        device.operation_3 = command.operation_3;
+        device.operation_4 = command.operation_4;
+        device.operation_5 = command.operation_5;
+        devices.push(device);
       }
-      this.schedule.devices = devices
+      this.schedule.devices = devices;
 
-      const data = {
-        params: this.schedule
-      };
+      const data = this.schedule;
       // console.log(data);
-      this.apiGet(
-        "device/schedule.php?action=insert_command",
-        data
-      ).then(res => {
-        if (res[0]) {
-          _g.toastMsg("success", res[1]);
+      this.apiPost("admin/schedule", data).then(res => {
+        this.handelResponse(res, data => {
+          _g.toastMsg("success", data);
           this.goback();
-        } else {
-          this.isLoading = true;
-          _g.toastMsg("error", res[1]);
-        }
-        // for (var key in this.form) {
-        //     this.form[key] = ""
-        // }
-        // this.isLoading = !this.isLoading;
+        });
+        this.isLoading = false;
       });
     },
     getAllDevices() {
@@ -589,16 +566,8 @@ export default {
       }
       this.commands = [];
       this.devicesId = [];
-      const data = {
-        params: {
-          schedule: this.schedule.id
-        }
-      };
       var vm = this;
-      this.apiGet(
-        "device/schedule.php?action=search_command",
-        data
-      ).then(res => {
+      this.apiGet("admin/schedule/" + this.schedule.id, {}).then(res => {
         for (var command of res) {
           vm.devicesId.push(command.id);
           for (var index in vm.tableData) {
@@ -630,7 +599,7 @@ export default {
             var musicObj = Lockr.get(
               "music_" + command.id + "_" + command.operation_2
             );
-            command.deviceProperty = {}
+            command.deviceProperty = {};
             if (musicObj) {
               command.deviceProperty = musicObj;
             } else {
