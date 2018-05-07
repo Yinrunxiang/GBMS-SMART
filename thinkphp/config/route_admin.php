@@ -18,6 +18,7 @@ return [
         'admin/mood' => 'admin/mood',
         'admin/macro' => 'admin/macro',
         'admin/schedule' => 'admin/schedule',
+        'admin/record' => 'admin/record',
     ],
     // 【基础】登录
     'admin/base/login' => ['admin/base/login', ['method' => 'POST']],
@@ -52,13 +53,17 @@ return [
     // 【Macro】执行Macro命令
     'admin/macro/run' => ['admin/macro/run', ['method' => 'POST']],
     // 【Macro】删除Macro
-    'admin/macro/deleteMacro' => ['admin/macro/deleteMacro', ['method' => 'POST']],
+    'admin/macro/delete' => ['admin/macro/delete', ['method' => 'POST']],
     // 【Macro】删除MarcoCommand
     'admin/macro/deleteCommand' => ['admin/macro/deleteCommand', ['method' => 'POST']],
     // 【Schedule】删除Schedule
-    'admin/schedule/deleteSchedule' => ['admin/schedule/deleteSchedule', ['method' => 'POST']],
+    'admin/schedule/delete' => ['admin/schedule/delete', ['method' => 'POST']],
     // 【Schedule】删除ScheduleCommand
     'admin/schedule/deleteCommand' => ['admin/schedule/deleteCommand', ['method' => 'POST']],
+    // 【Mood】删除Mood
+    'admin/mood/delete' => ['admin/mood/delete', ['method' => 'POST']],
+    // 【Record】删除Record
+    'admin/record/count' => ['admin/record/count', ['method' => 'POST']],
 	// MISS路由
     '__miss__' => 'admin/base/miss',
 ];

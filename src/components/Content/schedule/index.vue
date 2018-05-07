@@ -123,7 +123,7 @@ export default {
           const data = {
               ids: ids
           };
-          this.apiPost("admin/schedule/deleteSchedule", data).then(res => {
+          this.apiPost("admin/schedule/delete", data).then(res => {
             this.handelResponse(res, data => {
               this.init();
               _g.toastMsg("success", data);

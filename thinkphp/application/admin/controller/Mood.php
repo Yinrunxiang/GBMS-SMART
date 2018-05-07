@@ -13,7 +13,8 @@ class Mood extends ApiCommon
     public function index()
     {
         $moodModel = model('Mood');
-        $data = $moodModel->getDataList();
+        $param = $this->param;
+        $data = $moodModel->getDataList($param);
         return resultArray(['data' => $data]);
     }
     public function save()

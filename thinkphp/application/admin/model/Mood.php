@@ -16,12 +16,13 @@ class Mood extends Common
 
     protected $name = 'mood';
 
-    public function getDataList()
+    public function getDataList($param)
     {
+
         $map = [];
-        $map['mood.address'] = ['=', $address];
-        $map['mood.floor'] = ['=', $floor];
-        $map['mood.room'] = ['=', $room];
+        $map['mood.address'] = ['=', $param['address']];
+        $map['mood.floor'] = ['=', $param['floor']];
+        $map['mood.room'] = ['=', $param['room']];
         $data = $this
             ->alias('mood')
             ->join('device device', 'mood.device=device.id', 'LEFT')
@@ -62,19 +63,23 @@ class Mood extends Common
         }
         $this->startTrans();
         try {
-            foreach ($devicetypes as $k => $v) {
+            $map = [];
+            $map['address'] = ['=', $address];
+            $map['floor'] = ['=', $floor];
+            $map['room'] = ['=', $room];
+            $map['devicetype'] = ['in', $devicetypes];
+            $data = Db::table('device')->field("'" . $mood . "' as mood,'" . $address . "' as address,'" . $floor . "' as floor,'" . $room . "' as room,id as device,case when on_off = 'on' then '1' when on_off='off' or on_off='' or on_off is null then '0' end as on_off,mode,grade,operation_1 as status_1,operation_2 as status_2,operation_3 as status_3")->where($map)->select();
+            $this->allowField(true)->saveAll($data, false);
+            foreach ($curtains as $k => $v) {
+                $curtain = $v;
+                $on_off = $curtain->on_off ? '1' : '0';
                 $map = [];
                 $map['address'] = ['=', $address];
                 $map['floor'] = ['=', $floor];
                 $map['room'] = ['=', $room];
-                $map['devicetype'] = ['=', $v];
-                $data = Db::table('device') . field("'" . $mood . "' as mood,'" . $address . "' as address,'" . $floor . "' as floor,'" . $room . "' as room,id,case when on_off = 'on' then '1' when on_off='off' or on_off='' or on_off is null then '0' end as on_off,mode,grade,operation_1,operation_2,operation_3")->where($map)->select();
-                $this->data($data)->insert();
-            }
-            foreach ($curtains as $k => $v) {
-                $curtain = $v;
-                $on_off = $curtain->on_off ? '1' : '0';
-                $this->data(['on_off' => $on_off])->update();
+                $map['mood'] = ['=', $mood];
+                $map['id'] = ['=', $curtain->id];
+                $this->allowField(true)->save(['on_off' => $on_off], $map);
             }
             $this->commit();
             return true;
@@ -92,10 +97,10 @@ class Mood extends Common
     public function delDatas($param)
     {
         $map = [];
-        $map['mood'] = ['=', $mood];
-        $map['address'] = ['=', $address];
-        $map['floor'] = ['=', $floor];
-        $map['room'] = ['=', $room];
+        $map['mood'] = ['=', $param['mood']];
+        $map['address'] = ['=', $param['address']];
+        $map['floor'] = ['=', $param['floor']];
+        $map['room'] = ['=', $param['room']];
         $this->startTrans();
 
         try {

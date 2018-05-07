@@ -51,7 +51,7 @@ class Schedule extends ApiCommon
         }
         
     }
-    public function deleteSchedule()
+    public function delete()
     {
         $scheduleModel = model('Schedule');
         $param = $this->param;

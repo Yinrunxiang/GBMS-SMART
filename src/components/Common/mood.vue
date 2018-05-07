@@ -1,9 +1,10 @@
 <template>
-    <div  v-loading="moodLoading">
-    <el-card v-for="(mood,key) in moodList" :key = "key" class="box-card m-b-15" :span="24">
-            <div v-show="!mood.add" style="line-height:36px" >
+    <div   v-loading="moodLoading">
+      <div class="mood-container">
+    <el-card v-for="(mood,key) in moodList" :key = "key" class="box-card m-r-5 m-b-15" :span="24">
+            <div v-show="!mood.add" style="line-height:40px" >
               <span>{{mood.mood}}</span>
-              <a  class="fa fa-close fr m-l-10 m-t-5" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>
+              <a  class="fa fa-close fr m-l-10 m-t-10" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>
               <el-button type="primary" @click="run(mood.deviceList)" class="fr">Run</el-button>
                   <!-- <el-switch class="fr" v-model="mood.on_off" @change="switch_change(mood.on_off,mood.deviceList)">
                   </el-switch> -->
@@ -33,14 +34,19 @@
            </div>
            
             
-        </el-card>
-        <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="addMood()" >Add</el-button>
-            <el-button @click="closeDialog">Cancel</el-button>
-        </div>
+      </el-card>
+      </div>
+      <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="addMood()" >Add</el-button>
+          <el-button @click="closeDialog">Cancel</el-button>
+      </div>
     </div>
 </template>
 <style>
+.mood-container {
+  overflow: scroll;
+  max-height: 350px;
+}
 .mood-curtain-switch {
   margin-right: 20px;
   line-height: 1 !important;
@@ -89,7 +95,7 @@ export default {
     //   });
     // },
     run(deviceList) {
-      udpArr.sendUdpArr(deviceList)
+      udpArr.sendUdpArr(deviceList);
     },
     closeDialog() {
       this.$emit("close", false);
@@ -103,11 +109,11 @@ export default {
           room: this.room.room
         }
       };
-      this.apiGet("device/mood.php?action=search", data).then(res => {
-        if (res) {
+      this.apiGet("admin/mood", data).then(res => {
+        this.handelResponse(res, data => {
           var moodList = {};
 
-          for (var mood of res) {
+          for (var mood of data) {
             if (!moodList[mood.mood]) {
               var moodObj = {
                 mood: mood.mood,
@@ -121,9 +127,8 @@ export default {
           }
           this.oldMoodList = moodList;
           this.moodList = moodList;
-          this.moodLoading = false;
-          // console.log(this.moodList);
-        }
+        });
+        this.moodLoading = false;
       });
     },
     saveMood(mood) {
@@ -151,23 +156,19 @@ export default {
         }
       }
       var data = {
-        params: {
-          mood: mood.mood,
-          address: this.room.address,
-          floor: this.room.floor,
-          room: this.room.room,
-          devicetypes: this.devicetypes,
-          curtains: curtains
-        }
+        mood: mood.mood,
+        address: this.room.address,
+        floor: this.room.floor,
+        room: this.room.room,
+        devicetypes: this.devicetypes,
+        curtains: curtains
       };
       // console.log(data);
-      this.apiGet("device/mood.php?action=insert", data).then(res => {
-        if (res[0]) {
-          _g.toastMsg("success", res[1]);
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
-        this.getMood();
+      this.apiPost("admin/mood", data).then(res => {
+        this.handelResponse(res, data => {
+          _g.toastMsg("success", data);
+          this.getMood();
+        });
       });
     },
     addMood() {
@@ -186,20 +187,16 @@ export default {
         type: "warning"
       }).then(() => {
         var data = {
-          params: {
-            mood: mood.mood,
-            address: this.room.address,
-            floor: this.room.floor,
-            room: this.room.room
-          }
+          mood: mood.mood,
+          address: this.room.address,
+          floor: this.room.floor,
+          room: this.room.room
         };
-        this.apiGet("device/mood.php?action=delete", data).then(res => {
-          if (res[0]) {
-            _g.toastMsg("success", res[1]);
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
-          this.getMood();
+        this.apiPost("admin/mood/delete", data).then(res => {
+          this.handelResponse(res, data => {
+            _g.toastMsg("success", data);
+            this.getMood();
+          });
         });
       });
     }

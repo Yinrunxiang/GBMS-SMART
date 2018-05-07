@@ -118,7 +118,7 @@ export default {
           const data = {
             ids: ids
           };
-          this.apiPost("admin/macro/deleteMacro", data).then(res => {
+          this.apiPost("admin/macro/delete", data).then(res => {
             this.handelResponse(res, data => {
               this.init();
               _g.toastMsg("success", data);

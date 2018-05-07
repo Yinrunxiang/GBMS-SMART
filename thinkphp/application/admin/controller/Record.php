@@ -17,6 +17,13 @@ class Record extends ApiCommon
         $data = $recordModel->getDataList($param['start'],$param['end'],$param['beginDate'],$param['endDate']);
         return resultArray(['data' => $data]);
     }
+    public function count()
+    {   
+        $recordModel = model('Record');
+        $param = $this->param;   
+        $data = $recordModel->getDataCount($param['beginDate'],$param['endDate']);
+        return resultArray(['data' => $data]);
+    }
 
     public function save()
     {
@@ -38,14 +45,6 @@ class Record extends ApiCommon
             return resultArray(['error' => $recordModel->getError()]);
         } 
         return resultArray(['data' => 'Update success']);
-    }
-
-    public function count()
-    {   
-        $recordModel = model('Record');
-        $param = $this->param;
-        $data = $recordModel->getDataList($param['beginDate'],$param['endDate']);
-        return resultArray(['data' => $data]);
     }
 }
  

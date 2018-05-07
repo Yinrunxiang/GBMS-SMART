@@ -46,7 +46,7 @@ class Macro extends ApiCommon
         }
         return resultArray(['data' => 'Add success']);
     }
-    public function deleteMacro()
+    public function delete()
     {
         $macroModel = model('Macro');
         $param = $this->param;
