@@ -34,7 +34,7 @@ class Schedule extends ApiCommon
         // return resultArray(['data' => $param ]);
         $scheduleModel = model('Schedule');
         $data = $scheduleModel->createData($param);
-        if (!$data[0]) {
+        if (!$data || !$data[0]) {
             return resultArray(['error' => $scheduleModel->getError()]);
         }
         $newID = $data[1];
@@ -44,7 +44,12 @@ class Schedule extends ApiCommon
         if (!$data) {
             return resultArray(['error' => $scheduleCommandModel->getError()]);
         }
-        return resultArray(['data' => 'Add success']);
+        if(empty($param['id'])){
+            return resultArray(['data' => 'Add success']);
+        }else{
+            return resultArray(['data' => 'Update success']);
+        }
+        
     }
     public function deleteSchedule()
     {

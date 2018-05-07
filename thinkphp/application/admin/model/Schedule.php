@@ -48,27 +48,29 @@ class Schedule extends Common
     public function createData($param)
     {
         $id = $param['id'];
-        $schedule = $param['schedule'];
-        $type = $param['type'];
-        $time_1 = $param['time_1'];
-        $time_2 = $param['time_2'];
-        $mon = $param['mon'];
-        $tues = $param['tues'];
-        $wed = $param['wed'];
-        $thur = $param['thur'];
-        $fri = $param['fri'];
-        $sat = $param['sat'];
-        $sun = $param['sun'];
-        $data = ["schedule"=>$schedule,"type"=>$type,"time_1"=>$time_1,"time_2"=>$time_2,"mon"=>$mon,"tues"=>$tues,"wed"=>$wed,"thur"=>$thur,"fri"=>$fri,"sat"=>$sat,"sun"=>$sun];
+        // $schedule = $param['schedule'];
+        // $type = $param['type'];
+        // $time_1 = $param['time_1'];
+        // $time_2 = $param['time_2'];
+        // $mon = $param['mon'];
+        // $tues = $param['tues'];
+        // $wed = $param['wed'];
+        // $thur = $param['thur'];
+        // $fri = $param['fri'];
+        // $sat = $param['sat'];
+        // $sun = $param['sun'];
+        // $data = ["schedule"=>$schedule,"type"=>$type,"time_1"=>$time_1,"time_2"=>$time_2,"mon"=>$mon,"tues"=>$tues,"wed"=>$wed,"thur"=>$thur,"fri"=>$fri,"sat"=>$sat,"sun"=>$sun];
+        $newID= "";
         $this->startTrans();
         try {
             if (empty($id)) {
-                $newID - $this->insertGetId($data);
+                $newID = $this->insertGetId($data);
             } else {
-                $this->allowField(true)->data($data)->where('id', $id)->update();
+                $this->allowField(true)->save($param, ['id' => $id]);
             }
             $this->commit();
-            return true;
+            $data = [true, $newID];
+            return $data;
         } catch (\Exception $e) {
             $this->rollback();
             $this->error = 'Add failure';

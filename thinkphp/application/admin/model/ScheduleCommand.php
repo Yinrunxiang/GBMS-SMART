@@ -35,12 +35,8 @@ class ScheduleCommand extends Common
             ->join('device b', 'a.device = b.id', 'left')
             ->join('room c', 'b.room = c.room and b.address = c.address and b.floor = c.floor', 'left')
             ->where($map)
-            ->file('schedule,a.id as schedule_id,a.device as id,subnetid,deviceid,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name')
+            ->field('schedule,a.id as schedule_id,a.device as id,subnetid,deviceid,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name')
             ->select();
-        if (!$data) {
-            $this->error = 'This data is not available';
-            return false;
-        }
         return $data;
     }
 
@@ -72,7 +68,7 @@ class ScheduleCommand extends Common
             $list = [];
             foreach ($devices as $k => $v) {
                 $device = $v;
-                $data = ['schedule' => $id, 'device' => $device['id'], 'on_off' => $device['on_off'], 'mode' => $device['mode'], 'grade' => $device['grade'], 'status_1' => $device['operation_1'], 'status_2' => $device['operation_2'], 'status_3' => $device['operation_3'], 'status_4' => $device['operation_4'], 'status_5' => $device['operation_5'], 'time' => $device['time']];
+                $data = ['schedule' => $id, 'device' => $device['id'], 'on_off' => $device['on_off'], 'mode' => $device['mode'], 'grade' => $device['grade'], 'status_1' => $device['operation_1'], 'status_2' => $device['operation_2'], 'status_3' => $device['operation_3'], 'status_4' => $device['operation_4'], 'status_5' => $device['operation_5']];
                 array_push($list, $data);
 
             }

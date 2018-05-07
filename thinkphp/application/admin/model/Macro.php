@@ -67,7 +67,7 @@ class Macro extends Common
                 // $this->data(['macro' => $macro])->insert();
                 $newID = $this->insertGetId(['macro' => $macro]);
             } else {
-                $this->allowField(true)->data(['macro' => $macro])->where('id', $id)->update();
+                $this->allowField(true)->save($param, ['id' => $id]);
             }
             $this->commit();
             $data = [true, $newID];

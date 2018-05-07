@@ -37,10 +37,6 @@ class MacroCommand extends Common
             ->field('macro,a.id as macro_id,a.device as id,subnetid,deviceid,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name,a.time')
             ->where($map)
             ->select();
-        if (!$data) {
-            $this->error = 'This data is not available';
-            return false;
-        }
         return $data;
     }
 

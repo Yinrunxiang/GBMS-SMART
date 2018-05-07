@@ -34,7 +34,7 @@ class Macro extends ApiCommon
         // return resultArray(['data' => $param ]);
         $macroModel = model('Macro');
         $data = $macroModel->createData($param);
-        if (!$data[0]) {
+        if (!$data || !$data[0]) {
             return resultArray(['error' => $macroModel->getError()]);
         }
         $newID = $data[1];

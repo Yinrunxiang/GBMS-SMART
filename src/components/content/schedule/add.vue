@@ -8,8 +8,8 @@
                 <div class="fl " style="margin-left:23px;">
                    <el-select class=" w-230" v-model="schedule.type" placeholder="">
                         <el-option
-                          v-for="item in timeTypeArr"
-                          :key="item.value"
+                          v-for="(item,key) in timeTypeArr"
+                          :key="key"
                           :label="item.label"
                           :value="item.value">
                         </el-option>
@@ -21,8 +21,8 @@
                           multiple
                           placeholder="Please choose">
                           <el-option
-                            v-for="item in weekArr"
-                            :key="item.value"
+                            v-for="(item,key) in weekArr"
+                            :key="key"
                             :label="item.label"
                             :value="item.value">
                           </el-option>
@@ -119,16 +119,16 @@
                     <template slot-scope="scope">
                       <el-select v-if="commands[scope.$index].devicetype == 'ac'" v-model="commands[scope.$index].mode" placeholder="">
                         <el-option
-                          v-for="item in modes"
-                          :key="item.value"
+                          v-for="(item,key) in modes"
+                          :key="key"
                           :label="item.label"
                           :value="item.value">
                         </el-option>
                       </el-select>
                       <el-select @change="sourceChange(commands[scope.$index])" v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_2" placeholder="">
                         <el-option
-                          v-for="item in musicSource"
-                          :key="item.value"
+                          v-for="(item,key) in musicSource"
+                          :key="key"
                           :label="item.label"
                           :value="item.value">
                         </el-option>
@@ -139,18 +139,18 @@
                     <template slot-scope="scope">
                       <el-select v-if="commands[scope.$index].devicetype == 'ac'" v-model="commands[scope.$index].grade" placeholder="">
                         <el-option
-                          v-for="item in grades"
-                          :key="item.value"
+                          v-for="(item,key) in grades"
+                          :key="key"
                           :label="item.label"
                           :value="item.value">
                         </el-option>
                       </el-select>
                       <el-select @change="albumChange(commands[scope.$index])" v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_3" placeholder="">
                         <el-option
-                          v-for="album in commands[scope.$index].deviceProperty.albumlist"
-                          :key="album.albumNo"
-                          :label="album.albumName"
-                          :value="album.albumNo">
+                          v-for="(item,key) in commands[scope.$index].deviceProperty.albumlist"
+                          :key="key"
+                          :label="item.albumName"
+                          :value="item.albumNo">
                         </el-option>
                       </el-select>
                     </template>
@@ -159,10 +159,10 @@
                     <template slot-scope="scope">
                       <el-select v-if="commands[scope.$index].devicetype == 'music'" v-model="commands[scope.$index].operation_4" placeholder="">
                         <el-option
-                          v-for="song in commands[scope.$index].deviceProperty.songList"
-                          :key="song.songNo"
-                          :label="song.songName"
-                          :value="song.songNo">
+                          v-for="(item,key) in commands[scope.$index].deviceProperty.songList"
+                          :key="key"
+                          :label="item.songName"
+                          :value="item.songNo">
                         </el-option>
                       </el-select>
                     </template>
@@ -464,12 +464,12 @@ export default {
       const data = {
         id: scope.row.schedule_id
       };
-      this.apiPost("device/schedule/deleteCommand", data).then(
+      this.apiPost("admin/schedule/deleteCommand", data).then(res => {
         this.handelResponse(res, data => {
           _g.toastMsg("success", data);
           this.search_command();
-        })
-      );
+        });
+      });
     },
     save() {
       if (this.schedule.schedule == "" || this.schedule.type == "") {
@@ -568,53 +568,55 @@ export default {
       this.devicesId = [];
       var vm = this;
       this.apiGet("admin/schedule/" + this.schedule.id, {}).then(res => {
-        for (var command of res) {
-          vm.devicesId.push(command.id);
-          for (var index in vm.tableData) {
-            if (vm.tableData[index].id == command.id) {
-              vm.$refs.deviceTable.toggleRowSelection(
-                vm.tableData[index],
-                true
-              );
+        this.handelResponse(res, data => {
+          for (var command of data) {
+            vm.devicesId.push(parseInt(command.id));
+            for (var index in vm.tableData) {
+              if (vm.tableData[index].id == command.id) {
+                vm.$refs.deviceTable.toggleRowSelection(
+                  vm.tableData[index],
+                  true
+                );
+              }
             }
-          }
-          command.on_off = command.on_off == "1" ? true : false;
-          command.operation_1 = parseInt(command.status_1);
-          command.operation_2 = parseInt(command.status_2);
-          command.operation_3 = parseInt(command.status_3);
-          command.operation_4 = parseInt(command.status_4);
-          command.operation_5 = parseInt(command.status_5);
-          if (command.devicetype == "ac") {
+            command.on_off = command.on_off == "1" ? true : false;
             command.operation_1 = parseInt(command.status_1);
             command.operation_2 = parseInt(command.status_2);
             command.operation_3 = parseInt(command.status_3);
-          }
-          if (command.devicetype == "music") {
-            command.operation_1 = command.status_1
-              ? parseInt(command.status_1)
-              : 0;
-            command.operation_2 = command.status_2 ? command.status_2 : "01";
-            command.operation_3 = command.status_3;
-            command.operation_4 = command.status_4;
-            var musicObj = Lockr.get(
-              "music_" + command.id + "_" + command.operation_2
-            );
-            command.deviceProperty = {};
-            if (musicObj) {
-              command.deviceProperty = musicObj;
-            } else {
-              command.deviceProperty.source = command.status_2;
-              command.deviceProperty.albumlist = [];
-              command.deviceProperty.songList = [];
-              command.deviceProperty.songListAll = [];
-              musicApi.readStatus(command, command.deviceProperty);
+            command.operation_4 = parseInt(command.status_4);
+            command.operation_5 = parseInt(command.status_5);
+            if (command.devicetype == "ac") {
+              command.operation_1 = parseInt(command.status_1);
+              command.operation_2 = parseInt(command.status_2);
+              command.operation_3 = parseInt(command.status_3);
             }
+            if (command.devicetype == "music") {
+              command.operation_1 = command.status_1
+                ? parseInt(command.status_1)
+                : 0;
+              command.operation_2 = command.status_2 ? command.status_2 : "01";
+              command.operation_3 = command.status_3;
+              command.operation_4 = command.status_4;
+              var musicObj = Lockr.get(
+                "music_" + command.id + "_" + command.operation_2
+              );
+              command.deviceProperty = {};
+              if (musicObj) {
+                command.deviceProperty = musicObj;
+              } else {
+                command.deviceProperty.source = command.status_2;
+                command.deviceProperty.albumlist = [];
+                command.deviceProperty.songList = [];
+                command.deviceProperty.songListAll = [];
+                musicApi.readStatus(command, command.deviceProperty);
+              }
+            }
+            if (command.devicetype == "light") {
+              command.mode = parseInt(command.mode);
+            }
+            vm.commands.push(command);
           }
-          if (command.devicetype == "light") {
-            command.mode = parseInt(command.mode);
-          }
-          vm.commands.push(command);
-        }
+        });
         vm.isLoading = false;
       });
     }
