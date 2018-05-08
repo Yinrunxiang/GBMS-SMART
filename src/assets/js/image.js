@@ -2,10 +2,10 @@
 const imageMethods = {
     data() {
         return {
-            action: HOST + "upload/up.php",
+            action: HOST + "admin/upload/index",
             currentImage: "",
             success: false,
-            showImage:"",
+            showImage: "",
         }
     },
     methods: {
@@ -21,7 +21,7 @@ const imageMethods = {
         beforeAvatarUpload(file) {
             const isJPG = file.type === "image/jpeg";
             const isLt2M = file.size / 1024 / 1024 < 2;
-            
+
             if (!isJPG) {
                 this.$message.error("Uploading pictures can only be JPG format!");
             }
@@ -32,11 +32,9 @@ const imageMethods = {
         },
         deleteImage(image) {
             let data = {
-                params: {
-                    image: image
-                }
+                image: image
             };
-            this.apiGet("upload/delete.php", data).then(res => { });
+            this.apiPost("admin/upload/delete", data).then(res => { });
         },
         destroyedDeleteImage() {
             if (!this.success) {
@@ -46,16 +44,16 @@ const imageMethods = {
             }
         },
         updateDeleteImage() {
-                if (this.currentImage) {
-                    this.deleteImage(this.currentImage)
-                }
+            if (this.currentImage) {
+                this.deleteImage(this.currentImage)
+            }
         },
         recoveryImage() {
             if (this.currentImage == this.form.image) {
                 this.form.image = ""
                 this.form.image_full = ""
                 this.showImage = ""
-            }else{
+            } else {
                 this.deleteImage(this.form.image)
                 this.showImage = ""
             }

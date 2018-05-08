@@ -93,9 +93,9 @@ export default {
         mac: "",
         lat: "",
         lng: "",
-        image:"",
-        comment:"",
-        operation:"0",
+        image: "",
+        comment: "",
+        operation: "0",
         status: "enabled"
       };
       this.address = address;
@@ -109,59 +109,48 @@ export default {
     selectItem(val) {
       this.multipleSelection = val;
     },
-    //保存状态点击事件
-    setStatusBtn(status) {
-      const data = {
-        params: {
-          selections: this.multipleSelection,
-          status: status
-        }
-      };
-      this.apiGet("device/address.php?action=setStatus", data).then(res => {
-        if (res[0]) {
-          for (var selection of this.multipleSelection) {
-            selection.status = status;
-          }
-          _g.toastMsg("success", res[1]);
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
-      });
-    },
     //删除按钮事件
     deleteBtn() {
-      this.$confirm("Are you sure to delete the selected data? The floor, room, and device that the building belongs to will also be deleted.", "Tips", {
-        confirmButtonText: "Yse",
-        cancelButtonText: "No",
-        type: "warning"
-      })
+      this.$confirm(
+        "Are you sure to delete the selected data? The floor, room, and device that the building belongs to will also be deleted.",
+        "Tips",
+        {
+          confirmButtonText: "Yse",
+          cancelButtonText: "No",
+          type: "warning"
+        }
+      )
         .then(() => {
           const data = {
-            params: {
-              selections: this.multipleSelection
-            }
+            selections: this.multipleSelection
           };
-          this.apiGet("device/address.php?action=delete", data).then(res => {
-            if (res[0]) {
-              var address = this.$store.state.address;
-              var floor = this.$store.state.floor;
-              var room = this.$store.state.room;
-              var devices = this.$store.state.devices;
-              for (var selection of this.multipleSelection) {
-                address = address.filter(item => item.address != selection.address);
-                floor = floor.filter(item => item.address != selection.address);
-                room = room.filter(item => item.address != selection.address);
-                devices = devices.filter(item => item.address != selection.address);
-              }
-              this.$store.dispatch("setAddress", address);
-              this.$store.dispatch("setFloor", floor);
-              this.$store.dispatch("setRoom", room);
-              this.$store.dispatch("setDevices", devices);
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
+          this.apiPost("device/address/delete.php?action=delete", data).then(
+            res => {
+              this.handelResponse(res, data => {
+                var address = this.$store.state.address;
+                var floor = this.$store.state.floor;
+                var room = this.$store.state.room;
+                var devices = this.$store.state.devices;
+                for (var selection of this.multipleSelection) {
+                  address = address.filter(
+                    item => item.address != selection.address
+                  );
+                  floor = floor.filter(
+                    item => item.address != selection.address
+                  );
+                  room = room.filter(item => item.address != selection.address);
+                  devices = devices.filter(
+                    item => item.address != selection.address
+                  );
+                }
+                this.$store.dispatch("setAddress", address);
+                this.$store.dispatch("setFloor", floor);
+                this.$store.dispatch("setRoom", room);
+                this.$store.dispatch("setDevices", devices);
+                _g.toastMsg("success", data);
+              });
             }
-          });
+          );
         })
         .catch(() => {
           // catch error

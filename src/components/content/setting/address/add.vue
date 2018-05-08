@@ -116,12 +116,10 @@ export default {
       form: {},
       oldAddress: "",
       oldFloorNum: "",
-      addressOptions: [],
-      
+      addressOptions: []
     };
   },
   methods: {
-   
     goback() {
       this.$emit("goback", false);
     },
@@ -129,33 +127,27 @@ export default {
       this.operation = val;
     },
     getFloor() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/floor.php", data).then(res => {
-        this.$store.dispatch("setFloor", res);
+      this.apiGet("admin/floor", {}).then(res => {
+        this.handelResponse(res, data => {
+          this.$store.dispatch("setFloor", data);
+        });
       });
     },
     addAddressRun() {
       var vm = this;
-      if(this.form.operation == '1'){
-        if(this.form.ip == "" || this.form.mac == ""){
-          this.$message.error('In remote mode, you must enter IP and MAC');
-          return
+      if (this.form.operation == "1") {
+        if (this.form.ip == "" || this.form.mac == "") {
+          this.$message.error("In remote mode, you must enter IP and MAC");
+          return;
         }
       }
       this.isLoading = !this.isLoading;
       this.form.oldAddress = this.oldAddress;
-      const data = {
-        params: this.form
-      };
+      const data = this.form;
 
       if (this.add) {
-        this.apiGet("device/address.php?action=insert", data).then(res => {
-          // _g.clearVuex('setRules')
-          if (res[0]) {
+        this.apiPost("admin/address", data).then(res => {
+          this.handelResponse(res, data => {
             var address = [];
             address = address.concat(vm.$store.state.address);
             address.push(vm.form);
@@ -172,22 +164,20 @@ export default {
               floors.push(floorObj);
             }
             vm.$store.dispatch("setFloor", floors);
-            _g.toastMsg("success", res[1]);
-            vm.updateDeleteImage()
+            _g.toastMsg("success", data);
+            vm.updateDeleteImage();
             vm.success = true;
             setTimeout(() => {
               vm.getFloor();
               vm.goback();
             }, 500);
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
+          });
+
           vm.isLoading = false;
         });
       } else {
-        vm.apiGet("device/address.php?action=update", data).then(res => {
-          // _g.clearVuex('setRules')
-          if (res[0]) {
+        vm.apiPut("admin/address/", data.id, data).then(res => {
+          this.handelResponse(res, data => {
             var address = [];
             address = address.concat(vm.$store.state.address);
             for (var index in address) {
@@ -258,27 +248,25 @@ export default {
               }
             }
             vm.$store.dispatch("setRoom", rooms);
-            _g.toastMsg("success", res[1]);
-            vm.updateDeleteImage()
+            _g.toastMsg("success", data);
+            vm.updateDeleteImage();
             vm.success = true;
             setTimeout(() => {
               vm.getFloor();
               vm.goback();
             }, 500);
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
+          });
           vm.isLoading = false;
         });
       }
     },
     addAddress(form) {
-      if( this.form.comment && this.form.comment.length  > 120){
+      if (this.form.comment && this.form.comment.length > 120) {
         this.$message({
           message: "The length of the comment can not exceed 100 characters",
-          type: 'error'
+          type: "error"
         });
-        return
+        return;
       }
       if (parseInt(this.form.floor_num) < parseInt(this.address.floor_num)) {
         this.$confirm(
@@ -508,10 +496,10 @@ export default {
     this.addressOptions = this.getAddressOptions();
   },
   destroyed() {
-    this.destroyedDeleteImage()
+    this.destroyedDeleteImage();
   },
   computed: {},
   components: {},
-  mixins: [http,image]
+  mixins: [http, image]
 };
 </script>

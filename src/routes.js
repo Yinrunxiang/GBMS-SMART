@@ -24,7 +24,6 @@ const settingTypeLedAdd = require("./components/Content/setting/type/led/add.vue
 const settingTypeLedUpdate = require("./components/Content/setting/type/led/update.vue");
 const address = require("./components/Content/setting/address");
 const addressAdd = require("./components/Content/setting/address/add.vue");
-const addressUpdate = require("./components/Content/setting/address/update.vue");
 const floorSetting = require("./components/Content/setting/floor");
 const floorAdd = require("./components/Content/setting/floor/add.vue");
 const roomSetting = require("./components/Content/setting/room");
@@ -114,7 +113,6 @@ const routes = [
       { path: "setting/type/led/update", component: settingTypeLedUpdate, name: "settingTypeLedUpdate" },
       { path: "setting/address", component: address, name: "address" },
       { path: "setting/address/add", component: addressAdd, name: "addressAdd" },
-      { path: "setting/address/update", component: addressUpdate, name: "addressUpdate" },
       { path: "setting/floor", component: floorSetting, name: "floorSetting" },
       { path: "setting/floor/add", component: floorAdd, name: "floorAdd" },
       { path: "setting/room", component: roomSetting, name: "roomSetting" },

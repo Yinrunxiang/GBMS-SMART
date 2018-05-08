@@ -75,11 +75,11 @@ class Device extends ApiCommon
         } 
         return resultArray(['data' => 'Delete success']);
     }
-    public function updateLocationById()
+    public function updateLocation()
     {
         $deviceModel = model('Device');
         $param = $this->param;
-        $data = $deviceModel->updateLocationById($param);
+        $data = $deviceModel->updateLocation($param);
         if (!$data) {
             return resultArray(['error' => $deviceModel->getError()]);
         } 

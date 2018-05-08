@@ -79,8 +79,8 @@ export default {
         floor: "",
         room_num: "",
         address: "",
-        image:"",
-        comment:"",
+        image: "",
+        comment: "",
         status: "enabled"
       };
       this.floor = floor;
@@ -94,25 +94,6 @@ export default {
     selectItem(val) {
       this.multipleSelection = val;
     },
-    //保存状态点击事件
-    setStatusBtn(status) {
-      const data = {
-        params: {
-          selections: this.multipleSelection,
-          status: status
-        }
-      };
-      this.apiGet("device/floor.php?action=setStatus", data).then(res => {
-        if (res[0]) {
-          for (var selection of this.multipleSelection) {
-            selection.status = status;
-          }
-          _g.toastMsg("success", res[1]);
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
-      });
-    },
     //删除按钮事件
     deleteBtn() {
       this.$confirm("Are you sure to delete the selected data?", "Tips", {
@@ -122,12 +103,10 @@ export default {
       })
         .then(() => {
           const data = {
-            params: {
-              selections: this.multipleSelection
-            }
+            selections: this.multipleSelection
           };
-          this.apiGet("device/floor.php?action=delete", data).then(res => {
-            if (res[0]) {
+          this.apiPost("admin/floor/delete", data).then(res => {
+            this.handerResponse(res, data => {
               var floor = this.$store.state.floor;
               for (var i = 0; i < floor.length; i++) {
                 for (var selection of this.multipleSelection) {
@@ -137,10 +116,8 @@ export default {
                 }
               }
               this.$store.dispatch("setFloor", floor);
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
+              _g.toastMsg("success", data);
+            });
           });
         })
         .catch(() => {
@@ -173,16 +150,6 @@ export default {
       this.getCurrentPage();
       this.getAllData();
     }
-    // getFloor() {
-    //   const data = {
-    //     params: {
-    //       action: "search"
-    //     }
-    //   };
-    //   this.apiGet("device/floor.php", data).then(res => {
-    //     this.$store.dispatch("setFloor", res);
-    //   });
-    // },
   },
   created() {
     console.log("floor");
@@ -190,9 +157,7 @@ export default {
 
     this.init();
   },
-  mounted() {
-    
-  },
+  mounted() {},
   components: {
     add
   },
@@ -217,6 +182,6 @@ export default {
       deep: true
     }
   },
-  mixins: [http,list]
+  mixins: [http, list]
 };
 </script>

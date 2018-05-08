@@ -11,7 +11,6 @@ function getRecordList(beginDate, endDate, vm, count, start, end, setIntervalRec
     };
     http.methods.apiGet("admin/record", data).then(res => {
         http.methods.handelResponse(res, data => {
-            console.log(data)
             var records = data;
             var newRecords = [];
             var addresss = vm.$store.state.address;
@@ -97,7 +96,6 @@ const record = {
         };
         http.methods.apiPost("admin/record/count", data).then(res => {
             http.methods.handelResponse(res, data => {
-                console.log(data)
                 var count = parseInt(data);
                 forGetRecord(beginDate, endDate, vm, count);
             })

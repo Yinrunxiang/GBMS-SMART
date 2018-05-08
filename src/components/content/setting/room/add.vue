@@ -154,58 +154,52 @@ export default {
       // console.log(this.form);
     },
     addAddress() {
-      if( this.form.comment && this.form.comment.length  > 120){
+      if (this.form.comment && this.form.comment.length > 120) {
         this.$message({
           message: "The length of the comment can not exceed 100 characters",
-          type: 'error'
+          type: "error"
         });
-        return
+        return;
       }
       var vm = this;
       this.isLoading = !this.isLoading;
       this.form.oldRoom = this.oldRoom;
-      const data = {
-        params: this.form
-      };
+      const data = this.form;
       if (this.add) {
-        this.apiGet("device/room.php?action=insert", data).then(res => {
-          // _g.clearVuex('setRules')
-          if (res[0]) {
+        this.apiPost("admin/room", data).then(res => {
+          this.handerResponse(res, data => {
             var room = vm.$store.state.room;
             room.push(vm.form);
             vm.$store.dispatch("setRoom", room);
-            _g.toastMsg("success", res[1]);
+            _g.toastMsg("success", data);
             setTimeout(() => {
               vm.goback();
             }, 500);
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
+          });
+
           vm.isLoading = false;
         });
       } else {
-        this.apiGet("device/room.php?action=update", data).then(res => {
-          // _g.clearVuex('setRules')
-          if (res[0]) {
-            var room = [];
-            room = room.concat(vm.$store.state.room);
-            for (var i = 0; i < room.length; i++) {
-              if (
-                room[i].room == vm.form.room &&
-                room[i].floor == vm.form.floor &&
-                room[i].address == vm.form.address
-              ) {
-                room[i] = vm.form;
+        this.apiPut("admin/room/", data.id, data).then(res => {
+          this.handerResponse(res, data => {
+              var room = [];
+              room = room.concat(vm.$store.state.room);
+              for (var i = 0; i < room.length; i++) {
+                if (
+                  room[i].room == vm.form.room &&
+                  room[i].floor == vm.form.floor &&
+                  room[i].address == vm.form.address
+                ) {
+                  room[i] = vm.form;
+                }
               }
-            }
-            vm.$store.dispatch("setRoom", room);
-            _g.toastMsg("success", res[1]);
-            setTimeout(() => {
-              vm.goback();
-            }, 500);
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
+              vm.$store.dispatch("setRoom", room);
+              _g.toastMsg("success", data);
+              setTimeout(() => {
+                vm.goback();
+              }, 500);
+          });
+
           vm.isLoading = false;
         });
       }

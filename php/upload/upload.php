@@ -14,7 +14,7 @@ class upLoad
         $name = $_FILES['image']['name'];
         $uploadfile = $uploaddir . $name;
         $type = strtolower(substr(strrchar($name, '.'), 1));
-//获取文件类型
+        //获取文件类型
         $typeArr = array("jpg", "png", "gif");
         if (!in_array($type, $typeArr)) {
             echo "请上传jpg,png或gif类型的图片！";

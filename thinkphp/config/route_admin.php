@@ -39,7 +39,7 @@ return [
     // // 【设备】修改设备位置
     // 'admin/device/update' => ['admin/device/update', ['method' => 'POST']],
 	// 【设备】修改设备位置
-    'admin/device/updateLocationById' => ['admin/device/updateLocationById', ['method' => 'POST']],
+    'admin/device/updateLocation' => ['admin/device/updateLocation', ['method' => 'POST']],
 	// 【设备】修改LED颜色
     'admin/device/setColor' => ['admin/device/setColor', ['method' => 'POST']],
 	// 【设备】获取IR模块额外参数
@@ -64,6 +64,10 @@ return [
     'admin/mood/delete' => ['admin/mood/delete', ['method' => 'POST']],
     // 【Record】删除Record
     'admin/record/count' => ['admin/record/count', ['method' => 'POST']],
+    // 【Upload】上传图片
+    'admin/upload/index' => ['admin/upload/index', ['method' => 'POST']],
+    // 【Upload】删除图片
+    'admin/upload/delete' => ['admin/upload/delete', ['method' => 'POST']],
 	// MISS路由
     '__miss__' => 'admin/base/miss',
 ];

@@ -28,35 +28,36 @@ class Record extends Common
      */
     public function getDataCount($beginDate, $endDate)
     {
-        $map = [];
-        //根据keywords筛选信息
-        if(!empty($beginDate)){
-            $map['record_date'] = ['>=', '%' . $beginDate. '%'];
-        }
-        if(!empty($endDate)){
-            $map['record_date'] = ['<', '%' . $endDate . '%'];
-        }
-        $map['devicetype'] = ['in', ["ac", "light"]];
+        // $map = [];
+        // //根据keywords筛选信息
+        // if(!empty($beginDate)){
+        //     $map['UNIX_TIMESTAMP(record_date)'] = ['>=', strtotime($beginDate)];
+        // }
+        // if(!empty($endDate)){
+        //     $map['UNIX_TIMESTAMP(record_date)'] = ['<', strtotime($endDate)];
+        // }
+        // $map['devicetype'] = ['in', ["ac", "light"]];
+        // return $map;
         $dataCount = $this
-            ->where($map)
+            ->where("record_date >= '" . $beginDate . "' and record_date < '" . $endDate . "' and (devicetype = 'ac' or devicetype = 'light')")
             ->count('id');
 
         return $dataCount;
     }
     public function getDataList($start, $end, $beginDate, $endDate)
     {
-        $map = [];
-        //根据keywords筛选信息
-        if(!empty($beginDate)){
-            $map['record_date'] = ['>=',  $beginDate];
-        }
-        if(!empty($endDate)){
-            $map['record_date'] = ['<', $endDate];
-        }
-        $map['devicetype'] = ['in', ["ac", "light"]];
+        // $map = [];
+        // //根据keywords筛选信息
+        // if(!empty($beginDate)){
+        //     $map['record_date'] = ['>=',  $beginDate];
+        // }
+        // if(!empty($endDate)){
+        //     $map['record_date'] = ['<', $endDate];
+        // }
+        // $map['devicetype'] = ['in', ["ac", "light"]];
         $data = $this
-            ->where($map)
-            ->limit($start, $end)
+            ->where("record_date >= '" . $beginDate . "' and record_date< '" . $endDate . "' and (devicetype = 'ac' or devicetype = 'light')")
+            ->limit($start, 3000)
             ->select();
 
         return $data;

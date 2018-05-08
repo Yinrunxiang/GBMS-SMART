@@ -89,10 +89,10 @@ export default {
       //     lng: '',
       //     status: 'enabled',
       // },
-      form:{},
+      form: {},
       addressOptions: [],
       oldFloor: "",
-      oldRoomNum:"",
+      oldRoomNum: ""
     };
   },
   methods: {
@@ -100,26 +100,20 @@ export default {
       this.$emit("goback", false);
     },
     getRoom() {
-      const data = {
-        params: {
-          action: "search"
-        }
-      };
-      this.apiGet("device/room.php", data).then(res => {
-        this.$store.dispatch("setRoom", res);
+      this.apiGet("admin/room", {}).then(res => {
+        this.handerResponse(res, data => {
+          this.$store.dispatch("setRoom", data);
+        });
       });
     },
     addFloorRun() {
       var vm = this;
       this.isLoading = !this.isLoading;
       this.form.oldFloor = this.oldFloor;
-      const data = {
-        params: this.form
-      };
+      const data = this.form;
       if (this.add) {
-        this.apiGet("device/floor.php?action=insert", data).then(res => {
-          // _g.clearVuex('setRules')
-          if (res[0]) {
+        this.apiPost("admin/floor", data).then(res => {
+          this.handerResponse(res, data => {
             var floors = [];
             floors = floors.concat(vm.$store.state.floor);
             floors.push(vm.form);
@@ -137,20 +131,18 @@ export default {
               rooms.push(roomObj);
             }
             vm.$store.dispatch("setRoom", rooms);
-            _g.toastMsg("success", res[1]);
+            _g.toastMsg("success", data);
             setTimeout(() => {
               vm.getRoom();
               vm.goback();
             }, 500);
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
+          });
+
           vm.isLoading = false;
         });
       } else {
-        vm.apiGet("device/floor.php?action=update", data).then(res => {
-          // _g.clearVuex('setRules')
-          if (res[0]) {
+        vm.apiPut("admin/floor/", data.id, data).then(res => {
+          this.handerResponse(res, data => {
             var floor = [];
             floor = floor.concat(vm.$store.state.floor);
             for (var index in floor) {
@@ -186,11 +178,6 @@ export default {
                   item.floor != vm.oldFloor ||
                   parseInt(item.room) <= parseInt(vm.form.room_num)
               );
-              // for (var index in rooms) {
-              //   if (rooms[index].address == vm.form.address && rooms[index].floor == vm.oldFloor) {
-              //     rooms[index].address = vm.form.address;
-              //   }
-              // }
             }
             vm.$store.dispatch("setRoom", rooms);
             _g.toastMsg("success", res[1]);
@@ -198,20 +185,19 @@ export default {
               vm.getRoom();
               vm.goback();
             }, 500);
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
+          });
+
           vm.isLoading = false;
         });
       }
     },
     addFloor(form) {
-      if( this.form.comment && this.form.comment.length  > 120){
+      if (this.form.comment && this.form.comment.length > 120) {
         this.$message({
           message: "The length of the comment can not exceed 100 characters",
-          type: 'error'
+          type: "error"
         });
-        return
+        return;
       }
       if (parseInt(this.form.room_num) < parseInt(this.floor.room_num)) {
         this.$confirm(
@@ -235,15 +221,15 @@ export default {
     }
   },
   props: ["add", "floor"],
-  created(){
-    this.form = Object.assign({}, this.floor)
+  created() {
+    this.form = Object.assign({}, this.floor);
     this.currentImage = this.form.image;
     this.showImage = this.form.image_full;
   },
   mounted() {
     console.log("floor add");
     this.oldFloor = this.floor.floor;
-    this.oldRoomNum = this.floor.room_num
+    this.oldRoomNum = this.floor.room_num;
   },
   computed: {
     address() {
@@ -259,6 +245,6 @@ export default {
     }
   },
   components: {},
-  mixins: [http,image]
+  mixins: [http, image]
 };
 </script>

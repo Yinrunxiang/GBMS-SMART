@@ -102,12 +102,10 @@ class Device extends Common
      * 通过id更新设备位置
      * @param  array $param [description]
      */
-    public function updateLocationById($param)
+    public function updateLocation($param)
     {
         $id = $param['id'];
-        return $id . '123';
         $this->startTrans();
-
         try {
             $this->allowField(true)->save($param, ['id' => $id]);
             $this->commit();

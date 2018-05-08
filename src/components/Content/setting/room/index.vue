@@ -79,12 +79,12 @@ export default {
         room_num: "",
         floor: "",
         address: "",
-        image:"",
-        comment:"",
-        lat:"",
-        lng:"",
-        width:"",
-        height:"",
+        image: "",
+        comment: "",
+        lat: "",
+        lng: "",
+        width: "",
+        height: "",
         status: "enabled"
       };
       this.room = room;
@@ -98,25 +98,6 @@ export default {
     selectItem(val) {
       this.multipleSelection = val;
     },
-    //保存状态点击事件
-    setStatusBtn(status) {
-      const data = {
-        params: {
-          selections: this.multipleSelection,
-          status: status
-        }
-      };
-      this.apiGet("device/room.php?action=setStatus", data).then(res => {
-        if (res[0]) {
-          for (var selection of this.multipleSelection) {
-            selection.status = status;
-          }
-          _g.toastMsg("success", res[1]);
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
-      });
-    },
     //删除按钮事件
     deleteBtn() {
       var vm = this;
@@ -127,12 +108,10 @@ export default {
       })
         .then(() => {
           const data = {
-            params: {
-              selections: this.multipleSelection
-            }
+            selections: this.multipleSelection
           };
-          this.apiGet("device/room.php?action=delete", data).then(res => {
-            if (res[0]) {
+          this.apiPost("admin/room/delete", data).then(res => {
+            this.handerResponse(res, data => {
               var room = vm.$store.state.room;
               for (var i = 0; i < room.length; i++) {
                 for (var selection of vm.multipleSelection) {
@@ -142,10 +121,8 @@ export default {
                 }
               }
               this.$store.dispatch("setRoom", room);
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
+              _g.toastMsg("success", data);
+            });
           });
         })
         .catch(() => {

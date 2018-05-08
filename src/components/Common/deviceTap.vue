@@ -224,25 +224,21 @@ export default {
             self.device.y_axis = y;
             if (self.device.id && self.device.id != "") {
               const data = {
-                params: self.device
+                id: self.device.id,
+                x_axis: x,
+                y_axis: y
               };
-              self
-                .apiGet("device/index.php?action=updateLocation", data)
-                .then(res => {
-                  // _g.clearVuex('setRules')
-                  if (res[0]) {
-                    var devices = self.$store.state.devices;
-                    for (var i = 0; i < devices.length; i++) {
-                      if (devices[i].id == self.device.id) {
-                        devices[i] = self.device;
-                      }
+              self.apiPost("admin/device/updateLocation", data).then(res => {
+                self.handelResponse(res, data => {
+                  var devices = self.$store.state.devices;
+                  for (var i = 0; i < devices.length; i++) {
+                    if (devices[i].id == self.device.id) {
+                      devices[i] = self.device;
                     }
-                    self.$store.dispatch("setDevices", devices);
-                    // _g.toastMsg('success', res[1])
-                  } else {
-                    // _g.toastMsg('error', res[1])
                   }
+                  self.$store.dispatch("setDevices", devices);
                 });
+              });
             }
           }
         }, //拖动停止 x,y为当前坐标
