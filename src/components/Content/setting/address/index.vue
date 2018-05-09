@@ -16,7 +16,7 @@
                     </el-input>
                 </div>
             </div>
-            <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
+            <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick"  :height="400">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
                 <el-table-column label="Country" prop="country" width="150">

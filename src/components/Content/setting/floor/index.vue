@@ -2,21 +2,16 @@
     <div>
         <div v-show="!setting" class="p-20">
             <div class="m-b-20 ovf-hd">
-                <!-- <div class="fl">
-                    <el-button type="info" class="" @click="addressSetting">
-                        <i class="el-icon-plus"></i>&nbsp;&nbsp;Add
-                    </el-button>
-                    <el-button type="warning" class="" @click="deleteBtn">
-                        <i class="el-icon-minus"></i>&nbsp;&nbsp;Delete
-                    </el-button>
-                </div> -->
+                <div class="fl m-l-30">
+                <el-cascader :options="allAddress" change-on-select @change="addressChange"></el-cascader>
+                </div>
                 <div class="fl w-300 m-l-30">
                     <el-input placeholder="Please enter the model" v-model="keywords">
                         <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                     </el-input>
                 </div>
             </div>
-            <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
+            <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick"  :height="400">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
                 <el-table-column label="Floor Name" prop="floor" width="150">
@@ -65,7 +60,9 @@ export default {
       limit: 10,
       add: true,
       setting: false,
-      floor: {}
+      floor: {},
+      options_address: "",
+      options_floor: "",
     };
   },
   methods: {
@@ -124,19 +121,88 @@ export default {
           // catch error
         });
     },
+    addressChange(value) {
+      var len = value.length;
+      switch (len) {
+        case 1:
+          this.options_address = value[0];
+          this.options_floor = "";
+          break;
+        case 2:
+          this.options_address = value[0];
+          this.options_floor = value[1];
+          break;
+        case 3:
+          this.options_address = value[0];
+          this.options_floor = value[1];
+          break;
+      }
+      this.search();
+    },
+    search() {
+      router.push({
+        path: this.$route.path,
+        query: {
+          options_address: this.options_address,
+          options_floor: this.options_address,
+          keywords: this.keywords,
+          page: 1
+        }
+      });
+    },
+    //换页事件
+    handleCurrentChange(page) {
+      router.push({
+        path: this.$route.path,
+        query: {
+          options_address: this.options_address,
+          options_floor: this.options_address,
+          keywords: this.keywords,
+          page: page
+        }
+      });
+    },
+    getCurrentPage() {
+      let data = this.$route.query;
+      if (data) {
+        if (data.page) {
+          this.currentPage = parseInt(data.page);
+        } else {
+          this.currentPage = 1;
+        }
+      }
+    },
+    //获取关键值
+    getKeywords() {
+      let data = this.$route.query;
+      if (data) {
+        if (data.keywords) {
+          this.keywords = data.keywords;
+        } else {
+          this.keywords = "";
+        }
+      }
+    },
     getAllData() {
-      // var pages = Math.ceil(this.dataCount/this.limit)
       var data = [];
-      //   var devices = [];
-      //   devices = devcice.cancat(this.devices);
-      if (this.keywords != "") {
-        for (var floor of this.floors) {
-          if (floor.floor == this.keywords) {
-            data.push(floor);
+      let query = this.$route.query;
+      if (query && query.options) {
+        this.options_address = query.options_address
+          ? query.options_address
+          : "";
+        this.options_floor = query.options_floor ? query.options_floor : "";
+      }
+      for (var floor of this.floors) {
+        if (
+          this.options_address == "" ||
+          floor.address == this.options_address
+        ) {
+          if (this.options_floor == "" || floor.floor == this.options_floor) {
+              if (this.keywords == "" || floor.floor == this.keywords) {
+                data.push(floor);
+              }
           }
         }
-      } else {
-        data = this.floors;
       }
 
       // var data = this.devices
@@ -169,7 +235,30 @@ export default {
     //从vuex中获取设备数据条数
     dataCount() {
       return this.$store.state.floor.length;
-    }
+    },
+      allAddress() {
+      var allAddress = [];
+      for (var address of this.$store.state.address) {
+        var addressObj = {
+          value: address.address,
+          label: address.address,
+          children: []
+        };
+        for (var floor of this.$store.state.floor) {
+          if (floor.address == address.address) {
+            var floorObj = {
+              value: floor.floor,
+              label: "floor " + floor.floor,
+              children: []
+            };
+            addressObj.children.push(floorObj);
+          }
+        }
+        allAddress.push(addressObj);
+      }
+      // console.log(allAddress)
+      return allAddress;
+    },
   },
   watch: {
     $route(to, from) {
