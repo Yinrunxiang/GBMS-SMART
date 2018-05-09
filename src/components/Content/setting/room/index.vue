@@ -111,7 +111,7 @@ export default {
             selections: this.multipleSelection
           };
           this.apiPost("admin/room/delete", data).then(res => {
-            this.handerResponse(res, data => {
+            this.handelResponse(res, data => {
               var room = vm.$store.state.room;
               for (var i = 0; i < room.length; i++) {
                 for (var selection of vm.multipleSelection) {

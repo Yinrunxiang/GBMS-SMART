@@ -124,7 +124,7 @@ export default {
           const data = {
             selections: this.multipleSelection
           };
-          this.apiPost("device/address/delete.php?action=delete", data).then(
+          this.apiPost("admin/address/delete", data).then(
             res => {
               this.handelResponse(res, data => {
                 var address = this.$store.state.address;

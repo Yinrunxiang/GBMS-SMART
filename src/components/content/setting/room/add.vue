@@ -166,8 +166,8 @@ export default {
       this.form.oldRoom = this.oldRoom;
       const data = this.form;
       if (this.add) {
-        this.apiPost("admin/room", data).then(res => {
-          this.handerResponse(res, data => {
+        vm.apiPost("admin/room", data).then(res => {
+          vm.handelResponse(res, data => {
             var room = vm.$store.state.room;
             room.push(vm.form);
             vm.$store.dispatch("setRoom", room);
@@ -180,24 +180,24 @@ export default {
           vm.isLoading = false;
         });
       } else {
-        this.apiPut("admin/room/", data.id, data).then(res => {
-          this.handerResponse(res, data => {
-              var room = [];
-              room = room.concat(vm.$store.state.room);
-              for (var i = 0; i < room.length; i++) {
-                if (
-                  room[i].room == vm.form.room &&
-                  room[i].floor == vm.form.floor &&
-                  room[i].address == vm.form.address
-                ) {
-                  room[i] = vm.form;
-                }
+        vm.apiPut("admin/room/", data.id, data).then(res => {
+          vm.handelResponse(res, data => {
+            var room = [];
+            room = room.concat(vm.$store.state.room);
+            for (var i = 0; i < room.length; i++) {
+              if (
+                room[i].room == vm.form.room &&
+                room[i].floor == vm.form.floor &&
+                room[i].address == vm.form.address
+              ) {
+                room[i] = vm.form;
               }
-              vm.$store.dispatch("setRoom", room);
-              _g.toastMsg("success", data);
-              setTimeout(() => {
-                vm.goback();
-              }, 500);
+            }
+            vm.$store.dispatch("setRoom", room);
+            _g.toastMsg("success", data);
+            setTimeout(() => {
+              vm.goback();
+            }, 500);
           });
 
           vm.isLoading = false;
@@ -258,13 +258,13 @@ export default {
     // console.log(floor[0])
     this.floorImage = floor[0].image;
     let data = {
-      params: {
-        image: this.floorImage
-      }
+      image: this.floorImage
     };
-    this.apiGet("/upload/image.php", data).then(res => {
-      this.base64Image = res;
-      this.getImage(res);
+    this.apiPost("admin/upload/getImage", data).then(res => {
+      this.handelResponse(res, data => {
+        this.base64Image = data;
+        this.getImage(data);
+      });
       // console.log(res)
     });
 

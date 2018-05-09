@@ -68,6 +68,20 @@ return [
     'admin/upload/index' => ['admin/upload/index', ['method' => 'POST']],
     // 【Upload】删除图片
     'admin/upload/delete' => ['admin/upload/delete', ['method' => 'POST']],
+     // 【Upload】获取图片
+     'admin/upload/getImage' => ['admin/upload/getImage', ['method' => 'POST']],
+    // 【Address】删除Address
+    'admin/address/delete' => ['admin/address/delete', ['method' => 'POST']],
+    // 【Floor】删除Floor
+    'admin/floor/delete' => ['admin/floor/delete', ['method' => 'POST']],
+    // 【Room】删除Room
+    'admin/room/delete' => ['admin/room/delete', ['method' => 'POST']],
+    // 【AC】删除AC
+    'admin/ac/delete' => ['admin/ac/delete', ['method' => 'POST']],
+    // 【LIGHT】删除LIGHT
+    'admin/light/delete' => ['admin/light/delete', ['method' => 'POST']],
+    // 【LED】删除LED
+    'admin/led/delete' => ['admin/led/delete', ['method' => 'POST']],
 	// MISS路由
     '__miss__' => 'admin/base/miss',
 ];

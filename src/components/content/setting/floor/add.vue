@@ -101,7 +101,7 @@ export default {
     },
     getRoom() {
       this.apiGet("admin/room", {}).then(res => {
-        this.handerResponse(res, data => {
+        this.handelResponse(res, data => {
           this.$store.dispatch("setRoom", data);
         });
       });
@@ -112,8 +112,8 @@ export default {
       this.form.oldFloor = this.oldFloor;
       const data = this.form;
       if (this.add) {
-        this.apiPost("admin/floor", data).then(res => {
-          this.handerResponse(res, data => {
+        vm.apiPost("admin/floor", data).then(res => {
+          vm.handelResponse(res, data => {
             var floors = [];
             floors = floors.concat(vm.$store.state.floor);
             floors.push(vm.form);
@@ -142,7 +142,7 @@ export default {
         });
       } else {
         vm.apiPut("admin/floor/", data.id, data).then(res => {
-          this.handerResponse(res, data => {
+          vm.handelResponse(res, data => {
             var floor = [];
             floor = floor.concat(vm.$store.state.floor);
             for (var index in floor) {
@@ -180,7 +180,7 @@ export default {
               );
             }
             vm.$store.dispatch("setRoom", rooms);
-            _g.toastMsg("success", res[1]);
+            _g.toastMsg("success", data);
             setTimeout(() => {
               vm.getRoom();
               vm.goback();

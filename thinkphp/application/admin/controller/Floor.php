@@ -12,40 +12,51 @@ class Floor extends ApiCommon
 
     public function index()
     {   
-        $roomModel = model('Floor');
-        $data = $roomModel->getDataList();
+        $floorModel = model('Floor');
+        $data = $floorModel->getDataList();
         return resultArray(['data' => $data]);
     }
 
     public function read()
     {
-        $roomModel = model('Floor');
+        $floorModel = model('Floor');
         $param = $this->param;
-        $data = $roomModel->getDataById($param);
+        $data = $floorModel->getDataById($param);
         if (!$data) {
-            return resultArray(['error' => $roomModel->getError()]);
+            return resultArray(['error' => $floorModel->getError()]);
         } 
         return resultArray(['data' => $data]);
     }
 
+    public function save()
+    {
+        $floorModel = model('Floor');
+        $param = $this->param;
+        $data = $floorModel->createData($param);
+        if (!$data) {
+            return resultArray(['error' => $floorModel->getError()]);
+        }
+        return resultArray(['data' => 'Add success']);
+    }
+
     public function update()
     {
-        $roomModel = model('Floor');
+        $floorModel = model('Floor');
         $param = $this->param;
-        $data = $roomModel->updateDataById($param);
+        $data = $floorModel->updateDataById($param);
         if (!$data) {
-            return resultArray(['error' => $roomModel->getError()]);
+            return resultArray(['error' => $floorModel->getError()]);
         } 
         return resultArray(['data' => 'Update success']);
     }
     
     public function delete()
     {
-        $roomModel = model('Floor');
+        $floorModel = model('Floor');
         $param = $this->param;
-        $data = $roomModel->delDatas($param);
+        $data = $floorModel->delDatas($param);
         if (!$data) {
-            return resultArray(['error' => $roomModel->getError()]);
+            return resultArray(['error' => $floorModel->getError()]);
         } 
         return resultArray(['data' => 'Delete success']);
     }   

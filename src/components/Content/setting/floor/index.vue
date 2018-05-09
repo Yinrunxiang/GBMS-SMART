@@ -106,7 +106,7 @@ export default {
             selections: this.multipleSelection
           };
           this.apiPost("admin/floor/delete", data).then(res => {
-            this.handerResponse(res, data => {
+            this.handelResponse(res, data => {
               var floor = this.$store.state.floor;
               for (var i = 0; i < floor.length; i++) {
                 for (var selection of this.multipleSelection) {

@@ -14,9 +14,9 @@ const imageMethods = {
                 this.deleteImage(this.form.image)
             }
             this.showImage = URL.createObjectURL(file.raw);
-            this.form.image = res
+            this.form.image = res.data
             this.form.image_full = URL.createObjectURL(file.raw)
-            console.log(res);
+            console.log(res.data);
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === "image/jpeg";
