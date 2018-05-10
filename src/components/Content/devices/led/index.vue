@@ -54,13 +54,11 @@ export default {
     setColor() {
       var vm = this;
       const data = {
-        params: {
-          id: this.device.id,
-          color: this.deviceProperty.color
-        }
+        id: this.device.id,
+        color: this.deviceProperty.color
       };
-      this.apiGet("device/index.php?action=setColor", data).then(res => {
-        if (res[0]) {
+      this.apiPost("admin/device/setColor", data).then(res => {
+        this.handelResponse(res, data => {
           var devices = this.$store.state.devices;
           for (var i = 0; i < devices.length; i++) {
             if (devices[i].id == this.device.id) {
@@ -68,10 +66,7 @@ export default {
             }
           }
           vm.$store.dispatch("setDevices", devices);
-          // _g.toastMsg("success", res[1]);
-        } else {
-          // _g.toastMsg("error", res[1]);
-        }
+        });
       });
     },
     //开关滑块
@@ -83,12 +78,12 @@ export default {
     //当颜色值发生改变时
     headleChangeColor(val) {
       this.deviceProperty.color = val.hex;
-      this.setColor()
+      this.setColor();
       ledApi.headleChangeColor(val, this.device, this.deviceProperty);
     }
   },
   mounted() {
-    console.log('led')
+    console.log("led");
     ledApi.readStatus(this.device, this.deviceProperty);
     $(".vc-target").hide();
     $(".led-light").click(function() {

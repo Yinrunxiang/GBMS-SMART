@@ -1,51 +1,52 @@
 <?php
 // +----------------------------------------------------------------------
-// | Description: 空调品牌
+// | Description: 灯光品牌
 // +----------------------------------------------------------------------
 // | Author: Jensen
 // +----------------------------------------------------------------------
 
 namespace app\admin\controller;
 
-class AcBreed extends ApiCommon
+class Ir extends ApiCommon
 {
 
     public function index()
     {   
-        $acBreedModel = model('AcBreed');
-        $data = $acBreedModel->getDataList();
+        $IrModel = model('Ir');
+        $param = $this->param; 
+        $data = $IrModel->getDataList($param);
         return resultArray(['data' => $data]);
     }
 
     public function read()
     {
-        $acBreedModel = model('AcBreed');
+        $IrModel = model('Ir');
         $param = $this->param;
-        $data = $acBreedModel->getDataById($param['id']);
+        $data = $IrModel->getDataById($param['id']);
         if (!$data) {
-            return resultArray(['error' => $acBreedModel->getError()]);
+            return resultArray(['error' => $IrModel->getError()]);
         } 
         return resultArray(['data' => $data]);
     }
 
    public function save()
    {
-       $acBreedModel = model('AcBreed');
+       $IrModel = model('Ir');
        $param = $this->param;
-       $data = $acBreedModel->createData($param);
+       $data = $IrModel->createData($param);
        if (!$data) {
-           return resultArray(['error' => $acBreedModel->getError()]);
+           return resultArray(['error' => $IrModel->getError()]);
        }
        return resultArray(['data' => 'Add success']);
    }
 
     public function update()
     {
-        $acBreedModel = model('AcBreed');
+        $IrModel = model('Ir');
         $param = $this->param;
-        $data = $acBreedModel->updateDataById($param, $param['id']);
+        $data = $IrModel->updateDataById($param);
         if (!$data) {
-            return resultArray(['error' => $acBreedModel->getError()]);
+            return resultArray(['error' => $IrModel->getError()]);
         } 
         return resultArray(['data' => 'Update success']);
     }
@@ -53,13 +54,14 @@ class AcBreed extends ApiCommon
 
     public function delete()
     {
-        $acBreedModel = model('AcBreed');
+        $IrModel = model('Ir');
         $param = $this->param;
-        $data = $acBreedModel->delDatas($param['ids']);
+        $data = $IrModel->delDatas($param['ids']);
         if (!$data) {
-            return resultArray(['error' => $acBreedModel->getError()]);
+            return resultArray(['error' => $IrModel->getError()]);
         } 
         return resultArray(['data' => 'Delete success']);
-    }   
+    }
+    
 }
  

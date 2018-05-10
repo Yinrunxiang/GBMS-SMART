@@ -32,16 +32,16 @@ class LightBreed extends ApiCommon
         return resultArray(['data' => $data]);
     }
 
-//    public function save()
-//    {
-//        $lightBreedModel = model('LightBreed');
-//        $param = $this->param;
-//        $data = $lightBreedModel->createData($param);
-//        if (!$data) {
-//            return resultArray(['error' => $lightBreedModel->getError()]);
-//        }
-//        return resultArray(['data' => 'Add success']);
-//    }
+   public function save()
+   {
+       $lightBreedModel = model('LightBreed');
+       $param = $this->param;
+       $data = $lightBreedModel->createData($param);
+       if (!$data) {
+           return resultArray(['error' => $lightBreedModel->getError()]);
+       }
+       return resultArray(['data' => 'Add success']);
+   }
 
     public function update()
     {
@@ -54,18 +54,8 @@ class LightBreed extends ApiCommon
         return resultArray(['data' => 'Update success']);
     }
 
-    public function delete()
-    {
-        $lightBreedModel = model('LightBreed');
-        $param = $this->param;
-        $data = $lightBreedModel->delDataById($param['id']);
-        if (!$data) {
-            return resultArray(['error' => $lightBreedModel->getError()]);
-        } 
-        return resultArray(['data' => 'Delete success']);
-    }
 
-    public function deletes()
+    public function delete()
     {
         $lightBreedModel = model('LightBreed');
         $param = $this->param;
@@ -74,17 +64,6 @@ class LightBreed extends ApiCommon
             return resultArray(['error' => $lightBreedModel->getError()]);
         } 
         return resultArray(['data' => 'Delete success']);
-    }
-
-    public function enables()
-    {
-        $lightBreedModel = model('LightBreed');
-        $param = $this->param;
-        $data = $lightBreedModel->enableDatas($param['ids'], $param['status']);
-        if (!$data) {
-            return resultArray(['error' => $lightBreedModel->getError()]);
-        } 
-        return resultArray(['data' => 'Successful operation']);
     }
     
 }

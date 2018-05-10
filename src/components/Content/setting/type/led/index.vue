@@ -17,7 +17,7 @@
                 </el-input>
             </div>
         </div>
-        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
+        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick" :height="400">
             <el-table-column type="selection" width="50">
             </el-table-column>
             <el-table-column label="Breed(W)" prop="breed" width="150">
@@ -98,26 +98,26 @@ export default {
         type: "warning"
       })
         .then(() => {
+          var ids  = []
+          for(var item of this.multipleSelection){
+            ids.push(item.id)
+          }
           const data = {
-            params: {
-              selections: this.multipleSelection
-            }
+            ids: ids
           };
-          this.apiGet("device/led_breed.php?action=delete", data).then(res => {
-            if (res[0]) {
-              var led_breed = this.$store.state.led_breed;
-              for (var i = 0; i < led_breed.length; i++) {
-                for (var selection of this.multipleSelection) {
-                  if (led_breed[i].breed == selection.breed) {
-                    led_breed.splice(i, 1);
+          this.apiPost("admin/led_breed/delete", data).then(res => {
+            this.handelResponse(res, data => {
+                var led_breed = this.$store.state.led_breed;
+                for (var i = 0; i < led_breed.length; i++) {
+                  for (var selection of this.multipleSelection) {
+                    if (led_breed[i].breed == selection.breed) {
+                      led_breed.splice(i, 1);
+                    }
                   }
                 }
-              }
-              this.$store.dispatch("setLedBreed", led_breed);
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
+                this.$store.dispatch("setLedBreed", led_breed);
+                _g.toastMsg("success", data);
+            });
           });
         })
         .catch(() => {
@@ -148,7 +148,7 @@ export default {
     init() {
       this.getKeywords();
       this.getCurrentPage();
-      this.getAllData()
+      this.getAllData();
     }
   },
   created() {
@@ -177,6 +177,6 @@ export default {
       deep: true
     }
   },
-  mixins: [http,list]
+  mixins: [http, list]
 };
 </script>

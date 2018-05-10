@@ -32,16 +32,16 @@ class LedBreed extends ApiCommon
         return resultArray(['data' => $data]);
     }
 
-//    public function save()
-//    {
-//        $ledBreedModel = model('LedBreed');
-//        $param = $this->param;
-//        $data = $ledBreedModel->createData($param);
-//        if (!$data) {
-//            return resultArray(['error' => $ledBreedModel->getError()]);
-//        }
-//        return resultArray(['data' => 'Add success']);
-//    }
+   public function save()
+   {
+       $ledBreedModel = model('LedBreed');
+       $param = $this->param;
+       $data = $ledBreedModel->createData($param);
+       if (!$data) {
+           return resultArray(['error' => $ledBreedModel->getError()]);
+       }
+       return resultArray(['data' => 'Add success']);
+   }
 
     public function update()
     {
@@ -58,17 +58,6 @@ class LedBreed extends ApiCommon
     {
         $ledBreedModel = model('LedBreed');
         $param = $this->param;
-        $data = $ledBreedModel->delDataById($param['id']);
-        if (!$data) {
-            return resultArray(['error' => $ledBreedModel->getError()]);
-        } 
-        return resultArray(['data' => 'Delete success']);
-    }
-
-    public function deletes()
-    {
-        $ledBreedModel = model('LedBreed');
-        $param = $this->param;
         $data = $ledBreedModel->delDatas($param['ids']);
         if (!$data) {
             return resultArray(['error' => $ledBreedModel->getError()]);
@@ -76,16 +65,6 @@ class LedBreed extends ApiCommon
         return resultArray(['data' => 'Delete success']);
     }
 
-    public function enables()
-    {
-        $ledBreedModel = model('LedBreed');
-        $param = $this->param;
-        $data = $ledBreedModel->enableDatas($param['ids'], $param['status']);
-        if (!$data) {
-            return resultArray(['error' => $ledBreedModel->getError()]);
-        } 
-        return resultArray(['data' => 'Successful operation']);
-    }
     
 }
  

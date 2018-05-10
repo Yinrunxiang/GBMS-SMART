@@ -17,7 +17,7 @@
                 </el-input>
             </div>
         </div>
-        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
+        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick" :height="400">
             <el-table-column type="selection" width="50">
             </el-table-column>
             <el-table-column label="Breed(W)" prop="breed" width="150">
@@ -71,25 +71,6 @@ export default {
       this.multipleSelection = val;
       // console.log(this.multipleSelection);
     },
-    //保存状态点击事件
-    setStatusBtn(status) {
-      const data = {
-        params: {
-          selections: this.multipleSelection,
-          status: status
-        }
-      };
-      this.apiGet("device/light_breed.php?action=setStatus", data).then(res => {
-        if (res[0]) {
-          for (var selection of this.multipleSelection) {
-            selection.status = status;
-          }
-          _g.toastMsg("success", res[1]);
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
-      });
-    },
     //删除按钮事件
     deleteBtn() {
       this.$confirm("Are you sure to delete the selected data?", "Tips", {
@@ -98,16 +79,15 @@ export default {
         type: "warning"
       })
         .then(() => {
+          var ids = [];
+          for (var item of this.multipleSelection) {
+            ids.push(item.id);
+          }
           const data = {
-            params: {
-              selections: this.multipleSelection
-            }
+            ids: ids
           };
-          this.apiGet(
-            "device/light_breed.php?action=delete",
-            data
-          ).then(res => {
-            if (res[0]) {
+          this.apiPost("admin/light_breed/delete", data).then(res => {
+            this.handelResponse(res, data => {
               var light_breed = this.$store.state.light_breed;
               for (var i = 0; i < light_breed.length; i++) {
                 for (var selection of this.multipleSelection) {
@@ -117,10 +97,8 @@ export default {
                 }
               }
               this.$store.dispatch("setLightBreed", light_breed);
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
+              _g.toastMsg("success", data);
+            });
           });
         })
         .catch(() => {
@@ -151,7 +129,7 @@ export default {
     init() {
       this.getKeywords();
       this.getCurrentPage();
-      this.getAllData()
+      this.getAllData();
     }
   },
   created() {
@@ -180,6 +158,6 @@ export default {
       deep: true
     }
   },
-  mixins: [http,list]
+  mixins: [http, list]
 };
 </script>

@@ -2,7 +2,7 @@
     <div>
         <div v-show="!setting" class="p-20">
             <div class="m-b-20 ovf-hd">
-                <div class="fl m-l-30">
+                <div class="fl">
                 <el-cascader :options="allAddress" change-on-select @change="addressChange"></el-cascader>
                 </div>
                 <div class="fl w-300 m-l-30">

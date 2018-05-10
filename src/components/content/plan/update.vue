@@ -15,7 +15,7 @@
             </el-form-item>
             <el-form-item label="Breed Type">
                 <el-select v-model="form.breed" filterable placeholder="Select Breed" class="h-40 w-200">
-                    <el-option v-for="(item,key) in breedData" :key="key" :label="item.breed" :value="item.breed">
+                    <el-option v-for="(item,key) in breedData" :key="key" :label="item.breed" :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>

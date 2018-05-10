@@ -6,7 +6,11 @@
 // +----------------------------------------------------------------------
 
 namespace app\admin\controller;
-class SendUdp extends ApiCommon
+
+use app\common\udp\UdpProtocol;
+use app\common\udp\UdpSocket;
+
+class Udp extends ApiCommon
 {
 
     public function sendUdp()
@@ -39,6 +43,7 @@ class SendUdp extends ApiCommon
         }
         new UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
         usleep(300000);
+        return resultArray(['data' => $msg]);
     }
 }
  

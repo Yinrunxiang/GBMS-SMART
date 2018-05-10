@@ -379,7 +379,7 @@ export default {
               var run_time = parseInt(breed.run_time) * 36000;
               if (
                 breed.run_time != 0 &&
-                item.breed == breed.breed &&
+                item.breed == breed.id &&
                 item.run_time >= run_time
               ) {
                 item.warn = true;
@@ -394,7 +394,7 @@ export default {
           switch (item.devicetype) {
             case "ac":
               for (var ac_breed of ac_breeds) {
-                if (item.breed == ac_breed.breed) {
+                if (item.breed == ac_breed.id) {
                   item.watts =
                     parseInt(ac_breed[item.mode]) +
                     parseInt(ac_breed[item.grade]);
@@ -403,14 +403,14 @@ export default {
               break;
             case "light":
               for (var light_breed of light_breeds) {
-                if (item.breed == light_breed.breed) {
+                if (item.breed == light_breed.id) {
                   item.watts = parseInt(light_breed.watts);
                 }
               }
               break;
             case "led":
               for (var led_breed of led_breeds) {
-                if (item.breed == led_breed.breed) {
+                if (item.breed == led_breed.id) {
                   item.watts = parseInt(led_breed.watts);
                 }
               }

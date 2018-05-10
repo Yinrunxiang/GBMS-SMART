@@ -17,7 +17,7 @@
                 </el-input>
             </div>
         </div>
-        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick">
+        <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick" :height="400">
             <el-table-column type="selection" width="50">
             </el-table-column>
             <el-table-column label="Mode(W)" prop="breed" width="150">
@@ -112,26 +112,26 @@ export default {
         type: "warning"
       })
         .then(() => {
+          var ids  = []
+          for(var item of this.multipleSelection){
+            ids.push(item.id)
+          }
           const data = {
-            params: {
-              selections: this.multipleSelection
-            }
+            ids: ids
           };
-          this.apiGet("device/ac_breed.php?action=delete", data).then(res => {
-            if (res[0]) {
-              var ac_breed = this.$store.state.ac_breed;
-              for (var i = 0; i < ac_breed.length; i++) {
-                for (var selection of this.multipleSelection) {
-                  if (ac_breed[i].breed == selection.breed) {
-                    ac_breed.splice(i, 1);
+          this.apiPost("admin/ac_breed/delete", data).then(res => {
+            this.handelResponse(res, data => {
+                var ac_breed = this.$store.state.ac_breed;
+                for (var i = 0; i < ac_breed.length; i++) {
+                  for (var selection of this.multipleSelection) {
+                    if (ac_breed[i].breed == selection.breed) {
+                      ac_breed.splice(i, 1);
+                    }
                   }
                 }
-              }
-              this.$store.dispatch("setAcBreed", ac_breed);
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
+                this.$store.dispatch("setAcBreed", ac_breed);
+                _g.toastMsg("success", data);
+            });
           });
         })
         .catch(() => {
@@ -162,7 +162,7 @@ export default {
     init() {
       this.getKeywords();
       this.getCurrentPage();
-      this.getAllData()
+      this.getAllData();
     }
   },
   created() {

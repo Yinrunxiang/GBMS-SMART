@@ -117,9 +117,8 @@ class Common extends Model
 	 * @param     boolean                 $delSon [是否删除子孙数据]
 	 * @return    [type]                          [description]
 	 */
-	public function delDatas($param)
+	public function delDatas($ids)
 	{
-		$ids = $param['ids'];
 		if (empty($ids)) {
 			$this->error = 'Please select data';
 			return false;

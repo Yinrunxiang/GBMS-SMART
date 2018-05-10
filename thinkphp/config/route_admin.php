@@ -19,6 +19,7 @@ return [
         'admin/macro' => 'admin/macro',
         'admin/schedule' => 'admin/schedule',
         'admin/record' => 'admin/record',
+        'admin/ir' => 'admin/ir',
     ],
     // 【基础】登录
     'admin/base/login' => ['admin/base/login', ['method' => 'POST']],
@@ -69,7 +70,7 @@ return [
     // 【Upload】删除图片
     'admin/upload/delete' => ['admin/upload/delete', ['method' => 'POST']],
      // 【Upload】获取图片
-     'admin/upload/getImage' => ['admin/upload/getImage', ['method' => 'POST']],
+    'admin/upload/getImage' => ['admin/upload/getImage', ['method' => 'POST']],
     // 【Address】删除Address
     'admin/address/delete' => ['admin/address/delete', ['method' => 'POST']],
     // 【Floor】删除Floor
@@ -77,11 +78,13 @@ return [
     // 【Room】删除Room
     'admin/room/delete' => ['admin/room/delete', ['method' => 'POST']],
     // 【AC】删除AC
-    'admin/ac/delete' => ['admin/ac/delete', ['method' => 'POST']],
+    'admin/ac_breed/delete' => ['admin/ac_breed/delete', ['method' => 'POST']],
     // 【LIGHT】删除LIGHT
-    'admin/light/delete' => ['admin/light/delete', ['method' => 'POST']],
+    'admin/light_breed/delete' => ['admin/light_breed/delete', ['method' => 'POST']],
     // 【LED】删除LED
-    'admin/led/delete' => ['admin/led/delete', ['method' => 'POST']],
+    'admin/led_breed/delete' => ['admin/led_breed/delete', ['method' => 'POST']],
+    // 【IR】删除IR
+    'admin/ir/delete' => ['admin/ir/delete', ['method' => 'POST']],
 	// MISS路由
     '__miss__' => 'admin/base/miss',
 ];

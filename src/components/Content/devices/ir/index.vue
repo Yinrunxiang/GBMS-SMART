@@ -218,6 +218,7 @@ import http from "../../../../assets/js/http";
 export default {
   data() {
     return {
+      ir_id:"",
       ir_key: "",
       ir_value: "",
       ir_name: "",
@@ -225,7 +226,7 @@ export default {
       showPage: "control",
       dialogType: true,
       operationObj: {},
-      ir_loading:true,
+      ir_loading: true
     };
   },
   // props: ['device'],
@@ -269,95 +270,58 @@ export default {
         return;
       }
       var data = {
-        params: {
-          device: this.device.id,
-          ir_key: this.ir_key,
-          ir_name: this.ir_name,
-          ir_value: this.ir_value
-        }
+        device: this.device.id,
+        ir_key: this.ir_key,
+        ir_name: this.ir_name,
+        ir_value: this.ir_value
       };
       var vm = this;
       if (this.operationObj[this.ir_key]) {
-        this.apiGet(
-          "device/index.php?action=updateIrOperation",
-          data
-        ).then(res => {
-          if (res[0]) {
+        this.apiPut("admin/ir/", data.device, data).then(res => {
+          this.handelResponse(res, data => {
             vm.operationObj[vm.ir_key] = {};
-            // vm.$set(vm.operationObj[vm.ir_key], "device", vm.device.id);
-            // vm.$set(vm.operationObj[vm.ir_key], "ir_key", vm.ir_key);
-            // vm.$set(vm.operationObj[vm.ir_key], "ir_name", vm.ir_name);
-            // vm.$set(vm.operationObj[vm.ir_key], "ir_value", vm.ir_value);
             vm.operationObj[vm.ir_key].device = vm.device.id;
             vm.operationObj[vm.ir_key].ir_key = vm.ir_key;
             vm.operationObj[vm.ir_key].ir_name = vm.ir_name;
             vm.operationObj[vm.ir_key].ir_value = vm.ir_value;
-            _g.toastMsg("success", res[1]);
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
-          // for (var ir_key in this.form) {
-          //     this.form[ir_key] = ""
-          // }
+            _g.toastMsg("success", data);
+          });
           this.showDialog = false;
         });
       } else {
-        this.apiGet(
-          "device/index.php?action=insertIrOperation",
-          data
-        ).then(res => {
-          if (res[0]) {
+        this.apiPost("admin/ir", data).then(res => {
+          this.handelResponse(res, data => {
             var obj = {};
             obj.device = vm.device.id;
             obj.ir_key = vm.ir_key;
             obj.ir_name = vm.ir_name;
             obj.ir_value = vm.ir_value;
             vm.$set(vm.operationObj, vm.ir_key, obj);
-            // vm.operationObj[vm.ir_key] = {};
-            // vm.$set(vm.operationObj[vm.ir_key], "device", vm.device.id);
-            // vm.$set(vm.operationObj[vm.ir_key], "ir_key", vm.ir_key);
-            // vm.$set(vm.operationObj[vm.ir_key], "ir_name", vm.ir_name);
-            // vm.$set(vm.operationObj[vm.ir_key], "ir_value", vm.ir_value);
-            // vm.operationObj[vm.ir_key].device = vm.device.id;
-            // vm.operationObj[vm.ir_key].ir_key = vm.ir_key;
-            // vm.operationObj[vm.ir_key].ir_name = vm.ir_name;
-            // vm.operationObj[vm.ir_key].ir_value = vm.ir_value;
-            _g.toastMsg("success", res[1]);
-          } else {
-            _g.toastMsg("error", res[1]);
-          }
-          // for (var ir_key in this.form) {
-          //     this.form[ir_key] = ""
-          // }
+            _g.toastMsg("success", data);
+          });
           this.showDialog = false;
         });
       }
     },
     getIrOperation(id) {
-      const data = {
+     const data = {
         params: {
           device: id
         }
       };
       var vm = this;
-      this.apiGet("device/index.php?action=getIrOperation", data).then(res => {
-        for (var operation of res) {
-          var obj = {};
-          obj.device = vm.device.id;
-          obj.ir_key = operation.ir_key;
-          obj.ir_name = operation.ir_name;
-          obj.ir_value = operation.ir_value;
-          vm.$set(vm.operationObj, operation.ir_key, obj);
-          vm.ir_loading= false
-          // vm.operationObj[operation.ir_key] = {};
-          // vm.$set(vm.operationObj[vm.ir_key], "device", vm.device.id);
-          //   vm.$set(vm.operationObj[vm.ir_key], "ir_key", operation.ir_key);
-          //   vm.$set(vm.operationObj[vm.ir_key], "ir_name", operation.ir_name);
-          //   vm.$set(vm.operationObj[vm.ir_key], "ir_value", operation.ir_value);
-          // vm.operationObj[operation.ir_key].ir_key = operation.ir_key;
-          // vm.operationObj[operation.ir_key].ir_name = operation.ir_name;
-          // vm.operationObj[operation.ir_key].ir_value = operation.ir_value;
-        }
+      this.apiGet("admin/ir", data).then(res => {
+        this.handelResponse(res, data => {
+          for (var operation of data) {
+            var obj = {};
+            obj.device = vm.device.id;
+            obj.ir_key = operation.ir_key;
+            obj.ir_name = operation.ir_name;
+            obj.ir_value = operation.ir_value;
+            vm.$set(vm.operationObj, operation.ir_key, obj);
+            vm.ir_loading = false;
+          }
+        });
       });
     }
   },

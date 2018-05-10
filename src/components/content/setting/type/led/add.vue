@@ -38,10 +38,8 @@ export default {
     add(form) {
       var vm = this
       this.isLoading = !this.isLoading;
-      const data = {
-        params: this.form
-      };
-      this.apiGet("device/led_breed.php?action=insert", data).then(res => {
+      const data =this.form
+      this.apiPost("admin/led_breed", data).then(res => {
         // _g.clearVuex('setRules')
         if (res[0]) {
           var led_breed = [];

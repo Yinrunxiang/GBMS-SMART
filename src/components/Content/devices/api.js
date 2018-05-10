@@ -2,7 +2,7 @@
 const api = {
     apiPost(url, data) {
         return new Promise((resolve, reject) => {
-            axios.get(url, data).then((response) => {
+            axios.post(url, data).then((response) => {
                 resolve(response.data)
             }, (response) => {
                 reject(response)
@@ -33,6 +33,7 @@ const api = {
     sendUdp(device, data, type) {
         if (!type || type == "") {
             api.apiPost("admin/udp/sendUdp", data).then(res => {
+                // console.log('res')
             });
         } else {
             var pass = false

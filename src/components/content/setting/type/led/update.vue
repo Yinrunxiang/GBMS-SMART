@@ -36,15 +36,12 @@ export default {
   },
   methods: {
     add(form) {
-      var vm = this
+      var vm = this;
       this.isLoading = !this.isLoading;
-      const data = {
-        params: this.form
-      };
+      const data = this.form;
 
-      this.apiGet("device/led_breed.php?action=update", data).then(res => {
-        // _g.clearVuex('setRules')
-        if (res[0]) {
+      this.apiPut("admin/led_breed/", data.id, data).then(res => {
+        this.handelResponse(res, data => {
           var led_breed = [];
           led_breed = led_breed.concat(vm.$store.state.led_breed);
           for (var i = 0; i < led_breed.length; i++) {
@@ -53,13 +50,12 @@ export default {
             }
           }
           vm.$store.dispatch("setLedBreed", led_breed);
-          _g.toastMsg("success", res[1]);
+          _g.toastMsg("success", data);
           setTimeout(() => {
             vm.goback();
           }, 500);
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
+        });
+
         vm.isLoading = false;
       });
     }

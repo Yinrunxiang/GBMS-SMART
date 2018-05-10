@@ -1,8 +1,8 @@
 <template>
     <el-row class="panel m-w-1100">
         <el-col :span="24" class="contral-panel-center h-100p ">
-            <aside class="w-180 h-100p ovf-hd" style="background: #eef1f6;">
-                <el-menu default-active="1" class="el-menu-vertical-demo"  @select="selectCountry">
+            <aside class="w-180 h-100p" style="background: #eef1f6;overflow-x:hidden;overflow-y:scroll">
+                <el-menu default-active="1" class="el-menu-vertical-demo"  @select="selectCountry" >
                     <div v-for="(country,key) in countryArr" :key = "key">
                         <el-submenu :index="country.name">
 
@@ -28,7 +28,7 @@
                                                                                                                     </div> -->
                 </el-menu>
             </aside>
-            <section class="panel-c-c">
+            <section class="panel-c-c" style="overflow-x:hidden;">
                 <div class="grid-content bg-purple-light">
                     <el-col :span="24">
                         <transition name="fade" mode="out-in" appear>
@@ -240,7 +240,7 @@ export default {
       return this.$store.state.showRightPage;
     },
     countryArr() {
-      console.log(this.$store.state.countryArr)
+      // console.log(this.$store.state.countryArr)
       var countryArr = this.$store.state.countryArr;
       // var countryArr = []
       // countryArr.concat(this.$store.state.countryArr)

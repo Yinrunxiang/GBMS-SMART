@@ -64,25 +64,21 @@ export default {
   },
   methods: {
     add(form) {
-      var vm = this
+      var vm = this;
       this.isLoading = !this.isLoading;
-      const data = {
-        params: this.form
-      };
-      this.apiGet("device/ac_breed.php?action=insert", data).then(res => {
-        // _g.clearVuex('setRules')
-        if (res[0] == true) {
-          var ac_breed = [];
-          ac_breed = ac_breed.concat(vm.$store.state.ac_breed);
-          ac_breed.push(vm.form);
-          vm.$store.dispatch('setAcBreed', ac_breed)
-          _g.toastMsg("success", res[1]);
-          setTimeout(() => {
-            vm.goback();
-          }, 500);
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
+      const data = this.form;
+      this.apiPost("admin/ac_breed", data).then(res => {
+        this.handelResponse(res, data => {
+            var ac_breed = [];
+            ac_breed = ac_breed.concat(vm.$store.state.ac_breed);
+            ac_breed.push(vm.form);
+            vm.$store.dispatch("setAcBreed", ac_breed);
+            _g.toastMsg("success", data);
+            setTimeout(() => {
+              vm.goback();
+            }, 500);
+        });
+
         vm.isLoading = false;
       });
     }

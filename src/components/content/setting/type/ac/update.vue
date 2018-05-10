@@ -63,31 +63,27 @@ export default {
   },
   methods: {
     add(form) {
-      var vm = this
+      var vm = this;
       this.isLoading = !this.isLoading;
-      const data = {
-        params: this.form
-      };
-      this.apiGet("device/ac_breed.php?action=update", data).then(res => {
-        // _g.clearVuex('setRules')
-        if (res[0] == true) {
-          var ac_breed = [];
-          ac_breed = ac_breed.concat(vm.$store.state.ac_breed);
-          var ac_breed = vm.$store.state.ac_breed;
+      const data = this.form;
+      this.apiPut("admin/ac_breed/", data.id, data).then(res => {
+        this.handelResponse(res, data => { 
+            var ac_breed = [];
+            ac_breed = ac_breed.concat(vm.$store.state.ac_breed);
+            var ac_breed = vm.$store.state.ac_breed;
 
-          for (var i = 0; i < ac_breed.length; i++) {
-            if (ac_breed[i].breed == vm.form.breed) {
-              ac_breed[i] = vm.form;
+            for (var i = 0; i < ac_breed.length; i++) {
+              if (ac_breed[i].breed == vm.form.breed) {
+                ac_breed[i] = vm.form;
+              }
             }
-          }
-          vm.$store.dispatch('setAcBreed', ac_breed)
-          _g.toastMsg("success", res[1]);
-          setTimeout(() => {
-            vm.goback();
-          }, 500);
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
+            vm.$store.dispatch("setAcBreed", ac_breed);
+            _g.toastMsg("success",data);
+            setTimeout(() => {
+              vm.goback();
+            }, 500);
+        });
+
         vm.isLoading = false;
       });
     }
