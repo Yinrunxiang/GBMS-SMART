@@ -264,7 +264,9 @@ export default {
       });
     },
     updateDatabase() {
-      this.apiGet("admin/base/updateDatabase", {}).then(res => {});
+      this.apiPost("admin/dataBase/updateDatabase", {}).then(res => {
+        console.log(res);
+      });
     },
     countryArr() {
       var countryArr = [];

@@ -7,13 +7,13 @@
 
 namespace app\admin\controller;
 
-class Address extends ApiCommon
+class DataBase extends ApiCommon
 {
 
     public function updateDataBase()
     {
-        $userInfo = $cache['userInfo'];
-        $database_name = $userInfo['data_name'];
+        $userInfo = $GLOBALS['userInfo'];
+        $database_name = $userInfo['database_name'];
         $con = mysqli_connect('localhost', 'root', 'root');
         if (!$con) {
             die('Could not connect: ' . mysqli_error($con));

@@ -32,7 +32,7 @@ return [
     // 【基础】退出登录
     'admin/base/register' => ['admin/base/register', ['method' => 'POST']],
     // 【基础】更新数据库
-    'admin/base/updateDatabase' => ['admin/base/updateDatabase', ['method' => 'POST']],
+    'admin/dataBase/updateDatabase' => ['admin/dataBase/updateDatabase', ['method' => 'POST']],
     // 【UDP】发送UDP
     'admin/udp/sendUdp' => ['admin/udp/sendUdp', ['method' => 'POST']],
     // // 【设备】修改设备位置
