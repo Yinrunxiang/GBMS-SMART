@@ -265,7 +265,9 @@ export default {
     },
     updateDatabase() {
       this.apiPost("admin/dataBase/updateDatabase", {}).then(res => {
-        console.log(res);
+        this.handelResponse(res, data => {
+          this.version = data;
+        });
       });
     },
     countryArr() {
