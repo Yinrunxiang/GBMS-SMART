@@ -1,13 +1,14 @@
 <?php
+namespace app\common\udp;
 header("Content-type: text/html; charset=utf-8");
 date_default_timezone_set('PRC');
 use Workerman\Worker;
 use Workerman\WebServer;
 use Workerman\Lib\Timer;
-
+use app\common\udp\UDP;
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once './udp/udp.php';
+// require_once './udp/udp.php';
 
 $con = mysqli_connect('localhost', 'root', 'root');
 // if (!$con) {
@@ -15,7 +16,7 @@ $con = mysqli_connect('localhost', 'root', 'root');
 // }
 mysqli_select_db($con, "admin");
 mysqli_set_charset($con, "utf8");
-class udpServer
+class UdpServer
 {
 
 
@@ -64,7 +65,6 @@ class udpServer
         // 监听一个UDP端口
         // global $port;
         $port = $port == "" ? "6000" : $port;
-
         $inner_udp_worker = new Worker('udp://0.0.0.0:' . $port);
              // $inner_udp_worker = new Worker('udp://0.0.0.0:8888');
                 // $inner_udp_worker = new Worker('udp://0.0.0.0:59263');
