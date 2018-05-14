@@ -1,6 +1,7 @@
 <?php
 namespace app\common\udp\device;
-use app\common\udp\SendCommand;
+// use app\common\udp\SendCommand;
+require_once '../SendCommand.php';
 $sendCommand = new SendCommand();
 class Music
 {

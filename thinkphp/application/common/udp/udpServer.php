@@ -5,8 +5,8 @@ date_default_timezone_set('PRC');
 use Workerman\Worker;
 use Workerman\WebServer;
 use Workerman\Lib\Timer;
-use app\common\udp\UDP;
-
+// use app\common\udp\Udp;
+require_once './Udp.php';
 require_once __DIR__ . '/vendor/autoload.php';
 // require_once './udp/udp.php';
 
@@ -37,11 +37,11 @@ class UdpServer
      function sendCommand($schedule)
     {
         global $con;
-        $UDP = new UDP;
+        $Udp = new Udp;
         $command = "select subnetid,deviceid,channel,channel_spare,devicetype,ip,port,mac,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,c.operation as udp_type from schedule_command as a left join device as b on a.device = b.id left join address as c on b.address = c.address where schedule = '" . $schedule . "'";
         $command = mysqli_query($con, $command);
         while ($command_row = mysqli_fetch_assoc($command)) {
-            $UDP->sendStatusUdp($command_row);
+            $Udp->sendStatusUdp($command_row);
             // usleep(300000);
         }
     }
@@ -306,7 +306,7 @@ class UdpServer
         $inner_udp_worker->listen();
         Timer::add(600, function () {
             global $con;
-            $sql = "insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,floor,room,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,floor,room,now() from device left join address on device.address = address.address where on_off = 'on' and (devicetype = 'light' or devicetype = 'led' or devicetype = 'ac') ";
+            $sql = "insert into record (device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,address,floor,room,record_date) select device,subnetid,deviceid,channel,mac,ip,port,devicetype,on_off,mode,grade,breed,country,device.address,floor,room,now() from device left join address on device.address = address.address where on_off = 'on' and (devicetype = 'light' or devicetype = 'led' or devicetype = 'ac' or devicetype = 'floorheat') ";
             $result = mysqli_query($con, $sql);
         });
         Timer::add(1, function () {

@@ -7,7 +7,7 @@
 					<!-- <img :src="img" class="logo"> -->
 				</template>
 				<template v-else>
-					<a class="p-l-10"  style="cursor:pointer;color:#eee;"  @click="homeClick()"><img src="../assets/images/Gensen app of GBMS.png" class="logo">SMART GBMS</a>
+					<a class="p-l-10"  style="cursor:pointer;color:#fff;"  @click="homeClick()"><img src="../assets/images/Gensen app of GBMS.png" class="logo">SMART GBMS</a>
 				</template>
 			</el-col>
       <el-col :span="18" class="h-60">
@@ -104,6 +104,7 @@
   height: 44px;
   width: 44px;
   float: left;
+  color: #fff;
   /* border:2px solid #ffffff;
   border-radius: 10px; */
 }
@@ -112,7 +113,7 @@
   top: 5px;
   right: 5px;
   font-size: 10px;
-  color: #eee;
+  color: #fff;
 }
 
 .user-ground {

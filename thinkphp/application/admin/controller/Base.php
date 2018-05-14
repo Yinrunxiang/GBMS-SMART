@@ -93,20 +93,6 @@ class Base extends Common
         return resultArray(['data' => $data]);
     }
 
-    public function updateDataBase()
-    {
-        $version = '1.6.1';
-        $selectVersion = Db::name('udp')->field('udp_flag')->select();
-        if (count($selectVersion)>0 && $selectVersion[0]["version"] == $version) return;
-        $updateVersion = "";
-        if (count($selectVersion)>0) {
-            Db::name('udp')->data(['udp_id'=>'1','udp_flag'=>$version])->update();
-        } else {
-            Db::name('udp')->data(['udp_id'=>'1','udp_flag'=>$version])->insert();
-        }
-        
-    }
-
     // miss 路由：处理没有匹配到的路由规则
     public function miss()
     {

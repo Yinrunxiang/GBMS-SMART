@@ -4,9 +4,9 @@ use PHPSocketIO\SocketIO;
 use Workerman\Worker;
 use Workerman\WebServer;
 use Workerman\Lib\Timer;
-use app\common\udp\UdpServer;
+// use app\common\udp\UdpServer;
 require_once './UdpServer.php';
-
+// $UdpServer = new()
 $sender_io = new SocketIO(2120);
 // 客户端发起连接事件时，设置连接socket的各种事件回调
 $sender_io->on('connection', function ($socket) {
