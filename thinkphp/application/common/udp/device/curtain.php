@@ -1,7 +1,7 @@
 <?php
 namespace app\common\udp\device;
-// use app\common\udp\SendCommand;
-require_once '../SendCommand.php';
+use \app\common\udp\device\SendCommand;
+require_once __DIR__.'/SendCommand.php';
 $sendCommand = new SendCommand();
 class Curtain
 {

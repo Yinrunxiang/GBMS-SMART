@@ -1,10 +1,11 @@
 <?php
+namespace app\common\udp;
 require_once __DIR__ . '/vendor/autoload.php';
 use PHPSocketIO\SocketIO;
 use Workerman\Worker;
 use Workerman\WebServer;
 use Workerman\Lib\Timer;
-// use app\common\udp\UdpServer;
+use \app\common\udp\UdpServer;
 require_once './UdpServer.php';
 // $UdpServer = new()
 $sender_io = new SocketIO(2120);

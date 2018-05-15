@@ -1,10 +1,10 @@
 <?php
 namespace app\common\udp;
-// use app\common\udp\device\Ac;
-// use app\common\udp\device\Light;
-// use app\common\udp\device\Led;
-// use app\common\udp\device\Curtain;
-// use app\common\udp\device\Music;
+use app\common\udp\device\Ac;
+use app\common\udp\device\Light;
+use app\common\udp\device\Led;
+use app\common\udp\device\Curtain;
+use app\common\udp\device\Music;
 require_once './device/Ac.php';
 require_once './device/Light.php';
 require_once './device/Led.php';

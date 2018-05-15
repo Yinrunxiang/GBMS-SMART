@@ -1,7 +1,9 @@
 <?php
-namespace app\common\udp;
+namespace app\common\udp\device;
 use app\common\udp\UdpProtocol;
 use app\common\udp\UdpSocket;
+require_once __DIR__ . '\..\UdpProtocol.php';
+require_once __DIR__ . '\..\UdpSocket.php';
 
 class SendCommand
 {
