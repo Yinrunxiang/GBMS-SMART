@@ -1,5 +1,6 @@
 <?php
 namespace app\common\udp;
+
 header("Content-type: text/html; charset=utf-8");
 date_default_timezone_set('PRC');
 use Workerman\Worker;
@@ -20,7 +21,7 @@ class UdpServer
 {
 
 
-     function toHex($num)
+    function toHex($num)
     {
         $num = dechex($num);
         if (strlen($num) < 2) {
@@ -29,12 +30,12 @@ class UdpServer
         return $num;
     }
 
-     function tocolor($str)
+    function tocolor($str)
     {
         $color = $this->toHex(round(hexdec("0x" + $str) / 100 * 255));
         return $color;
     }
-     function sendCommand($schedule)
+    function sendCommand($schedule)
     {
         global $con;
         $Udp = new Udp;
@@ -45,7 +46,7 @@ class UdpServer
             // usleep(300000);
         }
     }
-     function updataLed($channel, $color, $subnetid, $deviceid, $con)
+    function updataLed($channel, $color, $subnetid, $deviceid, $con)
     {
         if ($color != "00") {
             $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
@@ -59,7 +60,7 @@ class UdpServer
         global $sender_io;
        
         // define('HEARTBEAT_TIME', 25);
-        
+
         $devices = array();
         
         // 监听一个UDP端口
@@ -117,6 +118,7 @@ class UdpServer
                     mysqli_query($con, $sql);
                     break;
                 case "0034":
+                echo $msg;
                     if ($deviceTypeId == '0382') {
                         $red = substr($msg, 52, 2);
                         $green = substr($msg, 54, 2);

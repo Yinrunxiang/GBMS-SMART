@@ -151,7 +151,7 @@ export default {
         return;
       }
       var deviceOpenList = [];
-      console.log(vm.$refs.devicelist);
+      // console.log(vm.$refs.devicelist);
       for (var devicelist of vm.$refs.devicelist) {
         if (devicelist.$attrs.room == val) {
           deviceOpenList = deviceOpenList.concat(devicelist.$refs.device);

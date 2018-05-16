@@ -462,7 +462,7 @@ export default {
       this.deviceProperty.songListAll= []
       this.deviceProperty.musicLoading= true
       // this.deviceProperty.source= "01"
-      this.initMusic(device)
+      // this.initMusic(device)
       return device;
     }
   }
