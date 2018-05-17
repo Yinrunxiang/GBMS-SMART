@@ -220,7 +220,10 @@ export default {
   },
   mounted() {
     console.log("floorheat");
-    // acApi.readStatus(this.device, this.deviceProperty);
+    acApi.readStatus(this.device, this.deviceProperty);
+  },
+  destroyed(){
+    acApi.closeSocket();
   },
   components: {},
   computed: {
@@ -242,7 +245,7 @@ export default {
         targetDeviceID: "",
         channel: ""
       };
-      acApi.readStatus(device, this.deviceProperty);
+      // acApi.readStatus(device, this.deviceProperty);
       return device;
     },
     modeTemperature() {

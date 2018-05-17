@@ -95,13 +95,16 @@ export default {
       : this.deviceProperty.color;
     $(".led-light").css("color", this.deviceProperty.color);
   },
+  destroyed(){
+    ledApi.closeSocket();
+  },
   computed: {
     device() {
       var device = this.$store.state.device;
       this.deviceProperty.brightness = 0;
       this.deviceProperty.on_off = false;
       this.deviceProperty.color = "#c0ccda";
-      ledApi.readStatus(device, this.deviceProperty);
+      // ledApi.readStatus(device, this.deviceProperty);
       return device;
     }
   },

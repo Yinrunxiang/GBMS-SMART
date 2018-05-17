@@ -74,6 +74,9 @@ export default {
     console.log("curtain vue");
     curtainApi.readStatus(this.device, this.deviceProperty);
   },
+  destroyed(){
+    curtainApi.closeSocket();
+  },
   components: {},
   computed: {
     device() {

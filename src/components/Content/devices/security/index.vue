@@ -129,6 +129,9 @@ export default {
   mounted() {
     console.log("security");
   },
+  // destroyed(){
+  //   securityApi.closeSocket();
+  // },
   components: {},
   computed: {
     device() {

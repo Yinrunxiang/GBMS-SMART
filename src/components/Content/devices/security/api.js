@@ -1,5 +1,6 @@
 import api from "../api";
 const lightApi = {
+    socketio:{},
     get_command(val, device) {
         if (val.type == '04' || val.type == '08') {
             const data = {
@@ -37,7 +38,9 @@ const lightApi = {
         // console.log(data)
         api.sendUdp(device, data)
     },
-
+    closeSocket(){
+        this.socketio.removeAllListeners()
+      },
     readStatus(val, device, deviceProperty) {
         let data = {
             params: {
@@ -52,7 +55,9 @@ const lightApi = {
             }
         };
         api.sendUdp(device, data)
-        window.socketio.on("new_msg", function (msg) {
+        let port = Lockr.get("port");
+        this.socketio = socket("http://" + document.domain + ":" + port);
+        this.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);
             var channel = msg.substr(52, 2);

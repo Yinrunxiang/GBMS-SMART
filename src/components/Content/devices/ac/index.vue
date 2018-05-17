@@ -195,6 +195,9 @@ export default {
     acApi.readStatus(this.device, this.deviceProperty);
     acApi.readTmpRange(this.device, this.deviceProperty)
   },
+  destroyed(){
+    acApi.closeSocket();
+  },
   components: {},
   computed: {
     device() {
@@ -206,7 +209,7 @@ export default {
       this.deviceProperty.tmp = 26;
       this.deviceProperty.wind = 2;
       this.deviceProperty.mode = "cool";
-      acApi.readStatus(device, this.deviceProperty);
+    //   acApi.readStatus(device, this.deviceProperty);
       return device;
     }
   }

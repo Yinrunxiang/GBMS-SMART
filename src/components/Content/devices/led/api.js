@@ -1,6 +1,7 @@
 import api from "../api";
 import $ from "jquery";
 const ledApi = {
+  socketio:{},
   //开关滑块
   //驱动颜色变化的数据为 255色的16位进制
   //UDP发送的颜色数据为  100色的16位进制
@@ -52,6 +53,9 @@ const ledApi = {
     const data = this.get_headleChangeColor(val, device, deviceProperty)
     api.sendUdp(device, data)
   },
+  closeSocket(){
+    this.socketio.removeAllListeners()
+  },
   readStatus(device, deviceProperty) {
     var operatorCodefst = "00",
       operatorCodesec = "33",
@@ -59,7 +63,9 @@ const ledApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     // console.log(device);
     api.sendUdp(device, data)
-    window.socketio.on("new_msg", function (msg) {
+    let port = Lockr.get("port");
+    this.socketio = socket("http://" + document.domain + ":" + port);
+    this.socketio.on("new_msg", function (msg) {
       var subnetid = msg.substr(34, 2);
       var deviceid = msg.substr(36, 2);
       var channel = msg.substr(52, 2);

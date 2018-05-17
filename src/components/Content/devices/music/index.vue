@@ -1,6 +1,6 @@
 <template>
     <el-col :span="24">
-        <div class="music" style="width:300px;height:550px;text-align: center;">
+        <div v-loading="deviceProperty.musicLoading"  class="music" style="width:300px;height:550px;text-align: center;">
           <div v-show="albumShow" class="album">
                 <div class="fa fa-reply album-btn-back btn-hand" @click="albumBtnClickBack"></div>
                 <el-menu class="album-list">
@@ -57,7 +57,7 @@
             <div class="model-item">
                 <div></div>
             </div>
-            <div v-loading="deviceProperty.musicLoading" class="music-list">
+            <div class="music-list">
                 <ul style="margin:0;padding:0;">
                     <li @dblclick="selectSong(song)" :class="song.select?'select':''" v-for="(song,key) in deviceProperty.songList" :key="key">
                         <div class="song">
@@ -305,7 +305,7 @@ export default {
       this.deviceProperty.songListAll = [];
       this.deviceProperty.musicLoading = true;
       console.log("music_test");
-      musicApi.readStatus(this.device, this.deviceProperty);
+      musicApi.readSong(this.device, this.deviceProperty);
     },
     sourceChange(command) {
       this.deviceProperty.source = command;
@@ -323,7 +323,7 @@ export default {
         this.deviceProperty.songListAll = music.songList;
         this.deviceProperty.musicLoading = false;
       } else {
-        musicApi.readStatus(this.device, this.deviceProperty);
+        musicApi.readSong(this.device, this.deviceProperty);
       }
     },
     albumBtnClick() {
@@ -429,13 +429,16 @@ export default {
         this.deviceProperty.songListAll = music.songList;
         this.deviceProperty.musicLoading = false;
       } else {
-        musicApi.readStatus(device, this.deviceProperty);
+        musicApi.readSong(device, this.deviceProperty);
       }
     }
   },
   created() {
     console.log("music");
     this.initMusic(this.device)
+  },
+  destroyed(){
+    musicApi.closeSocket();
   },
   computed: {},
   components: {},

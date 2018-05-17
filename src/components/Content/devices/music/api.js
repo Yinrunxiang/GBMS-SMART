@@ -17,6 +17,7 @@ function strToarr4(str) {
   return arr;
 }
 const musicApi = {
+  socketio:{},
   time_change(val, device) {
     // device.autotmp = val;
     // device.loading = true
@@ -131,8 +132,10 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
-
-  readStatus(device, deviceProperty) {
+  closeSocket(){
+    this.socketio.removeAllListeners()
+  },
+  readSong(device, deviceProperty) {
     console.log('music_api')
     var $this = this
     var albumnum = 0;
@@ -146,8 +149,9 @@ const musicApi = {
       additionalContentData = [deviceProperty.source]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
-    // window.socketio.connect()
-    window.socketio.on("new_msg", function (msg) {
+    let port = Lockr.get("port");
+    this.socketio = socket("http://" + document.domain + ":" + port);
+    this.socketio.on("new_msg", function (msg) {
       var msglen = msg.length;
       var stop = msglen - 4;
       var subnetid = msg.substr(34, 2);
@@ -287,7 +291,7 @@ const musicApi = {
                     deviceProperty.songListAll = songList
                     deviceProperty.musicLoading = false
                     Lockr.set('music_' + device.id + '_' + deviceProperty.source, deviceProperty)
-                    // window.socketio.disconnect()
+                    $this.socketio.removeAllListeners()
                   }
                 }, 10000)
               }

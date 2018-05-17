@@ -54,6 +54,9 @@ export default {
     console.log("light vue");
     lightApi.readStatus(this.device, this.deviceProperty);
   },
+  destroyed(){
+    lightApi.closeSocket();
+  },
   components: {},
   computed: {
     device() {
@@ -61,7 +64,7 @@ export default {
       var device = this.$store.state.device;
       this.deviceProperty.brightness = 0
       this.deviceProperty.on_off = false
-      lightApi.readStatus(device, this.deviceProperty);
+      // lightApi.readStatus(device, this.deviceProperty);
       
       return device;
     },

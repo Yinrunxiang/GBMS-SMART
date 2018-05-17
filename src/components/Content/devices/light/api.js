@@ -1,5 +1,6 @@
 import api from "../api";
 const lightApi = {
+  socketio:{},
   get_switch_change(val, device, deviceProperty) {
     if (val) {
       deviceProperty.brightness = 100;
@@ -29,13 +30,18 @@ const lightApi = {
     const data = this.get_slider_change(val, device, deviceProperty)
     api.sendUdp(device, data)
   },
+  closeSocket(){
+    this.socketio.removeAllListeners()
+  },
   readStatus(device, deviceProperty) {
     var operatorCodefst = "00",
       operatorCodesec = "33",
       additionalContentData = []
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
-    window.socketio.on("new_msg", function (msg) {
+    let port = Lockr.get("port");
+    this.socketio = socket("http://" + document.domain + ":" + port);
+    this.socketio.on("new_msg", function (msg) {
       var subnetid = msg.substr(34, 2);
       var deviceid = msg.substr(36, 2);
       var channel = msg.substr(52, 2);

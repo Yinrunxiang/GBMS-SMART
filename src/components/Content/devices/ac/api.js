@@ -5,6 +5,7 @@ function toTmp(tmp) {
     return tmp
 }
 const acApi = {
+    socketio:{},
     get_switch_change(val, device, deviceProperty) {
         if (val) {
             var operatorCodefst = "E3",
@@ -116,6 +117,9 @@ const acApi = {
         const data = this.get_readTmpRange(device, deviceProperty)
         api.sendUdp(device, data)
     },
+    closeSocket(){
+        this.socketio.removeAllListeners()
+      },
     readStatus(device, deviceProperty) {
         var operatorCodefst = "E0",
             operatorCodesec = "EC",
@@ -123,7 +127,9 @@ const acApi = {
         var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         // console.log(device)
         api.sendUdp(device, data)
-        window.socketio.on("new_msg", function (msg) {
+        let port = Lockr.get("port");
+        this.socketio = socket("http://" + document.domain + ":" + port);
+        this.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);
             // var channel = msg.substr(52, 2);

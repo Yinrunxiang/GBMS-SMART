@@ -15,6 +15,7 @@ let controlOnAndOff = "14",
     modelAway = '04',
     modelTimer = '05'
 const acApi = {
+    socketio:{},
     get_switch_change(val, device, deviceProperty) {
         if (val) {
             var operatorCodefst = "E3",
@@ -124,6 +125,9 @@ const acApi = {
         const data = this.get_timeChange(device, deviceProperty)
         api.sendUdp(device, data)
     },
+    closeSocket(){
+        this.socketio.removeAllListeners()
+      },
     readStatus(device, deviceProperty) {
         console.log('floorheatApi')
         var udpArr = []
@@ -178,7 +182,9 @@ const acApi = {
         }
         udpArr.push(udpObj)
         api.sendUdpArr(device, udpArr)
-        window.socketio.on("new_msg", function (msg) {
+        let port = Lockr.get("port");
+    this.socketio = socket("http://" + document.domain + ":" + port);
+    this.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);
             var deviceid = msg.substr(36, 2);
             //操作码
