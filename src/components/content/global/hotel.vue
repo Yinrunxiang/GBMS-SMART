@@ -394,7 +394,7 @@ export default {
       });
       }
       clearInterval(interval);
-      // window.socketio.removeAllListeners("new_msg");
+      window.socketio.removeAllListeners();
       // console.log(val)
       var vm = this;
       var i = 0;

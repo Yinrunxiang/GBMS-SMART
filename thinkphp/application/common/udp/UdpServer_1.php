@@ -32,7 +32,22 @@ class UdpServer
         }
         return $num;
     }
-
+    function strToarr($arr, $str)
+    {
+        $len = count($str) / 2;
+        for ($i = 0; $i < $len; $i++) {
+            array_push($arr, substr($str, $i * 2, 2));
+        }
+        return $arr;
+    }
+    function strToarr4($arr, $str)
+    {
+        $len = count($str) / 4;
+        for ($i = 0; $i < $len; $i++) {
+            array_push($arr, substr($str, $i * 4, 4));
+        }
+        return $arr;
+    }
     function tocolor($str)
     {
         $color = $this->toHex(round(hexdec("0x" + $str) / 100 * 255));
@@ -294,19 +309,19 @@ class UdpServer
                             $key = $type;
                             switch ($value) {
                                 case '01':
-                                    $value = "heat";
+                                    $value = "manual";
                                     break;
                                 case '02':
-                                    $value = "fan";
+                                    $value = "day";
                                     break;
                                 case '03':
-                                    $value = "auto";
+                                    $value = "night";
                                     break;
                                 case '04':
-                                    $value = "auto";
+                                    $value = "away";
                                     break;
                                 case '05':
-                                    $value = "auto";
+                                    $value = "alarm";
                                     break;
                             }
                             break;
@@ -316,7 +331,7 @@ class UdpServer
                             $value = hexdec($value);
                             break;
                     }
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, $type => $value];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, $key => $value];
                     $sender_io->emit('udp', $udp);
                     if ($type == 'on_off') {
                         if ($value == 'on') {
@@ -394,7 +409,7 @@ class UdpServer
                     $dest_port = $address["port"];
                     //获取温度
                     $sendCommand = new SendCommand();
-                    $msg = $sendCommand->send('E3', 'E7', $subnetid, $deviceid, ['01'], $macAddress, $dest_address, $dest_port);
+                    $sendCommand->send('E3', 'E7', $subnetid, $deviceid, ['01'], $macAddress, $dest_address, $dest_port);
                     break;
                 case '03ca':
                     //获取该建筑发在区域的mac地址目标ip目标端口
@@ -403,7 +418,7 @@ class UdpServer
                     $dest_address = $address["ip"];
                     $dest_port = $address["port"];
                     $sendCommand = new SendCommand();
-                    $msg = $sendCommand->send('03', 'CB', $subnetid, $deviceid, [], $macAddress, $dest_address, $dest_port);
+                    $sendCommand->send('03', 'CB', $subnetid, $deviceid, [], $macAddress, $dest_address, $dest_port);
                     break;
                 case "03cc":
                     //地热模块
@@ -411,11 +426,151 @@ class UdpServer
                     $dayTimeMinute = hexdec($this->getadditional($msg, 1));
                     $nightTimeHour = hexdec($this->getadditional($msg, 2));
                     $nightTimeMinute = hexdec($this->getadditional($msg, 3));
-                    $dayTime = $dayTimeHour.$dayTimeMinute;
-                    $nightTime = $nightTimeHour.$nightTimeMinute;
+                    $dayTime = $dayTimeHour . $dayTimeMinute;
+                    $nightTime = $nightTimeHour . $nightTimeMinute;
                     $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'dayTime' => $dayTime, 'dayTemperature' => $nightTime, 'nightTime' => $nightTemperature];
                     $sender_io->emit('udp', $udp);
                     break;
+                case "e3db":
+                    $channel = $this->getadditional($msg, 2);
+                    $operatorKind = $this->getadditional($msg, 0);
+                    $operatorResult = $this->getadditional($msg, 1);
+                    switch ($operatorKind) {
+                        case "14":
+                            $type = 'on_off';
+                            $key = $type;
+                            if ($value == "01") {
+                                $value = 'on';
+
+                            } else {
+                                $value = 'off';
+                            }
+                            break;
+                        case "15":
+                            $type = 'mode';
+                            $key = $type;
+                            switch ($value) {
+                                case '01':
+                                    $value = "manual";
+                                    break;
+                                case '02':
+                                    $value = "day";
+                                    break;
+                                case '03':
+                                    $value = "night";
+                                    break;
+                                case '04':
+                                    $value = "away";
+                                    break;
+                                case '05':
+                                    $value = "alarm";
+                                    break;
+                            }
+                    }
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, $key => $value];
+                    $sender_io->emit('udp', $udp);
+                    break;
+                case "e3e8":
+                    break;
+                case "02e1":
+                    $msglen = count($msg);
+                    $stop = $msglen - 52 - 4;
+                    $source = $this->getadditional($msg, 0);
+                    $albumpack = subst($msg, 52, $stop);
+                    $additionalContentData = [$source];
+                    $additionalContentData = $this->strToarr($additionalContentData, $albumpack);
+                    //获取该建筑发在区域的mac地址目标ip目标端口
+                    $address = $this->getAddress($subnetid, $deviceid);
+                    $macAddress = $address["mac"];
+                    $dest_address = $address["ip"];
+                    $dest_port = $address["port"];
+                    //发送UDP
+                    $sendCommand = new SendCommand();
+                    $sendCommand->send('02', 'E2', $subnetid, $deviceid, $additionalContentData, $macAddress, $dest_address, $dest_port);
+                    break;
+                case "02e3":
+                 //获取该建筑发在区域的mac地址目标ip目标端口
+                    $address = $this->getAddress($subnetid, $deviceid);
+                    $macAddress = $address["mac"];
+                    $dest_address = $address["ip"];
+                    $dest_port = $address["port"];
+
+                    $msglen = count($msg);
+                    $stop = $msglen - 52 - 4;
+                    $source = $this->getadditional($msg, 2);
+                    $firstAlbumNo = $this->getadditional($msg, 5);
+                    $albumnum = $this->getadditional($msg, 4);
+                    $albumlist = substr($msg, 60);
+                    for ($i = 0; $i < $albumnum; $i++) {
+                        $albumNo = substr($albumlist . $albumCount, 2);
+                        $albumLength = substr($albumlist, $albumCount + 2, 2);
+                        $albumLength = intval('0x' + $albumLength) * 2;
+                        $albumNameList = substr($albumlist, $albumCount + 4, $albumLength);
+                        $albumNameList = $this->strToarr4($albumNameList);
+                        $albumName = [];
+                        foreach ($albumNameList as $k => $v) {
+                            array_push($albumName, chr($v));
+                        }
+                        $albumName = implode("", $albumName);
+                        $albumObj = [
+                            'albumName' => $albumName,
+                            'albumNo' => $albumNo
+                        ];
+                        $albumObj = json_encode($albumObj);
+                        array_push($albumList, $albumObj);
+                        $albumNoList[$albumNo] = false;
+                        $albumCount = $albumCount + $albumLength + 4;
+                    }
+                    //发送socket给前端
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'source' => $source, 'albumList' => $albumList];
+                    $sender_io->emit('udp', $udp);
+                    //发送UDP
+                    $sendCommand = new SendCommand();
+                    foreach ($albumNoList as $k => $v) {
+                        $sendCommand->send('02', 'E4', $subnetid, $deviceid, [$source, $k], $macAddress, $dest_address, $dest_port);
+                        usleep(100000);
+                    }
+                    break;
+                case "02e5":
+                 //获取该建筑发在区域的mac地址目标ip目标端口
+                    $address = $this->getAddress($subnetid, $deviceid);
+                    $macAddress = $address["mac"];
+                    $dest_address = $address["ip"];
+                    $dest_port = $address["port"];
+
+                    $source = $this->getadditional($msg, 0);
+                    $albumno = $this->getadditional($msg, 1);
+                    $songpack = substr($msg, 54, 2);
+                    $songpack = intval("0x" + $songpack);
+                    //发送UDP
+                    $sendCommand = new SendCommand();
+                    for ($i = 0; $i < $songpack; $i++) {
+                        $sendCommand->send('02', 'E6', $subnetid, $deviceid, [$source, $albumno, $this->toHex($i)], $macAddress, $dest_address, $dest_port);
+                        usleep(100000);
+                    }
+                    break;
+                case "02e7":
+                 //获取该建筑发在区域的mac地址目标ip目标端口
+                    $address = $this->getAddress($subnetid, $deviceid);
+                    $macAddress = $address["mac"];
+                    $dest_address = $address["ip"];
+                    $dest_port = $address["port"];
+
+                    $source = $this->getadditional($msg, 2);
+                    $songNum = $this->getadditional($msg, 5);
+                    $songNum = intval("0x" + $songNum);
+                    $songCount = 0;
+                    $songForNum = 0;
+                    $songpack = substr($msg, 54, 2);
+                    $songpack = intval("0x" + $songpack);
+                    //发送UDP
+                    $sendCommand = new SendCommand();
+                    for ($i = 0; $i < $songpack; $i++) {
+                        $sendCommand->send('02', 'E6', $subnetid, $deviceid, [$source, $albumno, $this->toHex($i)], $macAddress, $dest_address, $dest_port);
+                        usleep(100000);
+                    }
+                    break;
+
             }
 
         };

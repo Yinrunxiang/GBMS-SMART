@@ -147,6 +147,7 @@ export default {
       }
       this.room_key = val;
       clearInterval(vm.interval);
+      window.socketio.removeAllListeners()
       if (typeof val == "string" && val == "") {
         return;
       }

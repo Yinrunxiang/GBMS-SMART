@@ -18,6 +18,8 @@ function strToarr4(str) {
 }
 const musicApi = {
   socketio:{},
+  albumInterval:"",
+  songInterval:"",
   time_change(val, device) {
     // device.autotmp = val;
     // device.loading = true
@@ -134,6 +136,10 @@ const musicApi = {
   },
   closeSocket(){
     this.socketio.removeAllListeners()
+    if(this.albumInterval)
+    clearInterval(this.albumInterval)
+    if(this.songInterval)
+    clearInterval(this.songInterval)
   },
   readSong(device, deviceProperty) {
     console.log('music_api')
@@ -226,7 +232,7 @@ const musicApi = {
               udpArrAlbum.push(udpObj)
             }
             $this.sendUdpArr(udpArrAlbum)
-            var albumInterval = setInterval(function () {
+            $this.albumInterval = setInterval(function () {
               var check = true
               var udpArrAlbum = []
               // console.log(albumNoList)
@@ -247,14 +253,14 @@ const musicApi = {
               }
               $this.sendUdpArr(udpArrAlbum)
               if (check) {
-                clearInterval(albumInterval)
+                clearInterval($this.albumInterval)
                 albumList.sort(function (a, b) {
                   // return a.songNo - b.songNo
                   return parseInt(a.albumNo) - parseInt(b.albumNo)
                 });
                 deviceProperty.albumlist = albumList
                 $this.sendUdpArr(udpArrSong)
-                var songInterval = setInterval(function () {
+                $this.songInterval = setInterval(function () {
                   var check = true
                   var udpArrSong = []
                   // console.log(songNoList)
@@ -277,7 +283,7 @@ const musicApi = {
 
                   $this.sendUdpArr(udpArrSong)
                   if (check) {
-                    clearInterval(songInterval)
+                    clearInterval($this.songInterval)
                     // var hash = {};
                     // songList = songList.reduce(function (item, next) {
                     //   hash[next.songNo] ? '' : hash[next.songNo] = true && item.push(next);
@@ -434,7 +440,7 @@ const musicApi = {
         var sendUdpFor = setInterval(function () {
           if (pass || index > 3) {
             clearInterval(sendUdpFor);
-            console.log(arrIndex)
+            // console.log(arrIndex)
             arrIndex++
             if (arr[arrIndex]) {
               if (arr[arrIndex].device.time && parseInt(arr[arrIndex].device.time) > 0) {
@@ -442,7 +448,7 @@ const musicApi = {
                 var timeCode = function () {
                   sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
                 }
-                setTimeout(timeCode, time)
+                setTimeout(timeCode, time) 
               } else {
                 sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
               }

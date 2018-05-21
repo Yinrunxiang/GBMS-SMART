@@ -34,6 +34,7 @@ const lightApi = {
     this.socketio.removeAllListeners()
   },
   readStatus(device, deviceProperty) {
+    // console.log('light-api')
     var operatorCodefst = "00",
       operatorCodesec = "33",
       additionalContentData = []
