@@ -77,7 +77,7 @@ class Address extends Common
      */
     public function updateDataById($param)
     {
-        $checkData = $this->get($param['id']);
+        $checkData = $this->get($param['address']);
         if (!$checkData) {
             $this->error = 'This data is not available';
             return false;

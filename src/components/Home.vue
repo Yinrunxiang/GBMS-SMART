@@ -673,6 +673,7 @@ export default {
   watch: {
     devices: {
       handler: function(val, oldVal) {
+        console.log('deviceChange')
         this.countryArr();
       },
       deep: true

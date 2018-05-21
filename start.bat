@@ -5,7 +5,7 @@ REM php start_io.php  php test_6001.php  php admin_6002.php
 @echo off  
 
 :: 配置环境变量 
-set "Path=%PATH%;D:\phpStudy20161103\php\php-5.4.45"
+set "Path=%PATH%;C:\SMART-GBMS\phpStudy\php\php-5.4.45"
 
 cd bin\thinkphp\application\common\udp
 php Local.php
