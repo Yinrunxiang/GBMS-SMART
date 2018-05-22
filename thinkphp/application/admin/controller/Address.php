@@ -25,7 +25,8 @@ class Address extends ApiCommon
         if (!$data) {
             return resultArray(['error' => $addressModel->getError()]);
         }
-        return resultArray(['data' => 'Add success']);
+        $data['result'] = 'Add success';
+        return resultArray(['data' => $data]);
     }
 
     public function update()
