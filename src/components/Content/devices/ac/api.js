@@ -127,7 +127,8 @@ const acApi = {
         var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         // console.log(device)
         api.sendUdp(device, data)
-        let port = Lockr.get("port");
+        let userInfo = Lockr.get("userInfo");
+        let port = userInfo.port;
         this.socketio = socket("http://" + document.domain + ":" + port);
         this.socketio.on("new_msg", function (msg) {
             var subnetid = msg.substr(34, 2);

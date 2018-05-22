@@ -10,7 +10,7 @@ namespace app\admin\model;
 use think\Db;
 use app\admin\model\Common;
 use com\verify\HonrayVerify;
-
+use app\admin\model\Floor;
 class Address extends Common
 {
 
@@ -54,15 +54,20 @@ class Address extends Common
             return false;
         }
         try {
-            $this->data($param)->allowField(true)->save();
+            $id = $this->data($param)->allowField(true)->insertGetId();
             $floor_num = intval($param['floor_num']);
             $floor_list = [];
             for ($i = 1; $i <= $floor_num; $i++) {
-                $floor_data = ['floor' => $i, 'room_num' => 0, 'address' => $param['address'], 'status' => 'enabled'];
+                $floor_data = ['floor' => $i, 'room_num' => 0, 'address' => $id, 'status' => 'enabled'];
                 array_push($floor_list, $floor_data);
             }
             Db::table('floor')->insertAll($floor_list);
-            return true;
+            $data = array();
+
+            $data["address"] = $this->getDataList();
+            $Floor = new Floor();
+            $data["floor"] = $Floor->getDataList();
+            return $data;
         } catch (\Exception $e) {
             $this->error = 'Add failure';
             return false;
@@ -77,7 +82,7 @@ class Address extends Common
      */
     public function updateDataById($param)
     {
-        $checkData = $this->get($param['address']);
+        $checkData = $this->get($param['id']);
         if (!$checkData) {
             $this->error = 'This data is not available';
             return false;
@@ -89,28 +94,28 @@ class Address extends Common
             $this->error = $validate->getError();
             return false;
         }
-        $floor_count = Db::table('floor')->where('address',$param['oldAddress'])->count('id');
+        $floor_count = Db::table('floor')->where('address',$param['id'])->count('id');
         $floor_num = intval($param['floor_num']);
         try {
             //更新地址表
-            $this->allowField(true)->save($param, ['address'=> $param['oldAddress']]);
+            $this->allowField(true)->save($param, ['id'=> $param['id']]);
             //更新与地址有关联的表
-            Db::table('device')->where('address', $param['oldAddress'])->update(['address' => $param['address']]);
-            Db::table('floor')->where('address', $param['oldAddress'])->update(['address' => $param['address']]);
-            Db::table('room')->where('address', $param['oldAddress'])->update(['address' => $param['address']]);
-            Db::table('record')->where('address', $param['oldAddress'])->update(['address' => $param['address']]);
+            // Db::table('device')->where('address', $param['id'])->update(['address' => $param['address']]);
+            // Db::table('floor')->where('address', $param['id'])->update(['address' => $param['address']]);
+            // Db::table('room')->where('address', $param['id'])->update(['address' => $param['address']]);
+            // Db::table('record')->where('address', $param['id'])->update(['address' => $param['address']]);
             //更新楼层数量
             $floor_list = [];
             if ($floor_num > $floor_count) {
                 for ($i = $floor_count + 1; $i <= $floor_num; $i++) {
-                    $floor_data = ['floor' => $i, 'room_num' => 0, 'address' => $param['address'], 'status' => 'enabled'];
+                    $floor_data = ['floor' => $i, 'room_num' => 0, 'address' => $param['id'], 'status' => 'enabled'];
                     array_push($floor_list, $floor_data);
                 }
                 Db::table('floor')->insertAll($floor_list);
             } else if ($floor_num < $floor_count) {
-                Db::table('floor')->where(['address'=>['=',$param['address']],'floor'=>['>',$floor_num]])->delete();
-                Db::table('room')->where(['address'=>['=',$param['address']],'floor'=>['>',$floor_num]])->delete();
-                Db::table('device')->where(['address'=>['=',$param['address']],'floor'=>['>',$floor_num]])->delete();
+                Db::table('floor')->where(['address'=>['=',$param['id']],'floor'=>['>',$floor_num]])->delete();
+                Db::table('room')->where(['address'=>['=',$param['id']],'floor'=>['>',$floor_num]])->delete();
+                Db::table('device')->where(['address'=>['=',$param['id']],'floor'=>['>',$floor_num]])->delete();
             }
             return true;
         } catch (\Exception $e) {

@@ -126,13 +126,13 @@ export default {
     operationChange(val) {
       this.operation = val;
     },
-    getFloor() {
-      this.apiGet("admin/floor", {}).then(res => {
-        this.handelResponse(res, data => {
-          this.$store.dispatch("setFloor", data);
-        });
-      });
-    },
+    // getFloor() {
+    //   this.apiGet("admin/floor", {}).then(res => {
+    //     this.handelResponse(res, data => {
+    //       this.$store.dispatch("setFloor", data);
+    //     });
+    //   });
+    // },
     addAddressRun() {
       var vm = this;
       if (this.form.operation == "1") {
@@ -148,27 +148,14 @@ export default {
       if (this.add) {
         this.apiPost("admin/address", data).then(res => {
           this.handelResponse(res, data => {
-            var address = [];
-            address = address.concat(vm.$store.state.address);
-            address.push(vm.form);
-            vm.$store.dispatch("setAddress", address);
-            var floors = [];
-            floors = floors.concat(vm.$store.state.floor);
-            for (var i = 1; i <= parseInt(vm.form.floor_num); i++) {
-              var floorObj = {
-                floor: i,
-                room_num: 0,
-                address: vm.form.address,
-                status: "enabled"
-              };
-              floors.push(floorObj);
-            }
-            vm.$store.dispatch("setFloor", floors);
-            _g.toastMsg("success", data);
+            console.log(data)
+            vm.$store.dispatch("setAddress", data.address);
+            vm.$store.dispatch("setFloor", data.floor);
+            _g.toastMsg("success", data.result);
             vm.updateDeleteImage();
             vm.success = true;
             setTimeout(() => {
-              vm.getFloor();
+              // vm.getFloor();
               vm.goback();
             }, 500);
           });
@@ -252,7 +239,7 @@ export default {
             vm.updateDeleteImage();
             vm.success = true;
             setTimeout(() => {
-              vm.getFloor();
+              // vm.getFloor();
               vm.goback();
             }, 500);
           });

@@ -155,7 +155,8 @@ const musicApi = {
       additionalContentData = [deviceProperty.source]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
-    let port = Lockr.get("port");
+    let userInfo = Lockr.get("userInfo");
+    let port = userInfo.port;
     this.socketio = socket("http://" + document.domain + ":" + port);
     this.socketio.on("new_msg", function (msg) {
       var msglen = msg.length;
