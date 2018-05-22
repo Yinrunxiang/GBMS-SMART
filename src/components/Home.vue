@@ -593,18 +593,17 @@ export default {
   },
   created() {
     console.log("home");
-    // let username = Lockr.get("username");
-    // let password = Lockr.get("password");
-    // this.username = username;
-    // if (!username || !password) {
-    //   _g.toastMsg("warning", "You are not logged in yet");
-    //   setTimeout(() => {
-    //     router.replace("/");
-    //   }, 1500);
-    //   return;
-    // }
-    let userInfo = Lockr.get("userInfo");
-    let port = userInfo.port;
+    let username = Lockr.get("username");
+    let password = Lockr.get("password");
+    this.username = username;
+    if (!username || !password) {
+      _g.toastMsg("warning", "You are not logged in yet");
+      setTimeout(() => {
+        router.replace("/");
+      }, 1500);
+      return;
+    }
+    let port = Lockr.get("port");
     var socketio = socket("http://" + document.domain + ":" + port);
     window.socketio = socketio;
 

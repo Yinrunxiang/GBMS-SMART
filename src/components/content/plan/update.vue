@@ -14,7 +14,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="Breed Type">
-                <el-select v-model="form.breed"  filterable placeholder="Select Breed" class="h-40 w-200">
+                <el-select v-model="form.breed" filterable placeholder="Select Breed" class="h-40 w-200">
                     <el-option v-for="(item,key) in breedData" :key="key" :label="item.breed" :value="item.id">
                     </el-option>
                 </el-select>
@@ -44,7 +44,7 @@
             </el-form-item>
             <el-form-item v-show="notHotel" label="Building">
               <template slot="prepend">Http://</template>
-                <el-select value-key= 'id' v-model="form.address" @change = "addressChange" filterable placeholder="Select Building" class="h-40 w-200">
+                <el-select v-model="form.address" filterable placeholder="Select Building" class="h-40 w-200">
                   
                     <el-option v-for="(item,key) in address" :key="key" :label="item.label" :value="item.value">
                     </el-option>
@@ -144,10 +144,6 @@ export default {
         );
       }
       this.$emit("changeUpdate", false);
-    },
-    addressChange(data){
-      this.form.address = data.address
-      this.form.country = data.country
     },
     commit(form) {
       // this.form.subnetid = _g.toHex(this.form.subnetid)
@@ -300,9 +296,8 @@ export default {
       for (var item of this.$store.state.address) {
         var addressObj = {};
         addressObj.label = item.address;
-        addressObj.value = item;
-        addressObj.id = item.address;
-        // addressObj.address = item;
+        addressObj.value = item.address;
+        addressObj.address = item;
         address.push(addressObj);
       }
       return address;
