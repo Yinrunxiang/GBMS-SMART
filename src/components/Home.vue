@@ -291,7 +291,7 @@ export default {
             if (address.country == address2.country) {
               var addressObject = {};
               addressObject.name = address2.address;
-              addressObject.id = address2.addressid;
+              addressObject.id = address2.id;
               addressObject.country = address2.country;
               addressObject.address = address2.address;
               addressObject.lat = address2.lat;
@@ -308,8 +308,9 @@ export default {
               addressObject.usd = 0;
               addressObject.deviceTypeNumber = {};
               for (var floor of this.$store.state.floor) {
-                if (floor.address == address2.address) {
+                if (floor.address == address2.id) {
                   var floorObject = {};
+                  floorObject.id = floor.id;
                   floorObject.name = floor.floor;
                   floorObject.image_full = floor.image_full;
                   floorObject.comment = floor.comment;
@@ -322,7 +323,7 @@ export default {
                   floorObject.usd = 0;
                   for (var room of this.$store.state.room) {
                     if (
-                      room.floor == floor.floor &&
+                      room.floor == floor.id &&
                       room.address == floor.address
                     ) {
                       var roomObject = {};
@@ -494,7 +495,7 @@ export default {
               : (country.deviceTypeNumber[item.devicetype] = 1);
             for (var address of country.addressList) {
               //筛选重复类型
-              if (item.address == address.name) {
+              if (item.address == address.id) {
                 // if (address.floorArr.indexOf(item.floor) == -1) {
                 //   address.floorArr.push(item.floor);
                 //   var floorObject = {};
@@ -521,7 +522,7 @@ export default {
                   : (address.deviceTypeNumber[item.devicetype] = 1);
                 for (var floor of address.floorList) {
                   //筛选重复类型
-                  if (item.floor == floor.name) {
+                  if (item.floor == floor.id) {
                     // if (floor.roomArr.indexOf(item.room) == -1) {
                     //   floor.roomArr.push(item.room);
                     //   var roomObject = {};
@@ -548,7 +549,7 @@ export default {
                       ? (floor.deviceTypeNumber[item.devicetype] += 1)
                       : (floor.deviceTypeNumber[item.devicetype] = 1);
                     for (var room of floor.roomList) {
-                      if (item.room == room.name) {
+                      if (item.room == room.id) {
                         if (room.typeArr.indexOf(item.devicetype) == -1) {
                           room.typeArr.push(item.devicetype);
                           var typeObject = {};

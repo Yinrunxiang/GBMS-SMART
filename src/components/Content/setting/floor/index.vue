@@ -18,7 +18,7 @@
                 </el-table-column>
                 <el-table-column label="Room Number" prop="room_num" width="150">
                 </el-table-column>
-                <el-table-column label="Address" prop="address" width="150">
+                <el-table-column label="Address" prop="address_name" width="150">
                 </el-table-column>
                 <el-table-column label="Comment" prop="comment">
                 </el-table-column>
@@ -62,7 +62,7 @@ export default {
       setting: false,
       floor: {},
       options_address: "",
-      options_floor: "",
+      options_floor: ""
     };
   },
   methods: {
@@ -104,16 +104,10 @@ export default {
           };
           this.apiPost("admin/floor/delete", data).then(res => {
             this.handelResponse(res, data => {
-              var floor = this.$store.state.floor;
-              for (var i = 0; i < floor.length; i++) {
-                for (var selection of this.multipleSelection) {
-                  if (floor[i].floor == selection.floor) {
-                    floor.splice(i, 1);
-                  }
-                }
-              }
-              this.$store.dispatch("setFloor", floor);
-              _g.toastMsg("success", data);
+              vm.$store.dispatch("setFloor", data.floor);
+              vm.$store.dispatch("setRoom", data.room);
+              vm.$store.dispatch("setDevices", data.device);
+              _g.toastMsg("success", data.result);
             });
           });
         })
@@ -144,7 +138,7 @@ export default {
         path: this.$route.path,
         query: {
           options_address: this.options_address,
-          options_floor: this.options_address,
+          options_floor: this.options_floor,
           keywords: this.keywords,
           page: 1
         }
@@ -197,10 +191,10 @@ export default {
           this.options_address == "" ||
           floor.address == this.options_address
         ) {
-          if (this.options_floor == "" || floor.floor == this.options_floor) {
-              if (this.keywords == "" || floor.floor == this.keywords) {
-                data.push(floor);
-              }
+          if (this.options_floor == "" || floor.id == this.options_floor) {
+            if (this.keywords == "" || floor.floor == this.keywords) {
+              data.push(floor);
+            }
           }
         }
       }
@@ -230,24 +224,25 @@ export default {
   computed: {
     //从vuex中获取设备数据
     floors() {
+      // console.log(this.$store.state.floor);
       return this.$store.state.floor;
     },
     //从vuex中获取设备数据条数
     dataCount() {
       return this.$store.state.floor.length;
     },
-      allAddress() {
+    allAddress() {
       var allAddress = [];
       for (var address of this.$store.state.address) {
         var addressObj = {
-          value: address.address,
+          value: address.id,
           label: address.address,
           children: []
         };
         for (var floor of this.$store.state.floor) {
-          if (floor.address == address.address) {
+          if (floor.address == address.id) {
             var floorObj = {
-              value: floor.floor,
+              value: floor.id,
               label: "floor " + floor.floor,
               children: []
             };
@@ -258,7 +253,7 @@ export default {
       }
       // console.log(allAddress)
       return allAddress;
-    },
+    }
   },
   watch: {
     $route(to, from) {

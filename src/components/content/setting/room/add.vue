@@ -168,10 +168,8 @@ export default {
       if (this.add) {
         vm.apiPost("admin/room", data).then(res => {
           vm.handelResponse(res, data => {
-            var room = vm.$store.state.room;
-            room.push(vm.form);
-            vm.$store.dispatch("setRoom", room);
-            _g.toastMsg("success", data);
+            vm.$store.dispatch("setRoom", data.room);
+            _g.toastMsg("success", data.result);
             setTimeout(() => {
               vm.goback();
             }, 500);
@@ -182,19 +180,9 @@ export default {
       } else {
         vm.apiPut("admin/room/", data.id, data).then(res => {
           vm.handelResponse(res, data => {
-            var room = [];
-            room = room.concat(vm.$store.state.room);
-            for (var i = 0; i < room.length; i++) {
-              if (
-                room[i].room == vm.form.room &&
-                room[i].floor == vm.form.floor &&
-                room[i].address == vm.form.address
-              ) {
-                room[i] = vm.form;
-              }
-            }
-            vm.$store.dispatch("setRoom", room);
-            _g.toastMsg("success", data);
+            vm.$store.dispatch("setRoom", data.room);
+            vm.$store.dispatch("setDevices", data.device);
+            _g.toastMsg("success", data.result);
             setTimeout(() => {
               vm.goback();
             }, 500);
@@ -253,7 +241,7 @@ export default {
     this.currentImage = this.form.image;
     this.showImage = this.form.image_full;
     var floor = this.$store.state.floor.filter(function(item) {
-      return item.address == vm.form.address && item.floor == vm.form.floor;
+      return item.address == vm.form.address && item.id == vm.form.floor;
     });
     // console.log(floor[0])
     this.floorImage = floor[0].image;

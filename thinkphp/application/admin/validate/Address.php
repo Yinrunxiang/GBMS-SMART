@@ -8,13 +8,12 @@ use think\Validate;
 class Address extends Validate{
 
 	protected $rule = array(
-        'address'  		=> 'require|length:0,200|unique:address',
+        'address'  		=> 'require|length:0,200',
         'country'  		=> 'require',
 	);
 	protected $message = array(
-		'address.require'    	=> 'address name must be filled in',
-		'address.length'    	=> 'address name length is from 0 to 200 bits',
-        'address.unique'    	=> 'address name already exists',
+	'address.require'    	=> 'address name must be filled in',
+	'address.length'    	=> 'address name length is from 0 to 200 bits',
         'country.require'    	=> 'country must be filled in',
 	);
 }

@@ -8,11 +8,10 @@ use think\Validate;
 class LedBreed extends Validate{
 
 	protected $rule = array(
-		'breed'  		=> 'require|length:0,10|unique:led_breed',
+		'breed'  		=> 'require|length:0,10',
 	);
 	protected $message = array(
 		'breed.require'    	=> 'breed name must be filled in',
 		'breed.length'    	=> 'breed name length is from 0 to 10 bits',
-		'breed.unique'    	=> 'breed name already exists',
 	);
 }

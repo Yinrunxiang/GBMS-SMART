@@ -37,7 +37,8 @@ class Address extends ApiCommon
         if (!$data) {
             return resultArray(['error' => $addressModel->getError()]);
         }
-        return resultArray(['data' => 'Update success']);
+        $data['result'] = 'Update success';
+        return resultArray(['data' => $data]);
     }
     public function delete()
     {
@@ -47,7 +48,8 @@ class Address extends ApiCommon
         if (!$data) {
             return resultArray(['error' => $addressModel->getError()]);
         }
-        return resultArray(['data' => 'Delete success']);
+        $data['result'] = 'Delete success';
+        return resultArray(['data' => $data]);
     }
 }
  

@@ -148,7 +148,6 @@ export default {
       if (this.add) {
         this.apiPost("admin/address", data).then(res => {
           this.handelResponse(res, data => {
-            console.log(data)
             vm.$store.dispatch("setAddress", data.address);
             vm.$store.dispatch("setFloor", data.floor);
             _g.toastMsg("success", data.result);
@@ -165,77 +164,11 @@ export default {
       } else {
         vm.apiPut("admin/address/", data.id, data).then(res => {
           this.handelResponse(res, data => {
-            var address = [];
-            address = address.concat(vm.$store.state.address);
-            for (var index in address) {
-              if (address[index].address == vm.oldAddress) {
-                address[index] = vm.form;
-              }
-            }
-            vm.$store.dispatch("setAddress", address);
-            var devices = [];
-            devices = devices.concat(vm.$store.state.devices);
-            for (var index in devices) {
-              if (devices[index].address == vm.oldAddress) {
-                if (
-                  parseInt(devices[index].floor) > parseInt(vm.form.floor_num)
-                ) {
-                  devices.splice(index, 1);
-                } else {
-                  devices[index].address = vm.form.address;
-                  devices[index].ip = vm.form.ip;
-                  devices[index].port = vm.form.port;
-                  devices[index].mac = vm.form.mac;
-                  devices[index].country = vm.form.country;
-                  devices[index].udp_type = vm.form.operation;
-                }
-              }
-            }
-            vm.$store.dispatch("setDevices", devices);
-            var floors = [];
-            floors = floors.concat(vm.$store.state.floor);
-            if (parseInt(vm.oldFloorNum) < parseInt(vm.form.floor_num)) {
-              for (
-                var i = parseInt(vm.oldFloorNum);
-                i <= parseInt(vm.form.floor_num);
-                i++
-              ) {
-                var floorObj = {
-                  floor: i,
-                  room_num: 0,
-                  address: vm.form.address,
-                  status: "enabled"
-                };
-                floors.push(floorObj);
-              }
-            } else {
-              floors = floors.filter(
-                item =>
-                  item.address != vm.oldAddress ||
-                  parseInt(item.floor) <= parseInt(vm.form.floor_num)
-              );
-              for (var index in floors) {
-                if (floors[index].address == vm.oldAddress) {
-                  floors[index].address = vm.form.address;
-                }
-              }
-            }
-            vm.$store.dispatch("setFloor", floors);
-            var rooms = [];
-            rooms = rooms.concat(vm.$store.state.room);
-            for (var index in rooms) {
-              if (rooms[index].address == vm.oldAddress) {
-                if (
-                  parseInt(rooms[index].floor) > parseInt(vm.form.floor_num)
-                ) {
-                  rooms.splice(index, 1);
-                } else {
-                  rooms[index].address = vm.form.address;
-                }
-              }
-            }
-            vm.$store.dispatch("setRoom", rooms);
-            _g.toastMsg("success", data);
+            vm.$store.dispatch("setAddress", data.address);
+            vm.$store.dispatch("setDevices", data.device);
+            vm.$store.dispatch("setFloor", data.floor);
+            vm.$store.dispatch("setRoom", data.room);
+            _g.toastMsg("success", data.result);
             vm.updateDeleteImage();
             vm.success = true;
             setTimeout(() => {

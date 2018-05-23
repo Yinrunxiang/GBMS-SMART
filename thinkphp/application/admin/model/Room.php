@@ -10,7 +10,7 @@ namespace app\admin\model;
 use think\Db;
 use app\admin\model\Common;
 use com\verify\HonrayVerify;
-
+use app\admin\model\Device;
 class Room extends Common
 {
 
@@ -25,8 +25,13 @@ class Room extends Common
 			$host_ip = $_SERVER['SERVER_NAME'];
 		}
 		$image_addr = "http://" . $host_ip . ":" . $_SERVER["SERVER_PORT"];
-
-		$data = $this->order('address,floor,room+0')->select();
+        $data = $this
+		->alias('a')
+        ->join('address b', 'a.address=b.id', 'LEFT')
+        ->join('floor c', 'a.floor=c.id', 'LEFT')
+		->field('a.id,room,room_name,a.image,b.country,a.address,a.floor,a.status,a.comment,b.address as address_name,c.floor as floor_name,a.lat,a.lng,width,height')
+		->order('country,address,floor_name+0,room+0')
+		->select();
 		foreach ($data as $k => $v) {
 			$v["image_addr"] = $image_addr;
 			$v["image_full"] = $v["image"] == "" ? "" : $image_addr . $v["image"];
@@ -86,8 +91,12 @@ class Room extends Common
             return false;
         }
         try {
-            $this->allowField(true)->save($param, ['address'=> ['=',$param['address']],'floor'=> ['=',$param['floor']],'room'=> ['=',$param['room']]]);
-            return true;
+            $this->allowField(true)->save($param, ['address'=> ['=',$param['address']],'floor'=> ['=',$param['floor']],'room'=> ['=',$param['id']]]);
+            $data = array();
+            $data["room"] = $this->getDataList();
+            $Device = new Device();
+            $data["device"] = $Device->getDataList();
+            return $data;
         } catch (\Exception $e) {
             $this->error = 'Update failure';
             return false;
@@ -108,7 +117,11 @@ class Room extends Common
                 Db::table('device')->where(['address'=> ['=',$v['address']],'floor'=> ['=',$v['floor']],'room'=> ['=',$v['room']]])->delete();
             }
             $this->commit();
-            return true;
+            $data = array();
+            $data["room"] = $this->getDataList();
+            $Device = new Device();
+            $data["device"] = $Device->getDataList();
+            return $data;
         } catch (\Exception $e) {
             $this->rollback();
             $this->error = 'Delete failure';

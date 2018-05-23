@@ -11,6 +11,8 @@ use think\Db;
 use app\admin\model\Common;
 use com\verify\HonrayVerify;
 use app\admin\model\Floor;
+use app\admin\model\Room;
+use app\admin\model\Device;
 class Address extends Common
 {
 
@@ -54,7 +56,8 @@ class Address extends Common
             return false;
         }
         try {
-            $id = $this->data($param)->allowField(true)->insertGetId();
+            $this->allowField(true)->save($param);
+            $id = $this->getLastInsID();
             $floor_num = intval($param['floor_num']);
             $floor_list = [];
             for ($i = 1; $i <= $floor_num; $i++) {
@@ -117,7 +120,15 @@ class Address extends Common
                 Db::table('room')->where(['address'=>['=',$param['id']],'floor'=>['>',$floor_num]])->delete();
                 Db::table('device')->where(['address'=>['=',$param['id']],'floor'=>['>',$floor_num]])->delete();
             }
-            return true;
+            $data = array();
+            $data["address"] = $this->getDataList();
+            $Floor = new Floor();
+            $data["floor"] = $Floor->getDataList();
+            $Room = new Room();
+            $data["room"] = $Room->getDataList();
+            $Device = new Device();
+            $data["Device"] = $Device->getDataList();
+            return $data;
         } catch (\Exception $e) {
             $this->error = 'Update failure';
             return false;
@@ -134,13 +145,21 @@ class Address extends Common
         $this->startTrans();
         try {
             foreach ($selections as $k => $v) {
-                $this->where('address', $v['address'])->delete();
-                Db::table('floor')->where('address', $v['address'])->delete();
-                Db::table('room')->where('address', $v['address'])->delete();
-                Db::table('device')->where('address', $v['address'])->delete();
+                $this->where('id', $v['id'])->delete();
+                Db::table('floor')->where('address', $v['id'])->delete();
+                Db::table('room')->where('address', $v['id'])->delete();
+                Db::table('device')->where('address', $v['id'])->delete();
             }
             $this->commit();
-            return true;
+            $data = array();
+            $data["address"] = $this->getDataList();
+            $Floor = new Floor();
+            $data["floor"] = $Floor->getDataList();
+            $Room = new Room();
+            $data["room"] = $Room->getDataList();
+            $Device = new Device();
+            $data["Device"] = $Device->getDataList();
+            return $data;
         } catch (\Exception $e) {
             $this->rollback();
             $this->error = 'Delete failure';

@@ -18,9 +18,9 @@
                 </el-table-column>
                 <el-table-column label="Room Name" prop="room_name" width="150">
                 </el-table-column>
-                <el-table-column label="Floor" prop="floor" width="150">
+                 <el-table-column label="Address" prop="address_name" width="150">
                 </el-table-column>
-                <el-table-column label="Address" prop="address" width="150">
+                <el-table-column label="Floor" prop="floor_name" width="150">
                 </el-table-column>
                 <el-table-column label="Comment" prop="comment">
                 </el-table-column>
@@ -110,16 +110,9 @@ export default {
           };
           this.apiPost("admin/room/delete", data).then(res => {
             this.handelResponse(res, data => {
-              var room = vm.$store.state.room;
-              for (var i = 0; i < room.length; i++) {
-                for (var selection of vm.multipleSelection) {
-                  if (room[i].room == selection.room) {
-                    room.splice(i, 1);
-                  }
-                }
-              }
-              this.$store.dispatch("setRoom", room);
-              _g.toastMsg("success", data);
+              vm.$store.dispatch("setRoom", data.room);
+              vm.$store.dispatch("setDevices", data.device);
+              _g.toastMsg("success", data.result);
             });
           });
         })
@@ -153,8 +146,8 @@ export default {
         path: this.$route.path,
         query: {
           options_address: this.options_address,
-          options_floor: this.options_address,
-          options_room: this.options_address,
+          options_floor: this.options_floor,
+          options_room: this.options_room,
           keywords: this.keywords,
           page: 1
         }
@@ -210,7 +203,7 @@ export default {
           room.address == this.options_address
         ) {
           if (this.options_floor == "" || room.floor == this.options_floor) {
-            if (this.options_room == "" || room.room == this.options_room) {
+            if (this.options_room == "" || room.id == this.options_room) {
               if (this.keywords == "" || room.room_name == this.keywords) {
                 data.push(room);
               }
@@ -251,24 +244,24 @@ export default {
       var allAddress = [];
       for (var address of this.$store.state.address) {
         var addressObj = {
-          value: address.address,
+          value: address.id,
           label: address.address,
           children: []
         };
         for (var floor of this.$store.state.floor) {
-          if (floor.address == address.address) {
+          if (floor.address == address.id) {
             var floorObj = {
-              value: floor.floor,
+              value: floor.id,
               label: "floor " + floor.floor,
               children: []
             };
             for (var room of this.$store.state.room) {
               if (
-                room.floor == floor.floor &&
-                room.address == address.address
+                room.floor == floor.id &&
+                room.address == address.id
               ) {
                 var roomObj = {
-                  value: room.room,
+                  value: room.id,
                   label: room.room_name
                 };
                 floorObj.children.push(roomObj);

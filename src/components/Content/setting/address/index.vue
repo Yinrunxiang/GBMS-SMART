@@ -111,6 +111,7 @@ export default {
     },
     //删除按钮事件
     deleteBtn() {
+      let vm = this
       this.$confirm(
         "Are you sure to delete the selected data? The floor, room, and device that the building belongs to will also be deleted.",
         "Tips",
@@ -124,33 +125,15 @@ export default {
           const data = {
             selections: this.multipleSelection
           };
-          this.apiPost("admin/address/delete", data).then(
-            res => {
-              this.handelResponse(res, data => {
-                var address = this.$store.state.address;
-                var floor = this.$store.state.floor;
-                var room = this.$store.state.room;
-                var devices = this.$store.state.devices;
-                for (var selection of this.multipleSelection) {
-                  address = address.filter(
-                    item => item.address != selection.address
-                  );
-                  floor = floor.filter(
-                    item => item.address != selection.address
-                  );
-                  room = room.filter(item => item.address != selection.address);
-                  devices = devices.filter(
-                    item => item.address != selection.address
-                  );
-                }
-                this.$store.dispatch("setAddress", address);
-                this.$store.dispatch("setFloor", floor);
-                this.$store.dispatch("setRoom", room);
-                this.$store.dispatch("setDevices", devices);
-                _g.toastMsg("success", data);
-              });
-            }
-          );
+          this.apiPost("admin/address/delete", data).then(res => {
+            this.handelResponse(res, data => {
+              vm.$store.dispatch("setAddress", data.address);
+              vm.$store.dispatch("setDevices", data.device);
+              vm.$store.dispatch("setFloor", data.floor);
+              vm.$store.dispatch("setRoom", data.room);
+              _g.toastMsg("success", data.result);
+            });
+          });
         })
         .catch(() => {
           // catch error

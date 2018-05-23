@@ -309,7 +309,7 @@ export default {
         command.deviceProperty.songListAll = music.songList;
         // command.deviceProperty.musicLoading = false;
       } else {
-        musicApi.readStatus(command, command.deviceProperty);
+        musicApi.readSong(command, command.deviceProperty);
       }
     },
     albumChange(command) {
@@ -389,7 +389,7 @@ export default {
               device.deviceProperty.albumlist = [];
               device.deviceProperty.songList = [];
               device.deviceProperty.songListAll = [];
-              musicApi.readStatus(device, device.deviceProperty);
+              musicApi.readSong(device, device.deviceProperty);
             }
           }
           if (device.devicetype == "light") {
@@ -472,7 +472,6 @@ export default {
       if (!this.macro.id) {
         this.isLoading = false;
         return;
-        
       }
       for (var device of this.tableData) {
         this.$refs.deviceTable.toggleRowSelection(device, false);
@@ -523,7 +522,7 @@ export default {
                 command.deviceProperty.albumlist = [];
                 command.deviceProperty.songList = [];
                 command.deviceProperty.songListAll = [];
-                musicApi.readStatus(command, command.deviceProperty);
+                musicApi.readSong(command, command.deviceProperty);
               }
             }
             if (command.devicetype == "light") {
@@ -558,24 +557,21 @@ export default {
       var allAddress = [];
       for (var address of this.$store.state.address) {
         var addressObj = {
-          value: address.address,
+          value: address.id,
           label: address.address,
           children: []
         };
         for (var floor of this.$store.state.floor) {
-          if (floor.address == address.address) {
+          if (floor.address == address.id) {
             var floorObj = {
-              value: floor.floor,
+              value: floor.id,
               label: "floor " + floor.floor,
               children: []
             };
             for (var room of this.$store.state.room) {
-              if (
-                room.floor == floor.floor &&
-                room.address == address.address
-              ) {
+              if (room.floor == floor.id && room.address == address.id) {
                 var roomObj = {
-                  value: room.room,
+                  value: room.id,
                   label: room.room_name
                 };
                 floorObj.children.push(roomObj);

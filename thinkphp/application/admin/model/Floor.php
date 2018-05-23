@@ -10,7 +10,8 @@ namespace app\admin\model;
 use think\Db;
 use app\admin\model\Common;
 use com\verify\HonrayVerify;
-
+use app\admin\model\Room;
+use app\admin\model\Device;
 class Floor extends Common
 {
 
@@ -26,8 +27,12 @@ class Floor extends Common
 			$host_ip = $_SERVER['SERVER_NAME'];
 		}
 		$image_addr = "http://" . $host_ip . ":" . $_SERVER["SERVER_PORT"];
-
-		$data = $this->order('address,floor+0')->select();
+		$data = $this
+		->alias('a')
+		->join('address b', 'a.address=b.id', 'LEFT')
+		->field('a.id,floor,room_num,a.image,a.address,a.status,a.comment,b.address as address_name')
+		->order('country,address,floor+0')
+		->select();
 		foreach ($data as $k => $v) {
 			$v["image_addr"] = $image_addr;
 			$v["image_full"] = $v["image"] == "" ? "" : $image_addr . $v["image"];
@@ -62,11 +67,15 @@ class Floor extends Common
 			$room_num = intval($param['room_num']);
 			$room_list = [];
 			for ($i = 1; $i <= $room_num; $i++) {
-				$room_data = ['room' => $i, 'room_name' => $i, 'address' => $param['address'], 'floor' => $param['floor'], 'status' => 'enabled'];
+				$room_data = ['room' => $i, 'room_name' => $i, 'address' => $param['address'], 'floor' => $param['id'], 'status' => 'enabled'];
 				array_push($room_list, $room_data);
 			}
 			Db::table('room')->insertAll($room_list);
-			return true;
+			$data = array();
+			$data["floor"] = $this->getDataList();
+            $Room = new Room();
+            $data["room"] = $Room->getDataList();
+			return $data;
 		} catch (\Exception $e) {
 			$this->error = 'Add failure';
 			return false;
@@ -93,24 +102,30 @@ class Floor extends Common
 			$this->error = $validate->getError();
 			return false;
 		}
-		$room_count = Db::table('room')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['floor']]])->count('id');
+		$room_count = Db::table('room')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['id']]])->count('id');
 		$room_num = intval($param['room_num']);
 		try {
-            //更新地址表
-			$this->allowField(true)->save($param, ['address' => ['=', $param['address']], 'floor' => ['=', $param['floor']]]);
+            // //更新地址表
+			// $this->allowField(true)->save($param, ['address' => ['=', $param['address']], 'floor' => ['=', $param['floor']]]);
             //更新房间数量
 			$room_list = [];
 			if ($room_num > $room_count) {
 				for ($i = $room_count + 1; $i <= $room_num; $i++) {
-					$room_data = ['room' => $i, 'room_name' => $i, 'address' => $param['address'], 'floor' => $param['floor'], 'status' => 'enabled'];
+					$room_data = ['room' => $i, 'room_name' => $i, 'address' => $param['address'], 'floor' => $param['id'], 'status' => 'enabled'];
 					array_push($room_list, $room_data);
 				}
 				Db::table('room')->insertAll($room_list);
 			} else if ($room_num < $room_count) {
-				Db::table('room')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['floor']], 'room' => ['>', $room_num]])->delete();
-				Db::table('device')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['floor']], 'room' => ['>', $room_num]])->delete();
+				Db::table('room')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['id']], 'room' => ['>', $room_num]])->delete();
+				Db::table('device')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['id']], 'room' => ['>', $room_num]])->delete();
 			}
-			return true;
+			$data = array();
+            $data["floor"] = $this->getDataList();
+            $Room = new Room();
+            $data["room"] = $Room->getDataList();
+            $Device = new Device();
+            $data["device"] = $Device->getDataList();
+            return $data;
 		} catch (\Exception $e) {
 			$this->error = 'Update failure';
 			return false;
@@ -127,12 +142,18 @@ class Floor extends Common
 		$this->startTrans();
 		try {
 			foreach ($selections as $k => $v) {
-				$this->where(['address' => ['=', $v['address']], 'floor' => ['=', $v['floor']]])->delete();
-				Db::table('room')->where(['address' => ['=', $v['address']], 'floor' => ['=', $v['floor']]])->delete();
-				Db::table('device')->where(['address' => ['=', $v['address']], 'floor' => ['=', $v['floor']]])->delete();
+				$this->where(['address' => ['=', $v['address']], 'floor' => ['=', $v['id']]])->delete();
+				Db::table('room')->where(['address' => ['=', $v['address']], 'floor' => ['=', $v['id']]])->delete();
+				Db::table('device')->where(['address' => ['=', $v['address']], 'floor' => ['=', $v['id']]])->delete();
 			}
 			$this->commit();
-			return true;
+			$data = array();
+            $data["floor"] = $this->getDataList();
+            $Room = new Room();
+            $data["room"] = $Room->getDataList();
+            $Device = new Device();
+            $data["device"] = $Device->getDataList();
+            return $data;
 		} catch (\Exception $e) {
 			$this->rollback();
 			$this->error = 'Delete failure';

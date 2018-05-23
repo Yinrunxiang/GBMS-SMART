@@ -99,13 +99,6 @@ export default {
     goback() {
       this.$emit("goback", false);
     },
-    getRoom() {
-      this.apiGet("admin/room", {}).then(res => {
-        this.handelResponse(res, data => {
-          this.$store.dispatch("setRoom", data);
-        });
-      });
-    },
     addFloorRun() {
       var vm = this;
       this.isLoading = !this.isLoading;
@@ -114,26 +107,10 @@ export default {
       if (this.add) {
         vm.apiPost("admin/floor", data).then(res => {
           vm.handelResponse(res, data => {
-            var floors = [];
-            floors = floors.concat(vm.$store.state.floor);
-            floors.push(vm.form);
-            vm.$store.dispatch("setFloor", floors);
-            var rooms = [];
-            rooms = rooms.concat(vm.$store.state.room);
-            for (var i = 1; i <= parseInt(vm.form.room_num); i++) {
-              var roomObj = {
-                room: i,
-                room_name: 0,
-                floor: vm.form.floor,
-                address: vm.form.address,
-                status: "enabled"
-              };
-              rooms.push(roomObj);
-            }
-            vm.$store.dispatch("setRoom", rooms);
-            _g.toastMsg("success", data);
+            vm.$store.dispatch("setFloor", data.floor);
+            vm.$store.dispatch("setRoom", data.room);
+            _g.toastMsg("success", data.result);
             setTimeout(() => {
-              vm.getRoom();
               vm.goback();
             }, 500);
           });
@@ -143,46 +120,11 @@ export default {
       } else {
         vm.apiPut("admin/floor/", data.id, data).then(res => {
           vm.handelResponse(res, data => {
-            var floor = [];
-            floor = floor.concat(vm.$store.state.floor);
-            for (var index in floor) {
-              if (
-                floor[index].floor == vm.form.floor &&
-                floor[index].address == vm.form.address
-              ) {
-                floor[index] = vm.form;
-              }
-            }
-            vm.$store.dispatch("setFloor", floor);
-            var rooms = [];
-            rooms = rooms.concat(vm.$store.state.room);
-            if (parseInt(vm.oldRoomNum) < parseInt(vm.form.room_num)) {
-              for (
-                var i = parseInt(vm.oldRoomNum);
-                i <= parseInt(vm.form.room_num);
-                i++
-              ) {
-                var roomObj = {
-                  room: i,
-                  room_name: i,
-                  floor: vm.form.floor,
-                  address: vm.form.address,
-                  status: "enabled"
-                };
-                rooms.push(roomObj);
-              }
-            } else {
-              rooms = rooms.filter(
-                item =>
-                  item.address != vm.form.address ||
-                  item.floor != vm.oldFloor ||
-                  parseInt(item.room) <= parseInt(vm.form.room_num)
-              );
-            }
-            vm.$store.dispatch("setRoom", rooms);
-            _g.toastMsg("success", data);
+            vm.$store.dispatch("setFloor", data.floor);
+            vm.$store.dispatch("setRoom", data.room);
+            vm.$store.dispatch("setDevices", data.device);
+            _g.toastMsg("success", data.result);
             setTimeout(() => {
-              vm.getRoom();
               vm.goback();
             }, 500);
           });

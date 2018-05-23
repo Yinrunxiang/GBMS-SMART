@@ -25,7 +25,8 @@ class Room extends ApiCommon
        if (!$data) {
            return resultArray(['error' => $roomModel->getError()]);
        }
-       return resultArray(['data' => 'Add success']);
+       $data['result'] = 'Add success';
+       return resultArray(['data' => $data]);
    }
 
     public function update()
@@ -36,7 +37,8 @@ class Room extends ApiCommon
         if (!$data) {
             return resultArray(['error' => $roomModel->getError()]);
         } 
-        return resultArray(['data' => 'Update success']);
+        $data['result'] = 'Update success';
+        return resultArray(['data' => $data]);
     }
 
     public function delete()
@@ -47,7 +49,8 @@ class Room extends ApiCommon
         if (!$data) {
             return resultArray(['error' => $roomModel->getError()]);
         } 
-        return resultArray(['data' => 'Delete success']);
+        $data['result'] = 'Delete success';
+        return resultArray(['data' => $data]);
     }   
 }
  
