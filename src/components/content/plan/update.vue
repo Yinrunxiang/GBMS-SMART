@@ -44,7 +44,7 @@
             </el-form-item>
             <el-form-item v-show="notHotel" label="Building">
               <template slot="prepend">Http://</template>
-                <el-select value-key= 'id' v-model="form.address" @change = "addressChange" filterable placeholder="Select Building" class="h-40 w-200">
+                <el-select  v-model="form.address" @change = "addressChange" filterable placeholder="Select Building" class="h-40 w-200">
                   
                     <el-option v-for="(item,key) in address" :key="key" :label="item.label" :value="item.value">
                     </el-option>
@@ -57,7 +57,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item v-show="notHotel" label="Room">
-                <el-select v-model="form.room" filterable placeholder="Select Room" class="h-40 w-200">
+                <el-select  v-model="form.room" filterable placeholder="Select Room" class="h-40 w-200">
                     <el-option v-for="(item,key) in room" :key="key" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -146,8 +146,11 @@ export default {
       this.$emit("changeUpdate", false);
     },
     addressChange(data){
-      this.form.address = data.address
-      this.form.country = data.country
+      for(var address of this.$store.state.address){
+        if(this.form.address == address.id){
+          this.form.country = address.country
+        }
+      }
     },
     commit(form) {
       // this.form.subnetid = _g.toHex(this.form.subnetid)
@@ -300,9 +303,7 @@ export default {
       for (var item of this.$store.state.address) {
         var addressObj = {};
         addressObj.label = item.address;
-        addressObj.value = item;
-        addressObj.id = item.address;
-        // addressObj.address = item;
+        addressObj.value = item.id.toString();
         address.push(addressObj);
       }
       return address;
@@ -315,13 +316,13 @@ export default {
             //   if (item.status == "enabled") {
             var floorObj = {};
             floorObj.label = item.floor;
-            floorObj.value = item.floor;
-            floorObj.floor = item;
+            floorObj.value = item.id.toString();
             floor.push(floorObj);
           }
           // }
         }
       }
+      console.log(floor)
       return floor;
     },
     room() {
@@ -335,8 +336,7 @@ export default {
             //   if (item.status == "enabled") {
             var roomObj = {};
             roomObj.label = item.room_name;
-            roomObj.value = item.room;
-            roomObj.room = item;
+            roomObj.value = item.id.toString();
             room.push(roomObj);
           }
           // }

@@ -33,7 +33,7 @@ class Device extends Common
             ->join('room c', 'a.room = c.id', 'LEFT')
             ->join('floor d', 'a.floor=d.id', 'LEFT')
             ->field('a.id,device,subnetid,deviceid,channel,channel_spare,b.address as address_name,d.floor as floor_name,mac,ip,port,b.lat,b.lng,a.floor,a.room,devicetype,case when on_off = "on" then now() - run_date else null end as run_time,on_off,mode,grade,breed,country,a.address,a.status,starttime,endtime,a.floor,a.room,room_name,x_axis,y_axis,operation_1,operation_2,operation_3,operation_4,operation_5,operation_6,operation_7,operation_8,operation_9,operation_10,operation_11,operation_12,operation_13,operation_14,operation_15,operation_16,operation_17,operation_18,operation_19,operation_20,operation_21,a.comment,b.operation as udp_type')
-            ->order('country,address,floor_name+0,c.room+0')
+            ->order('country,address,floor_name+0,c.room+0,devicetype,breed')
             ->select();
         foreach ($data as $k => $v) {
             $v['on_off'] = $v['on_off'] == 'on' ? true : false;

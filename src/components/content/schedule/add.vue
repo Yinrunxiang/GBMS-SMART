@@ -639,28 +639,25 @@ export default {
     schedule() {
       return this.data;
     },
-    allAddress() {
+   allAddress() {
       var allAddress = [];
       for (var address of this.$store.state.address) {
         var addressObj = {
-          value: address.address,
+          value: address.id,
           label: address.address,
           children: []
         };
         for (var floor of this.$store.state.floor) {
-          if (floor.address == address.address) {
+          if (floor.address == address.id) {
             var floorObj = {
-              value: floor.floor,
+              value: floor.id,
               label: "floor " + floor.floor,
               children: []
             };
             for (var room of this.$store.state.room) {
-              if (
-                room.floor == floor.floor &&
-                room.address == address.address
-              ) {
+              if (room.floor == floor.id && room.address == address.id) {
                 var roomObj = {
-                  value: room.room,
+                  value: room.id,
                   label: room.room_name
                 };
                 floorObj.children.push(roomObj);

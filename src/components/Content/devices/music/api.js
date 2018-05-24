@@ -17,9 +17,9 @@ function strToarr4(str) {
   return arr;
 }
 const musicApi = {
-  socketio:{},
-  albumInterval:"",
-  songInterval:"",
+  socketio: {},
+  albumInterval: "",
+  songInterval: "",
   time_change(val, device) {
     // device.autotmp = val;
     // device.loading = true
@@ -39,15 +39,19 @@ const musicApi = {
     //     // _g.closeGlobalLoading()
     // })
   },
-  source_change(device, deviceProperty) {
+  get_source_change(device, deviceProperty) {
     var source = deviceProperty.source == '02' ? '03' : deviceProperty.source
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["01", source]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    return data
+  },
+  source_change(device, deviceProperty) {
+    var data = this.get_source_change(device, devicePropert)
     api.sendUdp(device, data)
   },
-  vol_change(val, device, deviceProperty) {
+  get_vol_change(val, device, deviceProperty) {
     deviceProperty.vol = val;
     device.loading = true;
     val = 79 - val;
@@ -55,6 +59,10 @@ const musicApi = {
       operatorCodesec = "18",
       additionalContentData = ["05", "01", "03", _g.toHex(val)]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    return data
+  },
+  vol_change(val, device, deviceProperty) {
+    var data = this.get_vol_change(val, device, deviceProperty)
     api.sendUdp(device, data)
   },
   pre(device) {
@@ -90,20 +98,28 @@ const musicApi = {
     }
     api.sendUdp(device, data)
   },
-  play(device) {
+  get_play(device) {
     device.on_off = true;
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["04", "03", "00", "00"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    return data
+  },
+  play(device) {
+    var data = this.play(device)
     api.sendUdp(device, data)
   },
-  pause(device) {
+  get_pause(device) {
     device.on_off = false;
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["04", "04", "00", "00"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    return data
+  },
+  pause(device) {
+    var data = this.get_pause(device)
     api.sendUdp(device, data)
   },
   random(device) {
@@ -127,19 +143,24 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
-  selectSong(device, deviceProperty, song) {
+  get_selectSong(device, deviceProperty, song) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["06", song.albumNo, song.songNoHigh, song.songNoLow]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    return data
+  },
+  selectSong(device, deviceProperty, song) {
+    var data = get_selectSong(device, deviceProperty, song)
     api.sendUdp(device, data)
   },
-  closeSocket(){
-    this.socketio.removeAllListeners()
-    if(this.albumInterval)
-    clearInterval(this.albumInterval)
-    if(this.songInterval)
-    clearInterval(this.songInterval)
+  closeSocket() {
+    if (this.socketio.io)
+      this.socketio.removeAllListeners()
+    if (this.albumInterval)
+      clearInterval(this.albumInterval)
+    if (this.songInterval)
+      clearInterval(this.songInterval)
   },
   readSong(device, deviceProperty) {
     console.log('music_api')
@@ -449,7 +470,7 @@ const musicApi = {
                 var timeCode = function () {
                   sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
                 }
-                setTimeout(timeCode, time) 
+                setTimeout(timeCode, time)
               } else {
                 sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
               }
