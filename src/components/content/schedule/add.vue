@@ -56,10 +56,23 @@
                     placeholder="Please choose">
                   </el-time-select> -->
                 </div>
+                <el-input  class="fl w-300" style="margin-left:23px;" v-model="schedule.comment">
+                        <template slot="prepend">Comment</template>
+                    </el-input>
             </el-row>
             <div class="m-b-10 ovf-hd">
-                <div class="fl" >
-                  <el-cascader :options="allAddress" change-on-select @change="addressChange" style="width:230px;"></el-cascader>
+              <div class="fl w-230" >
+                  <el-select v-model="dataType" placeholder="请选择">
+                  <el-option
+                    v-for="(item,key) in dataTypeList"
+                    :key="key"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+                </div>
+                <div class="fl w-230"  style="margin-left:23px;">
+                  <el-cascader :options="allAddress" change-on-select @change="addressChange" ></el-cascader>
                 </div>
                 <div class="fl w-230" style="margin-left:23px;">
                     <el-input placeholder="Please enter the model" v-model="keywords">
@@ -241,6 +254,17 @@ export default {
       floor: "",
       room: "",
       time: "",
+      dataType: "1",
+      dataTypeList: [
+        {
+          value: "1",
+          label: "Device"
+        },
+        {
+          value: "2",
+          label: "Marco"
+        },
+      ],
       isLoading: true,
       modes: [
         {
@@ -639,7 +663,7 @@ export default {
     schedule() {
       return this.data;
     },
-   allAddress() {
+    allAddress() {
       var allAddress = [];
       for (var address of this.$store.state.address) {
         var addressObj = {

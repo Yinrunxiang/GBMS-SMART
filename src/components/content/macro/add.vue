@@ -5,12 +5,15 @@
             <el-input  class="fl w-230" placeholder="Please enter the macro" v-model="macro.macro">
                 <template slot="prepend">Macro</template>
             </el-input>
+            <el-input  class="fl w-300" style="margin-left:23px;" v-model="macro.comment">
+                        <template slot="prepend">Comment</template>
+                    </el-input>
           </el-row>
             <div class="m-b-10 ovf-hd">
                 <div class="fl" >
                   <el-cascader :options="allAddress" change-on-select @change="addressChange" style="width:230px;"></el-cascader>
                 </div>
-                <div class="fl w-230" style="margin-left:23px;">
+                <div class="fl w-300" style="margin-left:23px;">
                     <el-input placeholder="Please enter the model" v-model="keywords">
                         <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                     </el-input>

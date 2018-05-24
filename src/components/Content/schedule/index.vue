@@ -21,13 +21,9 @@
                 </el-table-column>
                <el-table-column label="Schedule" prop="schedule" width="150">
                 </el-table-column>
-                <el-table-column label="Address" prop="address" width="150">
+                <el-table-column label="Type" prop="type" width="150">
                 </el-table-column>
-                <el-table-column label="Floor" prop="floor" width="150">
-                </el-table-column>
-                <el-table-column label="Room" prop="room_name" width="150">
-                </el-table-column>
-                <el-table-column label="Time" prop="time" width="150">
+                <el-table-column  label="Time" prop="time" width="150">
                 </el-table-column>
                 <el-table-column label="Comment" prop="comment">
                 </el-table-column>
@@ -167,6 +163,12 @@ export default {
             }
             if (schedule.sun == "1") {
               schedule.week.push("sun");
+            }
+            if(schedule.type == 'day' || schedule.type == 'week'){
+              schedule.time= schedule.time_2
+            }
+            if(schedule.type == 'once'){
+              schedule.time= schedule.time_1
             }
             // for (var command of commands) {
             //   if (schedule.id == command.schedule) {
