@@ -19,8 +19,14 @@
                     </el-input>
                 </div>
             </div>
-            <el-table ref="deviceTable" :data="tableData"  :height="400" style="width: 20%;display: inline-block"  @selection-change="selectItem">
-                <el-table-column type="selection" width="50">
+             <el-table  ref="deviceTable" :data="tableData"  :height="400" style="width: 20%;display: inline-block">
+                <el-table-column
+                  width="40" >
+                  <template slot-scope="scope" >
+                    <div class="tx-c" @click="selectDevice(scope.row)" style="cursor: pointer;">
+                    <a  class = "el-icon-circle-plus-outline" style="margin-top:3px;font-size:20px;color:#409EFF;" ></a>
+                    </div>
+                  </template>
                 </el-table-column>
                 <el-table-column label="Device" prop="device">
                 </el-table-column>
@@ -324,15 +330,6 @@ export default {
         }
       }
     },
-    selectionChange(selection, row) {
-      // console.log(selection);
-      // console.log(row);
-      for (var index in this.commands) {
-        if (this.commands[index].id == selection.id) {
-          this.commands.splice(index, 1);
-        }
-      }
-    },
     goback() {
       this.$emit("goback", false);
     },
@@ -363,57 +360,77 @@ export default {
       }
       this.init();
     },
-    //获取被选中的数据
-    selectItem(val) {
-      for (var device of val) {
-        if (this.devicesId.indexOf(device.id) == -1) {
-          if (device.devicetype == "ac") {
-            device.operation_1 = device.operation_1
-              ? parseInt(device.operation_1)
-              : 0;
-            device.mode = device.mode ? device.mode : "auto";
-            device.grade = device.grade ? device.grade : "wind_auto";
-          }
-          if (device.devicetype == "music") {
-            device.operation_1 = device.operation_1
-              ? parseInt(device.operation_1)
-              : 80;
-            device.operation_2 = device.operation_2 ? device.operation_2 : "01";
-            device.operation_3 = device.operation_3;
-            device.operation_4 = device.operation_4;
-            var musicObj = Lockr.get(
-              "music_" + device.id + "_" + device.operation_2
-            );
-            device.deviceProperty = {};
-            if (musicObj) {
-              device.deviceProperty = musicObj;
-            } else {
-              device.deviceProperty.source = device.operation_2;
-              device.deviceProperty.albumlist = [];
-              device.deviceProperty.songList = [];
-              device.deviceProperty.songListAll = [];
-              musicApi.readSong(device, device.deviceProperty);
-            }
-          }
-          if (device.devicetype == "light") {
-            device.mode = device.mode ? device.mode : 0;
-            device.mode = parseInt(device.mode);
-          }
-          this.commands.push(device);
-          this.devicesId.push(device.id);
+   //
+    addCommand(device) {
+      for(var index in this.commands){
+        if(this.commands[index].id == device.id){
+          this.commands.splice(index,1)
         }
       }
+      if(device.on_off == '1' ||device.on_off == 'on'){
+        device.on_off =true
+      }
+      if(device.on_off == '0' ||device.on_off == 'off'){
+        device.on_off =false
+      }
+      if (device.devicetype == "ac") {
+        device.operation_1 = device.operation_1
+          ? parseInt(device.operation_1)
+          : 0;
+        device.mode = device.mode ? device.mode : "auto";
+        device.grade = device.grade ? device.grade : "wind_auto";
+      }
+      if (device.devicetype == "music") {
+        device.operation_1 = device.operation_1
+          ? parseInt(device.operation_1)
+          : 80;
+        device.operation_2 = device.operation_2 ? device.operation_2 : "01";
+        device.operation_3 = device.operation_3;
+        device.operation_4 = device.operation_4;
+        var musicObj = Lockr.get(
+          "music_" + device.id + "_" + device.operation_2
+        );
+        device.deviceProperty = {};
+        if (musicObj) {
+          device.deviceProperty = musicObj;
+        } else {
+          device.deviceProperty.source = device.operation_2;
+          device.deviceProperty.albumlist = [];
+          device.deviceProperty.songList = [];
+          device.deviceProperty.songListAll = [];
+          musicApi.readStatus(device, device.deviceProperty);
+        }
+      }
+      if (device.devicetype == "light") {
+        device.mode = device.mode ? device.mode : 0;
+        device.mode = parseInt(device.mode);
+      }
+      this.commands.push(device);
+      this.devicesId.push(device.id);
+    },
+    //获取被选中的数据
+    selectDevice(device) {
+      if (this.devicesId.indexOf(device.id) != -1) {
+        // this.$confirm("Are you sure to delete the selected data?", "Tips", {
+        //   confirmButtonText: "Yse",
+        //   cancelButtonText: "No",
+        //   type: "warning"
+        // })
+        //   .then(() => {
+        //     this.addCommand(device);
+        //   })
+        //   .catch(() => {});
+        _g.toastMsg("warning", "Schedule list already exists for the device");
+        return;
+      }
+      this.addCommand(device);
     },
     deleteCommand(scope) {
-      var data = {
-        id: scope.row.macro_id
-      };
-      this.apiPost("admin/macro/deleteCommand", data).then(res => {
-        this.handelResponse(res, data => {
-          _g.toastMsg("success", data);
-          this.search_command();
-        });
-      });
+      for(var index in this.commands){
+        if(this.commands[index].id == scope.row.id){
+          this.commands.splice(index,1)
+        }
+      }
     },
     save() {
       if (this.macro.macro == "") {
@@ -476,9 +493,6 @@ export default {
         this.isLoading = false;
         return;
       }
-      for (var device of this.tableData) {
-        this.$refs.deviceTable.toggleRowSelection(device, false);
-      }
       this.commands = [];
       this.devicesId = [];
       var vm = this;
@@ -488,14 +502,6 @@ export default {
             command.id = parseInt(command.id);
             command.time = command.time ? parseInt(command.time) : 0;
             vm.devicesId.push(command.id);
-            for (var index in vm.tableData) {
-              if (vm.tableData[index].id == command.id) {
-                vm.$refs.deviceTable.toggleRowSelection(
-                  vm.tableData[index],
-                  true
-                );
-              }
-            }
             command.on_off = command.on_off == "1" ? true : false;
             command.operation_1 = parseInt(command.status_1);
             command.operation_2 = parseInt(command.status_2);

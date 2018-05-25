@@ -40,6 +40,7 @@ class MacroCommand extends Common
         return $data;
     }
 
+    
     /**
      * [getDataById 根据主键获取详情]
      */
