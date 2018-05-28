@@ -101,10 +101,7 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
-      this.deviceProperty.brightness = 0;
-      this.deviceProperty.on_off = false;
-      this.deviceProperty.color = "#c0ccda";
-      // ledApi.readStatus(device, this.deviceProperty);
+        device.deviceProperty = this.deviceProperty
       return device;
     }
   },

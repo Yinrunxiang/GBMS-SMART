@@ -590,6 +590,50 @@ export default {
       this.$store.dispatch("setCountryArr", countryArr);
       this.dataReady = true;
       // return countryArr
+    },
+    createSocket(devices) {
+      if(window.socketio && window.socketio.io){
+        window.socketio.removeAllListeners()
+      }
+      let userInfo = Lockr.get("userInfo");
+      let port = userInfo.port;
+      var socketio = socket("http://" + document.domain + ":" + port);
+      window.socketio = socketio
+      socketio.on("udp", function(udp) {
+        for (var device of devices) {
+          
+          if (
+            device.subnetid == udp.subnetid &&
+            device.deviceid == udp.deviceid
+          ) {
+            switch (device.devicetype) {
+              case "ac":
+                for (var key in udp.deviceProperty) {
+                  device.deviceProperty[key] = udp.deviceProperty[key];
+                }
+                break;
+              case "light":
+                if ((device.channel == udp.channel)) {
+                  for (var key in udp.deviceProperty) {
+                    device.deviceProperty[key] = udp.deviceProperty[key];
+                  }
+                }
+                break;
+              case "led":
+                for (var key in udp.deviceProperty) {
+                  device.deviceProperty[key] = udp.deviceProperty[key];
+                }
+                break;
+              case "curtain":
+                break;
+              case "floorheat":
+                break;
+              case "security":
+                break;
+            }
+          }
+        }
+      });
     }
   },
   created() {
@@ -604,10 +648,6 @@ export default {
     //   }, 1500);
     //   return;
     // }
-    let userInfo = Lockr.get("userInfo");
-    let port = userInfo.port;
-    var socketio = socket("http://" + document.domain + ":" + port);
-    window.socketio = socketio;
 
     // this.$store.dispatch("setShowHotel", true);
     // this.$store.dispatch("setShowFloor", false);
@@ -626,7 +666,11 @@ export default {
     this.updateDatabase();
     this.apiGet("admin/device", {}).then(res => {
       this.handelResponse(res, data => {
-        // console.log(data);
+        for(var device of data){
+            device.deviceProperty = {
+              on_off:false
+            }
+        }
         this.$store.dispatch("setDevices", data);
         // var devices = [];
         var maxid = data[0].maxid;
@@ -675,7 +719,8 @@ export default {
   watch: {
     devices: {
       handler: function(val, oldVal) {
-        console.log('deviceChange')
+        console.log("deviceChange");
+        this.createSocket(val)
         this.countryArr();
       },
       deep: true

@@ -9,7 +9,7 @@
                 <div :class="{'device-tap-border': setting }" class="icon">
                     <i class="fa" :class="iconstyle(device.devicetype)"></i>
                 </div>
-                <el-switch class="device-switch" v-model="device.on_off" @change="switch_change">
+                <el-switch class="device-switch" v-model="device.deviceProperty.on_off" @change="switch_change">
                 </el-switch>
             </div>
         </el-tooltip>
@@ -114,21 +114,20 @@ export default {
       // }
     },
     switch_change(val) {
-      switch (this.device.devicetype) {
+      switch (this.device.deviceProperty.devicetype) {
         case "light":
-          var deviceProperty = {
+          this.device.deviceProperty = {
             on_off: false,
             brightness: 0
           };
-          lightApi.switch_change(val, this.device, deviceProperty);
+          lightApi.switch_change(val, this.device);
           break;
         case "ac":
-          this.device.on_off = false;
+          this.device.deviceProperty.on_off = false;
           acApi.switch_change(val, this.device);
           break;
         case "led":
-          this.device.on_off = false;
-          var deviceProperty = {
+          this.device.deviceProperty = {
             on_off: false,
             brightness: 0,
             color: "#c0ccda",
@@ -136,7 +135,7 @@ export default {
             green: "cc",
             blue: "da"
           };
-          ledApi.switch_change(val, this.device, deviceProperty);
+          ledApi.switch_change(val, this.device);
           break;
         case "music":
           // musicApi.switch_change(this.device)
@@ -146,16 +145,16 @@ export default {
     readOpen() {
       switch (this.device.devicetype) {
         case "light":
-          this.device.on_off = false;
+          this.device.deviceProperty.on_off = false;
           lightApi.readOpen(this.device);
           break;
         case "ac":
-          this.device.on_off = false;
+          this.device.deviceProperty.on_off = false;
           acApi.readOpen(this.device);
           break;
         case "led":
-          this.device.on_off = false;
-          this.device.brightness = 0;
+          this.device.deviceProperty.on_off = false;
+          this.device.deviceProperty.brightness = 0;
           color: this.device.mode ? this.device.mode : "#ffffff",
             ledApi.readOpen(this.device);
           break;

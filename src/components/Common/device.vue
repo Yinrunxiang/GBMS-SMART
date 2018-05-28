@@ -8,7 +8,7 @@
                 <i class="fa" :class="iconstyle(device.devicetype)" style="font-size:80px;color:#ccc"></i>
             </div>
             <div style="margin-top:5px">
-                <el-switch v-model="device.on_off" @change="switch_change">
+                <el-switch v-model="deviceProperty.on_off" @change="switch_change">
                 </el-switch>
             </div>
 
@@ -59,7 +59,11 @@ import curtainApi from "../Content/devices/curtain/api.js";
 import floorHeatApi from "../Content/devices/floorheat/api.js";
 export default {
   data() {
-    return {};
+    return {
+      deviceProperty : {
+            on_off: false
+      }
+    };
   },
   props: ["device"],
   methods: {
@@ -111,24 +115,13 @@ export default {
     switch_change(val) {
       switch (this.device.devicetype) {
         case "light":
-          var deviceProperty = {
-            on_off: false,
-            brightness: 0
-          };
-          lightApi.switch_change(val, this.device, deviceProperty);
+          lightApi.switch_change(val, this.device);
           break;
         case "ac":
-          this.device.on_ff = false;
           acApi.switch_change(val, this.device);
           break;
         case "led":
-          // this.device.on_off = false;
-          var deviceProperty = {
-            on_off: false,
-            brightness: 0,
-            color: this.device.mode ? this.device.mode : "#ffffff"
-          };
-          ledApi.switch_change(val, this.device, deviceProperty);
+          ledApi.switch_change(val, this.device);
           break;
         case "music":
           musicApi.switch_change(val, this.device);
@@ -137,34 +130,22 @@ export default {
           curtainApi.switch_change(val, this.device);
           break;
         case "ir":
-          var deviceProperty = {
-            on_off: false,
-            brightness: 0
-          };
-          curtainApi.switch_change(val, this.device, deviceProperty);
+          curtainApi.switch_change(val, this.device);
           break;
         case "floorheat":
-          floorHeatApi.switch_change(val, this.device, deviceProperty);
+          floorHeatApi.switch_change(val, this.device);
           break;
       }
     },
     readOpen() {
       switch (this.device.devicetype) {
         case "light":
-          this.device.on_ff = false;
           lightApi.readOpen(this.device);
           break;
         case "ac":
-          this.device.on_ff = false;
           acApi.readOpen(this.device);
           break;
         case "led":
-          this.device.on_off = false;
-          this.device.brightness = 0;
-          this.device.color = "#c0ccda";
-          this.device.red = "c0";
-          this.device.green = "cc";
-          this.device.blue = "da";
           ledApi.readOpen(this.device);
           break;
         case "music":
@@ -172,11 +153,9 @@ export default {
           // musicApi.readOpen(this.device)
           break;
         case "curtain":
-          this.device.on_ff = false;
           curtainApi.readOpen(this.device);
           break;
         case "floorheat":
-          this.device.on_ff = false;
           floorHeatApi.readOpen(this.device);
           break;
       }
@@ -212,8 +191,7 @@ export default {
     }
   },
   created() {
-    // console.log("device list device");
-    // this.readOpen()
+    this.device.deviceProperty = this.deviceProperty
   },
   props: ["device"],
   components: {},

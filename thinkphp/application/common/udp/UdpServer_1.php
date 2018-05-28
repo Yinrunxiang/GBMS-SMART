@@ -6,9 +6,6 @@ date_default_timezone_set('PRC');
 use Workerman\Worker;
 use Workerman\WebServer;
 use Workerman\Lib\Timer;
-use \app\common\udp\device\SendCommand;
-
-require_once __DIR__ . '/udp/device/SendCommand.php';
 // use app\common\udp\Udp;
 require_once './Udp.php';
 require_once __DIR__ . '/vendor/autoload.php';
@@ -20,7 +17,7 @@ $con = mysqli_connect('localhost', 'root', 'root');
 // }
 mysqli_select_db($con, "admin");
 mysqli_set_charset($con, "utf8");
-class UdpServer
+class UdpServer_1
 {
 
 
@@ -79,8 +76,13 @@ class UdpServer
             // usleep(300000);
         }
     }
-    function updataLed($channel, $color, $subnetid, $deviceid, $con)
+    function updataLed($channel, $color, $subnetid, $deviceid, $con, $sender_io)
     {
+        $switch = $color != "00" ? true : false;
+        $brightness = hexdec('0x' + $color);
+        $deviceProperty = ['on_off' => $switch, 'brightness' =>$brightness];
+        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
+        $sender_io->emit('udp', $udp);
         if ($color != "00") {
             $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
         } else {
@@ -120,8 +122,10 @@ class UdpServer
                 case "0032":
                     $channel = substr($msg, 50, 2);
                     $brightness = substr($msg, 54, 2);
-                    $on_off = $brightness != '00' ? $on_off = 'on' : $on_off = 'off';
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'on_off' => $on_off, 'brightness' => $brightness];
+                    $on_off = $brightness != '00' ? 'on' : 'off';
+                    $switch = $brightness != '00' ? true : false;
+                    $deviceProperty = ['on_off' => $switch, 'brightness' => hexdec($brightness)];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     if ($on_off == 'on') {
                         $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
@@ -136,17 +140,19 @@ class UdpServer
                     $blue = substr($msg, 56, 2);
                     $mix = substr($msg, 58, 2);
 
-                    $this->updataLed('31', $red, $subnetid, $deviceid, $con);
-                    $this->updataLed('32', $green, $subnetid, $deviceid, $con);
-                    $this->updataLed('33', $blue, $subnetid, $deviceid, $con);
-                    $this->updataLed('34', $mix, $subnetid, $deviceid, $con);
+                    $this->updataLed('31', $red, $subnetid, $deviceid, $con, $sender_io);
+                    $this->updataLed('32', $green, $subnetid, $deviceid, $con, $sender_io);
+                    $this->updataLed('33', $blue, $subnetid, $deviceid, $con, $sender_io);
+                    $this->updataLed('34', $mix, $subnetid, $deviceid, $con, $sender_io);
                     $red = $this->tocolor($red);
                     $green = $this->tocolor($green);
                     $blue = $this->tocolor($blue);
                     $mix = $this->tocolor($mix);
                     $color = "#" . $red . $green . $blue;
                     $on_off = $color != "#000000" ? 'on' : 'off';
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'on_off' => $on_off, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
+                    $switch = $color != "#000000" ? true : false;
+                    $deviceProperty = ['on_off' => $switch, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     if ($color != "#000000") {
                         $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
@@ -161,19 +167,11 @@ class UdpServer
                         $green = substr($msg, 54, 2);
                         $blue = substr($msg, 56, 2);
                         $mix = substr($msg, 58, 2);
-                             //用light模式控led
-                        $on_off = $red != '00' ? 'on' : 'off';
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $red . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'  and devicetype = 'light' and channel = '31'";
-                        mysqli_query($con, $sql);
-                        $on_off = $green != '00' ? 'on' : 'off';
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $green . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'  and devicetype = 'light' and channel = '32'";
-                        mysqli_query($con, $sql);
-                        $on_off = $blue != '00' ? 'on' : 'off';
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $blue . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'  and devicetype = 'light' and channel = '33'";
-                        mysqli_query($con, $sql);
-                        $on_off = $mix != '00' ? 'on' : 'off';
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $mix . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'  and devicetype = 'light' and channel = '34'";
-                        mysqli_query($con, $sql);
+                        //用light模式控led
+                        $this->updataLed('31', $red, $subnetid, $deviceid, $con, $sender_io);
+                        $this->updataLed('32', $green, $subnetid, $deviceid, $con, $sender_io);
+                        $this->updataLed('33', $blue, $subnetid, $deviceid, $con, $sender_io);
+                        $this->updataLed('34', $mix, $subnetid, $deviceid, $con, $sender_io);
                              //普通LED模式
                         $red = $this->tocolor($red);
                         $blue = $this->tocolor($blue);
@@ -181,15 +179,16 @@ class UdpServer
                         $mix = $this->tocolor($mix);
                         $color = "#" . $red . $green . $blue;
                         $on_off = $color != "#000000" ? true : false;
-                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'on_off' => $on_off, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
+                        $deviceProperty = ['on_off' => $on_off, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
+                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
                         $sender_io->emit('udp', $udp);
                         if ($color != "#000000") {
                             $on_off = true;
-                            $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and devicetype = 'led'";
+                            $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and devicetype = 'led'";
                             mysqli_query($con, $sql);
                         } else {
                             $on_off = false;
-                            $sql = "update device as a left join address as b on a.address = b.address set on_off = 'off' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and devicetype = 'led'";
+                            $sql = "update device as a left join address as b on a.address = b.address set on_off = 'off',run_date = null where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and devicetype = 'led'";
                             mysqli_query($con, $sql);
                         }
 
@@ -204,21 +203,24 @@ class UdpServer
                             $brightness = substr($msg, $start, 2);
                             if ($brightness != "00") {
                                 $on_off = "on";
+                                $switch = true;
                             } else {
                                 $on_off = "off";
+                                $switch = false;
                             }
 
                             $channel = dechex($i);
                             if (strlen($channel) < 2) {
                                 $channel = '0' . $channel;
                             }
-                            $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'on_off' => $on_off, 'brightness' => $brightness];
+                            $deviceProperty = ['on_off' => $switch, 'brightness' =>hexdec($brightness)];
+                            $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
                             $sender_io->emit('udp', $udp);
                                 // echo  $channel;
                             if ($on_off == 'on') {
-                                $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "' and mode = '" . $brightness . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
+                                $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "' and mode = '" . $brightness . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
                             } else {
-                                $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
+                                $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',run_date = null  where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
                             }
 
                             mysqli_query($con, $sql);
@@ -236,10 +238,10 @@ class UdpServer
                             $type = 'on_off';
                             $key = $type;
                             if ($value == "01") {
-                                $value = 'on';
+                                $value = true;
 
                             } else {
-                                $value = 'off';
+                                $value = false;
                             }
                             break;
                         case "05":
@@ -298,10 +300,10 @@ class UdpServer
                             $type = 'on_off';
                             $key = $type;
                             if ($value == "01") {
-                                $value = 'on';
+                                $value = true;
 
                             } else {
-                                $value = 'off';
+                                $value = false;
                             }
                             break;
                         case "15":
@@ -331,13 +333,14 @@ class UdpServer
                             $value = hexdec($value);
                             break;
                     }
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, $key => $value];
+                    $deviceProperty = [$key => $value];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel,'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     if ($type == 'on_off') {
-                        if ($value == 'on') {
-                            $sql = "update device as a left join address as b on a.address = b.address set " . $type . " = '" . $value . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                        if ($value) {
+                            $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
                         } else {
-                            $sql = "update device as a left join address as b on a.address = b.address set " . $type . " = '" . $value . "',run_date = null where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                            $sql = "update device as a left join address as b on a.address = b.address set on_off = 'off',run_date = null where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
                         }
                     } else {
                         $sql = "update device as a left join address as b on a.address = b.address set " . $type . " = '" . $value . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
@@ -346,7 +349,8 @@ class UdpServer
                     break;
                 case "e0ed":
                     $on_off = substr($msg, 50, 2);
-                    $on_off = $on_off != '00' ? $on_off = 'on' : $on_off = 'off';
+                    $on_off = $on_off != '00' ? 'on' : 'off';
+                    $switch = $on_off != '00' ? true : false;
                     $devicetype = 'ac';
                     $mode = substr($msg, 55, 1);
                     $mode = hexdec($mode);
@@ -383,12 +387,15 @@ class UdpServer
                     $coolTmp = hexdec(substr($msg, 52, 2));
                     $heatTmp = hexdec(substr($msg, 60, 2));
                     $autoTmp = hexdec(substr($msg, 64, 2));
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'on_off' => $on_off, 'mode' => $mode, 'grade' => $grade, 'coolTmp' => $coolTmp, 'heatTmp' => $heatTmp, 'autoTmp' => $autoTmp];
+
+                    $deviceProperty = [ 'on_off' => $switch, 'mode' => $mode, 'grade' => $grade, 'coolTmp' => $coolTmp, 'heatTmp' => $heatTmp, 'autoTmp' => $autoTmp];
+
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     if ($on_off == 'on') {
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $mode . "',grade = '" . $grade . "',operation_1 = '" . $coolTmp . "',operation_2 = '" . $heatTmp . "',operation_3 = '" . $autoTmp . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $mode . "',grade = '" . $grade . "',operation_1 = '" . $coolTmp . "',operation_2 = '" . $heatTmp . "',operation_3 = '" . $autoTmp . "',run_date = now()  where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
                     } else {
-                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $mode . "',grade = '" . $grade . "',operation_1 = '" . $coolTmp . "',operation_2 = '" . $heatTmp . "',operation_3 = '" . $autoTmp . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                        $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $mode . "',grade = '" . $grade . "',operation_1 = '" . $coolTmp . "',operation_2 = '" . $heatTmp . "',operation_3 = '" . $autoTmp . "',run_date = null  where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
                     }
                     mysqli_query($con, $sql);
                     break;
@@ -400,7 +407,10 @@ class UdpServer
                     $dayTemperature = $this->getadditional($msg, 3);
                     $nightTemperature = $this->getadditional($msg, 5);
                     $awayTemperature = $this->getadditional($msg, 7);
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'manualTemperature' => $manualTemperature, 'dayTemperature' => $dayTemperature, 'nightTemperature' => $nightTemperature, 'awayTemperature' => $awayTemperature];
+                    
+                    $deviceProperty = [ 'manualTemperature' => $manualTemperature, 'dayTemperature' => $dayTemperature, 'nightTemperature' => $nightTemperature, 'awayTemperature' => $awayTemperature];
+
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     //获取该建筑发在区域的mac地址目标ip目标端口
                     $address = $this->getAddress($subnetid, $deviceid);
@@ -440,10 +450,10 @@ class UdpServer
                             $type = 'on_off';
                             $key = $type;
                             if ($value == "01") {
-                                $value = 'on';
+                                $value = true;
 
                             } else {
-                                $value = 'off';
+                                $value = false;
                             }
                             break;
                         case "15":
@@ -467,108 +477,113 @@ class UdpServer
                                     break;
                             }
                     }
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, $key => $value];
+                    $deviceProperty = [ $key => $value];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel,'deviceProperty' => $deviceProperty ];
                     $sender_io->emit('udp', $udp);
                     break;
                 case "e3e8":
                     break;
                 case "02e1":
-                    $msglen = count($msg);
-                    $stop = $msglen - 52 - 4;
-                    $source = $this->getadditional($msg, 0);
-                    $albumpack = subst($msg, 52, $stop);
-                    $additionalContentData = [$source];
-                    $additionalContentData = $this->strToarr($additionalContentData, $albumpack);
-                    //获取该建筑发在区域的mac地址目标ip目标端口
-                    $address = $this->getAddress($subnetid, $deviceid);
-                    $macAddress = $address["mac"];
-                    $dest_address = $address["ip"];
-                    $dest_port = $address["port"];
-                    //发送UDP
-                    $sendCommand = new SendCommand();
-                    $sendCommand->send('02', 'E2', $subnetid, $deviceid, $additionalContentData, $macAddress, $dest_address, $dest_port);
+                    $sender_io->emit('music', $msg);
+                        // $msglen = count($msg);
+                        // $stop = $msglen - 52 - 4;
+                        // $source = $this->getadditional($msg, 0);
+                        // $albumpack = subst($msg, 52, $stop);
+                        // $additionalContentData = [$source];
+                        // $additionalContentData = $this->strToarr($additionalContentData, $albumpack);
+                        // //获取该建筑发在区域的mac地址目标ip目标端口
+                        // $address = $this->getAddress($subnetid, $deviceid);
+                        // $macAddress = $address["mac"];
+                        // $dest_address = $address["ip"];
+                        // $dest_port = $address["port"];
+                        // //发送UDP
+                        // $sendCommand = new SendCommand();
+                        // $sendCommand->send('02', 'E2', $subnetid, $deviceid, $additionalContentData, $macAddress, $dest_address, $dest_port);
                     break;
                 case "02e3":
-                 //获取该建筑发在区域的mac地址目标ip目标端口
-                    $address = $this->getAddress($subnetid, $deviceid);
-                    $macAddress = $address["mac"];
-                    $dest_address = $address["ip"];
-                    $dest_port = $address["port"];
+                    $sender_io->emit('music', $msg);
+                        //  //获取该建筑发在区域的mac地址目标ip目标端口
+                        //     $address = $this->getAddress($subnetid, $deviceid);
+                        //     $macAddress = $address["mac"];
+                        //     $dest_address = $address["ip"];
+                        //     $dest_port = $address["port"];
 
-                    $msglen = count($msg);
-                    $stop = $msglen - 52 - 4;
-                    $source = $this->getadditional($msg, 2);
-                    $firstAlbumNo = $this->getadditional($msg, 5);
-                    $albumnum = $this->getadditional($msg, 4);
-                    $albumlist = substr($msg, 60);
-                    for ($i = 0; $i < $albumnum; $i++) {
-                        $albumNo = substr($albumlist . $albumCount, 2);
-                        $albumLength = substr($albumlist, $albumCount + 2, 2);
-                        $albumLength = intval('0x' + $albumLength) * 2;
-                        $albumNameList = substr($albumlist, $albumCount + 4, $albumLength);
-                        $albumNameList = $this->strToarr4($albumNameList);
-                        $albumName = [];
-                        foreach ($albumNameList as $k => $v) {
-                            array_push($albumName, chr($v));
-                        }
-                        $albumName = implode("", $albumName);
-                        $albumObj = [
-                            'albumName' => $albumName,
-                            'albumNo' => $albumNo
-                        ];
-                        $albumObj = json_encode($albumObj);
-                        array_push($albumList, $albumObj);
-                        $albumNoList[$albumNo] = false;
-                        $albumCount = $albumCount + $albumLength + 4;
-                    }
-                    //发送socket给前端
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'source' => $source, 'albumList' => $albumList];
-                    $sender_io->emit('udp', $udp);
-                    //发送UDP
-                    $sendCommand = new SendCommand();
-                    foreach ($albumNoList as $k => $v) {
-                        $sendCommand->send('02', 'E4', $subnetid, $deviceid, [$source, $k], $macAddress, $dest_address, $dest_port);
-                        usleep(100000);
-                    }
+                        //     $msglen = count($msg);
+                        //     $stop = $msglen - 52 - 4;
+                        //     $source = $this->getadditional($msg, 2);
+                        //     $firstAlbumNo = $this->getadditional($msg, 5);
+                        //     $albumnum = $this->getadditional($msg, 4);
+                        //     $albumlist = substr($msg, 60);
+                        //     for ($i = 0; $i < $albumnum; $i++) {
+                        //         $albumNo = substr($albumlist . $albumCount, 2);
+                        //         $albumLength = substr($albumlist, $albumCount + 2, 2);
+                        //         $albumLength = intval('0x' + $albumLength) * 2;
+                        //         $albumNameList = substr($albumlist, $albumCount + 4, $albumLength);
+                        //         $albumNameList = $this->strToarr4($albumNameList);
+                        //         $albumName = [];
+                        //         foreach ($albumNameList as $k => $v) {
+                        //             array_push($albumName, chr($v));
+                        //         }
+                        //         $albumName = implode("", $albumName);
+                        //         $albumObj = [
+                        //             'albumName' => $albumName,
+                        //             'albumNo' => $albumNo
+                        //         ];
+                        //         $albumObj = json_encode($albumObj);
+                        //         array_push($albumList, $albumObj);
+                        //         $albumNoList[$albumNo] = false;
+                        //         $albumCount = $albumCount + $albumLength + 4;
+                        //     }
+                        //     //发送socket给前端
+                        //     $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'source' => $source, 'albumList' => $albumList];
+                        //     $sender_io->emit('udp', $udp);
+                        //     //发送UDP
+                        //     $sendCommand = new SendCommand();
+                        //     foreach ($albumNoList as $k => $v) {
+                        //         $sendCommand->send('02', 'E4', $subnetid, $deviceid, [$source, $k], $macAddress, $dest_address, $dest_port);
+                        //         usleep(100000);
+                        //     }
                     break;
                 case "02e5":
-                 //获取该建筑发在区域的mac地址目标ip目标端口
-                    $address = $this->getAddress($subnetid, $deviceid);
-                    $macAddress = $address["mac"];
-                    $dest_address = $address["ip"];
-                    $dest_port = $address["port"];
+                    $sender_io->emit('music', $msg);
+                        //  //获取该建筑发在区域的mac地址目标ip目标端口
+                        //     $address = $this->getAddress($subnetid, $deviceid);
+                        //     $macAddress = $address["mac"];
+                        //     $dest_address = $address["ip"];
+                        //     $dest_port = $address["port"];
 
-                    $source = $this->getadditional($msg, 0);
-                    $albumno = $this->getadditional($msg, 1);
-                    $songpack = substr($msg, 54, 2);
-                    $songpack = intval("0x" + $songpack);
-                    //发送UDP
-                    $sendCommand = new SendCommand();
-                    for ($i = 0; $i < $songpack; $i++) {
-                        $sendCommand->send('02', 'E6', $subnetid, $deviceid, [$source, $albumno, $this->toHex($i)], $macAddress, $dest_address, $dest_port);
-                        usleep(100000);
-                    }
+                        //     $source = $this->getadditional($msg, 0);
+                        //     $albumno = $this->getadditional($msg, 1);
+                        //     $songpack = substr($msg, 54, 2);
+                        //     $songpack = intval("0x" + $songpack);
+                        //     //发送UDP
+                        //     $sendCommand = new SendCommand();
+                        //     for ($i = 0; $i < $songpack; $i++) {
+                        //         $sendCommand->send('02', 'E6', $subnetid, $deviceid, [$source, $albumno, $this->toHex($i)], $macAddress, $dest_address, $dest_port);
+                        //         usleep(100000);
+                        //     }
                     break;
                 case "02e7":
-                 //获取该建筑发在区域的mac地址目标ip目标端口
-                    $address = $this->getAddress($subnetid, $deviceid);
-                    $macAddress = $address["mac"];
-                    $dest_address = $address["ip"];
-                    $dest_port = $address["port"];
+                    $sender_io->emit('music', $msg);
+                        //  //获取该建筑发在区域的mac地址目标ip目标端口
+                        //     $address = $this->getAddress($subnetid, $deviceid);
+                        //     $macAddress = $address["mac"];
+                        //     $dest_address = $address["ip"];
+                        //     $dest_port = $address["port"];
 
-                    $source = $this->getadditional($msg, 2);
-                    $songNum = $this->getadditional($msg, 5);
-                    $songNum = intval("0x" + $songNum);
-                    $songCount = 0;
-                    $songForNum = 0;
-                    $songpack = substr($msg, 54, 2);
-                    $songpack = intval("0x" + $songpack);
-                    //发送UDP
-                    $sendCommand = new SendCommand();
-                    for ($i = 0; $i < $songpack; $i++) {
-                        $sendCommand->send('02', 'E6', $subnetid, $deviceid, [$source, $albumno, $this->toHex($i)], $macAddress, $dest_address, $dest_port);
-                        usleep(100000);
-                    }
+                        //     $source = $this->getadditional($msg, 2);
+                        //     $songNum = $this->getadditional($msg, 5);
+                        //     $songNum = intval("0x" + $songNum);
+                        //     $songCount = 0;
+                        //     $songForNum = 0;
+                        //     $songpack = substr($msg, 54, 2);
+                        //     $songpack = intval("0x" + $songpack);
+                        //     //发送UDP
+                        //     $sendCommand = new SendCommand();
+                        //     for ($i = 0; $i < $songpack; $i++) {
+                        //         $sendCommand->send('02', 'E6', $subnetid, $deviceid, [$source, $albumno, $this->toHex($i)], $macAddress, $dest_address, $dest_port);
+                        //         usleep(100000);
+                        //     }
                     break;
 
             }

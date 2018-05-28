@@ -39,20 +39,20 @@ const musicApi = {
     //     // _g.closeGlobalLoading()
     // })
   },
-  get_source_change(device, deviceProperty) {
-    var source = deviceProperty.source == '02' ? '03' : deviceProperty.source
+  get_source_change(device) {
+    var source = device.deviceProperty.source == '02' ? '03' : device.deviceProperty.source
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["01", source]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
-  source_change(device, deviceProperty) {
+  source_change(device) {
     var data = this.get_source_change(device, devicePropert)
     api.sendUdp(device, data)
   },
-  get_vol_change(val, device, deviceProperty) {
-    deviceProperty.vol = val;
+  get_vol_change(val, device) {
+    device.deviceProperty.vol = val;
     device.loading = true;
     val = 79 - val;
     var operatorCodefst = "02",
@@ -61,8 +61,8 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
-  vol_change(val, device, deviceProperty) {
-    var data = this.get_vol_change(val, device, deviceProperty)
+  vol_change(val, device) {
+    var data = this.get_vol_change(val, device)
     api.sendUdp(device, data)
   },
   pre(device) {
@@ -143,15 +143,15 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
-  get_selectSong(device, deviceProperty, song) {
+  get_selectSong(device, song) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["06", song.albumNo, song.songNoHigh, song.songNoLow]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
-  selectSong(device, deviceProperty, song) {
-    var data = get_selectSong(device, deviceProperty, song)
+  selectSong(device,  song) {
+    var data = get_selectSong(device,  song)
     api.sendUdp(device, data)
   },
   closeSocket() {
@@ -162,7 +162,7 @@ const musicApi = {
     if (this.songInterval)
       clearInterval(this.songInterval)
   },
-  readSong(device, deviceProperty) {
+  readSong(device) {
     console.log('music_api')
     var $this = this
     var albumnum = 0;
@@ -173,13 +173,13 @@ const musicApi = {
     var udpArrSong = []
     var operatorCodefst = "02",
       operatorCodesec = "E0",
-      additionalContentData = [deviceProperty.source]
+      additionalContentData = [device.deviceProperty.source]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
     let userInfo = Lockr.get("userInfo");
     let port = userInfo.port;
     this.socketio = socket("http://" + document.domain + ":" + port);
-    this.socketio.on("new_msg", function (msg) {
+    this.socketio.on("music", function (msg) {
       var msglen = msg.length;
       var stop = msglen - 4;
       var subnetid = msg.substr(34, 2);
@@ -195,7 +195,7 @@ const musicApi = {
 
         if (operationcode.toLowerCase() == "02e1") {
           var source = _g.getadditional(msg, 0);
-          if (deviceProperty.source == source) {
+          if (device.deviceProperty.source == source) {
             var albumpack = msg.substring(52, stop);
             var additionalContentData = strToarr(albumpack);
             additionalContentData.unshift(source);
@@ -208,15 +208,15 @@ const musicApi = {
         }
         if (operationcode.toLowerCase() == "02e3") {
           var source = _g.getadditional(msg, 2);
-          if (deviceProperty.source == source) {
+          if (device.deviceProperty.source == source) {
             var firstAlbumNo = _g.getadditional(msg, 5);
             var albumCount = 0
             // device.albumno = '06'
             albumnum = _g.getadditional(msg, 4);
             var albumlist = msg.substring(60);
-            deviceProperty.albumlist = [];
-            deviceProperty.songList = [];
-            deviceProperty.songListAll = [];
+            device.deviceProperty.albumlist = [];
+            device.deviceProperty.songList = [];
+            device.deviceProperty.songListAll = [];
             var albumList = []
             songList = []
             for (var i = 0; i < albumnum; i++) {
@@ -280,7 +280,7 @@ const musicApi = {
                   // return a.songNo - b.songNo
                   return parseInt(a.albumNo) - parseInt(b.albumNo)
                 });
-                deviceProperty.albumlist = albumList
+                device.deviceProperty.albumlist = albumList
                 $this.sendUdpArr(udpArrSong)
                 $this.songInterval = setInterval(function () {
                   var check = true
@@ -315,10 +315,10 @@ const musicApi = {
                     //   // return a.songNo - b.songNo
                     //   return parseInt(a.albumNo + a.No) - parseInt(b.albumNo + b.No)
                     // });
-                    deviceProperty.songList = songList
-                    deviceProperty.songListAll = songList
-                    deviceProperty.musicLoading = false
-                    Lockr.set('music_' + device.id + '_' + deviceProperty.source, deviceProperty)
+                    device.deviceProperty.songList = songList
+                    device.deviceProperty.songListAll = songList
+                    device.deviceProperty.musicLoading = false
+                    Lockr.set('music_' + device.id + '_' + device.deviceProperty.source, device.deviceProperty)
                     $this.socketio.removeAllListeners()
                   }
                 }, 10000)
@@ -329,7 +329,7 @@ const musicApi = {
         }
         if (operationcode.toLowerCase() == "02e5") {
           var source = _g.getadditional(msg, 0);
-          if (deviceProperty.source == source) {
+          if (device.deviceProperty.source == source) {
             var albumno = _g.getadditional(msg, 1);
             var songpack = msg.substring(54, 56);
             if (!albumNoList[albumno]) {
@@ -360,7 +360,7 @@ const musicApi = {
 
         if (operationcode.toLowerCase() == "02e7") {
           var source = _g.getadditional(msg, 2);
-          if (deviceProperty.source == source) {
+          if (device.deviceProperty.source == source) {
             var songNum = _g.getadditional(msg, 5)
             songNum = parseInt("0x" + songNum)
             var songCount = 0

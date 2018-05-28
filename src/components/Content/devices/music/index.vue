@@ -445,27 +445,7 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
-      this.deviceProperty.vol= 20
-      this.deviceProperty.mode= "random"
-      this.deviceProperty.on_off= false
-      this.deviceProperty.music_name= "Waitting"
-      this.deviceProperty.music_autor= "Waitting"
-      this.deviceProperty.time_now= 0
-      this.deviceProperty.time_over= 0
-      this.deviceProperty.albumno= 0
-      this.deviceProperty.albumlist= []
-      this.deviceProperty.songno= 0
-      this.deviceProperty.songList= [
-          {
-            songNo: 1,
-            songName: "Waitting",
-            select: true
-          }
-        ]
-      this.deviceProperty.songListAll= []
-      this.deviceProperty.musicLoading= true
-      // this.deviceProperty.source= "01"
-      // this.initMusic(device)
+      device.deviceProperty = this.deviceProperty
       return device;
     }
   }

@@ -202,14 +202,7 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
-      this.deviceProperty.on_off = false;
-      this.deviceProperty.cooltmp = 26;
-      this.deviceProperty.autotmp = 0;
-      this.deviceProperty.heattmp = 0;
-      this.deviceProperty.tmp = 26;
-      this.deviceProperty.wind = 2;
-      this.deviceProperty.mode = "cool";
-    //   acApi.readStatus(device, this.deviceProperty);
+        device.deviceProperty = this.deviceProperty
       return device;
     }
   }

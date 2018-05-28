@@ -229,23 +229,7 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
-      this.deviceProperty.on_off = false;
-      this.deviceProperty.manualTemperature = 26;
-      this.deviceProperty.dayTemperature = 26;
-      this.deviceProperty.nightTemperature = 26;
-      this.deviceProperty.awayTemperature = 26;
-      this.deviceProperty.alarmTemperature = 26;
-      this.deviceProperty.mode = "manual";
-      this.deviceProperty.dayTime = "";
-      this.deviceProperty.nightTime = "";
-      this.deviceProperty.insideTemperature = 26;
-      this.deviceProperty.outsideTemperature = 26;
-      this.deviceProperty.insideSensor = {
-        targetSubnetID: "",
-        targetDeviceID: "",
-        channel: ""
-      };
-      // acApi.readStatus(device, this.deviceProperty);
+         device.deviceProperty = this.deviceProperty
       return device;
     },
     modeTemperature() {

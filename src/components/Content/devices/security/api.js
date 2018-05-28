@@ -39,9 +39,9 @@ const lightApi = {
         api.sendUdp(device, data)
     },
     closeSocket(){
-        this.socketio.removeAllListeners()
+        // this.socketio.removeAllListeners()
       },
-    readStatus(val, device, deviceProperty) {
+    readStatus(val, device) {
         let data = {
             params: {
                 operatorCodefst: "01",
@@ -55,39 +55,39 @@ const lightApi = {
             }
         };
         api.sendUdp(device, data)
-        let userInfo = Lockr.get("userInfo");
-    let port = userInfo.port;
-        this.socketio = socket("http://" + document.domain + ":" + port);
-        this.socketio.on("new_msg", function (msg) {
-            var subnetid = msg.substr(34, 2);
-            var deviceid = msg.substr(36, 2);
-            var channel = msg.substr(52, 2);
-            if (
-                subnetid.toLowerCase() == device.subnetid.toLowerCase() &&
-                deviceid.toLowerCase() == device.deviceid.toLowerCase()
-            ) {
-                var msg1 = msg.substr(42, 4);
-                if (msg1 == "0032") {
-                    var channel = msg.substr(50, 2);
-                    if (channel.toLowerCase() == device.channel.toLowerCase()) {
-                        var msg2 = msg.substr(54, 2);
-                        if (msg2 != "00") {
-                            deviceProperty.on_off = true;
-                        } else {
-                            deviceProperty.on_off = false;
-                            deviceProperty.brightness = 0;
-                        }
-                    }
-                } else if (msg1 == "011f") {
-                    var area = _g.getadditional(msg, 0)
-                    var type = _g.getadditional(msg, 1)
-                    if (area == val.area) {
-                        deviceProperty.on_off = true;
-                        deviceProperty.brightness = msg3;
-                    }
-                }
-            }
-        })
+    //     let userInfo = Lockr.get("userInfo");
+    // let port = userInfo.port;
+    //     this.socketio = socket("http://" + document.domain + ":" + port);
+    //     this.socketio.on("new_msg", function (msg) {
+    //         var subnetid = msg.substr(34, 2);
+    //         var deviceid = msg.substr(36, 2);
+    //         var channel = msg.substr(52, 2);
+    //         if (
+    //             subnetid.toLowerCase() == device.subnetid.toLowerCase() &&
+    //             deviceid.toLowerCase() == device.deviceid.toLowerCase()
+    //         ) {
+    //             var msg1 = msg.substr(42, 4);
+    //             if (msg1 == "0032") {
+    //                 var channel = msg.substr(50, 2);
+    //                 if (channel.toLowerCase() == device.channel.toLowerCase()) {
+    //                     var msg2 = msg.substr(54, 2);
+    //                     if (msg2 != "00") {
+    //                         deviceProperty.on_off = true;
+    //                     } else {
+    //                         deviceProperty.on_off = false;
+    //                         deviceProperty.brightness = 0;
+    //                     }
+    //                 }
+    //             } else if (msg1 == "011f") {
+    //                 var area = _g.getadditional(msg, 0)
+    //                 var type = _g.getadditional(msg, 1)
+    //                 if (area == val.area) {
+    //                     deviceProperty.on_off = true;
+    //                     deviceProperty.brightness = msg3;
+    //                 }
+    //             }
+    //         }
+    //     })
     },
     readOpen(device) {
         let data = {
@@ -102,36 +102,36 @@ const lightApi = {
             }
         };
         api.sendUdp(device, data)
-        window.socketio.on("new_msg", function (msg) {
-            var subnetid = msg.substr(34, 2);
-            var deviceid = msg.substr(36, 2);
-            var channel = msg.substr(52, 2);
-            if (
-                subnetid.toLowerCase() == device.subnetid.toLowerCase() &&
-                deviceid.toLowerCase() == device.deviceid.toLowerCase()
-            ) {
-                var msg1 = msg.substr(42, 4);
-                if (msg1 == "0032") {
-                    var channel = msg.substr(50, 2);
-                    if (channel.toLowerCase() == device.channel.toLowerCase()) {
-                        var msg2 = msg.substr(54, 2);
-                        if (msg2 != "00") {
-                            device.on_off = true;
-                        } else {
-                            device.on_off = false;
-                        }
-                    }
-                } else if (msg1 == "0034") {
-                    var len = 50 + parseInt("0x" + device.channel) * 2;
-                    var msg2 = msg.substr(len, 2);
-                    if (msg2 != "00") {
-                        device.on_off = true;
-                    } else {
-                        device.on_off = false;
-                    }
-                }
-            }
-        })
+        // window.socketio.on("new_msg", function (msg) {
+        //     var subnetid = msg.substr(34, 2);
+        //     var deviceid = msg.substr(36, 2);
+        //     var channel = msg.substr(52, 2);
+        //     if (
+        //         subnetid.toLowerCase() == device.subnetid.toLowerCase() &&
+        //         deviceid.toLowerCase() == device.deviceid.toLowerCase()
+        //     ) {
+        //         var msg1 = msg.substr(42, 4);
+        //         if (msg1 == "0032") {
+        //             var channel = msg.substr(50, 2);
+        //             if (channel.toLowerCase() == device.channel.toLowerCase()) {
+        //                 var msg2 = msg.substr(54, 2);
+        //                 if (msg2 != "00") {
+        //                     device.on_off = true;
+        //                 } else {
+        //                     device.on_off = false;
+        //                 }
+        //             }
+        //         } else if (msg1 == "0034") {
+        //             var len = 50 + parseInt("0x" + device.channel) * 2;
+        //             var msg2 = msg.substr(len, 2);
+        //             if (msg2 != "00") {
+        //                 device.on_off = true;
+        //             } else {
+        //                 device.on_off = false;
+        //             }
+        //         }
+        //     }
+        // })
     }
 }
 
