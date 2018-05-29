@@ -592,16 +592,15 @@ export default {
       // return countryArr
     },
     createSocket(devices) {
-      if(window.socketio && window.socketio.io){
-        window.socketio.removeAllListeners()
+      if (window.socketio && window.socketio.io) {
+        window.socketio.removeAllListeners();
       }
       let userInfo = Lockr.get("userInfo");
       let port = userInfo.port;
       var socketio = socket("http://" + document.domain + ":" + port);
-      window.socketio = socketio
+      window.socketio = socketio;
       socketio.on("udp", function(udp) {
         for (var device of devices) {
-          
           if (
             device.subnetid == udp.subnetid &&
             device.deviceid == udp.deviceid
@@ -613,7 +612,7 @@ export default {
                 }
                 break;
               case "light":
-                if ((device.channel == udp.channel)) {
+                if (device.channel == udp.channel) {
                   for (var key in udp.deviceProperty) {
                     device.deviceProperty[key] = udp.deviceProperty[key];
                   }
@@ -634,6 +633,106 @@ export default {
           }
         }
       });
+    },
+    addDeviceProperty(devices) {
+      for (var device of devices) {
+        switch (device.devicetype) {
+          case "ac":
+            device.deviceProperty = {
+              on_off: false,
+              coolTmp: 26,
+              autoTmp: 0,
+              heatTmp: 0,
+              tmp: 26,
+              grade: 2,
+              mode: "cool",
+              cool_strat: 0,
+              cool_end: 36,
+              heat_strat: 0,
+              heat_end: 36,
+              auto_strat: 0,
+              auto_end: 36
+            };
+            break;
+          case "light":
+            device.deviceProperty = {
+              brightness: 0,
+              on_off: false
+            };
+            break;
+          case "led":
+            device.deviceProperty = {
+              on_off: false,
+              brightness: 0,
+              color: "#c0ccda"
+              // red: "c0",
+              // green: "cc",
+              // blue: "da"
+            };
+            break;
+          case "curtain":
+            device.deviceProperty = {
+              on_off: false,
+              brightness: 0
+            };
+            break;
+          case "floorheat":
+            device.deviceProperty = {
+              on_off: false,
+              manualTemperature: 26,
+              dayTemperature: 26,
+              nightTemperature: 26,
+              awayTemperature: 26,
+              alarmTemperature: 26,
+              mode: "manual",
+              dayTime: "",
+              nightTime: "",
+              insideTemperature: 26,
+              outsideTemperature: 26,
+              insideSensor: {
+                targetSubnetID: "",
+                targetDeviceID: "",
+                channel: ""
+              }
+            };
+            break;
+          case "security":
+            device.deviceProperty = {
+              on_off: false
+            };
+            break;
+          case "ir":
+            device.deviceProperty = {
+              on_off: false
+            };
+            break;
+          case "music":
+            device.deviceProperty = {
+              vol: 20,
+              mode: "random",
+              on_off: false,
+              music_name: "Waitting",
+              music_autor: "Waitting",
+              time_now: 0,
+              time_over: 0,
+              albumno: 0,
+              albumlist: [],
+              songno: 0,
+              songList: [
+                {
+                  songNo: 1,
+                  songName: "Waitting",
+                  select: true
+                }
+              ],
+              songListAll: [],
+              musicLoading: true,
+              source: "01"
+            };
+            break;
+        }
+      }
+      this.createSocket(devices)
     }
   },
   created() {
@@ -666,11 +765,7 @@ export default {
     this.updateDatabase();
     this.apiGet("admin/device", {}).then(res => {
       this.handelResponse(res, data => {
-        for(var device of data){
-            device.deviceProperty = {
-              on_off:false
-            }
-        }
+        this.addDeviceProperty(data);
         this.$store.dispatch("setDevices", data);
         // var devices = [];
         var maxid = data[0].maxid;
@@ -720,10 +815,11 @@ export default {
     devices: {
       handler: function(val, oldVal) {
         console.log("deviceChange");
-        this.createSocket(val)
+        this.addDeviceProperty(val);
+        // this.createSocket(val);
         this.countryArr();
       },
-      deep: true
+      deep: false
     },
     address: {
       handler: function(val, oldVal) {

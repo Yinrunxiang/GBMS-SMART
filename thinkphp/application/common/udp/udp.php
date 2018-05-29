@@ -83,19 +83,19 @@ class Udp
                         break;
                     };
                     switch($command_row['grade']){
-                        case 'wind_auto':
+                        case '0':
 						//usleep(300000);
                             $ac->wind_change("0",$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
                         break;
-                        case 'high':
+                        case '1':
 						//usleep(300000);
                             $ac->wind_change("1",$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
                         break;
-                        case 'medial':
+                        case '2':
 						//usleep(300000);
                             $ac->wind_change("2",$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
                         break;
-                        case 'low':
+                        case '3':
 						//usleep(300000);
                             $ac->wind_change("3",$targetSubnetID,$targetDeviceID,$macAddress,$dest_address,$dest_port);
                         break;

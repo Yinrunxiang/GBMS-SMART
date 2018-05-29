@@ -66,7 +66,10 @@ class Device extends Common
         try {
             $this->data($param)->allowField(true)->save();
             $this->commit();
-            return true;
+            // return true;
+            $data = array();
+            $data["device"] = $this->getDataList();
+            return $data;
         } catch (\Exception $e) {
             $this->rollback();
             $this->error = 'Add failure';
@@ -95,10 +98,34 @@ class Device extends Common
         }
         try {
             $this->allowField(true)->save($param, ['id' => $id]);
-            return true;
-
+            // return true;
+            $data = array();
+            $data["device"] = $this->getDataList();
+            return $data;
         } catch (\Exception $e) {
             $this->error = 'Update failure';
+            return false;
+        }
+    }
+    /**
+     * 删除device
+     * @param  array $param [description]
+     */
+    public function delDatas($param)
+    {
+        $selections = $param['selections'];
+        $this->startTrans();
+        try {
+            foreach ($selections as $k => $v) {
+                $this->where('id', $v['id'])->delete();
+            }
+            $this->commit();
+            // $data = array();
+            // $data["device"] = $this->getDataList();
+            return true;
+        } catch (\Exception $e) {
+            $this->rollback();
+            $this->error = 'Delete failure';
             return false;
         }
     }

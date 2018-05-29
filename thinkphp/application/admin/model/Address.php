@@ -127,7 +127,7 @@ class Address extends Common
             $Room = new Room();
             $data["room"] = $Room->getDataList();
             $Device = new Device();
-            $data["Device"] = $Device->getDataList();
+            $data["device"] = $Device->getDataList();
             return $data;
         } catch (\Exception $e) {
             $this->error = 'Update failure';
@@ -158,7 +158,7 @@ class Address extends Common
             $Room = new Room();
             $data["room"] = $Room->getDataList();
             $Device = new Device();
-            $data["Device"] = $Device->getDataList();
+            $data["device"] = $Device->getDataList();
             return $data;
         } catch (\Exception $e) {
             $this->rollback();

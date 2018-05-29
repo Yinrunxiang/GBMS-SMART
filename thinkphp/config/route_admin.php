@@ -39,6 +39,8 @@ return [
     // 'admin/device/save' => ['admin/device/save', ['method' => 'POST']],
     // // 【设备】修改设备位置
     // 'admin/device/update' => ['admin/device/update', ['method' => 'POST']],
+    // 【设备】删除设备
+    'admin/device/delete' => ['admin/device/delete', ['method' => 'POST']],
 	// 【设备】修改设备位置
     'admin/device/updateLocation' => ['admin/device/updateLocation', ['method' => 'POST']],
 	// 【设备】修改LED颜色

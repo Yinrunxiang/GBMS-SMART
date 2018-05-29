@@ -192,6 +192,7 @@ export default {
     }
   },
   created() {
+    // this.deviceProperty = this.device.deviceProperty;
     // console.log('device list device')
     // this.readOpen()
   },

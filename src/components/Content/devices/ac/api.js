@@ -19,19 +19,19 @@ const acApi = {
             return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         }
     },
-    get_autotmp_change(val, device) {
+    get_autoTmp_change(val, device) {
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
             additionalContentData = ["08", _g.toHex(val < 0 ? val + 256 : val)]
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
-    get_cooltmp_change(val, device) {
+    get_coolTmp_change(val, device) {
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
             additionalContentData = ["04", _g.toHex(val < 0 ? val + 256 : val)]
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
-    get_heattmp_change(val, device) {
+    get_heatTmp_change(val, device) {
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
             additionalContentData = ["07", _g.toHex(val < 0 ? val + 256 : val)]
@@ -77,19 +77,19 @@ const acApi = {
         const data = this.get_switch_change(val, device)
         api.sendUdp(device, data)
     },
-    autotmp_change(val, device) {
+    autoTmp_change(val, device) {
 
-        const data = this.get_autotmp_change(val, device)
+        const data = this.get_autoTmp_change(val, device)
         api.sendUdp(device, data)
     },
-    cooltmp_change(val, device) {
+    coolTmp_change(val, device) {
 
-        const data = this.get_cooltmp_change(val, device)
+        const data = this.get_coolTmp_change(val, device)
         api.sendUdp(device, data)
     },
-    heattmp_change(val, device) {
+    heatTmp_change(val, device) {
 
-        const data = this.get_heattmp_change(val, device)
+        const data = this.get_heatTmp_change(val, device)
         api.sendUdp(device, data)
     },
     wind_change(val, device) {
@@ -154,15 +154,15 @@ const acApi = {
         //                 }
         //                 //制冷温度
         //                 var cooltempdata = msg.substr(52, 2);
-        //                 deviceProperty.cooltmp = toTmp(cooltempdata)
+        //                 deviceProperty.coolTmp = toTmp(cooltempdata)
 
         //                 //制热温度
         //                 var heattempdata = msg.substr(60, 2);
-        //                 deviceProperty.heattmp = toTmp(heattempdata)
+        //                 deviceProperty.heatTmp = toTmp(heattempdata)
 
         //                 //自动温度
         //                 var autotempdata = msg.substr(64, 2);
-        //                 deviceProperty.autotmp = toTmp(autotempdata)
+        //                 deviceProperty.autoTmp = toTmp(autotempdata)
 
         //                 //模式
         //                 var mode = msg.substr(54, 2);
@@ -236,7 +236,7 @@ const acApi = {
         //                         }
         //                         break;
         //                     case "04":
-        //                         deviceProperty.cooltmp = toTmp(value)
+        //                         deviceProperty.coolTmp = toTmp(value)
         //                         break;
         //                     case "05":
         //                         deviceProperty.wind = parseInt("0x" + value);
@@ -259,10 +259,10 @@ const acApi = {
         //                         }
         //                         break;
         //                     case "07":
-        //                         deviceProperty.heattmp = toTmp(value)
+        //                         deviceProperty.heatTmp = toTmp(value)
         //                         break;
         //                     case "08":
-        //                         deviceProperty.autotmp = toTmp(value)
+        //                         deviceProperty.autoTmp = toTmp(value)
         //                         break;
         //                 }
         //                 break
@@ -317,15 +317,15 @@ const acApi = {
         //             }
         //             //制冷温度
         //             var cooltempdata = msg.substr(52, 2);
-        //             device.cooltmp = parseInt("0x" + cooltempdata);
+        //             device.coolTmp = parseInt("0x" + cooltempdata);
 
         //             //制热温度
         //             var heattempdata = msg.substr(60, 2);
-        //             device.heattmp = parseInt("0x" + heattempdata);
+        //             device.heatTmp = parseInt("0x" + heattempdata);
 
         //             //自动温度
         //             var autotempdata = msg.substr(64, 2);
-        //             device.autotmp = parseInt("0x" + autotempdata);
+        //             device.autoTmp = parseInt("0x" + autotempdata);
 
         //             //模式
         //             var mode = msg.substr(54, 2);
@@ -398,7 +398,7 @@ const acApi = {
         //                     }
         //                     break;
         //                 case "04":
-        //                     device.cooltmp = parseInt("0x" + value);
+        //                     device.coolTmp = parseInt("0x" + value);
         //                     break;
         //                 case "05":
         //                     device.wind = parseInt("0x" + value);
@@ -421,10 +421,10 @@ const acApi = {
         //                     }
         //                     break;
         //                 case "07":
-        //                     device.heattmp = parseInt("0x" + value);
+        //                     device.heatTmp = parseInt("0x" + value);
         //                     break;
         //                 case "08":
-        //                     device.autotmp = parseInt("0x" + value);
+        //                     device.autoTmp = parseInt("0x" + value);
         //                     break;
         //             }
         //         }

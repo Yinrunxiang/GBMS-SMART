@@ -35,13 +35,13 @@
                 </el-table-column>
                 <!-- <el-table-column label="status" prop="status" width="150">
                 </el-table-column> -->
-                <el-table-column label="Breed" prop="breed" width="150">
+                <el-table-column label="Breed" prop="breed">
                 </el-table-column>
-                <el-table-column label="Time" prop="start" >
+                <!-- <el-table-column label="Time" prop="start" >
                     <template slot-scope="scope">
                         <el-button  size="small" icon="el-icon-time" @click="showTimeSetting(scope.row)"></el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
                 <!-- <el-table-column label="Start Time" prop="start" width="220">
                     <template scope="scope">
                         <el-time-select placeholder="Start Time" @change="startTimeChange(scope.row)" v-model="scope.row.starttime" :picker-options="{
@@ -106,7 +106,7 @@ export default {
       thisdevice: {},
       notHotel: true,
       multipleSelection: [],
-      limit: 10,
+      limit: 7,
       showDeviceUpdate: false,
       openTimeSetting: false,
       openTimeSettingDevice: {}
@@ -200,28 +200,6 @@ export default {
     rowDblclick(row) {
       this.showDeviceUpdate = true;
       this.thisdevice = row;
-      this.thisdevice.subnetid = this.thisdevice.subnetid
-        ? parseInt("0x" + this.thisdevice.subnetid)
-        : "";
-      this.thisdevice.deviceid = this.thisdevice.deviceid
-        ? parseInt("0x" + this.thisdevice.deviceid)
-        : "";
-      this.thisdevice.channel = this.thisdevice.channel
-        ? parseInt("0x" + this.thisdevice.channel)
-        : "";
-      this.thisdevice.channel_spare = this.thisdevice.channel_spare
-        ? parseInt("0x" + this.thisdevice.channel_spare)
-        : "";
-      if (this.thisdevice.devicetype == "curtain") {
-        this.thisdevice.operation_1 = this.thisdevice.operation_1
-          ? parseInt("0x" + this.thisdevice.operation_1)
-          : "";
-      }
-
-      // console.log(this.thisdevice);
-      // let url = '/home/plan/update'
-      // this.$store.dispatch('setDevice', row)
-      // router.push(url)
     },
     //开始时间改变事件
     startTimeChange(row) {
@@ -288,12 +266,11 @@ export default {
       })
         .then(() => {
           const data = {
-            params: {
               selections: vm.multipleSelection
-            }
           };
-          this.apiGet("device/index.php?action=delete", data).then(res => {
-            if (res[0]) {
+          this.apiPost("admin/device/delete", data).then(res => {
+            this.handelResponse(res, data => {
+              
               var devices = vm.$store.state.devices;
               for (var i = 0; i < devices.length; i++) {
                 for (var selection of vm.multipleSelection) {
@@ -303,10 +280,9 @@ export default {
                 }
               }
               vm.$store.dispatch("setDevices", devices);
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
+              this.init();
+              _g.toastMsg("success", data);
+            });
           });
         })
         .catch(() => {

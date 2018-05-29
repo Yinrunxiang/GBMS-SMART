@@ -8,7 +8,7 @@
                 <i class="fa" :class="iconstyle(device.devicetype)" style="font-size:80px;color:#ccc"></i>
             </div>
             <div style="margin-top:5px">
-                <el-switch v-model="deviceProperty.on_off" @change="switch_change">
+                <el-switch v-model="device.deviceProperty.on_off" @change="switch_change">
                 </el-switch>
             </div>
 
@@ -60,9 +60,6 @@ import floorHeatApi from "../Content/devices/floorheat/api.js";
 export default {
   data() {
     return {
-      deviceProperty : {
-            on_off: false
-      }
     };
   },
   props: ["device"],
@@ -191,7 +188,6 @@ export default {
     }
   },
   created() {
-    this.device.deviceProperty = this.deviceProperty
   },
   props: ["device"],
   components: {},

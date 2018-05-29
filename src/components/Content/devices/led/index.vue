@@ -5,12 +5,12 @@
             <i class="fa fa-lightbulb-o icon led-light"></i>
         </div>
         <el-row>
-            <el-switch v-model="deviceProperty.on_off" @change="switch_change">
+            <el-switch v-model="device.deviceProperty.on_off" @change="switch_change">
             </el-switch>
             
         </el-row>
         <div style="visible: hidden;">
-          <colorPicker v-model="deviceProperty.color" v-on:accept="headleChangeColor"></colorPicker>
+          <colorPicker v-model="device.deviceProperty.color" v-on:accept="headleChangeColor"></colorPicker>
         </div>
 </div>
 </template>
@@ -40,14 +40,6 @@ import $ from "jquery";
 export default {
   data() {
     return {
-      deviceProperty: {
-        on_off: false,
-        brightness: 0,
-        color: "#c0ccda"
-        // red: "c0",
-        // green: "cc",
-        // blue: "da"
-      }
     };
   },
   methods: {
@@ -55,14 +47,14 @@ export default {
       var vm = this;
       const data = {
         id: this.device.id,
-        color: this.deviceProperty.color
+        color: this.device.deviceProperty.color
       };
       this.apiPost("admin/device/setColor", data).then(res => {
         this.handelResponse(res, data => {
           var devices = this.$store.state.devices;
           for (var i = 0; i < devices.length; i++) {
             if (devices[i].id == this.device.id) {
-              devices[i].mode = this.deviceProperty.color;
+              devices[i].mode = this.device.deviceProperty.color;
             }
           }
           vm.$store.dispatch("setDevices", devices);
@@ -73,27 +65,30 @@ export default {
     //驱动颜色变化的数据为 255色的16位进制
     //UDP发送的颜色数据为  100色的16位进制
     switch_change(val) {
-      ledApi.switch_change(val, this.device, this.deviceProperty);
+      ledApi.switch_change(val, this.device);
     },
     //当颜色值发生改变时
     headleChangeColor(val) {
-      this.deviceProperty.color = val.hex;
+      this.device.deviceProperty.color = val.hex;
       this.setColor();
-      ledApi.headleChangeColor(val, this.device, this.deviceProperty);
+      ledApi.headleChangeColor(val, this.device);
     }
+  },
+   created(){
+   
   },
   mounted() {
     console.log("led");
-    ledApi.readStatus(this.device, this.deviceProperty);
+    ledApi.readStatus(this.device);
     $(".vc-target").hide();
     $(".led-light").click(function() {
       $(".vc-target").trigger("click");
     });
     $(".vc-container").css("z-index", 999);
-    this.deviceProperty.color = this.device.mode
+    this.device.deviceProperty.color = this.device.mode
       ? this.device.mode
-      : this.deviceProperty.color;
-    $(".led-light").css("color", this.deviceProperty.color);
+      : this.device.deviceProperty.color;
+    $(".led-light").css("color", this.device.deviceProperty.color);
   },
   destroyed(){
     ledApi.closeSocket();
@@ -101,7 +96,6 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
-        device.deviceProperty = this.deviceProperty
       return device;
     }
   },

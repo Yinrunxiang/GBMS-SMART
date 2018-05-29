@@ -40,7 +40,8 @@ class Device extends ApiCommon
        if (!$data) {
            return resultArray(['error' => $deviceModel->getError()]);
        }
-       return resultArray(['data' => 'Add success']);
+       $data['result'] = 'Add success';
+       return resultArray(['data' => $data]);
    }
 
     public function update()
@@ -51,21 +52,11 @@ class Device extends ApiCommon
         if (!$data) {
             return resultArray(['error' => $deviceModel->getError()]);
         } 
-        return resultArray(['data' => 'Update success']);
+        $data['result'] = 'Update success';
+        return resultArray(['data' => $data]);
     }
 
     public function delete()
-    {
-        $deviceModel = model('Device');
-        $param = $this->param;
-        $data = $deviceModel->delDataById($param);
-        if (!$data) {
-            return resultArray(['error' => $deviceModel->getError()]);
-        } 
-        return resultArray(['data' => 'Delete success']);
-    }
-
-    public function deletes()
     {
         $deviceModel = model('Device');
         $param = $this->param;

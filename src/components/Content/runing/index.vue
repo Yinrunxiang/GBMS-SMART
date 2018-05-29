@@ -53,7 +53,7 @@ export default {
     runList() {
       var runList = [];
       for (var device of this.$store.state.devices) {
-        if (device.on_off == true) {
+        if (device.deviceProperty.on_off == true) {
           runList.push(device);
         }
       }

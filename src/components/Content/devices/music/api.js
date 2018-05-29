@@ -107,7 +107,7 @@ const musicApi = {
     return data
   },
   play(device) {
-    var data = this.play(device)
+    var data = this.get_play(device)
     api.sendUdp(device, data)
   },
   get_pause(device) {
@@ -151,7 +151,7 @@ const musicApi = {
     return data
   },
   selectSong(device,  song) {
-    var data = get_selectSong(device,  song)
+    var data = this.get_selectSong(device,  song)
     api.sendUdp(device, data)
   },
   closeSocket() {

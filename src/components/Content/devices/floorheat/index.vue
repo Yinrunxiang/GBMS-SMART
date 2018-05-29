@@ -5,48 +5,48 @@
                 <i class="fa fa-thermometer icon"></i>
         </div>
         <div >
-            <el-switch class="m-t-20" v-model="deviceProperty.on_off" @change="switch_change">
+            <el-switch class="m-t-20" v-model="device.deviceProperty.on_off" @change="switch_change">
             </el-switch>
-            <div v-show="deviceProperty.on_off" class="m-t-20">
+            <div v-show="device.deviceProperty.on_off" class="m-t-20">
                 <el-row>
                   <div class="m-t-20">
                     <div class="i-b temp-show" >
                       <i class="fa fa-home temp-show-icon"></i>
                       <div  class="i-b  p-t-5" >
-                        <div>{{deviceProperty.insideTemperature}}℃</div>
-                        <div>{{deviceProperty.insideTemperature}}F</div>
+                        <div>{{device.deviceProperty.insideTemperature}}℃</div>
+                        <div>{{device.deviceProperty.insideTemperature}}F</div>
                       </div>
                     </div>
                     <div class="i-b temp-show" >
                       <div  class="i-b  p-t-5" >
-                        <div>{{deviceProperty.outsideTemperature}}℃</div>
-                        <div>{{deviceProperty.outsideTemperature}}F</div>
+                        <div>{{device.deviceProperty.outsideTemperature}}℃</div>
+                        <div>{{device.deviceProperty.outsideTemperature}}F</div>
                       </div>
                       <i class="fa fa-tree temp-show-icon"></i>
                     </div>
                   </div>
                   <div class="m-t-20">
-                    <div v-show="deviceProperty.mode == 'manual'" class="i-b now-temp-show fl btn-group" style="margin-left:26px" @click="addTemperatureButtonClick()"><i class="fa fa-caret-up now-temp-show-icon"></i></div>
+                    <div v-show="device.deviceProperty.mode == 'manual'" class="i-b now-temp-show fl btn-group" style="margin-left:26px" @click="addTemperatureButtonClick()"><i class="fa fa-caret-up now-temp-show-icon"></i></div>
                     <div class="i-b">
                       <div>{{modeTemperature}}℃</div>
                       <div>{{modeTemperature}}F</div>
                     </div>
-                    <div v-show="deviceProperty.mode == 'manual'" class="i-b now-temp-show fr btn-group" style="margin-right:26px" @click="reduceTemperatureButtonClick()" ><i class="fa fa-caret-down now-temp-show-icon"></i></div>
+                    <div v-show="device.deviceProperty.mode == 'manual'" class="i-b now-temp-show fr btn-group" style="margin-right:26px" @click="reduceTemperatureButtonClick()" ><i class="fa fa-caret-down now-temp-show-icon"></i></div>
                   </div>
                     <div class="m-t-20">
-                        <el-button :class="{active:deviceProperty.mode == 'manual'}" size="small" class="mode-btn" style="margin:0" @click="manualButtonClick()"><i class="fa fa-hand-pointer-o"></i></el-button>
-                        <el-button :class="{active:deviceProperty.mode == 'day'}"  size="small" class="mode-btn" style="margin:0"  @click="dayButtonClick()"><i class="fa fa-sun-o"></i></el-button>
-                        <el-button :class="{active:deviceProperty.mode == 'night'}"  size="small" class="mode-btn" style="margin:0"  @click="nightButtonClick()"><i class="fa fa-moon-o"></i></el-button>
-                        <el-button :class="{active:deviceProperty.mode == 'away'}"  size="small" class="mode-btn" style="margin:0"  @click="awayButtonClick()"><i class="fa fa-sign-out"></i></el-button>
+                        <el-button :class="{active:device.deviceProperty.mode == 'manual'}" size="small" class="mode-btn" style="margin:0" @click="manualButtonClick()"><i class="fa fa-hand-pointer-o"></i></el-button>
+                        <el-button :class="{active:device.deviceProperty.mode == 'day'}"  size="small" class="mode-btn" style="margin:0"  @click="dayButtonClick()"><i class="fa fa-sun-o"></i></el-button>
+                        <el-button :class="{active:device.deviceProperty.mode == 'night'}"  size="small" class="mode-btn" style="margin:0"  @click="nightButtonClick()"><i class="fa fa-moon-o"></i></el-button>
+                        <el-button :class="{active:device.deviceProperty.mode == 'away'}"  size="small" class="mode-btn" style="margin:0"  @click="awayButtonClick()"><i class="fa fa-sign-out"></i></el-button>
                     </div>
                     <div class="m-t-20">
-                        <el-button :class="{active:deviceProperty.mode == 'alarm'}"  size="small" class="mode-btn" style="margin:0" @click="alarmButtonClick()"><i class="fa fa-clock-o"></i></el-button>
+                        <el-button :class="{active:device.deviceProperty.mode == 'alarm'}"  size="small" class="mode-btn" style="margin:0" @click="alarmButtonClick()"><i class="fa fa-clock-o"></i></el-button>
                     </div>
-                    <div class="m-t-20" v-show="deviceProperty.mode == 'alarm'">
+                    <div class="m-t-20" v-show="device.deviceProperty.mode == 'alarm'">
                       <el-time-select 
                         class="i-b"
                         style="width:120px"
-                        v-model="deviceProperty.dayTime"
+                        v-model="device.deviceProperty.dayTime"
                         @change = "timeChange"
                         :picker-options="{
                             start: '00:00',
@@ -58,13 +58,13 @@
                         <el-time-select  
                         class="i-b"
                         style="width:120px"
-                        v-model="deviceProperty.nightTime"
+                        v-model="device.deviceProperty.nightTime"
                         @change = "timeChange"
                         :picker-options="{
                             start: '00:00',
                             step: '00:01',
                             end: '18:30',
-                            minTime:deviceProperty.dayTime
+                            minTime:device.deviceProperty.dayTime
                         }"
                         placeholder="Selection time">
                         </el-time-select>
@@ -136,24 +136,6 @@ import acApi from "./api";
 export default {
   data() {
     return {
-      deviceProperty: {
-        on_off: false,
-        manualTemperature: 26,
-        dayTemperature: 26,
-        nightTemperature: 26,
-        awayTemperature: 26,
-        alarmTemperature: 26,
-        mode: "manual",
-        dayTime: "",
-        nightTime: "",
-        insideTemperature: 26,
-        outsideTemperature: 26,
-        insideSensor: {
-          targetSubnetID: "",
-          targetDeviceID: "",
-          channel: ""
-        }
-      }
     };
   },
   // props: ['device'],
@@ -191,36 +173,39 @@ export default {
       }
     },
     switch_change(val) {
-      acApi.switch_change(val, this.device, this.deviceProperty);
+      acApi.switch_change(val, this.device);
     },
     addTemperatureButtonClick() {
-      acApi.addTemperatureButtonClick(this.device, this.deviceProperty);
+      acApi.addTemperatureButtonClick(this.device);
     },
     reduceTemperatureButtonClick() {
-      acApi.reduceTemperatureButtonClick(this.device, this.deviceProperty);
+      acApi.reduceTemperatureButtonClick(this.device);
     },
     manualButtonClick() {
-      acApi.manualButtonClick(this.device, this.deviceProperty);
+      acApi.manualButtonClick(this.device);
     },
     dayButtonClick() {
-      acApi.dayButtonClick(this.device, this.deviceProperty);
+      acApi.dayButtonClick(this.device);
     },
     nightButtonClick() {
-      acApi.nightButtonClick(this.device, this.deviceProperty);
+      acApi.nightButtonClick(this.device);
     },
     awayButtonClick() {
-      acApi.awayButtonClick(this.device, this.deviceProperty);
+      acApi.awayButtonClick(this.device);
     },
     alarmButtonClick() {
-      acApi.alarmButtonClick(this.device, this.deviceProperty);
+      acApi.alarmButtonClick(this.device);
     },
     timeChange(val) {
-      acApi.timeChange(this.device, this.deviceProperty);
+      acApi.timeChange(this.device);
     }
+  },
+   created(){
+ 
   },
   mounted() {
     console.log("floorheat");
-    acApi.readStatus(this.device, this.deviceProperty);
+    acApi.readStatus(this.device);
   },
   destroyed(){
     acApi.closeSocket();
@@ -229,37 +214,37 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
-         device.deviceProperty = this.deviceProperty
+      // this.deviceProperty = device.deviceProperty;
       return device;
     },
     modeTemperature() {
       var modeTemperature = "";
-      switch (this.deviceProperty.mode) {
+      switch (this.device.deviceProperty.mode) {
         case "manual":
-          modeTemperature = this.deviceProperty.manualTemperature;
+          modeTemperature = this.device.deviceProperty.manualTemperature;
           break;
         case "day":
-          modeTemperature = this.deviceProperty.dayTemperature;
+          modeTemperature = this.device.deviceProperty.dayTemperature;
           break;
         case "night":
-          modeTemperature = this.deviceProperty.nightTemperature;
+          modeTemperature = this.device.deviceProperty.nightTemperature;
           break;
         case "away":
-          modeTemperature = this.deviceProperty.awayTemperature;
+          modeTemperature = this.device.deviceProperty.awayTemperature;
           break;
         case "alarm":
           var date = new Date(),
             hour = date.getHours(),
             minute = date.getMinutes(),
             nowTime = parseInt(hour + "" + minute);
-          var dayTime = parseInt(this.deviceProperty.dayTime.split(":").join()),
+          var dayTime = parseInt(this.device.deviceProperty.dayTime.split(":").join()),
             nightTime = parseInt(
-              this.deviceProperty.nightTime.split(":").join()
+              this.device.deviceProperty.nightTime.split(":").join()
             );
           if (nowTime >= dayTime && nowTime < nightTime) {
-            modeTemperature = this.deviceProperty.dayTemperature;
+            modeTemperature = this.device.deviceProperty.dayTemperature;
           } else {
-            modeTemperature = this.deviceProperty.nightTemperature;
+            modeTemperature = this.device.deviceProperty.nightTemperature;
           }
 
           break;

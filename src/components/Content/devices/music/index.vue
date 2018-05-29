@@ -1,12 +1,12 @@
 <template>
     <el-col :span="24">
-        <div v-loading="deviceProperty.musicLoading"  class="music" style="width:300px;height:550px;text-align: center;">
+        <div v-loading="device.deviceProperty.musicLoading"  class="music" style="width:300px;height:550px;text-align: center;">
           <div v-show="albumShow" class="album">
                 <div class="fa fa-reply album-btn-back btn-hand" @click="albumBtnClickBack"></div>
                 <el-menu class="album-list">
                     <el-menu-item-group>
                         <span slot="title">Album</span>
-                        <el-menu-item class="album-list-li" :index="album.albumNo" v-for="(album,key) in deviceProperty.albumlist" :key="key" @click="albumClick(album.albumNo)">
+                        <el-menu-item class="album-list-li" :index="album.albumNo" v-for="(album,key) in device.deviceProperty.albumlist" :key="key" @click="albumClick(album.albumNo)">
                             {{album.albumName}}</el-menu-item>
                     </el-menu-item-group>
                 </el-menu>
@@ -15,7 +15,7 @@
             <div class="fa fa-bars album-btn btn-hand" @click="albumBtnClick"></div>
             <el-dropdown @command="sourceChange" class="source_list">
                 <span class="el-dropdown-link">
-                    {{sourceList[parseInt(deviceProperty.source) -1]}}<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{sourceList[parseInt(device.deviceProperty.source) -1]}}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu  slot="dropdown">
                     <el-dropdown-item command = "01">SD Card</el-dropdown-item>
@@ -25,28 +25,28 @@
                 <i class="el-icon-refresh" @click="refresh"></i>
             </div>
             <div class="music-title">
-            <p>{{deviceProperty.music_name}}</p>
+            <p>{{device.deviceProperty.music_name}}</p>
             </div>
             <div class="music-content" :span="24">
                 <div class="music-content-top">
-                    <div v-show="!deviceProperty.on_off" class=" content-icon mid" @click="play()">
+                    <div v-show="!device.deviceProperty.on_off" class=" content-icon mid" @click="play()">
                       <i class="fa fa-play btn-hand" style="margin-left:3px;"></i>
                     </div>
-                    <div v-show="deviceProperty.on_off" class=" content-icon mid" @click="pause()">
+                    <div v-show="device.deviceProperty.on_off" class=" content-icon mid" @click="pause()">
                       <i class="fa fa-pause btn-hand"></i>
                     </div>
                     <div class="fa fa-step-backward btn-hand content-icon left" @click="pre()"></div>
                     <div class="fa fa-step-forward btn-hand content-icon right" @click="next()"></div>
                 </div>
                 <div class="music-content-bottom">
-                    <div v-show="deviceProperty.mode == 'random'" class="fa fa-random btn-hand content-icon fl" style="margin-left:16px" @click="random()"></div>
-                    <div v-show="deviceProperty.mode == 'single'" class="fa fa-exchange  btn-hand content-icon fl" style="margin-left:16px" @click="single()"></div>
-                    <div v-show="deviceProperty.mode == 'allmusic'" class="fa fa-navicon  btn-hand content-icon fl" style="margin-left:16px" @click="allmusic()"></div>
+                    <div v-show="device.deviceProperty.mode == 'random'" class="fa fa-random btn-hand content-icon fl" style="margin-left:16px" @click="random()"></div>
+                    <div v-show="device.deviceProperty.mode == 'single'" class="fa fa-exchange  btn-hand content-icon fl" style="margin-left:16px" @click="single()"></div>
+                    <div v-show="device.deviceProperty.mode == 'allmusic'" class="fa fa-navicon  btn-hand content-icon fl" style="margin-left:16px" @click="allmusic()"></div>
 
                     <el-col :span="15" class="fl" >
                         <template>
                             <div>
-                                <el-slider v-model="deviceProperty.vol" :min='0' :max='79' :step="1" @change="vol_change">
+                                <el-slider v-model="device.deviceProperty.vol" :min='0' :max='79' :step="1" @change="vol_change">
                                 </el-slider>
                             </div>
                         </template>
@@ -59,7 +59,7 @@
             </div>
             <div class="music-list">
                 <ul style="margin:0;padding:0;">
-                    <li @dblclick="selectSong(song)" :class="song.select?'select':''" v-for="(song,key) in deviceProperty.songList" :key="key">
+                    <li @dblclick="selectSong(song)" :class="song.select?'select':''" v-for="(song,key) in device.deviceProperty.songList" :key="key">
                         <div class="song">
                             <!-- <div class="song-num">{{song.songNo}}</div> -->
                             <div class="song-name">{{song.songName}}</div>
@@ -271,59 +271,37 @@ import musicApi from "./api";
 export default {
   data() {
     return {
-      deviceProperty: {
-        vol: 20,
-        mode: "random",
-        on_off: false,
-        music_name: "Waitting",
-        music_autor: "Waitting",
-        time_now: 0,
-        time_over: 0,
-        albumno: 0,
-        albumlist: [],
-        songno: 0,
-        songList: [
-          {
-            songNo: 1,
-            songName: "Waitting",
-            select: true
-          }
-        ],
-        songListAll: [],
-        musicLoading: true,
-        source: "01"
-      },
       albumShow: false,
       sourceList: ["SD Card", "FTP"]
     };
   },
   methods: {
     refresh() {
-      Lockr.rm("music_" + this.device.id + "_" + this.deviceProperty.source);
-      this.deviceProperty.albumlist = [];
-      this.deviceProperty.songList = [];
-      this.deviceProperty.songListAll = [];
-      this.deviceProperty.musicLoading = true;
+      Lockr.rm("music_" + this.device.id + "_" + this.device.deviceProperty.source);
+      this.device.deviceProperty.albumlist = [];
+      this.device.deviceProperty.songList = [];
+      this.device.deviceProperty.songListAll = [];
+      this.device.deviceProperty.musicLoading = true;
       console.log("music_test");
-      musicApi.readSong(this.device, this.deviceProperty);
+      musicApi.readSong(this.device);
     },
     sourceChange(command) {
-      this.deviceProperty.source = command;
-      musicApi.source_change(this.device, this.deviceProperty);
-      this.deviceProperty.albumlist = [];
-      this.deviceProperty.songList = [];
-      this.deviceProperty.songListAll = [];
-      this.deviceProperty.musicLoading = true;
+      this.device.deviceProperty.source = command;
+      musicApi.source_change(this.device);
+      this.device.deviceProperty.albumlist = [];
+      this.device.deviceProperty.songList = [];
+      this.device.deviceProperty.songListAll = [];
+      this.device.deviceProperty.musicLoading = true;
       var music = Lockr.get(
-        "music_" + this.device.id + "_" + this.deviceProperty.source
+        "music_" + this.device.id + "_" + this.device.deviceProperty.source
       );
       if (music) {
-        this.deviceProperty.albumlist = music.albumlist;
-        this.deviceProperty.songList = music.songList;
-        this.deviceProperty.songListAll = music.songList;
-        this.deviceProperty.musicLoading = false;
+        this.device.deviceProperty.albumlist = music.albumlist;
+        this.device.deviceProperty.songList = music.songList;
+        this.device.deviceProperty.songListAll = music.songList;
+        this.device.deviceProperty.musicLoading = false;
       } else {
-        musicApi.readSong(this.device, this.deviceProperty);
+        musicApi.readSong(this.device);
       }
     },
     albumBtnClick() {
@@ -331,10 +309,10 @@ export default {
     },
     albumClick(albumNo) {
       this.albumShow = false;
-      this.deviceProperty.songList = [];
-      for (var song of this.deviceProperty.songListAll) {
+      this.device.deviceProperty.songList = [];
+      for (var song of this.device.deviceProperty.songListAll) {
         if (song.albumNo == albumNo) {
-          this.deviceProperty.songList.push(song);
+          this.device.deviceProperty.songList.push(song);
         }
       }
     },
@@ -342,94 +320,94 @@ export default {
       this.albumShow = false;
     },
     time_change(val) {
-      musicApi.time_change(val, this.device, this.deviceProperty);
+      musicApi.time_change(val, this.device);
     },
     vol_change(val) {
-      musicApi.vol_change(val, this.device, this.deviceProperty);
+      musicApi.vol_change(val, this.device);
     },
     pre() {
-      musicApi.pre(this.device, this.deviceProperty);
-      var len = this.deviceProperty.songList.length;
-      for (var key in this.deviceProperty.songList) {
-        if (this.deviceProperty.songList[key].select) {
-          this.deviceProperty.songList[key].select = false;
+      musicApi.pre(this.device);
+      var len = this.device.deviceProperty.songList.length;
+      for (var key in this.device.deviceProperty.songList) {
+        if (this.device.deviceProperty.songList[key].select) {
+          this.device.deviceProperty.songList[key].select = false;
           if (key == 0) {
-            this.deviceProperty.music_name = this.deviceProperty.songList[
+            this.device.deviceProperty.music_name = this.device.deviceProperty.songList[
               len - 1
             ].songName;
-            this.deviceProperty.songList[len - 1].select = true;
+            this.device.deviceProperty.songList[len - 1].select = true;
             return;
           } else {
-            this.deviceProperty.music_name = this.deviceProperty.songList[
+            this.device.deviceProperty.music_name = this.device.deviceProperty.songList[
               key - 1
             ].songName;
-            this.deviceProperty.songList[key - 1].select = true;
+            this.device.deviceProperty.songList[key - 1].select = true;
             return;
           }
         }
       }
     },
     next() {
-      musicApi.next(this.device, this.deviceProperty);
-      var len = this.deviceProperty.songList.length;
-      for (var key in this.deviceProperty.songList) {
+      musicApi.next(this.device);
+      var len = this.device.deviceProperty.songList.length;
+      for (var key in this.device.deviceProperty.songList) {
         key = parseInt(key);
-        if (this.deviceProperty.songList[key].select) {
-          this.deviceProperty.songList[key].select = false;
+        if (this.device.deviceProperty.songList[key].select) {
+          this.device.deviceProperty.songList[key].select = false;
           if (key == len - 1) {
-            this.deviceProperty.music_name = this.deviceProperty.songList[0].songName;
-            this.deviceProperty.songList[0].select = true;
+            this.device.deviceProperty.music_name = this.device.deviceProperty.songList[0].songName;
+            this.device.deviceProperty.songList[0].select = true;
             return;
           } else {
-            this.deviceProperty.music_name = this.deviceProperty.songList[
+            this.device.deviceProperty.music_name = this.device.deviceProperty.songList[
               key + 1
             ].songName;
-            this.deviceProperty.songList[key + 1].select = true;
+            this.device.deviceProperty.songList[key + 1].select = true;
             return;
           }
         }
       }
     },
     play() {
-      this.deviceProperty.on_off = true;
-      musicApi.play(this.device, this.deviceProperty);
+      this.device.deviceProperty.on_off = true;
+      musicApi.play(this.device);
     },
     pause() {
-      this.deviceProperty.on_off = false;
-      musicApi.pause(this.device, this.deviceProperty);
+      this.device.deviceProperty.on_off = false;
+      musicApi.pause(this.device);
     },
     random() {
-      this.deviceProperty.mode = "single";
-      musicApi.random(this.device, this.deviceProperty);
+      this.device.deviceProperty.mode = "single";
+      musicApi.random(this.device);
     },
     single() {
-      this.deviceProperty.mode = "allmusic";
-      musicApi.single(this.device, this.deviceProperty);
+      this.device.deviceProperty.mode = "allmusic";
+      musicApi.single(this.device);
     },
     allmusic() {
-      this.deviceProperty.mode = "random";
-      musicApi.allmusic(this.device, this.deviceProperty);
+      this.device.deviceProperty.mode = "random";
+      musicApi.allmusic(this.device);
     },
     selectSong(song) {
-      this.deviceProperty.music_name = song.songName;
-      for (var obj of this.deviceProperty.songList) {
+      this.device.deviceProperty.music_name = song.songName;
+      for (var obj of this.device.deviceProperty.songList) {
         obj.select = false;
       }
       song.select = true;
-      this.deviceProperty.on_off = true;
-      musicApi.selectSong(this.device, this.deviceProperty, song);
+      this.device.deviceProperty.on_off = true;
+      musicApi.selectSong(this.device, song);
     },
     initMusic(device) {
       var music = Lockr.get(
-        "music_" + device.id + "_" + this.deviceProperty.source
+        "music_" + device.id + "_" + this.device.deviceProperty.source
       );
       if (music) {
-        this.deviceProperty.albumlist = music.albumlist;
-        this.deviceProperty.songList = music.songList;
-        this.deviceProperty.songListAll = music.songList;
-        this.deviceProperty.musicLoading = false;
+        this.device.deviceProperty.albumlist = music.albumlist;
+        this.device.deviceProperty.songList = music.songList;
+        this.device.deviceProperty.songListAll = music.songList;
+        this.device.deviceProperty.musicLoading = false;
       } else {
-        musicApi.readSong(device, this.deviceProperty);
+        musicApi.readSong(device);
       }
     }
   },
@@ -445,7 +423,6 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
-      device.deviceProperty = this.deviceProperty
       return device;
     }
   }

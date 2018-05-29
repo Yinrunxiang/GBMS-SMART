@@ -4,11 +4,11 @@
         <div>
             <i class="fa fa-lightbulb-o icon"></i>
         </div>
-        <el-switch v-model="deviceProperty.on_off" @change="switch_change">
+        <el-switch v-model="device.deviceProperty.on_off" @change="switch_change">
         </el-switch>
         <template>
             <div class="block">
-                <el-slider v-model="deviceProperty.brightness" :min='0' :max='100' :step="1" @change="slider_change">
+                <el-slider v-model="device.deviceProperty.brightness" :min='0' :max='100' :step="1" @change="slider_change">
                 </el-slider>
             </div>
         </template>
@@ -35,36 +35,34 @@ import lightApi from "./api";
 export default {
   data() {
     return {
-      deviceProperty: {
-        brightness: 0,
-        on_off: false
-      }
     };
   },
   // props: ['device'],
   methods: {
     switch_change(val) {
-      lightApi.switch_change(val, this.device, this.deviceProperty);
+      lightApi.switch_change(val, this.device);
     },
     slider_change(val) {
-      lightApi.slider_change(val, this.device, this.deviceProperty);
+      lightApi.slider_change(val, this.device);
     }
+  },
+  created(){
+   
   },
   mounted() {
     console.log("light vue");
-    lightApi.readStatus(this.device, this.deviceProperty);
+    lightApi.readStatus(this.device);
   },
-  destroyed(){
+  destroyed() {
     lightApi.closeSocket();
   },
   components: {},
   computed: {
     device() {
-        
       var device = this.$store.state.device;
-         device.deviceProperty = this.deviceProperty
+      
       return device;
-    },
+    }
     // watch: {
     //   device: {
     //     handler: function(val, oldVal) {

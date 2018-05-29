@@ -51,7 +51,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item v-show="notHotel" label="Floor">
-                <el-select v-model="form.floor" filterable placeholder="Select Floor" class="h-40 w-200">
+                <el-select v-model="form.floor" filterable placeholder="Select Floor" @change = "floorChange" class="h-40 w-200">
                     <el-option v-for="(item,key)  in floor" :key="key" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -117,7 +117,7 @@ export default {
       //     endtime: '',
 
       // },
-      // form: {},
+      form: {},
       deviceTypeOptions: [
         { label: "AC", value: "ac" },
         { label: "Light", value: "light" },
@@ -145,12 +145,17 @@ export default {
       }
       this.$emit("changeUpdate", false);
     },
-    addressChange(data){
-      for(var address of this.$store.state.address){
-        if(this.form.address == address.id){
-          this.form.country = address.country
+    addressChange(data) {
+      this.form.floor = "";
+      this.form.room = "";
+      for (var address of this.$store.state.address) {
+        if (this.form.address == address.id) {
+          this.form.country = address.country;
         }
       }
+    },
+    floorChange() {
+      this.form.room = "";
     },
     commit(form) {
       // this.form.subnetid = _g.toHex(this.form.subnetid)
@@ -166,19 +171,13 @@ export default {
       }
       this.isLoading = !this.isLoading;
       var vm = this;
-      const data =  this.form;
+      const data = this.form;
       if (this.form.id) {
-        this.apiPut("admin/device/",this.form.id, data).then(res => {
+        this.apiPut("admin/device/", this.form.id, data).then(res => {
           this.isLoading = !this.isLoading;
           this.handelResponse(res, data => {
-            var devices = this.$store.state.devices;
-            for (var i = 0; i < devices.length; i++) {
-              if (devices[i].id == this.form.id) {
-                devices[i] = this.form;
-              }
-            }
-            vm.$store.dispatch("setDevices", devices);
-            _g.toastMsg("success", data);
+            vm.$store.dispatch("setDevices", data.device);
+            _g.toastMsg("success", data.result);
             vm.goback();
           });
         });
@@ -186,49 +185,9 @@ export default {
         this.apiPost("admin/device", data).then(res => {
           this.isLoading = !this.isLoading;
           this.handelResponse(res, data => {
-            var devices = vm.$store.state.devices;
-            var addressList = vm.$store.state.address;
-            for (var address of addressList) {
-              if (vm.form.address == address.address) {
-                vm.form.country = address.country;
-                vm.form.ip = address.ip;
-                vm.form.port = address.port;
-                vm.form.mac = address.mac;
-              }
-            }
-            // console.log(res[2]);
-            vm.form.id = res[2];
-            this.$set(
-              vm.form,
-              "operation_1",
-              vm.form.operation_1 ? vm.form.operation_1 : ""
-            );
-            this.$set(
-              vm.form,
-              "operation_2",
-              vm.form.operation_2 ? vm.form.operation_2 : ""
-            );
-            this.$set(
-              vm.form,
-              "operation_3",
-              vm.form.operation_3 ? vm.form.operation_3 : ""
-            );
-            this.$set(
-              vm.form,
-              "operation_4",
-              vm.form.operation_4 ? vm.form.operation_4 : ""
-            );
-            this.$set(
-              vm.form,
-              "operation_5",
-              vm.form.operation_5 ? vm.form.operation_5 : ""
-            );
-            this.$set(vm.form, "mode", vm.form.mode ? vm.form.mode : "");
-            this.$set(vm.form, "grade", vm.form.grade ? vm.form.grade : "");
-            devices.push(vm.form);
-            this.$emit("newDevice", vm.form);
-            vm.$store.dispatch("setDevices", devices);
-            _g.toastMsg("success", data);
+            // this.$emit("newDevice", vm.form);
+            vm.$store.dispatch("setDevices", data.device);
+            _g.toastMsg("success", data.result);
             vm.goback();
           });
         });
@@ -248,34 +207,18 @@ export default {
   props: ["device", "notHotel"],
   created() {
     console.log("plan update");
-    // this.form.subnetid = parseInt('0x' + this.form.subnetid)
-    // this.form.deviceid = parseInt('0x' + this.form.deviceid)
-    // this.form.channel = parseInt('0x' + this.form.channel)
-    // this.form.channel_spare = parseInt('0x' + this.form.channel_spare)
+    this.form = Object.assign({}, this.device);
+    this.form.subnetid = parseInt('0x' + this.form.subnetid)
+    this.form.deviceid = parseInt('0x' + this.form.deviceid)
+    this.form.channel = parseInt('0x' + this.form.channel)
+    if (this.form.devicetype == "curtain") {
+      this.form.channel_spare = parseInt('0x' + this.form.channel_spare)
+    }
   },
   mounted() {},
   components: {},
 
   computed: {
-    form() {
-      // var device = this.$store.state.device
-      // console.log(this.device);
-      var device = this.device;
-      // var device = Object.assign({}, this.device)
-      // device.subnetid = parseInt('0x' + device.subnetid)
-      // device.deviceid = parseInt('0x' + device.deviceid)
-      // device.channel = parseInt('0x' + device.channel)
-      // device.channel_spare = parseInt('0x' + device.channel_spare)
-      return device;
-
-      // var device = Object.assign({}, this.device)
-
-      // device.subnetid = parseInt('0x' + device.subnetid)
-      // device.deviceid = parseInt('0x' + device.deviceid)
-      // device.channel = parseInt('0x' + device.channel)
-      // device.channel_spare = parseInt('0x' + device.channel_spare)
-      // return device
-    },
     maxid() {
       var maxid = this.getBreedList(this.$store.state.maxid);
       return maxid;
@@ -322,7 +265,7 @@ export default {
           // }
         }
       }
-      console.log(floor)
+      console.log(floor);
       return floor;
     },
     room() {

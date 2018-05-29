@@ -6,58 +6,58 @@
         </div>
         <div >
             <el-row class="m-t-30" style="font-size:30px;text-align:center">
-                    <i class="fa" :class="modestyle(deviceProperty.mode)"></i>
-                    <span> {{deviceProperty.tmp}} ℃</span>
+                    <i class="fa" :class="modestyle(device.deviceProperty.mode)"></i>
+                    <span> {{device.deviceProperty.tmp}} ℃</span>
                 </el-row>
-            <el-switch class="m-t-20" v-model="deviceProperty.on_off" @change="switch_change">
+            <el-switch class="m-t-20" v-model="device.deviceProperty.on_off" @change="switch_change">
             </el-switch>
-            <div v-if="deviceProperty.on_off" class="m-t-20">
-                <el-row v-if="deviceProperty.mode=='auto'">
+            <div v-if="device.deviceProperty.on_off" class="m-t-20">
+                <el-row v-if="device.deviceProperty.mode=='auto'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="deviceProperty.autotmp" :min='deviceProperty.auto_strat' :max='deviceProperty.auto_end' :step="1" @change="autotmp_change">
+                                <el-slider v-model="device.deviceProperty.autoTmp" :min='device.deviceProperty.auto_strat' :max='device.deviceProperty.auto_end' :step="1" @change="autoTmp_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{deviceProperty.autotmp}} ℃</span>
+                        <span class="fl" style="line-height:36px">{{device.deviceProperty.autoTmp}} ℃</span>
                     </el-col>
                 </el-row>
-                <el-row v-if="deviceProperty.mode=='cool' || deviceProperty.mode=='fan'">
+                <el-row v-if="device.deviceProperty.mode=='cool' || device.deviceProperty.mode=='fan'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="deviceProperty.cooltmp" :min='deviceProperty.cool_strat' :max='deviceProperty.cool_end' :step="1" @change="cooltmp_change">
+                                <el-slider v-model="device.deviceProperty.coolTmp" :min='device.deviceProperty.cool_strat' :max='device.deviceProperty.cool_end' :step="1" @change="coolTmp_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{deviceProperty.cooltmp}} ℃</span>
+                        <span class="fl" style="line-height:36px">{{device.deviceProperty.coolTmp}} ℃</span>
                     </el-col>
                 </el-row>
-                <el-row v-if="deviceProperty.mode=='heat'">
+                <el-row v-if="device.deviceProperty.mode=='heat'">
                     <el-col :span="4">
                         <span class="fr" style="line-height:36px">Temperature</span>
                     </el-col>
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="deviceProperty.heattmp" :min='deviceProperty.heat_strat' :max='deviceProperty.heat_end' :step="1" @change="heattmp_change">
+                                <el-slider v-model="device.deviceProperty.heatTmp" :min='device.deviceProperty.heat_strat' :max='device.deviceProperty.heat_end' :step="1" @change="heatTmp_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{deviceProperty.heattmp}} ℃</span>
+                        <span class="fl" style="line-height:36px">{{device.deviceProperty.heatTmp}} ℃</span>
                     </el-col>
                 </el-row>
                 <el-row class="m-t-20">
@@ -67,13 +67,13 @@
                     <el-col :span="14" :offset="1">
                         <template>
                             <div>
-                                <el-slider v-model="deviceProperty.wind" :min='0' :max='3' :step="1" :format-tooltip="formatTooltip" @change="wind_change">
+                                <el-slider v-model="device.deviceProperty.grade" :min='0' :max='3' :step="1" :format-tooltip="formatTooltip" @change="wind_change">
                                 </el-slider>
                             </div>
                         </template>
                     </el-col>
                     <el-col :span="4" :offset="1">
-                        <span class="fl" style="line-height:36px">{{formatTooltip(deviceProperty.wind)}}</span>
+                        <span class="fl" style="line-height:36px">{{formatTooltip(device.deviceProperty.grade)}}</span>
                     </el-col>
                 </el-row>
                 <el-row>
@@ -109,21 +109,6 @@ import acApi from "./api";
 export default {
   data() {
     return {
-      deviceProperty: {
-        on_off: false,
-        cooltmp: 26,
-        autotmp: 0,
-        heattmp: 0,
-        tmp: 26,
-        wind: 2,
-        mode: "cool",
-        cool_strat:0,
-        cool_end:36,
-        heat_strat:0,
-        heat_end:36,
-        auto_strat:0,
-        auto_end:36,
-      }
     };
   },
   // props: ['device'],
@@ -161,48 +146,50 @@ export default {
       }
     },
     switch_change(val) {
-      acApi.switch_change(val, this.device, this.deviceProperty);
+      acApi.switch_change(val, this.device);
     },
-    autotmp_change(val) {
-      acApi.autotmp_change(val, this.device, this.deviceProperty);
+    autoTmp_change(val) {
+      acApi.autoTmp_change(val, this.device);
     },
-    cooltmp_change(val) {
-      acApi.cooltmp_change(val, this.device, this.deviceProperty);
+    coolTmp_change(val) {
+      acApi.coolTmp_change(val, this.device);
     },
-    heattmp_change(val) {
-      acApi.heattmp_change(val, this.device, this.deviceProperty);
+    heatTmp_change(val) {
+      acApi.heatTmp_change(val, this.device);
     },
     wind_change(val) {
-      acApi.wind_change(val, this.device, this.deviceProperty);
+      acApi.wind_change(val, this.device);
     },
 
     autobtn() {
-      acApi.autobtn(this.device, this.deviceProperty);
+      acApi.autobtn(this.device);
     },
     fanbtn() {
-      acApi.fanbtn(this.device, this.deviceProperty);
+      acApi.fanbtn(this.device);
     },
     coolbtn() {
-      acApi.coolbtn(this.device, this.deviceProperty);
+      acApi.coolbtn(this.device);
     },
     heatbtn() {
-      acApi.heatbtn(this.device, this.deviceProperty);
+      acApi.heatbtn(this.device);
     }
+  },
+  created() {
+    
   },
   mounted() {
     console.log("ac");
 
-    acApi.readStatus(this.device, this.deviceProperty);
-    acApi.readTmpRange(this.device, this.deviceProperty)
+    acApi.readStatus(this.device);
+    acApi.readTmpRange(this.device);
   },
-  destroyed(){
+  destroyed() {
     acApi.closeSocket();
   },
   components: {},
   computed: {
     device() {
       var device = this.$store.state.device;
-        device.deviceProperty = this.deviceProperty
       return device;
     }
   }

@@ -7,14 +7,6 @@
             <div class="fa fa-play-circle-o curtain-icon"  @click="switch_change(true)"></div>
             <div  class="fa fa-pause-circle-o curtain-icon" style="margin-left:16px" @click="stop()"></div>
             <div  class="fa fa-stop-circle-o curtain-icon" style="margin-left:16px" @click="switch_change(false)"></div>
-            <!-- <el-switch v-model="deviceProperty.on_off" @change="switch_change">
-            </el-switch>
-            <template>
-                <div class="block">
-                    <el-slider v-show="false" v-model="deviceProperty.brightness" :min='0' :max='100' :step="1" @change="slider_change">
-                    </el-slider>
-                </div>
-            </template> -->
    </div>
 </template>
 
@@ -53,10 +45,6 @@ import curtainApi from "./api";
 export default {
   data() {
     return {
-      deviceProperty: {
-        brightness: 0,
-        on_off: false
-      },
       status: true
     };
   },
@@ -64,15 +52,17 @@ export default {
   methods: {
     switch_change(val) {
       this.status = val;
-      curtainApi.switch_change(val, this.device, this.deviceProperty);
+      curtainApi.switch_change(val, this.device);
     },
     stop() {
-      curtainApi.stop(this.status, this.device, this.deviceProperty);
+      curtainApi.stop(this.status, this.device);
     }
+  },
+  created() {
   },
   mounted() {
     console.log("curtain vue");
-    curtainApi.readStatus(this.device, this.deviceProperty);
+    curtainApi.readStatus(this.device);
   },
   destroyed() {
     curtainApi.closeSocket();
@@ -81,7 +71,6 @@ export default {
   computed: {
     device() {
       var device = this.$store.state.device;
-      device.deviceProperty = this.deviceProperty;
       return device;
     }
   }

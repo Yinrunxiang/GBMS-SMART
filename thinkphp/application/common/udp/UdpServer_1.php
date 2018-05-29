@@ -29,6 +29,12 @@ class UdpServer_1
         }
         return $num;
     }
+    function toTmp($tmp)
+    {
+        $tmp = hexdec($tmp);
+        $tmp = $tmp >= 128 ? -256 + $tmp : $tmp;
+        return $tmp;
+    }
     function strToarr($arr, $str)
     {
         $len = count($str) / 2;
@@ -80,7 +86,7 @@ class UdpServer_1
     {
         $switch = $color != "00" ? true : false;
         $brightness = hexdec('0x' + $color);
-        $deviceProperty = ['on_off' => $switch, 'brightness' =>$brightness];
+        $deviceProperty = ['on_off' => $switch, 'brightness' => $brightness];
         $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
         $sender_io->emit('udp', $udp);
         if ($color != "00") {
@@ -213,7 +219,7 @@ class UdpServer_1
                             if (strlen($channel) < 2) {
                                 $channel = '0' . $channel;
                             }
-                            $deviceProperty = ['on_off' => $switch, 'brightness' =>hexdec($brightness)];
+                            $deviceProperty = ['on_off' => $switch, 'brightness' => hexdec($brightness)];
                             $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
                             $sender_io->emit('udp', $udp);
                                 // echo  $channel;
@@ -227,6 +233,14 @@ class UdpServer_1
                         }
                     }
 
+                    break;
+                case "1901":
+                    $cool_strat = $this->toTmp(substr($msg, 50, 2));
+                    $cool_end = $this->toTmp(substr($msg, 52, 2));
+                    $heat_strat = $this->toTmp(substr($msg, 54, 2));
+                    $heat_end = $this->toTmp(substr($msg, 56, 2));
+                    $auto_strat = $this->toTmp(substr($msg, 58, 2));
+                    $auto_end = $this->toTmp(substr($msg, 60, 2));
                     break;
                 case "e3d9":
                     $type = substr($msg, 50, 2);
@@ -249,16 +263,16 @@ class UdpServer_1
                             $key = $type;
                             switch ($value) {
                                 case '00':
-                                    $value = "auto";
+                                    $value = 0;
                                     break;
                                 case '01':
-                                    $value = "hign";
+                                    $value = 1;
                                     break;
                                 case '02':
-                                    $value = "medial";
+                                    $value = 2;
                                     break;
                                 case '03':
-                                    $value = "low";
+                                    $value = 3;
                                     break;
                             }
                             break;
@@ -282,18 +296,18 @@ class UdpServer_1
                             break;
                         case "04":
                             $type = 'operation_1';
-                            $key = 'cooltmp';
-                            $value = hexdec($value);
+                            $key = 'coolTmp';
+                            $value = $this->toTmp($value);
                             break;
                         case "07":
                             $type = 'operation_1';
-                            $key = 'heattmp';
-                            $value = hexdec($value);
+                            $key = 'heatTmp';
+                            $value = $this->toTmp($value);
                             break;
                         case "08":
                             $type = 'operation_1';
-                            $key = 'autotmp';
-                            $value = hexdec($value);
+                            $key = 'autoTmp';
+                            $value = $this->toTmp($value);
                             break;
                             //地热模块
                         case "14":
@@ -334,7 +348,7 @@ class UdpServer_1
                             break;
                     }
                     $deviceProperty = [$key => $value];
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel,'deviceProperty' => $deviceProperty];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     if ($type == 'on_off') {
                         if ($value) {
@@ -372,23 +386,23 @@ class UdpServer_1
                     $grade = hexdec($grade);
                     switch ($grade) {
                         case 0:
-                            $grade = "wind_auto";
+                            $grade = 0;
                             break;
                         case 1:
-                            $grade = "high";
+                            $grade = 1;
                             break;
                         case 2:
-                            $grade = "medial";
+                            $grade = 2;
                             break;
                         case 3:
-                            $grade = "low";
+                            $grade = 3;
                             break;
                     }
-                    $coolTmp = hexdec(substr($msg, 52, 2));
-                    $heatTmp = hexdec(substr($msg, 60, 2));
-                    $autoTmp = hexdec(substr($msg, 64, 2));
+                    $coolTmp = $this->toTmp(substr($msg, 52, 2));
+                    $heatTmp = $this->toTmp(substr($msg, 60, 2));
+                    $autoTmp = $this->toTmp(substr($msg, 64, 2));
 
-                    $deviceProperty = [ 'on_off' => $switch, 'mode' => $mode, 'grade' => $grade, 'coolTmp' => $coolTmp, 'heatTmp' => $heatTmp, 'autoTmp' => $autoTmp];
+                    $deviceProperty = ['on_off' => $switch, 'mode' => $mode, 'grade' => $grade, 'coolTmp' => $coolTmp, 'heatTmp' => $heatTmp, 'autoTmp' => $autoTmp];
 
                     $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
@@ -407,8 +421,8 @@ class UdpServer_1
                     $dayTemperature = $this->getadditional($msg, 3);
                     $nightTemperature = $this->getadditional($msg, 5);
                     $awayTemperature = $this->getadditional($msg, 7);
-                    
-                    $deviceProperty = [ 'manualTemperature' => $manualTemperature, 'dayTemperature' => $dayTemperature, 'nightTemperature' => $nightTemperature, 'awayTemperature' => $awayTemperature];
+
+                    $deviceProperty = ['manualTemperature' => $manualTemperature, 'dayTemperature' => $dayTemperature, 'nightTemperature' => $nightTemperature, 'awayTemperature' => $awayTemperature];
 
                     $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
@@ -477,8 +491,8 @@ class UdpServer_1
                                     break;
                             }
                     }
-                    $deviceProperty = [ $key => $value];
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel,'deviceProperty' => $deviceProperty ];
+                    $deviceProperty = [$key => $value];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     break;
                 case "e3e8":
