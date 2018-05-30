@@ -626,6 +626,11 @@ export default {
               case "curtain":
                 break;
               case "floorheat":
+                if (device.channel == udp.channel) {
+                  for (var key in udp.deviceProperty) {
+                    device.deviceProperty[key] = udp.deviceProperty[key];
+                  }
+                }
                 break;
               case "security":
                 break;
@@ -657,14 +662,14 @@ export default {
           case "light":
             device.deviceProperty = {
               brightness: 0,
-             on_off: device.on_off,
+              on_off: device.on_off
             };
             break;
           case "led":
             device.deviceProperty = {
-             on_off: device.on_off,
+              on_off: device.on_off,
               brightness: 0,
-              color: "#c0ccda"
+              color: device.mode
               // red: "c0",
               // green: "cc",
               // blue: "da"
@@ -698,12 +703,12 @@ export default {
             break;
           case "security":
             device.deviceProperty = {
-              on_off: device.on_off,
+              on_off: device.on_off
             };
             break;
           case "ir":
             device.deviceProperty = {
-              on_off: device.on_off,
+              on_off: device.on_off
             };
             break;
           case "music":
@@ -732,7 +737,7 @@ export default {
             break;
         }
       }
-      this.createSocket(devices)
+      this.createSocket(devices);
     }
   },
   created() {

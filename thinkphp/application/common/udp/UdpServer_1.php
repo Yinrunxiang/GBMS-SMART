@@ -56,7 +56,7 @@ class UdpServer_1
         $color = $this->toHex(round(hexdec("0x" + $str) / 100 * 255));
         return $color;
     }
-    function getadditional($msg, $num, $len)
+    function getadditional($msg = "", $num = 0, $len = 0)
     {
         $num = $num ? $num : 0;
         $len = $len ? $len : 0;
@@ -260,6 +260,7 @@ class UdpServer_1
                     $type = substr($msg, 50, 2);
                     $value = substr($msg, 52, 2);
                     $channel = substr($msg, 54, 2);
+                    $key = "";
                     switch ($type) {
                         //空调模块
                         case "03":
@@ -361,7 +362,7 @@ class UdpServer_1
                             $value = hexdec($value);
                             break;
                     }
-                    if ($key) {
+                    if ($key != "") {
                         $deviceProperty = [$key => $value];
                         $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
                         $sender_io->emit('udp', $udp);
@@ -475,6 +476,7 @@ class UdpServer_1
                     $channel = $this->getadditional($msg, 2);
                     $operatorKind = $this->getadditional($msg, 0);
                     $operatorResult = $this->getadditional($msg, 1);
+                    $key = "";
                     switch ($operatorKind) {
                         case "14":
                             $type = 'on_off';
@@ -507,9 +509,11 @@ class UdpServer_1
                                     break;
                             }
                     }
-                    $deviceProperty = [$key => $value];
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
-                    $sender_io->emit('udp', $udp);
+                    if ($key != "") {
+                        $deviceProperty = [$key => $value];
+                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
+                        $sender_io->emit('udp', $udp);
+                    }
                     break;
                 case "e3e8":
                     break;

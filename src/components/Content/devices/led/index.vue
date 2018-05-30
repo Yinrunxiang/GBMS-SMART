@@ -39,8 +39,7 @@ import $ from "jquery";
 // import colorPicker from '../../Common/colorPicker'
 export default {
   data() {
-    return {
-    };
+    return {};
   },
   methods: {
     setColor() {
@@ -74,9 +73,7 @@ export default {
       ledApi.headleChangeColor(val, this.device);
     }
   },
-   created(){
-   
-  },
+  created() {},
   mounted() {
     console.log("led");
     ledApi.readStatus(this.device);
@@ -85,12 +82,12 @@ export default {
       $(".vc-target").trigger("click");
     });
     $(".vc-container").css("z-index", 999);
-    this.device.deviceProperty.color = this.device.mode
-      ? this.device.mode
-      : this.device.deviceProperty.color;
+    this.device.deviceProperty.color = this.device.deviceProperty.color
+      ? this.device.deviceProperty.color
+      : "#c0ccda";
     $(".led-light").css("color", this.device.deviceProperty.color);
   },
-  destroyed(){
+  destroyed() {
     ledApi.closeSocket();
   },
   computed: {

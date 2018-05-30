@@ -9,6 +9,7 @@ const ledApi = {
     if (val) {
       //255色转100色
       var color = device.deviceProperty.color
+      // console.log(color)
       var red = _g.toHex(Math.round(parseInt("0x" + color.substr(1, 2)) / 255 * 100));
       var green = _g.toHex(
         Math.round(parseInt("0x" + color.substr(3, 2)) / 255 * 100)
