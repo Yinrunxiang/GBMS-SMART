@@ -12,8 +12,8 @@ class Address extends Validate{
         'country'  		=> 'require',
 	);
 	protected $message = array(
-	'address.require'    	=> 'address name must be filled in',
-	'address.length'    	=> 'address name length is from 0 to 200 bits',
-        'country.require'    	=> 'country must be filled in',
+	'address.require'    	=> 'Address name cannot be empty',
+	'address.length'    	=> 'Address length between 0 and 200',
+        'country.require'    	=> 'Country cannot be empty',
 	);
 }

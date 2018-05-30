@@ -14,8 +14,8 @@ class Floor extends Validate
 		'floor' => 'require',
 	);
 	protected $message = array(
-		'address.require' => 'address name must be filled in',
-		'address.length' => 'address name length is from 0 to 200 bits',
-		'floor.require' => 'floor must be filled in',
+		'address.require' => 'Address cannot be empty',
+		'address.length' => 'Address length between 0 and 100',
+		'floor.require' => 'Floor cannot be empty',
 	);
 }

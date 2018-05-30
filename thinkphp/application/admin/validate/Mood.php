@@ -11,7 +11,7 @@ class Marco extends Validate{
 		'mood'  		=> 'require|length:0,20',
 	);
 	protected $message = array(
-		'mood.require'    	=> 'mood name must be filled in',
-		'mood.length'    	=> 'mood name length is from 1 to 20 bits',
+		'mood.require'    	=> 'Mood cannot be empty',
+		'mood.length'    	=> 'Mood length between 0 and 20',
 	);
 }

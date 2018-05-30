@@ -639,7 +639,7 @@ export default {
         switch (device.devicetype) {
           case "ac":
             device.deviceProperty = {
-              on_off: false,
+              on_off: device.on_off,
               coolTmp: 26,
               autoTmp: 0,
               heatTmp: 0,
@@ -657,12 +657,12 @@ export default {
           case "light":
             device.deviceProperty = {
               brightness: 0,
-              on_off: false
+             on_off: device.on_off,
             };
             break;
           case "led":
             device.deviceProperty = {
-              on_off: false,
+             on_off: device.on_off,
               brightness: 0,
               color: "#c0ccda"
               // red: "c0",
@@ -672,13 +672,13 @@ export default {
             break;
           case "curtain":
             device.deviceProperty = {
-              on_off: false,
+              on_off: device.on_off,
               brightness: 0
             };
             break;
           case "floorheat":
             device.deviceProperty = {
-              on_off: false,
+              on_off: device.on_off,
               manualTemperature: 26,
               dayTemperature: 26,
               nightTemperature: 26,
@@ -698,19 +698,19 @@ export default {
             break;
           case "security":
             device.deviceProperty = {
-              on_off: false
+              on_off: device.on_off,
             };
             break;
           case "ir":
             device.deviceProperty = {
-              on_off: false
+              on_off: device.on_off,
             };
             break;
           case "music":
             device.deviceProperty = {
               vol: 20,
               mode: "random",
-              on_off: false,
+              on_off: device.on_off,
               music_name: "Waitting",
               music_autor: "Waitting",
               time_now: 0,

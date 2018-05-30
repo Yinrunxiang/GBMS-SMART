@@ -65,11 +65,25 @@ class UdpServer_1
     }
     function getAddress($subnetid, $deviceid)
     {
-        $sql = "select * from device as a left join address on a.address = b.address where subnetid = '" . $subnetid . "' and deviceid = '" . $deviceid . "'";
+        global $con;
+        $sql = "select mac,ip,port,b.operation as udp_type from device as a left join address as b on a.address = b.address where subnetid = '" . $subnetid . "' and deviceid = '" . $deviceid . "'";
         $data = mysqli_query($con, $sql);
         $data = mysqli_fetch_assoc($data);
-        $data = $data ? $data : [];
-        return $data;
+        if ($data) {
+            if ($data['udp_type'] == 1) {
+                $data['mac'] = $data['mac'] ? explode(".", $data['mac']) : [];
+                $data['ip'] = $data['ip'] ? $data['ip'] : '255.255.255.255';
+                $data['port'] = $data['port'] ? $data['port'] : 8888;
+            } else {
+                $data['mac'] = [];
+                $data['ip'] = '255.255.255.255';
+                $data['port'] = 6000;
+            }
+
+            return $data;
+        } else {
+            return [];
+        }
     }
     function sendCommand($schedule)
     {
@@ -347,19 +361,21 @@ class UdpServer_1
                             $value = hexdec($value);
                             break;
                     }
-                    $deviceProperty = [$key => $value];
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
-                    $sender_io->emit('udp', $udp);
-                    if ($type == 'on_off') {
-                        if ($value) {
-                            $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                    if ($key) {
+                        $deviceProperty = [$key => $value];
+                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
+                        $sender_io->emit('udp', $udp);
+                        if ($type == 'on_off') {
+                            if ($value) {
+                                $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                            } else {
+                                $sql = "update device as a left join address as b on a.address = b.address set on_off = 'off',run_date = null where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                            }
                         } else {
-                            $sql = "update device as a left join address as b on a.address = b.address set on_off = 'off',run_date = null where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                            $sql = "update device as a left join address as b on a.address = b.address set " . $type . " = '" . $value . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
                         }
-                    } else {
-                        $sql = "update device as a left join address as b on a.address = b.address set " . $type . " = '" . $value . "' where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
+                        mysqli_query($con, $sql);
                     }
-                    mysqli_query($con, $sql);
                     break;
                 case "e0ed":
                     $on_off = substr($msg, 50, 2);

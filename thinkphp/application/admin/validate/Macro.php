@@ -11,7 +11,7 @@ class Macro extends Validate{
 		'macro'  		=> 'require|length:0,30',
 	);
 	protected $message = array(
-		'macro.require'    	=> 'macro name must be filled in',
-		'macro.length'    	=> 'macro name length is from 1 to 30 bits',
+		'macro.require'    	=> 'Macro cannot be empty',
+		'macro.length'    	=> 'Macro length between 0 and 30',
 	);
 }

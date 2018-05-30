@@ -59,12 +59,12 @@ import curtainApi from "../Content/devices/curtain/api.js";
 import floorHeatApi from "../Content/devices/floorheat/api.js";
 export default {
   data() {
-    return {
-    };
+    return {};
   },
   props: ["device"],
   methods: {
     deviceDelete() {
+      var vm = this
       this.$confirm("Are you sure to delete the selected data?", "Tips", {
         confirmButtonText: "Yse",
         cancelButtonText: "No",
@@ -72,23 +72,19 @@ export default {
       })
         .then(() => {
           const data = {
-            params: {
               selections: [this.device]
-            }
           };
-          this.apiGet("device/index.php?action=delete", data).then(res => {
-            if (res[0]) {
-              var devices = this.$store.state.devices;
+          this.apiPost("admin/device/delete", data).then(res => {
+            this.handelResponse(res, data => {
+              var devices = vm.$store.state.devices;
               for (var i = 0; i < devices.length; i++) {
-                if (devices[i].id == this.device.id) {
+                if (devices[i].id == vm.device.id) {
                   devices.splice(i, 1);
                 }
               }
-              this.$store.dispatch("setDevices", devices);
-              _g.toastMsg("success", res[1]);
-            } else {
-              _g.toastMsg("error", res[1]);
-            }
+              vm.$store.dispatch("setDevices", devices);
+              _g.toastMsg("success", data);
+            });
           });
         })
         .catch(() => {
@@ -188,6 +184,7 @@ export default {
     }
   },
   created() {
+    console.log('device')
   },
   props: ["device"],
   components: {},

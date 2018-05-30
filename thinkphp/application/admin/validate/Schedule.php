@@ -11,7 +11,7 @@ class Schedule extends Validate{
 		'schedule'  		=> 'require|length:0,20',
 	);
 	protected $message = array(
-		'schedule.require'    	=> 'schedule name must be filled in',
-		'schedule.length'    	=> 'schedule name length is from 1 to 20 bits',
+		'schedule.require'    	=> 'Schedule cannot be empty',
+		'schedule.length'    	=> 'Schedule length between 0 and 20',
 	);
 }

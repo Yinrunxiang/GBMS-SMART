@@ -265,7 +265,7 @@ export default {
     },
     submit() {
       if (this.ir_value < 0 || this.ir_value > 255) {
-        _g.toastMsg("error", "The value must in 0 to 255");
+        _g.toastMsg("error", "The value  between 0 and 255");
         this.showDialog = false;
         return;
       }

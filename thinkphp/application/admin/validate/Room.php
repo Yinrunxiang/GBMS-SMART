@@ -16,10 +16,10 @@ class Room extends Validate
                 'room_name' => 'length:0,255',
         );
         protected $message = array(
-                'address.require' => 'address name must be filled in',
-                'address.length' => 'address name length is from 0 to 200 bits',
-                'floor.require' => 'floor must be filled in',
-                'room.require' => 'room must be filled in',
-                'room_name.length' => 'room name length is from 0 to 200 bits',
+                'address.require' => 'Address cannot be empty',
+                'address.length' => 'Address length between 0 and 200',
+                'floor.require' => 'Floor cannot be empty',
+                'room.require' => 'Room cannot be empty',
+                'room_name.length' => 'Room_name length between 0 and 255',
         );
 }

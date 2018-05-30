@@ -8,11 +8,9 @@ use think\Validate;
 class Record extends Validate{
 
 	protected $rule = array(
-		'patient'      	=> 'require',
-        'doctor'      	=> 'require',
+		'device'  		=> 'require',
 	);
 	protected $message = array(
-        'patient.require'    	=> 'Patient must be filled in',
-        'doctor.require'    	=> 'Doctor must be filled in',
+		'device.require'    	=> 'Device cannot be empty',
 	);
 }

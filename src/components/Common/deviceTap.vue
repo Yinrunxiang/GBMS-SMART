@@ -114,27 +114,14 @@ export default {
       // }
     },
     switch_change(val) {
-      switch (this.device.deviceProperty.devicetype) {
+      switch (this.device.devicetype) {
         case "light":
-          this.device.deviceProperty = {
-            on_off: false,
-            brightness: 0
-          };
           lightApi.switch_change(val, this.device);
           break;
         case "ac":
-          this.device.deviceProperty.on_off = false;
           acApi.switch_change(val, this.device);
           break;
         case "led":
-          this.device.deviceProperty = {
-            on_off: false,
-            brightness: 0,
-            color: "#c0ccda",
-            red: "c0",
-            green: "cc",
-            blue: "da"
-          };
           ledApi.switch_change(val, this.device);
           break;
         case "music":
@@ -145,18 +132,13 @@ export default {
     readOpen() {
       switch (this.device.devicetype) {
         case "light":
-          this.device.deviceProperty.on_off = false;
           lightApi.readOpen(this.device);
           break;
         case "ac":
-          this.device.deviceProperty.on_off = false;
           acApi.readOpen(this.device);
           break;
         case "led":
-          this.device.deviceProperty.on_off = false;
-          this.device.deviceProperty.brightness = 0;
-          color: this.device.mode ? this.device.mode : "#ffffff",
-            ledApi.readOpen(this.device);
+          ledApi.readOpen(this.device);
           break;
         case "music":
           // this.device.on_off = false
@@ -192,6 +174,7 @@ export default {
     }
   },
   created() {
+    // console.log('deviceTap')
     // this.deviceProperty = this.device.deviceProperty;
     // console.log('device list device')
     // this.readOpen()

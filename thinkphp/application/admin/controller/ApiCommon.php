@@ -28,7 +28,7 @@ class ApiCommon extends Common
         // 校验sessionid和authKey
         if (empty($sessionId)||empty($authKey)||empty($cache)) {
             header('Content-Type:application/json; charset=utf-8');
-            exit(json_encode(['code'=>101, 'error'=>'登录已失效']));
+            exit(json_encode(['code'=>101, 'error'=>'Login has expired']));
         }
 
         // 检查账号有效性
@@ -37,7 +37,7 @@ class ApiCommon extends Common
         $map['status'] = 1;
         if (!Db::name('user.user')->where($map)->value('id')) {
             header('Content-Type:application/json; charset=utf-8');
-            exit(json_encode(['code'=>103, 'error'=>'账号已被删除或禁用']));   
+            exit(json_encode(['code'=>103, 'error'=>'Account has been deleted or disabled']));   
         }
         // 更新缓存
         cache('Auth_'.$authKey, $cache, 2592000);

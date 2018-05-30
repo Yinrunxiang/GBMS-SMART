@@ -11,6 +11,6 @@ class Ir extends Validate{
 		'device'  		=> 'require',
 	);
 	protected $message = array(
-		'device.require'    	=> 'device  must be filled in',
+		'device.require'    	=> 'Device cannot be empty',
 	);
 }

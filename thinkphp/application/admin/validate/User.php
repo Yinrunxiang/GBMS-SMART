@@ -12,9 +12,9 @@ class User extends Validate{
 		'password'      	=> 'require',
 	);
 	protected $message = array(
-		'username.require'    	=> 'Username must be filled in',
-		'username.length'    	=> 'The longest username is 12 bits',
+		'username.require'    	=> 'Username cannot be empty',
+		'username.length'    	=> 'Username length between 0 and 20',
 		'username.unique'    	=> 'Username already exists',
-		'password.require'    	=> 'Password must be filled in',
+		'password.require'    	=> 'Password cannot be empty',
 	);
 }

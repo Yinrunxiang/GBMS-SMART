@@ -11,7 +11,7 @@ class AcBreed extends Validate{
 		'breed'  		=> 'require|length:0,10',
 	);
 	protected $message = array(
-		'breed.require'    	=> 'breed name must be filled in',
-		'breed.length'    	=> 'breed name length is from 0 to 10 bits',
+		'breed.require'    	=> 'Breed cannot be empty',
+		'breed.length'    	=> 'Breed length between 0 and 10',
 	);
 }
