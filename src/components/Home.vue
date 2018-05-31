@@ -639,106 +639,106 @@ export default {
         }
       });
     },
-    addDeviceProperty(devices) {
-      for (var device of devices) {
-        switch (device.devicetype) {
-          case "ac":
-            device.deviceProperty = {
-              on_off: device.on_off,
-              coolTmp: 26,
-              autoTmp: 0,
-              heatTmp: 0,
-              tmp: 26,
-              grade: 2,
-              mode: "cool",
-              cool_strat: 0,
-              cool_end: 36,
-              heat_strat: 0,
-              heat_end: 36,
-              auto_strat: 0,
-              auto_end: 36
-            };
-            break;
-          case "light":
-            device.deviceProperty = {
-              brightness: 0,
-              on_off: device.on_off
-            };
-            break;
-          case "led":
-            device.deviceProperty = {
-              on_off: device.on_off,
-              brightness: 0,
-              color: device.mode
-              // red: "c0",
-              // green: "cc",
-              // blue: "da"
-            };
-            break;
-          case "curtain":
-            device.deviceProperty = {
-              on_off: device.on_off,
-              brightness: 0
-            };
-            break;
-          case "floorheat":
-            device.deviceProperty = {
-              on_off: device.on_off,
-              manualTemperature: 26,
-              dayTemperature: 26,
-              nightTemperature: 26,
-              awayTemperature: 26,
-              alarmTemperature: 26,
-              mode: "manual",
-              dayTime: "",
-              nightTime: "",
-              insideTemperature: 26,
-              outsideTemperature: 26,
-              insideSensor: {
-                targetSubnetID: "",
-                targetDeviceID: "",
-                channel: ""
-              }
-            };
-            break;
-          case "security":
-            device.deviceProperty = {
-              on_off: device.on_off
-            };
-            break;
-          case "ir":
-            device.deviceProperty = {
-              on_off: device.on_off
-            };
-            break;
-          case "music":
-            device.deviceProperty = {
-              vol: 20,
-              mode: "random",
-              on_off: device.on_off,
-              music_name: "Waitting",
-              music_autor: "Waitting",
-              time_now: 0,
-              time_over: 0,
-              albumno: 0,
-              albumlist: [],
-              songno: 0,
-              songList: [
-                {
-                  songNo: 1,
-                  songName: "Waitting",
-                  select: true
-                }
-              ],
-              songListAll: [],
-              musicLoading: true,
-              source: "01"
-            };
-            break;
-        }
-      }
-      this.createSocket(devices);
-    }
+    // addDeviceProperty(devices) {
+    //   for (var device of devices) {
+    //     switch (device.devicetype) {
+    //       case "ac":
+    //         device.deviceProperty = {
+    //           on_off: device.on_off,
+    //           coolTmp: 26,
+    //           autoTmp: 0,
+    //           heatTmp: 0,
+    //           tmp: 26,
+    //           grade: 2,
+    //           mode: "cool",
+    //           cool_strat: 0,
+    //           cool_end: 36,
+    //           heat_strat: 0,
+    //           heat_end: 36,
+    //           auto_strat: 0,
+    //           auto_end: 36
+    //         };
+    //         break;
+    //       case "light":
+    //         device.deviceProperty = {
+    //           brightness: 0,
+    //           on_off: device.on_off
+    //         };
+    //         break;
+    //       case "led":
+    //         device.deviceProperty = {
+    //           on_off: device.on_off,
+    //           brightness: 0,
+    //           color: device.mode
+    //           // red: "c0",
+    //           // green: "cc",
+    //           // blue: "da"
+    //         };
+    //         break;
+    //       case "curtain":
+    //         device.deviceProperty = {
+    //           on_off: device.on_off,
+    //           brightness: 0
+    //         };
+    //         break;
+    //       case "floorheat":
+    //         device.deviceProperty = {
+    //           on_off: device.on_off,
+    //           manualTemperature: 26,
+    //           dayTemperature: 26,
+    //           nightTemperature: 26,
+    //           awayTemperature: 26,
+    //           alarmTemperature: 26,
+    //           mode: "manual",
+    //           dayTime: "",
+    //           nightTime: "",
+    //           insideTemperature: 26,
+    //           outsideTemperature: 26,
+    //           insideSensor: {
+    //             targetSubnetID: "",
+    //             targetDeviceID: "",
+    //             channel: ""
+    //           }
+    //         };
+    //         break;
+    //       case "security":
+    //         device.deviceProperty = {
+    //           on_off: device.on_off
+    //         };
+    //         break;
+    //       case "ir":
+    //         device.deviceProperty = {
+    //           on_off: device.on_off
+    //         };
+    //         break;
+    //       case "music":
+    //         device.deviceProperty = {
+    //           vol: 20,
+    //           mode: "random",
+    //           on_off: device.on_off,
+    //           music_name: "Waitting",
+    //           music_autor: "Waitting",
+    //           time_now: 0,
+    //           time_over: 0,
+    //           albumno: 0,
+    //           albumlist: [],
+    //           songno: 0,
+    //           songList: [
+    //             {
+    //               songNo: 1,
+    //               songName: "Waitting",
+    //               select: true
+    //             }
+    //           ],
+    //           songListAll: [],
+    //           musicLoading: true,
+    //           source: "01"
+    //         };
+    //         break;
+    //     }
+    //   }
+    //   this.createSocket(devices);
+    // }
   },
   created() {
     console.log("home");
@@ -770,7 +770,7 @@ export default {
     this.updateDatabase();
     this.apiGet("admin/device", {}).then(res => {
       this.handelResponse(res, data => {
-        this.addDeviceProperty(data);
+        _g.addDeviceProperty(data);
         this.$store.dispatch("setDevices", data);
         // var devices = [];
         var maxid = data[0].maxid;
@@ -819,9 +819,9 @@ export default {
   watch: {
     devices: {
       handler: function(val, oldVal) {
-        console.log("deviceChange");
-        this.addDeviceProperty(val);
-        // this.createSocket(val);
+        // console.log("deviceChange");
+        // _g.addDeviceProperty(val);
+        this.createSocket(val);
         this.countryArr();
       },
       deep: false

@@ -110,6 +110,7 @@ export default {
           };
           this.apiPost("admin/room/delete", data).then(res => {
             this.handelResponse(res, data => {
+              _g.addDeviceProperty(data.device);
               vm.$store.dispatch("setRoom", data.room);
               vm.$store.dispatch("setDevices", data.device);
               _g.toastMsg("success", data.result);

@@ -120,6 +120,7 @@ export default {
       } else {
         vm.apiPut("admin/floor/", data.id, data).then(res => {
           vm.handelResponse(res, data => {
+            _g.addDeviceProperty(data.device);
             vm.$store.dispatch("setFloor", data.floor);
             vm.$store.dispatch("setRoom", data.room);
             vm.$store.dispatch("setDevices", data.device);

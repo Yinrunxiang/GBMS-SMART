@@ -23,7 +23,7 @@ const udpArr = {
                 });
                 udpArr.push({
                   device: device,
-                  data: ac.get_cooltmp_change(device.status_1, device)
+                  data: ac.get_coolTmp_change(device.status_1, device)
                 });
                 break;
               case "fan":
@@ -33,7 +33,7 @@ const udpArr = {
                 });
                 udpArr.push({
                   device: device,
-                  data: ac.get_cooltmp_change(device.status_1, device)
+                  data: ac.get_coolTmp_change(device.status_1, device)
                 });
                 break;
               case "heat":
@@ -43,7 +43,7 @@ const udpArr = {
                 });
                 udpArr.push({
                   device: device,
-                  data: ac.get_heattmp_change(device.status_1, device)
+                  data: ac.get_heatTmp_change(device.status_1, device)
                 });
                 break;
               case "auto":
@@ -53,30 +53,30 @@ const udpArr = {
                 });
                 udpArr.push({
                   device: device,
-                  data: ac.get_autotmp_change(device.status_1, device)
+                  data: ac.get_autoTmp_change(device.status_1, device)
                 });
                 break;
             }
             switch (device.grade) {
-              case "wind_auto":
+              case "0":
                 udpArr.push({
                   device: device,
                   data: ac.get_wind_change("0", device)
                 });
                 break;
-              case "high":
+              case "1":
                 udpArr.push({
                   device: device,
                   data: ac.get_wind_change("1", device)
                 });
                 break;
-              case "medial":
+              case "2":
                 udpArr.push({
                   device: device,
                   data: ac.get_wind_change("2", device)
                 });
                 break;
-              case "low":
+              case "3":
                 udpArr.push({
                   device: device,
                   data: ac.get_wind_change("3", device)
@@ -92,40 +92,28 @@ const udpArr = {
           break;
         case "light":
           if (device.on_off == "1") {
-            var deviceProperty = {
-              brightness: 100
-            };
             udpArr.push({
               device: device,
-              data: light.get_switch_change(true, device, deviceProperty)
+              data: light.get_switch_change(true, device)
             });
           } else {
-            var deviceProperty = {
-              brightness: 0
-            };
             udpArr.push({
               device: device,
-              data: light.get_switch_change(false, device, deviceProperty)
+              data: light.get_switch_change(false, device)
             });
           }
           break;
         case "led":
           if (device.on_off == "1") {
-            var deviceProperty = {
-              color: device.mode
-            };
             udpArr.push({
               device: device,
-              data: led.get_switch_change(true, device, deviceProperty)
+              data: led.get_switch_change(true, device)
             });
             // udpArr.push(light.get_slider_change(true, device));
           } else {
-            var deviceProperty = {
-              color: "#000000"
-            };
             udpArr.push({
               device: device,
-              data: led.get_switch_change(false, device, deviceProperty)
+              data: led.get_switch_change(false, device)
             });
           }
           break;
@@ -150,22 +138,17 @@ const udpArr = {
               songNoHigh: device.status_4.substr(2, 2),
               songNoLow: device.status_4.substr(4, 2),
             }
-            var deviceProperty = {
-              vol: device.status_1,
-              source: device.status_2,
-              song: song
-            }
             udpArr.push({
               device: device,
-              data: music.get_vol_change(true, device, deviceProperty)
+              data: music.get_vol_change(true, device)
             });
             udpArr.push({
               device: device,
-              data: music.get_source_change(device, deviceProperty)
+              data: music.get_source_change(device.status_2,device)
             });
             udpArr.push({
               device: device,
-              data: music.get_selectSong(device, deviceProperty, song)
+              data: music.get_selectSong(device, song)
             });
             // udpArr.push({
             //   device: device,

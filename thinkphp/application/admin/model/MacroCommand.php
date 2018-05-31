@@ -33,7 +33,7 @@ class MacroCommand extends Common
         $map['macro'] = ['=', $macro];
         $data = $this->alias('a')
             ->join('device b', 'a.device = b.id', 'left')
-            ->join('room c', 'b.room = c.room and b.address = c.address and b.floor = c.floor', 'left')
+            ->join('room c', 'b.room = c.id and b.address = c.address and b.floor = c.floor', 'left')
             ->field('macro,a.id as macro_id,a.device as id,subnetid,deviceid,b.device as device,devicetype,a.on_off,a.mode,a.grade,status_1,status_2,status_3,status_4,status_5,b.address,b.floor,b.room,room_name,a.time')
             ->where($map)
             ->select();

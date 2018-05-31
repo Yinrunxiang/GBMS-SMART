@@ -39,20 +39,19 @@ const musicApi = {
     //     // _g.closeGlobalLoading()
     // })
   },
-  get_source_change(device) {
-    var source = device.deviceProperty.source == '02' ? '03' : device.deviceProperty.source
+  get_source_change(val,device) {
+    var source = val == '02' ? '03' : val
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["01", source]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
-  source_change(device) {
-    var data = this.get_source_change(device, devicePropert)
+  source_change(val,device) {
+    var data = this.get_source_change(val,device)
     api.sendUdp(device, data)
   },
   get_vol_change(val, device) {
-    device.deviceProperty.vol = val;
     device.loading = true;
     val = 79 - val;
     var operatorCodefst = "02",

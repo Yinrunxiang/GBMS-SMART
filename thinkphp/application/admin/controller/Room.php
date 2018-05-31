@@ -52,5 +52,25 @@ class Room extends ApiCommon
         $data['result'] = 'Delete success';
         return resultArray(['data' => $data]);
     }   
+    public function collect()
+    {
+        $roomModel = model('Room');
+        $param = $this->param;
+        $data = $roomModel->collect($param);
+        if (!$data) {
+            return resultArray(['error' => $roomModel->getError()]);
+        } 
+        return resultArray(['data' => 'Collect success']);
+    }   
+    public function uncollect()
+    {
+        $roomModel = model('Room');
+        $param = $this->param;
+        $data = $roomModel->uncollect($param);
+        if (!$data) {
+            return resultArray(['error' => $roomModel->getError()]);
+        } 
+        return resultArray(['data' => 'UnCollect success']);
+    }   
 }
  

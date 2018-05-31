@@ -180,6 +180,7 @@ export default {
       } else {
         vm.apiPut("admin/room/", data.id, data).then(res => {
           vm.handelResponse(res, data => {
+            _g.addDeviceProperty(data.device);
             vm.$store.dispatch("setRoom", data.room);
             vm.$store.dispatch("setDevices", data.device);
             _g.toastMsg("success", data.result);

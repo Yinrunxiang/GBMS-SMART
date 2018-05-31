@@ -222,19 +222,19 @@ export default {
       ],
       grades: [
         {
-          value: "low",
+          value: 3,
           label: "Low"
         },
         {
-          value: "medial",
+          value: 2,
           label: "Medial"
         },
         {
-          value: "hign",
+          value: 1,
           label: "Hign"
         },
         {
-          value: "wind_auto",
+          value: 0,
           label: "Auto"
         }
       ],
@@ -304,7 +304,7 @@ export default {
       command.deviceProperty.source = command.operation_2;
       command.operation_3 = "";
       command.operation_4 = "";
-      musicApi.source_change(command, command.deviceProperty);
+      musicApi.source_change(command.deviceProperty.source, command);
       command.deviceProperty.albumlist = [];
       command.deviceProperty.songList = [];
       command.deviceProperty.songListAll = [];
@@ -378,7 +378,7 @@ export default {
           ? parseInt(device.operation_1)
           : 0;
         device.mode = device.mode ? device.mode : "auto";
-        device.grade = device.grade ? device.grade : "wind_auto";
+        device.grade = device.grade ? parseInt(device.grade) : 0;
       }
       if (device.devicetype == "music") {
         device.operation_1 = device.operation_1
@@ -398,7 +398,7 @@ export default {
           device.deviceProperty.albumlist = [];
           device.deviceProperty.songList = [];
           device.deviceProperty.songListAll = [];
-          musicApi.readStatus(device, device.deviceProperty);
+          musicApi.readSong(device, device.deviceProperty);
         }
       }
       if (device.devicetype == "light") {

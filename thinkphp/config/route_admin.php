@@ -79,6 +79,10 @@ return [
     'admin/floor/delete' => ['admin/floor/delete', ['method' => 'POST']],
     // 【Room】删除Room
     'admin/room/delete' => ['admin/room/delete', ['method' => 'POST']],
+    // 【Room】收藏room
+    'admin/room/collect' => ['admin/room/collect', ['method' => 'POST']],
+    // 【Room】取消收藏room
+    'admin/room/uncollect' => ['admin/room/uncollect', ['method' => 'POST']],
     // 【AC】删除AC
     'admin/ac_breed/delete' => ['admin/ac_breed/delete', ['method' => 'POST']],
     // 【LIGHT】删除LIGHT

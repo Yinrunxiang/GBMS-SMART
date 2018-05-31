@@ -29,7 +29,7 @@ class Room extends Common
 		->alias('a')
         ->join('address b', 'a.address=b.id', 'LEFT')
         ->join('floor c', 'a.floor=c.id', 'LEFT')
-		->field('a.id,room,room_name,a.image,b.country,a.address,a.floor,a.status,a.comment,b.address as address_name,c.floor as floor_name,a.lat,a.lng,width,height')
+		->field('a.id,room,room_name,a.image,b.country,a.address,a.floor,a.status,a.comment,b.address as address_name,c.floor as floor_name,a.lat,a.lng,width,height,collect')
 		->order('country,address,floor_name+0,room+0')
 		->select();
 		foreach ($data as $k => $v) {
@@ -104,7 +104,7 @@ class Room extends Common
     }
 
     /**
-     * 删除Schedule
+     * 删除Room
      * @param  array $param [description]
      */
     public function delDatas($param)
@@ -125,6 +125,51 @@ class Room extends Common
         } catch (\Exception $e) {
             $this->rollback();
             $this->error = 'Delete failure';
+            return false;
+        }
+    }
+
+    /**
+     * [collection 收藏]
+     * @param     [type]                   $param [description]
+     * @param     [type]                   $id    [description]
+     * @return    [type]                          [description]
+     */
+    public function collect($param)
+    {
+        $checkData = $this->get($param['id']);
+        if (!$checkData) {
+            $this->error = 'This data is not available';
+            return false;
+        }
+        try {
+            $this->allowField(true)->save(['collect'=>'1'], ['id'=> ['=',$param['id']]]);
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->error = 'Collect failure';
+            return false;
+        }
+    }
+    /**
+     * [uncollection 取消收藏]
+     * @param     [type]                   $param [description]
+     * @param     [type]                   $id    [description]
+     * @return    [type]                          [description]
+     */
+    public function uncollect($param)
+    {
+        $checkData = $this->get($param['id']);
+        if (!$checkData) {
+            $this->error = 'This data is not available';
+            return false;
+        }
+        try {
+            $this->allowField(true)->save(['collect'=>'0'], ['id'=> ['=',$param['id']]]);
+            $this->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->error = 'UnCollect failure';
             return false;
         }
     }

@@ -66,7 +66,6 @@ export default {
       limit: 15,
       add: true,
       setting: false,
-      selectData: {},
       isLoading: true
     };
   },

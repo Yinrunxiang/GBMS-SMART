@@ -3,13 +3,11 @@ const lightApi = {
   socketio:{},
   get_switch_change(val, device) {
     if (val) {
-      device.deviceProperty.brightness = 100;
       var operatorCodefst = "00",
         operatorCodesec = "31",
         additionalContentData = [device.channel, "64", "00", "00"]
       return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     } else {
-      device.deviceProperty.brightness == 0;
       var operatorCodefst = "00",
         operatorCodesec = "31",
         additionalContentData = [device.channel, "00", "00", "00"]

@@ -287,7 +287,7 @@ export default {
     },
     sourceChange(command) {
       this.device.deviceProperty.source = command;
-      musicApi.source_change(this.device);
+      musicApi.source_change(command,this.device);
       this.device.deviceProperty.albumlist = [];
       this.device.deviceProperty.songList = [];
       this.device.deviceProperty.songListAll = [];

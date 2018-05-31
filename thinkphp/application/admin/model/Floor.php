@@ -12,6 +12,7 @@ use app\admin\model\Common;
 use com\verify\HonrayVerify;
 use app\admin\model\Room;
 use app\admin\model\Device;
+
 class Floor extends Common
 {
 
@@ -28,11 +29,11 @@ class Floor extends Common
 		}
 		$image_addr = "http://" . $host_ip . ":" . $_SERVER["SERVER_PORT"];
 		$data = $this
-		->alias('a')
-		->join('address b', 'a.address=b.id', 'LEFT')
-		->field('a.id,floor,room_num,a.image,a.address,a.status,a.comment,b.address as address_name')
-		->order('country,address,floor+0')
-		->select();
+			->alias('a')
+			->join('address b', 'a.address=b.id', 'LEFT')
+			->field('a.id,floor,room_num,a.image,a.address,a.status,a.comment,b.address as address_name')
+			->order('country,address,floor+0')
+			->select();
 		foreach ($data as $k => $v) {
 			$v["image_addr"] = $image_addr;
 			$v["image_full"] = $v["image"] == "" ? "" : $image_addr . $v["image"];
@@ -73,8 +74,8 @@ class Floor extends Common
 			Db::table('room')->insertAll($room_list);
 			$data = array();
 			$data["floor"] = $this->getDataList();
-            $Room = new Room();
-            $data["room"] = $Room->getDataList();
+			$Room = new Room();
+			$data["room"] = $Room->getDataList();
 			return $data;
 		} catch (\Exception $e) {
 			$this->error = 'Add failure';
@@ -116,16 +117,19 @@ class Floor extends Common
 				}
 				Db::table('room')->insertAll($room_list);
 			} else if ($room_num < $room_count) {
-				Db::table('room')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['id']], 'room' => ['>', $room_num]])->delete();
-				Db::table('device')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['id']], 'room' => ['>', $room_num]])->delete();
+				$room_arr = Db::table('room')->field('id')->where('floor', $param['id'])->order('id')->limit($room_num, $room_count - $room_num)->select();
+				foreach ($room_arr as $k => $v) {
+					Db::table('room')->where('id', $v['id'])->delete();
+					Db::table('device')->where('room', $v['id'])->delete();
+				}
 			}
 			$data = array();
-            $data["floor"] = $this->getDataList();
-            $Room = new Room();
-            $data["room"] = $Room->getDataList();
-            $Device = new Device();
-            $data["device"] = $Device->getDataList();
-            return $data;
+			$data["floor"] = $this->getDataList();
+			$Room = new Room();
+			$data["room"] = $Room->getDataList();
+			$Device = new Device();
+			$data["device"] = $Device->getDataList();
+			return $data;
 		} catch (\Exception $e) {
 			$this->error = 'Update failure';
 			return false;
@@ -148,12 +152,12 @@ class Floor extends Common
 			}
 			$this->commit();
 			$data = array();
-            $data["floor"] = $this->getDataList();
-            $Room = new Room();
-            $data["room"] = $Room->getDataList();
-            $Device = new Device();
-            $data["device"] = $Device->getDataList();
-            return $data;
+			$data["floor"] = $this->getDataList();
+			$Room = new Room();
+			$data["room"] = $Room->getDataList();
+			$Device = new Device();
+			$data["device"] = $Device->getDataList();
+			return $data;
 		} catch (\Exception $e) {
 			$this->rollback();
 			$this->error = 'Delete failure';

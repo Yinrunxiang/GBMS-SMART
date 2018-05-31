@@ -13,6 +13,7 @@ use com\verify\HonrayVerify;
 use app\admin\model\Floor;
 use app\admin\model\Room;
 use app\admin\model\Device;
+
 class Address extends Common
 {
 
@@ -97,11 +98,11 @@ class Address extends Common
             $this->error = $validate->getError();
             return false;
         }
-        $floor_count = Db::table('floor')->where('address',$param['id'])->count('id');
+        $floor_count = Db::table('floor')->where('address', $param['id'])->count('id');
         $floor_num = intval($param['floor_num']);
         try {
             //更新地址表
-            $this->allowField(true)->save($param, ['id'=> $param['id']]);
+            $this->allowField(true)->save($param, ['id' => $param['id']]);
             //更新与地址有关联的表
             // Db::table('device')->where('address', $param['id'])->update(['address' => $param['address']]);
             // Db::table('floor')->where('address', $param['id'])->update(['address' => $param['address']]);
@@ -116,9 +117,13 @@ class Address extends Common
                 }
                 Db::table('floor')->insertAll($floor_list);
             } else if ($floor_num < $floor_count) {
-                Db::table('floor')->where(['address'=>['=',$param['id']],'floor'=>['>',$floor_num]])->delete();
-                Db::table('room')->where(['address'=>['=',$param['id']],'floor'=>['>',$floor_num]])->delete();
-                Db::table('device')->where(['address'=>['=',$param['id']],'floor'=>['>',$floor_num]])->delete();
+                $floor_arr = Db::table('floor')->field('id')->where('address', $param['id'])->order('id')->limit($floor_num, $floor_count - $floor_num)->select();
+                foreach ($floor_arr as $k => $v) {
+                    Db::table('floor')->where('id', $v['id'])->delete();
+                    Db::table('room')->where('floor', $v['id'])->delete();
+                    Db::table('device')->where('floor', $v['id'])->delete();
+                }
+
             }
             $data = array();
             $data["address"] = $this->getDataList();

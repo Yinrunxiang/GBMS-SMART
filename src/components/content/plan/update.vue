@@ -15,28 +15,24 @@
             </el-form-item>
             <el-form-item label="Breed Type">
                 <el-select v-model="form.breed"  filterable placeholder="Select Breed" class="h-40 w-200">
-                    <el-option v-for="(item,key) in breedData" :key="key" :label="item.breed" :value="item.id">
+                    <el-option v-for="(item,key) in breedData" :key="key" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="Subnet ID" prop="subnetid" :rules="[
                                   { required: true, message: 'The Subnet ID must not be null'}
                                 ]">
-                <el-input type="subnetid" v-model="form.subnetid" class="h-40 w-200"></el-input>
+                <el-input  type="number" v-model="form.subnetid" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item label="Device ID" prop="deviceid" :rules="[
                                   { required: true, message: 'The Device ID must not be null'}
                                 ]">
-                <el-input type="deviceid" v-model="form.deviceid" class="h-40 w-200"></el-input>
+                <el-input type="number" v-model="form.deviceid" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item label="Channel" prop="channel" :rules="[
-                                  { required: true, message: 'The Channel must not be null'}
-                                ]">
-                <el-input type="channel" v-model="form.channel" class="h-40 w-200"></el-input>
+            <el-form-item label="Channel" prop="channel">
+                <el-input type="number" v-model="form.channel" class="h-40 w-200"></el-input>
             </el-form-item>
-            <el-form-item v-show="form.devicetype == 'curtain'" label="Channel" prop="channel_spare" :rules="[
-                                  { required: true, message: 'The Channel must not be null'}
-                                ]">
+            <el-form-item type="number" v-show="form.devicetype == 'curtain'" label="Channel" prop="channel_spare">
                 <el-input type="channel_spare" v-model="form.channel_spare" class="h-40 w-200"></el-input>
             </el-form-item>
             <el-form-item v-show="form.devicetype == 'curtain'" label="Channel" prop="operation_1">
@@ -176,6 +172,7 @@ export default {
         this.apiPut("admin/device/", this.form.id, data).then(res => {
           this.isLoading = !this.isLoading;
           this.handelResponse(res, data => {
+            _g.addDeviceProperty(data.device);
             vm.$store.dispatch("setDevices", data.device);
             _g.toastMsg("success", data.result);
             vm.goback();
@@ -185,7 +182,7 @@ export default {
         this.apiPost("admin/device", data).then(res => {
           this.isLoading = !this.isLoading;
           this.handelResponse(res, data => {
-            // this.$emit("newDevice", vm.form);
+            _g.addDeviceProperty(data.device);
             vm.$store.dispatch("setDevices", data.device);
             _g.toastMsg("success", data.result);
             vm.goback();
@@ -208,11 +205,11 @@ export default {
   created() {
     console.log("plan update");
     this.form = Object.assign({}, this.device);
-    this.form.subnetid = parseInt('0x' + this.form.subnetid)
-    this.form.deviceid = parseInt('0x' + this.form.deviceid)
-    this.form.channel = parseInt('0x' + this.form.channel)
+    this.form.subnetid = parseInt("0x" + this.form.subnetid);
+    this.form.deviceid = parseInt("0x" + this.form.deviceid);
+    this.form.channel = parseInt("0x" + this.form.channel);
     if (this.form.devicetype == "curtain") {
-      this.form.channel_spare = parseInt('0x' + this.form.channel_spare)
+      this.form.channel_spare = parseInt("0x" + this.form.channel_spare);
     }
   },
   mounted() {},
@@ -289,13 +286,34 @@ export default {
       return room;
     },
     ac_breed() {
-      return this.$store.state.ac_breed;
+      let arr = [];
+      for (let item of this.$store.state.ac_breed) {
+        let obj = {};
+        obj.label = item.breed;
+        obj.value = item.id.toString();
+        arr.push(obj);
+      }
+      return arr
     },
     light_breed() {
-      return this.$store.state.light_breed;
+      let arr = [];
+      for (let item of this.$store.state.light_breed) {
+        let obj = {};
+        obj.label = item.breed;
+        obj.value = item.id.toString();
+        arr.push(obj);
+      }
+      return arr
     },
     led_breed() {
-      return this.$store.state.led_breed;
+      let arr = [];
+      for (let item of this.$store.state.led_breed) {
+        let obj = {};
+        obj.label = item.breed;
+        obj.value = item.id.toString();
+        arr.push(obj);
+      }
+      return arr
     }
   },
   watch: {

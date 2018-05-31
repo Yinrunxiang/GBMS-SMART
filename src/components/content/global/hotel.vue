@@ -7,10 +7,10 @@
             
             <div v-show="showHotel" class="hotel-content">
                 <div class="icon-list">
-                    <div @click="hotelBack">
+                    <div class="pointer" @click="hotelBack">
                         <i class="fa fa-reply"></i>
                     </div>
-                    <div @click="settingClick">
+                    <div class="pointer" @click="settingClick">
                         <i class="el-icon-setting"></i>
                     </div>
                 </div>
@@ -42,10 +42,10 @@
             <div v-show="showFloor" >
               <div v-show="!showFloorUpdate" class="floor-content">
                 <div class="icon-list">
-                    <div @click="floorBack">
+                    <div class="pointer" @click="floorBack">
                         <i class="fa fa-reply"></i>
                     </div>
-                    <div @click="floorSetting">
+                    <div class="pointer" @click="floorSetting">
                         <i class="el-icon-setting"></i>
                     </div>
                 </div>
@@ -75,32 +75,38 @@
             <div v-if="showRoom" id="parentConstrain" class="room-content" style="width:100%;height:100%;background-color:#fff;">
               <div v-show="!showRoomUpdate">
                 <el-popover ref="addDevice" placement="left" width="100" trigger="hover" style="padding:0;margin:0;">
-                    <div class="add-type-list" v-for="(devicetype,key) in typeList" :key = "key" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)" >{{devicetype}}</div>
+                    <div class="add-type-list pointer" v-for="(devicetype,key) in typeList" :key = "key" style="padding:10px;width:100px;height: 25px;line-height:25px;font-size:16px;border-bottom: 1px solid #dfe6ec;" @click="addDeviceListClick(devicetype)" >{{devicetype}}</div>
                 </el-popover>
                 <div class="icon-list">
-                    <div @click="roomBack">
+                    <div class="pointer" @click="roomBack">
                         <i class="fa fa-reply"></i>
                     </div>
-                    <div v-popover:addDevice>
+                    <div class="pointer" v-popover:addDevice>
                         <i class="fa fa-plus"></i>
                     </div>
                     <!-- <div @click="settingStatusClick">
                         <i class="el-icon-setting"></i>
                     </div> -->
-                    <div @click="roomSetting">
+                    <div class="pointer" @click="roomSetting">
                         <i class="el-icon-setting"></i>
                     </div>
                     <!-- <div @click="roomClose">
                         <i class="fa fa-pause"></i>
                     </div> -->
-                    <div @click="clickToShowMoodSetting">
+                    <div class="pointer" @click="clickToShowMoodSetting">
                         <i class="fa fa-heart"></i>
                     </div>
-                    <div v-show="lock" @click="clickToUnLock">
+                    <div class="pointer" v-show="lock" @click="clickToUnLock">
                         <i class="fa fa-lock"></i>
                     </div>
-                    <div v-show="!lock" @click="clickToLock">
+                    <div class="pointer" v-show="!lock" @click="clickToLock">
                         <i class="fa fa-unlock"></i>
+                    </div>
+                     <div  class="pointer" v-show="!room.collect"  @click="clickToCollect(room)">
+                        <i class="el-icon-star-on"></i>
+                    </div>
+                    <div  class="pointer" v-show="room.collect" @click="clickToUnCollect(room)">
+                        <i style="color:#FFFF00" class="el-icon-star-on"></i>
                     </div>
                     
                 </div>
@@ -111,7 +117,7 @@
 
                 </div>
                 </div>
-                <room-update v-if="showRoomUpdate" :room="this.room" :add="false" @goback="roomUpdateback"></room-update>
+                <room-update v-if="showRoomUpdate" :room="room" :add="false" @goback="roomUpdateback"></room-update>
             </div>
         </div>
         <div v-if="showDeviceUpdate">
@@ -137,6 +143,7 @@
 
 
 <script>
+import http from "../../../assets/js/http.js";
 import deviceTap from "../../Common/deviceTap";
 import deviceUpdate from "../plan/update";
 import addressUpdate from "../setting/address/add";
@@ -159,7 +166,7 @@ export default {
       showAll: true,
       //   showFloor: false,
       //   showRoom: false,
-      hotelName: "",
+      hotelId: "",
       floorName: "",
       roomName: "",
       floorList: [],
@@ -182,7 +189,17 @@ export default {
       showFloorUpdate: false,
       showRoomUpdate: false,
       floor: {},
-      room: {},
+      room: {
+        id:"",
+        image:"",
+        image_full:"",
+        room:"",
+        room_name:"",
+        floor:"",
+        address:"",
+        typeList:[],
+        collect:0
+      },
       lock: true,
       showWatts: true
     };
@@ -191,6 +208,24 @@ export default {
   methods: {
     changeRoomName() {
       this.showChange = true;
+    },
+    clickToCollect(room) {
+      let data = room;
+      this.apiPost("admin/room/collect", data).then(res => {
+        this.handelResponse(res, data => {
+          room.collect = 1;
+          _g.toastMsg("success", data);
+        });
+      });
+    },
+    clickToUnCollect(room) {
+      let data = room;
+      this.apiPost("admin/room/uncollect", data).then(res => {
+        this.handelResponse(res, data => {
+          room.collect = 0;
+          _g.toastMsg("success", data);
+        });
+      });
     },
     clickToLock() {
       var currentDeviceList = [];
@@ -237,9 +272,9 @@ export default {
       deviceObj.subnetid = "";
       deviceObj.deviceid = "";
       deviceObj.channel = "";
-      deviceObj.address = this.address.name;
-      deviceObj.floor = this.floorName;
-      deviceObj.room = this.roomName;
+      deviceObj.address = this.address.id;
+      deviceObj.floor = this.floor.id;
+      deviceObj.room = this.room.id;
       deviceObj.devicetype = device;
       deviceObj.on_off = "";
       deviceObj.status = "";
@@ -376,6 +411,8 @@ export default {
           this.room.floor = room.floor;
           this.room.address = room.address;
           this.room.typeList = room.typeList;
+          this.room.collect = room.collect;
+          // this.$set('info.'+key, 'what is this?');
           for (var type of room.typeList) {
             for (var device of type.deviceList) {
               deviceList.push(device);
@@ -384,14 +421,14 @@ export default {
         }
       }
       this.deviceList = deviceList;
-      if(this.lock){
+      if (this.lock) {
         this.$message({
-        showClose: true,
-        message:
-          "Mobile function has been banned, please click the right unlock button and move again",
-        type: "warning",
-        duration: 3000
-      });
+          showClose: true,
+          message:
+            "Mobile function has been banned, please click the right unlock button and move again",
+          type: "warning",
+          duration: 3000
+        });
       }
       clearInterval(interval);
       // window.socketio.removeAllListeners();
@@ -487,10 +524,10 @@ export default {
   },
   mounted() {
     this.roomWatts = echarts.init(this.$refs.roomWatts);
-    this.hotelName = this.address.name;
+    this.hotelId = this.address.id;
     this.floorList = this.address.floorList;
     for (var address of this.$store.state.address) {
-      if (this.address.name == address.address) {
+      if (this.address.id == address.id) {
         this.addressUpdateData = address;
       }
     }
@@ -552,7 +589,7 @@ export default {
         floor_num: 0
       };
       for (var address of this.$store.state.address) {
-        if (address.address == this.hotelName) {
+        if (address.id == this.hotelId) {
           this.$route.query.address.floor_num = address.floor_num
             ? parseInt(address.floor_num)
             : 0;
@@ -697,7 +734,8 @@ export default {
       },
       deep: true
     }
-  }
+  },
+  mixins: [http]
 };
 </script>
 

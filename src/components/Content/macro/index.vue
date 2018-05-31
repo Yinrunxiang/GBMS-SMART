@@ -68,17 +68,16 @@ export default {
       limit: 15,
       add: true,
       setting: false,
-      selectData: {},
       isLoading: true
     };
   },
   methods: {
     run(macro) {
-      const data =  macro
+      const data = macro;
       this.apiPost("admin/macro/run", data).then(res => {
-        this.handelResponse(res,data=>{
-           udpArr.sendUdpArr(data);
-        })
+        this.handelResponse(res, data => {
+          udpArr.sendUdpArr(data);
+        });
       });
     },
     goback(bool) {
