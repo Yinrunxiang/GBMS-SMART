@@ -117,13 +117,16 @@ class Address extends Common
                 }
                 Db::table('floor')->insertAll($floor_list);
             } else if ($floor_num < $floor_count) {
-                $floor_arr = Db::table('floor')->field('id')->where('address', $param['id'])->order('id')->limit($floor_num, $floor_count - $floor_num)->select();
-                foreach ($floor_arr as $k => $v) {
-                    Db::table('floor')->where('id', $v['id'])->delete();
-                    Db::table('room')->where('floor', $v['id'])->delete();
-                    Db::table('device')->where('floor', $v['id'])->delete();
+                $floors = Db::table('floor')->field('id')->where(['address' => ['=', $param['id']], 'floor' => ['>', $floor_num]])->select();
+                foreach ($floors as $k => $v) {
+                    Db::table('device')
+                        ->where(['floor' => ['=', $v['id']]])
+                        ->delete();
+                    Db::table('room')
+                        ->where(['floor' => ['=', $v['id']]])
+                        ->delete();
                 }
-
+                Db::table('floor')->where(['address' => ['=', $param['id']], 'floor' => ['>', $floor_num]])->delete();
             }
             $data = array();
             $data["address"] = $this->getDataList();

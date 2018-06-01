@@ -270,7 +270,7 @@ class udpServer
                             $mode = "fan";
                             break;
                         case 3:
-                            $mode = "mode_auto";
+                            $mode = "auto";
                             break;
                     }
                     $grade = substr($msg, 56, 2);

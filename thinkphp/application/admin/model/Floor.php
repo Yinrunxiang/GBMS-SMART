@@ -106,8 +106,8 @@ class Floor extends Common
 		$room_count = Db::table('room')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['id']]])->count('id');
 		$room_num = intval($param['room_num']);
 		try {
-            // //更新地址表
-			// $this->allowField(true)->save($param, ['address' => ['=', $param['address']], 'floor' => ['=', $param['floor']]]);
+            //更新地址表
+			$this->allowField(true)->save($param, ['id' => ['=', $param['id']]]);
             //更新房间数量
 			$room_list = [];
 			if ($room_num > $room_count) {
@@ -117,11 +117,13 @@ class Floor extends Common
 				}
 				Db::table('room')->insertAll($room_list);
 			} else if ($room_num < $room_count) {
-				$room_arr = Db::table('room')->field('id')->where('floor', $param['id'])->order('id')->limit($room_num, $room_count - $room_num)->select();
-				foreach ($room_arr as $k => $v) {
-					Db::table('room')->where('id', $v['id'])->delete();
-					Db::table('device')->where('room', $v['id'])->delete();
+				$rooms = Db::table('room')->field('id')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['id']], 'room' => ['>', $room_num]])->select();
+				foreach($rooms as $k => $v){
+					Db::table('device')
+					->where(['room' => ['=', $v['id']]])
+					->delete();
 				}
+				Db::table('room')->where(['address' => ['=', $param['address']], 'floor' => ['=', $param['id']], 'room' => ['>', $room_num]])->delete();
 			}
 			$data = array();
 			$data["floor"] = $this->getDataList();

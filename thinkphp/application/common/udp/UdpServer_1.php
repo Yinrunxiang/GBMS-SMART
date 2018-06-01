@@ -6,9 +6,12 @@ date_default_timezone_set('PRC');
 use Workerman\Worker;
 use Workerman\WebServer;
 use Workerman\Lib\Timer;
+use \app\common\udp\device\SendCommand;
 // use app\common\udp\Udp;
 require_once './Udp.php';
 require_once __DIR__ . '/vendor/autoload.php';
+require_once './device/SendCommand.php';
+
 // require_once './udp/udp.php';
 
 $con = mysqli_connect('localhost', 'root', 'root');
@@ -60,7 +63,7 @@ class UdpServer_1
     {
         $num = $num ? $num : 0;
         $len = $len ? $len : 0;
-        $msg = $msg . substr((50 + $num * 2), 2 * ($len + 1));
+        $msg = substr($msg, (50 + $num * 2), 2 * ($len + 1));
         return $msg;
     }
     function getAddress($subnetid, $deviceid)
@@ -145,7 +148,7 @@ class UdpServer_1
                     $on_off = $brightness != '00' ? 'on' : 'off';
                     $switch = $brightness != '00' ? true : false;
                     $deviceProperty = ['on_off' => $switch, 'brightness' => hexdec($brightness)];
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel,'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     if ($on_off == 'on') {
                         $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "' and  channel = '" . $channel . "'";
@@ -171,8 +174,12 @@ class UdpServer_1
                     $color = "#" . $red . $green . $blue;
                     $on_off = $color != "#000000" ? 'on' : 'off';
                     $switch = $color != "#000000" ? true : false;
-                    $deviceProperty = ['on_off' => $switch, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
+                    if ($switch) {
+                        $deviceProperty = ['on_off' => $switch, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
+                    } else {
+                        $deviceProperty = ['on_off' => $switch];
+                    }
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid,'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     if ($color != "#000000") {
                         $sql = "update device as a left join address as b on a.address = b.address set on_off = 'on',mode = '" . $color . "',run_date = now() where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
@@ -200,7 +207,7 @@ class UdpServer_1
                         $color = "#" . $red . $green . $blue;
                         $on_off = $color != "#000000" ? true : false;
                         $deviceProperty = ['on_off' => $on_off, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
-                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
+                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid,'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
                         $sender_io->emit('udp', $udp);
                         if ($color != "#000000") {
                             $on_off = true;
@@ -234,7 +241,7 @@ class UdpServer_1
                                 $channel = '0' . $channel;
                             }
                             $deviceProperty = ['on_off' => $switch, 'brightness' => hexdec($brightness)];
-                            $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
+                            $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'operatorCode' => $operatorCode,'deviceProperty' => $deviceProperty];
                             $sender_io->emit('udp', $udp);
                                 // echo  $channel;
                             if ($on_off == 'on') {
@@ -364,7 +371,7 @@ class UdpServer_1
                     }
                     if ($key != "") {
                         $deviceProperty = [$key => $value];
-                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
+                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel,'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
                         $sender_io->emit('udp', $udp);
                         if ($type == 'on_off') {
                             if ($value) {
@@ -396,7 +403,7 @@ class UdpServer_1
                             $mode = "fan";
                             break;
                         case 3:
-                            $mode = "mode_auto";
+                            $mode = "auto";
                             break;
                     }
                     $grade = substr($msg, 56, 2);
@@ -421,7 +428,7 @@ class UdpServer_1
 
                     $deviceProperty = ['on_off' => $switch, 'mode' => $mode, 'grade' => $grade, 'coolTmp' => $coolTmp, 'heatTmp' => $heatTmp, 'autoTmp' => $autoTmp];
 
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid,'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     if ($on_off == 'on') {
                         $sql = "update device as a left join address as b on a.address = b.address set on_off = '" . $on_off . "',mode = '" . $mode . "',grade = '" . $grade . "',operation_1 = '" . $coolTmp . "',operation_2 = '" . $heatTmp . "',operation_3 = '" . $autoTmp . "',run_date = now()  where subnetid = '" . $subnetid . "' and  deviceid = '" . $deviceid . "'";
@@ -434,14 +441,14 @@ class UdpServer_1
                 //地热模块
                     $channel = $this->getadditional($msg, 0);
                     //获取各个模式的温度
-                    $manualTemperature = $this->getadditional($msg, 1);
-                    $dayTemperature = $this->getadditional($msg, 3);
-                    $nightTemperature = $this->getadditional($msg, 5);
-                    $awayTemperature = $this->getadditional($msg, 7);
+                    $manualTemperature = hexdec($this->getadditional($msg, 1));
+                    $dayTemperature = hexdec($this->getadditional($msg, 3));
+                    $nightTemperature = hexdec($this->getadditional($msg, 5));
+                    $awayTemperature = hexdec($this->getadditional($msg, 7));
 
                     $deviceProperty = ['manualTemperature' => $manualTemperature, 'dayTemperature' => $dayTemperature, 'nightTemperature' => $nightTemperature, 'awayTemperature' => $awayTemperature];
 
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'deviceProperty' => $deviceProperty];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel,'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     //获取该建筑发在区域的mac地址目标ip目标端口
                     $address = $this->getAddress($subnetid, $deviceid);
@@ -467,17 +474,19 @@ class UdpServer_1
                     $dayTimeMinute = hexdec($this->getadditional($msg, 1));
                     $nightTimeHour = hexdec($this->getadditional($msg, 2));
                     $nightTimeMinute = hexdec($this->getadditional($msg, 3));
-                    $dayTime = $dayTimeHour . $dayTimeMinute;
-                    $nightTime = $nightTimeHour . $nightTimeMinute;
-                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'dayTime' => $dayTime, 'dayTemperature' => $nightTime, 'nightTime' => $nightTemperature];
+
+                    $dayTime = $dayTimeHour . ':' . $dayTimeMinute;
+                    $nightTime = $nightTimeHour . ':' . $nightTimeMinute;
+                    $deviceProperty = ['dayTime' => $dayTime, 'nightTime' => $nightTime];
+                    $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
                     $sender_io->emit('udp', $udp);
                     break;
                 case "e3db":
                     $channel = $this->getadditional($msg, 2);
-                    $operatorKind = $this->getadditional($msg, 0);
-                    $operatorResult = $this->getadditional($msg, 1);
+                    $type = $this->getadditional($msg, 0);
+                    $value = $this->getadditional($msg, 1);
                     $key = "";
-                    switch ($operatorKind) {
+                    switch ($type) {
                         case "14":
                             $type = 'on_off';
                             $key = $type;
@@ -511,7 +520,7 @@ class UdpServer_1
                     }
                     if ($key != "") {
                         $deviceProperty = [$key => $value];
-                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel, 'deviceProperty' => $deviceProperty];
+                        $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'channel' => $channel,'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
                         $sender_io->emit('udp', $udp);
                     }
                     break;

@@ -181,7 +181,7 @@ const acApi = {
             data: data
         }
         udpArr.push(udpObj)
-        api.sendUdpArr(device, udpArr)
+        api.sendUdpArr(udpArr)
         // let userInfo = Lockr.get("userInfo");
         // let port = userInfo.port;
         // this.socketio = socket("http://" + document.domain + ":" + port);

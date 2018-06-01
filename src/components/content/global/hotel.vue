@@ -488,9 +488,8 @@ export default {
     },
     initMode(value) {
       if (value == "auto") {
-        value == "mode_auto";
+        return "mode_auto";
       }
-      return value;
     },
     initWind(value) {
       switch (value) {

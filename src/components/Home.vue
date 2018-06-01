@@ -626,9 +626,15 @@ export default {
               case "curtain":
                 break;
               case "floorheat":
-                if (device.channel == udp.channel) {
+                if (udp.operatorCode == "03cc") {
                   for (var key in udp.deviceProperty) {
                     device.deviceProperty[key] = udp.deviceProperty[key];
+                  }
+                } else {
+                  if (device.channel == udp.channel) {
+                    for (var key in udp.deviceProperty) {
+                      device.deviceProperty[key] = udp.deviceProperty[key];
+                    }
                   }
                 }
                 break;
@@ -638,7 +644,7 @@ export default {
           }
         }
       });
-    },
+    }
     // addDeviceProperty(devices) {
     //   for (var device of devices) {
     //     switch (device.devicetype) {
