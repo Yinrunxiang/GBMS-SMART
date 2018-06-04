@@ -77,6 +77,9 @@ const actions = {
   setShowRightPage({ commit }, showRightPage) {
     commit("setShowRightPage", showRightPage);
   },
+  setUdpDevice({ commit }, udpDevice) {
+    commit("setUdpDevice", udpDevice);
+  },
 };
 
 export default actions;

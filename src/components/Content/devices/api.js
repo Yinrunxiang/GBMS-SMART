@@ -18,15 +18,15 @@ const api = {
 
     getUdp(device, operatorCodefst, operatorCodesec, additionalContentData) {
         const data = {
-                operatorCodefst: operatorCodefst,
-                operatorCodesec: operatorCodesec,
-                targetSubnetID: device.subnetid,
-                targetDeviceID: device.deviceid,
-                additionalContentData: additionalContentData,
-                macAddress: device.mac ? device.mac.split(".") : "",
-                dest_address: device.ip ? device.ip : "",
-                dest_port: device.port ? device.port : "",
-                udp_type: device.udp_type ? device.udp_type : ""
+            operatorCodefst: operatorCodefst,
+            operatorCodesec: operatorCodesec,
+            targetSubnetID: device.subnetid,
+            targetDeviceID: device.deviceid,
+            additionalContentData: additionalContentData,
+            macAddress: device.mac ? device.mac.split(".") : "",
+            dest_address: device.ip ? device.ip : "",
+            dest_port: device.port ? device.port : "",
+            udp_type: device.udp_type ? device.udp_type : ""
         }
         return data
     },
@@ -47,26 +47,32 @@ const api = {
                 }
                 operatorCode = zero + operatorCode
             }
-            window.socketio.on("new_msg", function (msg) {
-                var subnetid = msg.substr(34, 2);
-                var deviceid = msg.substr(36, 2);
-                if (
-                    subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
-                    deviceid.toLowerCase() != device.deviceid.toLowerCase()
-                ) return
-                var operatorCodeCurrent = msg.substr(42, 4)
-                if (operatorCodeCurrent != operatorCode) return
-                pass = true
-            })
+            // window.socketio.on("new_msg", function (msg) {
+            //     var subnetid = msg.substr(34, 2);
+            //     var deviceid = msg.substr(36, 2);
+            //     if (
+            //         subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+            //         deviceid.toLowerCase() != device.deviceid.toLowerCase()
+            //     ) return
+            //     var operatorCodeCurrent = msg.substr(42, 4)
+            //     if (operatorCodeCurrent != operatorCode) return
+            //     pass = true
+            // })
             var sendUdp = setInterval(function () {
+                var udpDevice = window.store.state.udpDevice
+                if (udpDevice.subnetid == device.subnetid.toLowerCase() && udpDevice.deviceid == device.deviceid.toLowerCase() && udpDevice.operatorCode == operatorCode) {
+                    pass = true
+                }
+
                 if (pass || index > 3) {
                     clearInterval(sendUdp);
                     return;
                 }
+                console.log(data)
                 api.apiPost("admin/udp/sendUdp", data).then(res => {
                 });
                 index++
-            }, 100);
+            }, 700);
         }
     },
     sendUdpArr(arr) {
@@ -88,23 +94,31 @@ const api = {
                     }
                     operatorCode = zero + operatorCode
                 }
-                window.socketio.on("new_msg", function (msg) {
-                    var subnetid = msg.substr(34, 2);
-                    var deviceid = msg.substr(36, 2);
-                    if (
-                        subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
-                        deviceid.toLowerCase() != device.deviceid.toLowerCase()
-                    ) return
-                    var operatorCodeCurrent = msg.substr(42, 4)
-                    if (operatorCodeCurrent != operatorCode) return
-                    if (operatorCodeCurrent == '0032') {
-                        var channel = _g.getadditional(msg, 0)
-                        if (device.channel != channel) return
-                    }
-                    pass = true
-                })
+                // window.socketio.on("new_msg", function (msg) {
+                //     var subnetid = msg.substr(34, 2);
+                //     var deviceid = msg.substr(36, 2);
+                //     if (
+                //         subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+                //         deviceid.toLowerCase() != device.deviceid.toLowerCase()
+                //     ) return
+                //     var operatorCodeCurrent = msg.substr(42, 4)
+                //     if (operatorCodeCurrent != operatorCode) return
+                //     if (operatorCodeCurrent == '0032') {
+                //         var channel = _g.getadditional(msg, 0)
+                //         if (device.channel != channel) return
+                //     }
+                //     pass = true
+                // })
 
                 var sendUdpFor = setInterval(function () {
+                    var udpDevice = window.store.state.udpDevice
+                    if (udpDevice.subnetid == device.subnetid.toLowerCase() && udpDevice.deviceid == device.deviceid.toLowerCase() && udpDevice.operatorCode == operatorCode) {
+                        if (device.channel) {
+                            if (udpDevice.channel == device.channel.toLowerCase()) {
+                                pass = true
+                            }
+                        }
+                    }
                     if (pass || index > 3) {
                         clearInterval(sendUdpFor);
                         arrIndex++
@@ -114,6 +128,7 @@ const api = {
                                 var timeCode = function () {
                                     sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
                                 }
+
                                 setTimeout(timeCode, time)
                             } else {
                                 sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
@@ -121,10 +136,11 @@ const api = {
                         }
                         return;
                     }
+                    console.log(data)
                     api.apiPost("admin/udp/sendUdp", data).then(res => {
                     });
                     index++
-                }, 100);
+                }, 700);
             }
 
         }

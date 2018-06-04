@@ -592,6 +592,7 @@ export default {
       // return countryArr
     },
     createSocket(devices) {
+      var vm = this
       if (window.socketio && window.socketio.io) {
         window.socketio.removeAllListeners();
       }
@@ -605,6 +606,13 @@ export default {
             device.subnetid == udp.subnetid &&
             device.deviceid == udp.deviceid
           ) {
+            var udpDevice = {
+              subnetid: udp.subnetid,
+              deviceid: udp.deviceid,
+              channel:udp.channel?udp.channel:"",
+              operatorCode: udp.operatorCode
+            };
+            vm.$store.dispatch("setUdpDevice", udpDevice);
             switch (device.devicetype) {
               case "ac":
                 for (var key in udp.deviceProperty) {
@@ -629,6 +637,41 @@ export default {
                 if (udp.operatorCode == "03cc") {
                   for (var key in udp.deviceProperty) {
                     device.deviceProperty[key] = udp.deviceProperty[key];
+                  }
+                } else if (udp.operatorCode == "e3e8") {
+                  if (
+                    udp.subnetid == device.deviceProperty.insideSubnetID &&
+                    udp.deviceid == device.deviceProperty.insideDeviceID
+                  ) {
+                    var insideChannel = parseInt(
+                      "0x" + device.deviceProperty.insideChannel
+                    );
+                    var insideTemperature =
+                      _g.getadditional(udp.msg, insideChannel + 8) == "00"
+                        ? parseInt(
+                            "0x" + _g.getadditional(udp.msg, insideChannel)
+                          )
+                        : 0 -
+                          parseInt(
+                            "0x" + _g.getadditional(udp.msg, insideChannel)
+                          );
+                  }
+                  if (
+                    udp.subnetid == device.deviceProperty.outsideSubnetID &&
+                    udp.deviceid == device.deviceProperty.outsideDeviceID
+                  ) {
+                    var outsideChannel = parseInt(
+                      "0x" + device.deviceProperty.outsideChannel
+                    );
+                    var outsideTemperature =
+                      _g.getadditional(udp.msg, outsideChannel + 8) == "00"
+                        ? parseInt(
+                            "0x" + _g.getadditional(udp.msg, outsideChannel)
+                          )
+                        : 0 -
+                          parseInt(
+                            "0x" + _g.getadditional(udp.msg, outsideChannel)
+                          );
                   }
                 } else {
                   if (device.channel == udp.channel) {

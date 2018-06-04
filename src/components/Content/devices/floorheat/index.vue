@@ -43,7 +43,7 @@
                         <el-button :class="{active:device.deviceProperty.mode == 'alarm'}"  size="small" class="mode-btn" style="margin:0" @click="alarmButtonClick()"><i class="fa fa-clock-o"></i></el-button>
                     </div>
                     <div class="m-t-20" v-show="device.deviceProperty.mode == 'alarm'">
-                      <el-time-select 
+                      <!-- <el-time-select 
                         class="i-b"
                         style="width:120px"
                         v-model="device.deviceProperty.dayTime"
@@ -67,7 +67,31 @@
                             minTime:device.deviceProperty.dayTime
                         }"
                         placeholder="Selection time">
-                        </el-time-select>
+                        </el-time-select> -->
+                         <el-time-picker class="i-b"
+                        style="width:120px"
+                    v-model="device.deviceProperty.dayTime"
+                    @change = "dayTimeChange"
+                    :editable="false"
+                    value-format="HH:mm"
+                    :picker-options="{
+                      format:'HH:mm'
+                    }"
+                    
+                    placeholder="Please choose">
+                  </el-time-picker>
+                        <el-time-picker class="i-b"
+                        style="width:120px"
+                    v-model="device.deviceProperty.nightTime"
+                    @change = "nightTimeChange"
+                    :editable="false"
+                    value-format="HH:mm"
+                    :picker-options="{
+                      format:'HH:mm'
+                    }"
+                    
+                    placeholder="Please choose">
+                  </el-time-picker>
                     </div>
                 </el-row>
             </div>
@@ -135,8 +159,7 @@
 import acApi from "./api";
 export default {
   data() {
-    return {
-    };
+    return {};
   },
   // props: ['device'],
   methods: {
@@ -196,18 +219,21 @@ export default {
     alarmButtonClick() {
       acApi.alarmButtonClick(this.device);
     },
-    timeChange(val) {
+    dayTimeChange(val) {
+      // this.device.deviceProperty.dayTime  = val.substr(0,5)
+      acApi.timeChange(this.device);
+    },
+    nightTimeChange(val) {
+      // this.device.deviceProperty.nightTime  = val.substr(0,5)
       acApi.timeChange(this.device);
     }
   },
-   created(){
- 
-  },
+  created() {},
   mounted() {
     console.log("floorheat");
     acApi.readStatus(this.device);
   },
-  destroyed(){
+  destroyed() {
     acApi.closeSocket();
   },
   components: {},
@@ -237,7 +263,9 @@ export default {
             hour = date.getHours(),
             minute = date.getMinutes(),
             nowTime = parseInt(hour + "" + minute);
-          var dayTime = parseInt(this.device.deviceProperty.dayTime.split(":").join()),
+          var dayTime = parseInt(
+              this.device.deviceProperty.dayTime.split(":").join()
+            ),
             nightTime = parseInt(
               this.device.deviceProperty.nightTime.split(":").join()
             );

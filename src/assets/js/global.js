@@ -204,11 +204,12 @@ const commonFn = {
             nightTime: "",
             insideTemperature: 26,
             outsideTemperature: 26,
-            insideSensor: {
-              targetSubnetID: "",
-              targetDeviceID: "",
-              channel: ""
-            }
+            insideSensorSubnetID: "",
+            insideSensorDeviceID: "",
+            insideSensorChannel: "",
+            outsideSensorSubnetID: "",
+            outsideSensorDeviceID: "",
+            outsideSensorChannel: "",
           };
           break;
         case "security":

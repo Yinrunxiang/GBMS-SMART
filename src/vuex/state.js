@@ -25,6 +25,11 @@ const state = {
   showFloor:false,
   showRoom:false,
   showRightPage:false,
+  udpDevice:{
+    subnetid:"",
+    deviceid:"",
+    operatorCode:"",
+  },
 }
 
 export default state

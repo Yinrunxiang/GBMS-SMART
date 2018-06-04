@@ -76,6 +76,9 @@ const mutations = {
   },
   setShowRightPage(state, showRightPage) {
     state.showRightPage = showRightPage
+  },
+  setUdpDevice(state, udpDevice) {
+    state.udpDevice = udpDevice
   }
 }
 

@@ -84,9 +84,10 @@ const acApi = {
             dayTimeMinute = _g.toHex(device.deviceProperty.dayTime.split(':')[1]),
             nightTimeHour = _g.toHex(device.deviceProperty.nightTime.split(':')[0]),
             nightTimeMinute = _g.toHex(device.deviceProperty.nightTime.split(':')[1])
-        var operatorCodefst = "E3",
+        var operatorCodefst = "03",
             operatorCodesec = "C9",
             additionalContentData = [dayTimeHour, dayTimeMinute, nightTimeHour, nightTimeMinute]
+        console.log(additionalContentData)
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
     switch_change(val, device) {
@@ -131,36 +132,6 @@ const acApi = {
     readStatus(device) {
         console.log('floorheatApi')
         var udpArr = []
-        // 读取定时器模式下的开始与结束时间
-        var operatorCodefst = "03",
-            operatorCodesec = "CB",
-            additionalContentData = []
-        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-        var udpObj = {
-            device: device,
-            data: data
-        }
-        udpArr.push(udpObj)
-        // 读取模式匹配温度与传感器的地址
-        var operatorCodefst = "03",
-            operatorCodesec = "C7",
-            additionalContentData = [device.channel]
-        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-        var udpObj = {
-            device: device,
-            data: data
-        }
-        udpArr.push(udpObj)
-        // 读取室外温度 (读摄氏温度)
-        var operatorCodefst = "E3",
-            operatorCodesec = "E7",
-            additionalContentData = ["01"]
-        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-        var udpObj = {
-            device: device,
-            data: data
-        }
-        udpArr.push(udpObj)
         // 读取开关状态
         var operatorCodefst = "E3",
             operatorCodesec = "DA",
@@ -182,6 +153,37 @@ const acApi = {
         }
         udpArr.push(udpObj)
         api.sendUdpArr(udpArr)
+        // 读取定时器模式下的开始与结束时间
+        var operatorCodefst = "03",
+            operatorCodesec = "CB",
+            additionalContentData = []
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+        var udpObj = {
+            device: device,
+            data: data
+        }
+        udpArr.push(udpObj)
+        // 读取模式匹配温度与传感器的地址
+        var operatorCodefst = "03",
+            operatorCodesec = "C7",
+            additionalContentData = [device.channel]
+        var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+        var udpObj = {
+            device: device,
+            data: data
+        }
+        udpArr.push(udpObj)
+        // // 读取室外温度 (读摄氏温度)
+        // var operatorCodefst = "E3",
+        //     operatorCodesec = "E7",
+        //     additionalContentData = ["01"]
+        // var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+        // var udpObj = {
+        //     device: device,
+        //     data: data
+        // }
+        // udpArr.push(udpObj)
+
         // let userInfo = Lockr.get("userInfo");
         // let port = userInfo.port;
         // this.socketio = socket("http://" + document.domain + ":" + port);
