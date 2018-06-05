@@ -21,24 +21,26 @@ function getRecordList(beginDate, endDate, vm, count, start, end, setIntervalRec
                 if (record.on_off == "on") {
                     switch (record.devicetype) {
                         case "ac":
+                            var modeList = ['wind_auto', 'high', 'medium', 'low']
+                            console.log(modeList);
                             for (var ac_breed of ac_breeds) {
-                                if (record.breed == ac_breed.breed) {
+                                if (record.breed == ac_breed.id) {
                                     record.watts =
                                         parseInt(ac_breed[record.mode]) +
-                                        parseInt(ac_breed[record.grade]);
+                                        parseInt(ac_breed[modeList[parseInt(record.grade)]]);
                                 }
                             }
                             break;
                         case "light":
                             for (var light_breed of light_breeds) {
-                                if (record.breed == light_breed.breed) {
+                                if (record.breed == light_breed.id) {
                                     record.watts = parseInt(light_breed.watts);
                                 }
                             }
                             break;
                         case "led":
                             for (var led_breed of led_breeds) {
-                                if (record.breed == led_breed.breed) {
+                                if (record.breed == led_breed.id) {
                                     record.watts = parseInt(led_breed.watts);
                                 }
                             }
@@ -48,7 +50,7 @@ function getRecordList(beginDate, endDate, vm, count, start, end, setIntervalRec
                         record.watts = parseFloat(record.watts / 1000 / 6);
                         record.usd = 0;
                         for (var address of addresss) {
-                            if (address.address == record.address && address.kw_usd) {
+                            if (address.id == record.address && address.kw_usd) {
                                 record.usd = record.watts * parseFloat(address.kw_usd);
                             }
                         }

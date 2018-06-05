@@ -158,6 +158,9 @@ export default {
         case "ac":
           return "fa-thermometer";
           break;
+        case "floorheat":
+          return "fa-thermometer";
+          break;
         case "music":
           return "fa-music";
           break;

@@ -31,6 +31,7 @@ class MacroCommand extends Common
         $macro = $param['id'];
         $map = [];
         $map['macro'] = ['=', $macro];
+        $map['b.id'] = ['<>', ''];
         $data = $this->alias('a')
             ->join('device b', 'a.device = b.id', 'left')
             ->join('room c', 'b.room = c.id and b.address = c.address and b.floor = c.floor', 'left')

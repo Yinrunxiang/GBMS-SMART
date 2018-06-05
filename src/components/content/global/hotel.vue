@@ -632,11 +632,11 @@ export default {
         var led_breeds = this.$store.state.led_breed;
         var wattsTotal = 0;
         for (var device of val) {
-          if (device.on_off) {
+          if (device.deviceProperty.on_off) {
             switch (device.devicetype) {
               case "ac":
                 for (var ac_breed of ac_breeds) {
-                  if (device.breed == ac_breed.breed) {
+                  if (device.breed == ac_breed.id) {
                     var modeWatts = parseInt(
                       ac_breed[this.initMode(device.mode)]
                     );
@@ -654,7 +654,7 @@ export default {
                 break;
               case "light":
                 for (var light_breed of light_breeds) {
-                  if (device.breed == light_breed.breed) {
+                  if (device.breed == light_breed.id) {
                     device.watts = parseInt(light_breed.watts);
                     wattsTotal += device.watts
                       ? parseFloat((device.watts / 1000).toFixed(2))
@@ -664,7 +664,7 @@ export default {
                 break;
               case "led":
                 for (var led_breed of led_breeds) {
-                  if (device.breed == led_breed.breed) {
+                  if (device.breed == led_breed.id) {
                     device.watts = parseInt(led_breed.watts);
                     wattsTotal += device.watts
                       ? parseFloat((device.watts / 1000).toFixed(2))

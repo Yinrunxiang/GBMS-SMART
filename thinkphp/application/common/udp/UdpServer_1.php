@@ -281,6 +281,7 @@ class UdpServer_1
                             }
                             break;
                         case "05":
+                        //[wind_auto,high,medium,low]
                             $type = 'grade';
                             $key = $type;
                             switch ($value) {
@@ -464,7 +465,7 @@ class UdpServer_1
                     break;
                 case "e3e8":
                     //地热模块
-                    if(!$this->getadditional($msg, 0)){
+                    if (!$this->getadditional($msg, 0)) {
                         return;
                     }
                     $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'operatorCode' => $operatorCode, 'udp' => $msg];
