@@ -24,9 +24,9 @@ class Udp extends ApiCommon
         $additionalContentData = $param['additionalContentData'];
         $udp_type = $param['udp_type'];
         if ($udp_type == "1") {
-            $dest_address = $_REQUEST["dest_address"] ? $_REQUEST["dest_address"] : '255.255.255.255';
+            $dest_address = $param["dest_address"] ? $param["dest_address"] : '255.255.255.255';
             $dest_port = 8888;
-            $macAddress = $_REQUEST["macAddress"] ? $_REQUEST["macAddress"] : [];
+            $macAddress = $param["macAddress"] ? $param["macAddress"] : [];
         } else {
             $dest_address = '255.255.255.255';
             $dest_port = 6000;
@@ -44,6 +44,13 @@ class Udp extends ApiCommon
         new UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
         usleep(300000);
         return resultArray(['data' => $msg]);
+
+        // $data = [];
+        // $data['msg'] = $msg;
+        // $data['macAddress'] = $macAddress;
+        // $data['socket'] = new UdpSocket("0.0.0.0", 0, $dest_address, $dest_port, $msg);
+        // usleep(300000);
+        // return resultArray(['data' => $data]);
     }
 }
  

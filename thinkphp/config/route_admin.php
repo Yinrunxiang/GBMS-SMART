@@ -20,6 +20,7 @@ return [
         'admin/schedule' => 'admin/schedule',
         'admin/record' => 'admin/record',
         'admin/ir' => 'admin/ir',
+        'admin/alexa' => 'admin/alexa',
     ],
     // 【基础】登录
     'admin/base/login' => ['admin/base/login', ['method' => 'POST']],

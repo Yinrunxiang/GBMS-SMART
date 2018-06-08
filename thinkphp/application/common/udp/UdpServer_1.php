@@ -206,7 +206,11 @@ class UdpServer_1
                         $mix = $this->tocolor($mix);
                         $color = "#" . $red . $green . $blue;
                         $on_off = $color != "#000000" ? true : false;
-                        $deviceProperty = ['on_off' => $on_off, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
+                        if($on_off){
+                            $deviceProperty = ['on_off' => $on_off, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
+                        }else{
+                            $deviceProperty = ['on_off' => $on_off];
+                        }
                         $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
                         $sender_io->emit('udp', $udp);
                         if ($color != "#000000") {
@@ -391,7 +395,7 @@ class UdpServer_1
                     $on_off = $on_off != '00' ? 'on' : 'off';
                     $switch = $on_off != '00' ? true : false;
                     $devicetype = 'ac';
-                    $mode = substr($msg, 55, 1);
+                    $mode = substr($msg, 54, 1);
                     $mode = hexdec($mode);
                     switch ($mode) {
                         case 0:
@@ -407,7 +411,7 @@ class UdpServer_1
                             $mode = "auto";
                             break;
                     }
-                    $grade = substr($msg, 56, 2);
+                    $grade = substr($msg, 55, 1);
                     $grade = hexdec($grade);
                     switch ($grade) {
                         case 0:

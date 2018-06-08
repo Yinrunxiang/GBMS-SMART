@@ -2,12 +2,12 @@
 namespace app\common\udp\device;
 use \app\common\udp\device\SendCommand;
 require_once __DIR__.'/SendCommand.php';
-$sendCommand = new SendCommand();
+
 class Music
 {
     public static function switch_change($val,$targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
-        global $sendCommand;
+        $sendCommand = new SendCommand();
         if ($val) {
             $operatorCodefst = "02";
             $operatorCodesec = "18";
@@ -22,7 +22,7 @@ class Music
     }
     public static function vol_change($val, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
-        global $sendCommand;
+        $sendCommand = new SendCommand();
         $operatorCodefst = "02";
         $operatorCodesec = "18";
         $additionalContentData = ["05","01","03",$sendCommand->toHex($val)];
@@ -30,7 +30,7 @@ class Music
     }
     public static function mode_change($val, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
-        global $sendCommand;
+        $sendCommand = new SendCommand();
         $operatorCodefst = "02";
         $operatorCodesec = "18";
         $additionalContentData = ["02",$val];
@@ -38,7 +38,7 @@ class Music
     }
     public static function selectSong($val, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
-        global $sendCommand;
+        $sendCommand = new SendCommand();
         $operatorCodefst = "02";
         $operatorCodesec = "18";
         $albumNo = substr($val, 0, 2);

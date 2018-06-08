@@ -1,14 +1,25 @@
 import api from "../api";
 import $ from "jquery";
 const ledApi = {
-  socketio:{},
+  socketio: {},
   //开关滑块
   //驱动颜色变化的数据为 255色的16位进制
   //UDP发送的颜色数据为  100色的16位进制
   get_switch_change(val, device) {
     if (val) {
       //255色转100色
-      var color = device.deviceProperty.color
+      var color = "";
+      if (device.deviceProperty && device.deviceProperty.color) {
+        color = device.deviceProperty.color
+      } else {
+        color = device.mode
+      }
+      if (color == "") {
+        var operatorCodefst = "F0",
+          operatorCodesec = "80",
+          additionalContentData = ["00", "00", "00", "00", "00", "00"]
+        return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+      }
       // console.log(color)
       var red = _g.toHex(Math.round(parseInt("0x" + color.substr(1, 2)) / 255 * 100));
       var green = _g.toHex(
@@ -54,7 +65,7 @@ const ledApi = {
     const data = this.get_headleChangeColor(val, device)
     api.sendUdp(device, data)
   },
-  closeSocket(){
+  closeSocket() {
     // this.socketio.removeAllListeners()
   },
   readStatus(device) {

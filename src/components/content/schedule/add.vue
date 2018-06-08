@@ -305,19 +305,19 @@ export default {
       ],
       grades: [
         {
-          value: 3,
+          value: '3',
           label: "Low"
         },
         {
-          value: 2,
+          value: '2',
           label: "Medial"
         },
         {
-          value: 1,
+          value: '1',
           label: "High"
         },
         {
-          value: 0,
+          value: '0',
           label: "Auto"
         }
       ],

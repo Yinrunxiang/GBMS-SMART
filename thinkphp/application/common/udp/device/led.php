@@ -2,12 +2,11 @@
 namespace app\common\udp\device;
 use \app\common\udp\device\SendCommand;
 require_once __DIR__.'/SendCommand.php';
-$sendCommand = new SendCommand();
 class Led
 {
     public static function switch_change($val,$mode,$targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
-        global $sendCommand;
+        $sendCommand = new SendCommand();
         if ($val) {
             $red = $sendCommand->toHex(round(hexdec(substr($mode,1,2))/255*100));
             $green = $sendCommand->toHex(round(hexdec(substr($mode,3,2))/255*100));
@@ -25,7 +24,7 @@ class Led
     }
     public static function headleChangeColor($mode,$channel, $targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
-        global $sendCommand;
+        $sendCommand = new SendCommand();
         $red = $sendCommand->toHex(round(intval("0x".substr($mode,1,2))));
         $green = $sendCommand->toHex(round(intval("0x".substr($mode,3,2))));
         $blue = $sendCommand->toHex(round(intval("0x".substr($mode,5,2))));

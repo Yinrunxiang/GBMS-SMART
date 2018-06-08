@@ -33,7 +33,7 @@ const api = {
     sendUdp(device, data, type) {
         if (!type || type == "") {
             api.apiPost("admin/udp/sendUdp", data).then(res => {
-                // console.log('res')
+                // console.log(res)
             });
         } else {
             var pass = false

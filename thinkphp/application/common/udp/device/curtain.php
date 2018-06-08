@@ -2,12 +2,12 @@
 namespace app\common\udp\device;
 use \app\common\udp\device\SendCommand;
 require_once __DIR__.'/SendCommand.php';
-$sendCommand = new SendCommand();
+
 class Curtain
 {
     public static function switch_change($val,$channel,$channel_spare,$targetSubnetID, $targetDeviceID, $macAddress,$dest_address,$dest_port)
     {
-        global $sendCommand;
+        $sendCommand = new SendCommand();
         if ($val) {
             $operatorCodefst = "00";
             $operatorCodesec = "31";
