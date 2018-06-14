@@ -64,7 +64,8 @@
             </el-form-item> -->
         </el-form>
     </div>
-    <div class="m-l-50 m-t-30 fl" style="width:360px;">
+    <div class="m-l-50 m-t-30 fl " style="width:360px;">
+      
       <p  style="margin:0,color:#606266;">Comment</p>
         <el-input
           style="width:360px;"
@@ -73,11 +74,26 @@
           placeholder="Please enter the comment"
           v-model="form.comment">
         </el-input>
-        <div class= "m-t-30 fr">
+        
+        <div class= "m-t-30">
+          <div>
+          <el-button  class= "fl" @click="search()">search</el-button>
+        </div>
+          <div class= "fr">
           <el-button type="primary" @click="commit('form')" :loading="isLoading">Save</el-button>
                 <el-button @click="goback()">Cancel</el-button>
+            </div>
         </div>
     </div>
+    <el-dialog title="Device Type Table" :visible.sync="dialogTableVisible" width="600">
+      <el-table :data="originalDevices" height="400" @row-dblclick="rowDblclick">
+        <el-table-column prop="subnetid" label="Subnet ID" width="100" align = "center"></el-table-column>
+        <el-table-column prop="deviceid" label="Device ID" width="100" align = "center"></el-table-column>
+        <el-table-column prop="deviceType" label="Device Type" width="200" align = "center"></el-table-column>
+        <el-table-column prop="remark" label="Remark"></el-table-column>
+      </el-table>
+    </el-dialog>
+
     </div>
 </template>
 <style>
@@ -90,11 +106,11 @@
 <script>
 import http from "../../../assets/js/http";
 import fomrMixin from "../../../assets/js/form_com";
-
 export default {
   data() {
     return {
       isLoading: false,
+      dialogTableVisible: false,
       // form: {
       //     device: '',
       //     devicetype: 'ac',
@@ -123,10 +139,34 @@ export default {
         { label: "IR", value: "ir" },
         { label: "Security", value: "security" }
         // { label: "FloorHeat", value: "floorheat" }
-      ]
+      ],
+      socketio: {}
     };
   },
   methods: {
+    search() {
+      this.dialogTableVisible = true;
+      this.$store.dispatch("setOriginalDevices", []);
+      var data = {
+        operatorCodefst: "00",
+        operatorCodesec: "0e",
+        targetSubnetID: "ff",
+        targetDeviceID: "ff",
+        additionalContentData: [],
+        macAddress: [],
+        dest_address: "",
+        dest_port: "",
+        udp_type: "0"
+      };
+      this.apiPost("admin/udp/sendUdp", data).then(res => {
+        // console.log(res)
+      });
+    },
+    rowDblclick(row) {
+      this.form.subnetid = row.subnetid;
+      this.form.deviceid = row.deviceid;
+      this.dialogTableVisible = false;
+    },
     goback() {
       this.form.subnetid = _g.toHex(this.form.subnetid);
       this.form.deviceid = _g.toHex(this.form.deviceid);
@@ -216,6 +256,9 @@ export default {
   components: {},
 
   computed: {
+    originalDevices() {
+      return this.$store.state.originalDevices;
+    },
     maxid() {
       var maxid = this.getBreedList(this.$store.state.maxid);
       return maxid;
@@ -293,7 +336,7 @@ export default {
         obj.value = item.id.toString();
         arr.push(obj);
       }
-      return arr
+      return arr;
     },
     light_breed() {
       let arr = [];
@@ -303,7 +346,7 @@ export default {
         obj.value = item.id.toString();
         arr.push(obj);
       }
-      return arr
+      return arr;
     },
     led_breed() {
       let arr = [];
@@ -313,7 +356,7 @@ export default {
         obj.value = item.id.toString();
         arr.push(obj);
       }
-      return arr
+      return arr;
     }
   },
   watch: {

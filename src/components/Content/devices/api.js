@@ -1,6 +1,7 @@
 
 const api = {
     apiPost(url, data) {
+        console.log(data)
         return new Promise((resolve, reject) => {
             axios.post(url, data).then((response) => {
                 resolve(response.data)

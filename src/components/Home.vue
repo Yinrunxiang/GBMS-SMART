@@ -141,6 +141,7 @@
 }
 </style>
 <script>
+import originalTypeList from "../assets/js/originalTypeList.js"
 import leftMenu from "./Common/leftMenu.vue";
 import topMenu from "./Common/topMenu.vue";
 import changePwd from "./Account/changePwd.vue";
@@ -592,7 +593,7 @@ export default {
       // return countryArr
     },
     createSocket(devices) {
-      var vm = this
+      var vm = this;
       if (window.socketio && window.socketio.io) {
         window.socketio.removeAllListeners();
       }
@@ -609,7 +610,7 @@ export default {
             var udpDevice = {
               subnetid: udp.subnetid,
               deviceid: udp.deviceid,
-              channel:udp.channel?udp.channel:"",
+              channel: udp.channel ? udp.channel : "",
               operatorCode: udp.operatorCode
             };
             vm.$store.dispatch("setUdpDevice", udpDevice);
@@ -686,6 +687,16 @@ export default {
             }
           }
         }
+      });
+      socketio.on("originalDevices", function(data) {
+        var device = data.subnetid + data.deviceid;
+        var originalDevices = vm.$store.state.originalDevices;
+        data.deviceType = vm.originalTypeList[data.deviceTypeId]
+        originalDevices.push(data)
+        // if (!originalDevices[device]) {
+        //   originalDevices[device] = data
+        // }
+        vm.$store.dispatch("setOriginalDevices", originalDevices);
       });
     }
     // addDeviceProperty(devices) {
@@ -807,6 +818,8 @@ export default {
     // this.$store.dispatch("setShowRoom", false);
   },
   mounted() {
+    var vm = this;
+    this.originalTypeList = originalTypeList
     var height = document.body.clientHeight - 60;
     var leftMenu = this.$refs.leftMenu;
     leftMenu.style.height = height + "px";
@@ -833,6 +846,41 @@ export default {
         this.countryArr();
       });
     });
+    var alexa_socket = socket("http://39.108.129.244:2121");
+    alexa_socket.on("alexa", function(alexa) {
+      var alexa = JSON.parse(alexa);
+      var data = {};
+      if (alexa.intent == "open") {
+        data = {
+          operatorCodefst: "00",
+          operatorCodesec: "31",
+          targetSubnetID: "01",
+          targetDeviceID: "1d",
+          additionalContentData: ["01", "64", "00", "00"],
+          macAddress: [],
+          dest_address: "",
+          dest_port: "",
+          udp_type: "0"
+        };
+      } else {
+        data = {
+          operatorCodefst: "00",
+          operatorCodesec: "31",
+          targetSubnetID: "01",
+          targetDeviceID: "1d",
+          additionalContentData: ["01", "00", "00", "00"],
+          macAddress: [],
+          dest_address: "",
+          dest_port: "",
+          udp_type: "0"
+        };
+      }
+
+      console.log(data);
+      vm.apiPost("admin/udp/sendUdp", data).then(res => {
+        // console.log(res)
+      });
+    });
   },
   components: {
     leftMenu,
@@ -843,6 +891,9 @@ export default {
     devices() {
       return this.$store.state.devices;
     },
+    // originalDevices() {
+    //   return this.$store.state.originalDevices;
+    // },
     address() {
       return this.$store.state.address;
     },

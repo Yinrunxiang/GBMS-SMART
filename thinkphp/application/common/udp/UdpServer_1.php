@@ -206,9 +206,9 @@ class UdpServer_1
                         $mix = $this->tocolor($mix);
                         $color = "#" . $red . $green . $blue;
                         $on_off = $color != "#000000" ? true : false;
-                        if($on_off){
+                        if ($on_off) {
                             $deviceProperty = ['on_off' => $on_off, 'red' => $red, 'green' => $green, 'blue' => $blue, 'mix' => $mix, 'color' => $color];
-                        }else{
+                        } else {
                             $deviceProperty = ['on_off' => $on_off];
                         }
                         $udp = ['subnetid' => $subnetid, 'deviceid' => $deviceid, 'operatorCode' => $operatorCode, 'deviceProperty' => $deviceProperty];
@@ -641,6 +641,20 @@ class UdpServer_1
                         //         $sendCommand->send('02', 'E6', $subnetid, $deviceid, [$source, $albumno, $this->toHex($i)], $macAddress, $dest_address, $dest_port);
                         //         usleep(100000);
                         //     }
+                    break;
+                case "000f":
+                    $length = strlen($msg) - 50 - 4;
+                    $remark = substr($msg, 50, $length);
+                    $arr = [];
+                    $strArr = [];
+                    $this->strToarr($arr,$remark);
+                    foreach($arr as $k =>$v){
+                        $str = chr(hexdec($v));
+                        $strArr.push($str);
+                    }
+                    $remark = join($strArr,"");
+                    $udp = ['subnetid' => hexdec($subnetid), 'deviceid' => hexdec($deviceid),'deviceTypeId'=>hexdec($deviceTypeId),'operatorCode' => $operatorCode, 'remark' => $remark];
+                    $sender_io->emit('originalDevices', $udp);
                     break;
 
             }

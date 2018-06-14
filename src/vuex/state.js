@@ -30,6 +30,7 @@ const state = {
     deviceid:"",
     operatorCode:"",
   },
+  originalDevices:[],
 }
 
 export default state

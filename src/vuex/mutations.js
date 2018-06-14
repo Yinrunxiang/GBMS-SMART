@@ -79,6 +79,9 @@ const mutations = {
   },
   setUdpDevice(state, udpDevice) {
     state.udpDevice = udpDevice
+  },
+  setOriginalDevices(state, originalDevices) {
+    state.originalDevices = originalDevices
   }
 }
 

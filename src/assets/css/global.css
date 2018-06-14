@@ -5,6 +5,12 @@ a {
   text-decoration: none;
   color: #c0ccda;
 }
+.clearfix:after{  
+  display: block;  
+  content:'';  
+  clear: both;  
+  height:0;  
+}  
 .pos-rel {
   position: relative;
 }

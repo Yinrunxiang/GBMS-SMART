@@ -80,6 +80,9 @@ const actions = {
   setUdpDevice({ commit }, udpDevice) {
     commit("setUdpDevice", udpDevice);
   },
+  setOriginalDevices({ commit }, originalDevices) {
+    commit("setOriginalDevices", originalDevices);
+  },
 };
 
 export default actions;
