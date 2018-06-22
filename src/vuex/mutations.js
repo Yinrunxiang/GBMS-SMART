@@ -82,6 +82,9 @@ const mutations = {
   },
   setOriginalDevices(state, originalDevices) {
     state.originalDevices = originalDevices
+  },
+  setalexaToken(state, alexaToken) {
+    state.alexaToken = alexaToken
   }
 }
 

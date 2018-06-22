@@ -402,15 +402,15 @@ switch ($action) {
     case "updateDatabase":
         $version = '1.6.1';
         echo $version;
-        $selectVersion = "select udp_flag as version from udp";
+        $selectVersion = "select version from base";
         $result = mysqli_query($con, $selectVersion);
         $row = mysqli_fetch_assoc($result);
         if ($row && $row["version"] == $version) return;
         $updateVersion = "";
         if ($row) {
-            $updateVersion = "update udp set udp_flag = '" . $version . "'";
+            $updateVersion = "update base set version = '" . $version . "'";
         } else {
-            $updateVersion = "insert into udp (udp_flag) values ('" . $version . "')";
+            $updateVersion = "insert into base (version) values ('" . $version . "')";
         }
         $createMacro = "CREATE TABLE if not exists `macro` (`id` int(11) NOT NULL AUTO_INCREMENT,`macro` varchar(30) DEFAULT NULL,PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC; ";
         $createMacroComment = " CREATE TABLE if not exists `macro_command` ( `id` int(11) NOT NULL AUTO_INCREMENT,  `macro` varchar(30) DEFAULT NULL, `device` varchar(50) DEFAULT NULL, `on_off` varchar(1) DEFAULT NULL, `mode` varchar(20) DEFAULT NULL, `grade` varchar(20) DEFAULT NULL, `status_1` varchar(20) DEFAULT NULL, `status_2` varchar(20) DEFAULT NULL, `status_3` varchar(20) DEFAULT NULL, `status_4` varchar(20) DEFAULT NULL, `status_5` varchar(20) DEFAULT NULL, `time` varchar(10) DEFAULT NULL, PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC; ";

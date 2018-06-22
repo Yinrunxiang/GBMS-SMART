@@ -21,7 +21,7 @@ class DataBase extends ApiCommon
         mysqli_select_db($con, $database_name);
         mysqli_set_charset($con, "utf8");
         $version = '1.7.1';
-        $selectVersion = "select udp_flag as version from udp";
+        $selectVersion = "select version  from base";
         $result = mysqli_query($con, $selectVersion);
         $row = mysqli_fetch_assoc($result);
         if ($row && $row["version"] == $version) {
@@ -29,13 +29,15 @@ class DataBase extends ApiCommon
         }
         $updateVersion = "";
         if ($row) {
-            $updateVersion = "update udp set udp_flag = '" . $version . "'";
+            $updateVersion = "update base set version = '" . $version . "'";
         } else {
-            $updateVersion = "insert into udp (udp_flag) values ('" . $version . "')";
+            $updateVersion = "insert into base (version) values ('" . $version . "')";
         }
         $createMacro = "CREATE TABLE if not exists `macro` (`id` int(11) NOT NULL AUTO_INCREMENT,`macro` varchar(30) DEFAULT NULL,PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC; ";
         $createMacroComment = " CREATE TABLE if not exists `macro_command` ( `id` int(11) NOT NULL AUTO_INCREMENT,  `macro` varchar(30) DEFAULT NULL, `device` varchar(50) DEFAULT NULL, `on_off` varchar(1) DEFAULT NULL, `mode` varchar(20) DEFAULT NULL, `grade` varchar(20) DEFAULT NULL, `status_1` varchar(20) DEFAULT NULL, `status_2` varchar(20) DEFAULT NULL, `status_3` varchar(20) DEFAULT NULL, `status_4` varchar(20) DEFAULT NULL, `status_5` varchar(20) DEFAULT NULL, `time` varchar(10) DEFAULT NULL, PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC; ";
         $createIrOperation = "CREATE TABLE if not exists `ir_operation` ( `id` int(11) NOT NULL AUTO_INCREMENT, `device` varchar(50) DEFAULT NULL, `ir_key` varchar(20) DEFAULT NULL, `ir_name` varchar(20) DEFAULT NULL, `ir_value` varchar(20) DEFAULT NULL,  PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8; ";
+        $createBase = "CREATE TABLE if not exists `base` ( `id` int(11) NOT NULL AUTO_INCREMENT, `version` varchar(20) DEFAULT NULL,  PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8; ";
+        $createAlexa = "CREATE TABLE if not exists `base` ( `id` int(11) NOT NULL AUTO_INCREMENT, `alexa_token` varchar(2000) DEFAULT NULL,   PRIMARY KEY (`id`) ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8; ";
          // $addAddressOperation = "alter table address add operation varchar(1)";
         $addAddressOperation = "alter table address add operation varchar(1) DEFAULT '0'; ";
         $updateAddressOperation = "update address set operation = '0' where operation = '' or operation is null";
@@ -59,6 +61,7 @@ class DataBase extends ApiCommon
         mysqli_query($con, $createMacro);
         mysqli_query($con, $createMacroComment);
         mysqli_query($con, $createIrOperation);
+        mysqli_query($con, $createBase);
         mysqli_query($con, $addAddressOperation);
         mysqli_query($con, $updateAddressOperation);
         mysqli_query($con, $addAddressImage);

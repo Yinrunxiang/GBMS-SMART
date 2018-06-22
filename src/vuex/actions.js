@@ -83,6 +83,9 @@ const actions = {
   setOriginalDevices({ commit }, originalDevices) {
     commit("setOriginalDevices", originalDevices);
   },
+  setalexaToken({ commit }, alexaToken) {
+    commit("setalexaToken", alexaToken);
+  },
 };
 
 export default actions;

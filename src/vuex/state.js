@@ -31,6 +31,7 @@ const state = {
     operatorCode:"",
   },
   originalDevices:[],
+  alexaToken:"",
 }
 
 export default state

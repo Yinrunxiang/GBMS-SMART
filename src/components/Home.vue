@@ -182,7 +182,7 @@ export default {
       logo_type: null,
       dataReady: false,
       showChange: false,
-      version: ""
+      version: "",
     };
   },
   methods: {
@@ -262,6 +262,13 @@ export default {
       this.apiGet("admin/room", {}).then(res => {
         this.handelResponse(res, data => {
           this.$store.dispatch("setRoom", data);
+        });
+      });
+    },
+    getAlexaToken() {
+      this.apiGet("admin/alexa", {}).then(res => {
+        this.handelResponse(res, data => {
+          this.$store.dispatch("setalexaToken", data);
         });
       });
     },
@@ -699,123 +706,10 @@ export default {
         vm.$store.dispatch("setOriginalDevices", originalDevices);
       });
     }
-    // addDeviceProperty(devices) {
-    //   for (var device of devices) {
-    //     switch (device.devicetype) {
-    //       case "ac":
-    //         device.deviceProperty = {
-    //           on_off: device.on_off,
-    //           coolTmp: 26,
-    //           autoTmp: 0,
-    //           heatTmp: 0,
-    //           tmp: 26,
-    //           grade: 2,
-    //           mode: "cool",
-    //           cool_strat: 0,
-    //           cool_end: 36,
-    //           heat_strat: 0,
-    //           heat_end: 36,
-    //           auto_strat: 0,
-    //           auto_end: 36
-    //         };
-    //         break;
-    //       case "light":
-    //         device.deviceProperty = {
-    //           brightness: 0,
-    //           on_off: device.on_off
-    //         };
-    //         break;
-    //       case "led":
-    //         device.deviceProperty = {
-    //           on_off: device.on_off,
-    //           brightness: 0,
-    //           color: device.mode
-    //           // red: "c0",
-    //           // green: "cc",
-    //           // blue: "da"
-    //         };
-    //         break;
-    //       case "curtain":
-    //         device.deviceProperty = {
-    //           on_off: device.on_off,
-    //           brightness: 0
-    //         };
-    //         break;
-    //       case "floorheat":
-    //         device.deviceProperty = {
-    //           on_off: device.on_off,
-    //           manualTemperature: 26,
-    //           dayTemperature: 26,
-    //           nightTemperature: 26,
-    //           awayTemperature: 26,
-    //           alarmTemperature: 26,
-    //           mode: "manual",
-    //           dayTime: "",
-    //           nightTime: "",
-    //           insideTemperature: 26,
-    //           outsideTemperature: 26,
-    //           insideSensor: {
-    //             targetSubnetID: "",
-    //             targetDeviceID: "",
-    //             channel: ""
-    //           }
-    //         };
-    //         break;
-    //       case "security":
-    //         device.deviceProperty = {
-    //           on_off: device.on_off
-    //         };
-    //         break;
-    //       case "ir":
-    //         device.deviceProperty = {
-    //           on_off: device.on_off
-    //         };
-    //         break;
-    //       case "music":
-    //         device.deviceProperty = {
-    //           vol: 20,
-    //           mode: "random",
-    //           on_off: device.on_off,
-    //           music_name: "Waitting",
-    //           music_autor: "Waitting",
-    //           time_now: 0,
-    //           time_over: 0,
-    //           albumno: 0,
-    //           albumlist: [],
-    //           songno: 0,
-    //           songList: [
-    //             {
-    //               songNo: 1,
-    //               songName: "Waitting",
-    //               select: true
-    //             }
-    //           ],
-    //           songListAll: [],
-    //           musicLoading: true,
-    //           source: "01"
-    //         };
-    //         break;
-    //     }
-    //   }
-    //   this.createSocket(devices);
-    // }
   },
   created() {
     console.log("home");
-    // let username = Lockr.get("username");
-    // let password = Lockr.get("password");
-    // this.username = username;
-    // if (!username || !password) {
-    //   _g.toastMsg("warning", "You are not logged in yet");
-    //   setTimeout(() => {
-    //     router.replace("/");
-    //   }, 1500);
-    //   return;
-    // }
-
-    // this.$store.dispatch("setShowHotel", true);
-    // this.$store.dispatch("setShowFloor", false);
-    // this.$store.dispatch("setShowRoom", false);
+    this.updateDatabase();
   },
   mounted() {
     var vm = this;
@@ -829,26 +723,22 @@ export default {
     this.getAddress();
     this.getFloor();
     this.getRoom();
-    this.updateDatabase();
+    this.getAlexaToken(); 
     this.apiGet("admin/device", {}).then(res => {
       this.handelResponse(res, data => {
         _g.addDeviceProperty(data);
         this.$store.dispatch("setDevices", data);
-        // var devices = [];
         var maxid = data[0].maxid;
         this.$store.dispatch("setMaxid", maxid);
-        // for (var device of res) {
-        //   if (device.status == "enabled") {
-        //     devices.push(device);
-        //   }
-        // }
-        // this.devices = devices
         this.countryArr();
       });
     });
     var alexa_socket = socket("http://39.108.129.244:2121");
+    console.log('1.'+vm.$store.state.alexaToken)
     alexa_socket.on("alexa", function(alexa) {
+      
       var alexa = JSON.parse(alexa);
+      console.log('1.'+vm.$store.state.alexaToken+'2.'+alexa.token)
       var data = {};
       if (alexa.intent == "open") {
         data = {
@@ -891,9 +781,6 @@ export default {
     devices() {
       return this.$store.state.devices;
     },
-    // originalDevices() {
-    //   return this.$store.state.originalDevices;
-    // },
     address() {
       return this.$store.state.address;
     },
@@ -919,8 +806,6 @@ export default {
   watch: {
     devices: {
       handler: function(val, oldVal) {
-        // console.log("deviceChange");
-        // _g.addDeviceProperty(val);
         this.createSocket(val);
         this.countryArr();
       },

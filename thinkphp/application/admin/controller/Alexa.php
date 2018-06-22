@@ -1,27 +1,42 @@
 <?php
 // +----------------------------------------------------------------------
-// | Description: 基础类，无需验证权限。
+// | Description: Alexa
 // +----------------------------------------------------------------------
 // | Author: Jensen
 // +----------------------------------------------------------------------
 
 namespace app\admin\controller;
-use think\Db;
-use com\verify\HonrayVerify;
-use app\common\controller\Common;
-use think\Request;
-use app\common\udp\device\Light;
-require __DIR__.'/../../common/udp/device/Light.php';
 
-class Alexa extends Common
+class Alexa extends ApiCommon
 {
-    public function save()
+
+    public function index()
     {
-        $Light = new Light;
-        $Light->switch_change(true,'01','01','05',['53','03','00','00','00','98','C8'],'smartbuscloud.com',8888);
-        // $Light = new Light;
-        // $Light->switch_change(true,'01','01','05',[],'255.255.255.255',6000);
+        $alexaModel = model('Alexa');
+        $data = $alexaModel->getDataList();
+        if (count($data) > 0) {
+            return resultArray(['data' => $data[0]['token']]);
+        } else {
+            $data = $alexaModel->createData();
+            if (!$data) {
+                return resultArray(['error' => $alexaModel->getError()]);
+            }
+            $data['result'] = 'success';
+            return resultArray(['data' => $data[0]['token']]);
+        }
+
     }
 
+    public function save()
+    {
+        $alexaModel = model('Alexa');
+        $param = $this->param;
+        $data = $alexaModel->createData();
+        if (!$data) {
+            return resultArray(['error' => $alexaModel->getError()]);
+        }
+        $data['result'] = 'success';
+        return resultArray(['data' => $data['token']]);
+    }
 }
  
