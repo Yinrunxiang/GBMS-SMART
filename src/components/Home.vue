@@ -13,7 +13,10 @@
       <el-col :span="18" class="h-60">
         <topMenu ref="topMenu"></topMenu>
       </el-col>
-			<el-col  :span="2" class="pos-rel">
+      	<el-col  :span="2" class="pos-rel">
+          <el-button type="info" style="background-color:#1f2d3d;" @click="alexaClick">Alexa</el-button>
+			</el-col>
+			<!-- <el-col  :span="2" class="pos-rel">
 				<el-dropdown @command="handleMenu" class="user-menu">
 
 					<p class="el-dropdown-link user-ground" style="cursor: default;color:#eee;">
@@ -25,7 +28,7 @@
 					</el-dropdown-menu>
 				</el-dropdown>
         
-			</el-col>
+			</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
 			<!--<el-col :span="4">-->
@@ -43,6 +46,12 @@
 			</section>
 		</el-col>
 		<changePwd ref="changePwd" :showChange = 'showChange' @change = 'showChangePage'></changePwd>
+    <el-dialog
+  title="Alexa"
+  :visible.sync="alexa_dialog"
+  width="30%">
+  <span>Alexa ID : {{alexaToken}}</span>
+</el-dialog>
 
 	</div>
 </template>
@@ -141,7 +150,7 @@
 }
 </style>
 <script>
-import originalTypeList from "../assets/js/originalTypeList.js"
+import originalTypeList from "../assets/js/originalTypeList.js";
 import leftMenu from "./Common/leftMenu.vue";
 import topMenu from "./Common/topMenu.vue";
 import changePwd from "./Account/changePwd.vue";
@@ -150,6 +159,7 @@ export default {
   data() {
     return {
       username: "",
+      alexa_dialog: false,
       // topMenu: [],
       childMenu: [],
       menuData: [
@@ -182,10 +192,14 @@ export default {
       logo_type: null,
       dataReady: false,
       showChange: false,
-      version: "",
+      alexaToken: "",
+      version: ""
     };
   },
   methods: {
+    alexaClick() {
+      this.alexa_dialog = true;
+    },
     hideRightPage() {
       // console.log("123");
       this.$store.dispatch("setShowRightPage", false);
@@ -266,11 +280,18 @@ export default {
       });
     },
     getAlexaToken() {
-      this.apiGet("admin/alexa", {}).then(res => {
-        this.handelResponse(res, data => {
-          this.$store.dispatch("setalexaToken", data);
+      var alexaToken = Lockr.get("rememberKey");
+      if (!alexaToken) {
+        this.apiGet("admin/alexa", {}).then(res => {
+          this.handelResponse(res, data => {
+            this.alexaToken = data.token;
+            Lockr.set("alexaToken", data.token);
+            // this.$store.dispatch("setalexaToken", data);
+          });
         });
-      });
+      } else {
+        this.alexaToken = alexaToken;
+      }
     },
     updateDatabase() {
       this.apiPost("admin/dataBase/updateDatabase", {}).then(res => {
@@ -698,8 +719,8 @@ export default {
       socketio.on("originalDevices", function(data) {
         var device = data.subnetid + data.deviceid;
         var originalDevices = vm.$store.state.originalDevices;
-        data.deviceType = vm.originalTypeList[data.deviceTypeId]
-        originalDevices.push(data)
+        data.deviceType = vm.originalTypeList[data.deviceTypeId];
+        originalDevices.push(data);
         // if (!originalDevices[device]) {
         //   originalDevices[device] = data
         // }
@@ -713,7 +734,7 @@ export default {
   },
   mounted() {
     var vm = this;
-    this.originalTypeList = originalTypeList
+    this.originalTypeList = originalTypeList;
     var height = document.body.clientHeight - 60;
     var leftMenu = this.$refs.leftMenu;
     leftMenu.style.height = height + "px";
@@ -723,7 +744,7 @@ export default {
     this.getAddress();
     this.getFloor();
     this.getRoom();
-    this.getAlexaToken(); 
+    this.getAlexaToken();
     this.apiGet("admin/device", {}).then(res => {
       this.handelResponse(res, data => {
         _g.addDeviceProperty(data);
@@ -734,11 +755,12 @@ export default {
       });
     });
     var alexa_socket = socket("http://39.108.129.244:2121");
-    console.log('1.'+vm.$store.state.alexaToken)
     alexa_socket.on("alexa", function(alexa) {
-      
-      var alexa = JSON.parse(alexa);
-      console.log('1.'+vm.$store.state.alexaToken+'2.'+alexa.token)
+      // var alexa = JSON.parse(alexa);
+      console.log("1." + vm.alexaToken + "2." + alexa.token);
+      if (vm.alexaToken != alexa.token) {
+        return;
+      }
       var data = {};
       if (alexa.intent == "open") {
         data = {

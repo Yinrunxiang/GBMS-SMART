@@ -31,14 +31,12 @@ class Alexa extends Common
     {
         $this->startTrans();
         try {
-
-            $token = substr(md5(time()), 0, $length);
+            $token = md5(md5(time()).rand(10000, 99999));
             $this->data(['token'=>$token])->allowField(true)->save();
             $this->commit();
             // return true;
             $data = array();
             $data["alexa"] = $this->select();
-            echo $token;
             return $data;
         } catch (\Exception $e) {
             $this->rollback();

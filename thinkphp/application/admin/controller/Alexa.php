@@ -15,14 +15,14 @@ class Alexa extends ApiCommon
         $alexaModel = model('Alexa');
         $data = $alexaModel->getDataList();
         if (count($data) > 0) {
-            return resultArray(['data' => $data[0]['token']]);
+            return resultArray(['data' => $data[0]]);
         } else {
             $data = $alexaModel->createData();
             if (!$data) {
                 return resultArray(['error' => $alexaModel->getError()]);
             }
             $data['result'] = 'success';
-            return resultArray(['data' => $data[0]['token']]);
+            return resultArray(['data' => $data[0]]);
         }
 
     }
