@@ -112,7 +112,8 @@ class Floor extends Common
 			$room_list = [];
 			if ($room_num > $room_count) {
 				for ($i = $room_count + 1; $i <= $room_num; $i++) {
-					$room_data = ['room' => $i, 'room_name' => $i, 'address' => $param['address'], 'floor' => $param['id'], 'status' => 'enabled'];
+					$alexa = md5(md5(time()).$i.rand(0, 99999));
+					$room_data = ['room' => $i, 'room_name' => $i, 'address' => $param['address'], 'floor' => $param['id'],'alexa'=>$alexa, 'status' => 'enabled'];
 					array_push($room_list, $room_data);
 				}
 				Db::table('room')->insertAll($room_list);

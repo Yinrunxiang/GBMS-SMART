@@ -57,6 +57,8 @@ class DataBase extends ApiCommon
         $addMoodGrade = "alter table mood add grade varchar(20); ";
         $addMarcoComment = "alter table marco add comment varchar(200); ";
         $addScheduleComment = "alter table schedule add comment varchar(200); ";
+        $addRoomAlexa = "alter table room add alexa varchar(200); ";
+        $addDeviceAlexa = "alter table device add alexa varchar(200); ";
         mysqli_query($con, $updateVersion);
         mysqli_query($con, $createMacro);
         mysqli_query($con, $createMacroComment);
@@ -80,6 +82,8 @@ class DataBase extends ApiCommon
         mysqli_query($con, $addMoodGrade);
         mysqli_query($con, $addMarcoComment);
         mysqli_query($con, $addScheduleComment);
+        mysqli_query($con, $addRoomAlexa);
+        mysqli_query($con, $addDeviceAlexa);
         return resultArray(['data' => $version]);
     }
 }

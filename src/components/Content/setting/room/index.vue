@@ -22,6 +22,8 @@
                 </el-table-column>
                 <el-table-column label="Floor" prop="floor_name" width="150">
                 </el-table-column>
+                   <el-table-column label="Alexa" prop="alexa" width="300">
+                </el-table-column>
                 <el-table-column label="Comment" prop="comment">
                 </el-table-column>
             </el-table>

@@ -13,9 +13,6 @@
       <el-col :span="18" class="h-60">
         <topMenu ref="topMenu"></topMenu>
       </el-col>
-      	<el-col  :span="2" class="pos-rel">
-          <el-button type="info" style="background-color:#1f2d3d;" @click="alexaClick">Alexa</el-button>
-			</el-col>
 			<!-- <el-col  :span="2" class="pos-rel">
 				<el-dropdown @command="handleMenu" class="user-menu">
 
@@ -46,13 +43,6 @@
 			</section>
 		</el-col>
 		<changePwd ref="changePwd" :showChange = 'showChange' @change = 'showChangePage'></changePwd>
-    <el-dialog
-  title="Alexa"
-  :visible.sync="alexa_dialog"
-  width="30%">
-  <span>Alexa ID : {{alexaToken}}</span>
-</el-dialog>
-
 	</div>
 </template>
 <style>
@@ -155,11 +145,14 @@ import leftMenu from "./Common/leftMenu.vue";
 import topMenu from "./Common/topMenu.vue";
 import changePwd from "./Account/changePwd.vue";
 import http from "../assets/js/http";
+import lightApi from "./Content/devices/light/api";
+import acApi from "./Content/devices/ac/api";
+import ledApi from "./Content/devices/led/api";
+import musicApi from "./Content/devices/music/api";
 export default {
   data() {
     return {
       username: "",
-      alexa_dialog: false,
       // topMenu: [],
       childMenu: [],
       menuData: [
@@ -192,14 +185,10 @@ export default {
       logo_type: null,
       dataReady: false,
       showChange: false,
-      alexaToken: "",
       version: ""
     };
   },
   methods: {
-    alexaClick() {
-      this.alexa_dialog = true;
-    },
     hideRightPage() {
       // console.log("123");
       this.$store.dispatch("setShowRightPage", false);
@@ -278,20 +267,6 @@ export default {
           this.$store.dispatch("setRoom", data);
         });
       });
-    },
-    getAlexaToken() {
-      var alexaToken = Lockr.get("rememberKey");
-      if (!alexaToken) {
-        this.apiGet("admin/alexa", {}).then(res => {
-          this.handelResponse(res, data => {
-            this.alexaToken = data.token;
-            Lockr.set("alexaToken", data.token);
-            // this.$store.dispatch("setalexaToken", data);
-          });
-        });
-      } else {
-        this.alexaToken = alexaToken;
-      }
     },
     updateDatabase() {
       this.apiPost("admin/dataBase/updateDatabase", {}).then(res => {
@@ -744,7 +719,6 @@ export default {
     this.getAddress();
     this.getFloor();
     this.getRoom();
-    this.getAlexaToken();
     this.apiGet("admin/device", {}).then(res => {
       this.handelResponse(res, data => {
         _g.addDeviceProperty(data);
@@ -756,42 +730,59 @@ export default {
     });
     var alexa_socket = socket("http://39.108.129.244:2121");
     alexa_socket.on("alexa", function(alexa) {
-      // var alexa = JSON.parse(alexa);
-      console.log("1." + vm.alexaToken + "2." + alexa.token);
-      if (vm.alexaToken != alexa.token) {
-        return;
-      }
-      var data = {};
-      if (alexa.intent == "open") {
-        data = {
-          operatorCodefst: "00",
-          operatorCodesec: "31",
-          targetSubnetID: "01",
-          targetDeviceID: "1d",
-          additionalContentData: ["01", "64", "00", "00"],
-          macAddress: [],
-          dest_address: "",
-          dest_port: "",
-          udp_type: "0"
-        };
-      } else {
-        data = {
-          operatorCodefst: "00",
-          operatorCodesec: "31",
-          targetSubnetID: "01",
-          targetDeviceID: "1d",
-          additionalContentData: ["01", "00", "00", "00"],
-          macAddress: [],
-          dest_address: "",
-          dest_port: "",
-          udp_type: "0"
-        };
-      }
+      console.log(alexa)
+      for (var room of vm.room) {
+        if (room.alexa == alexa.token) {
+          for (var device of vm.devices) {
+            if (device.room == room.id && device.alexa == alexa.device) {
+              var on_off = alexa.intent == "open" ? true : false;
+              switch (device.devicetype) {
+                case "light":
+                  lightApi.switch_change(on_off, device);
+                  break;
+                case "ac":
+                  acApi.switch_change(on_off, device);
+                  break;
+                case "led":
+                  ledApi.switch_change(on_off, device);
+                  break;
+              }
+            }
+          }
+          // console.log("1." + room.alexa + "2." + alexa.token);
+          // var data = {};
+          // if (alexa.intent == "open") {
+          //   data = {
+          //     operatorCodefst: "00",
+          //     operatorCodesec: "31",
+          //     targetSubnetID: "01",
+          //     targetDeviceID: "1d",
+          //     additionalContentData: ["01", "64", "00", "00"],
+          //     macAddress: [],
+          //     dest_address: "",
+          //     dest_port: "",
+          //     udp_type: "0"
+          //   };
+          // } else {
+          //   data = {
+          //     operatorCodefst: "00",
+          //     operatorCodesec: "31",
+          //     targetSubnetID: "01",
+          //     targetDeviceID: "1d",
+          //     additionalContentData: ["01", "00", "00", "00"],
+          //     macAddress: [],
+          //     dest_address: "",
+          //     dest_port: "",
+          //     udp_type: "0"
+          //   };
+          // }
 
-      console.log(data);
-      vm.apiPost("admin/udp/sendUdp", data).then(res => {
-        // console.log(res)
-      });
+          // console.log(data);
+          // vm.apiPost("admin/udp/sendUdp", data).then(res => {
+          //   // console.log(res)
+          // });
+        }
+      }
     });
   },
   components: {

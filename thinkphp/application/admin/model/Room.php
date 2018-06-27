@@ -18,6 +18,13 @@ class Room extends Common
 
 	public function getDataList($keywords = "", $page = 0, $limit = 0)
 	{
+        $data = $this
+		->where(['alexa'=>['EXP','IS NULL']])
+        ->select();
+        foreach($data as $k=>$v){
+            $alexa = md5(md5(time()).$v['id'].rand(0, 99999));
+            $this->allowField(true)->save(['alexa'=>$alexa], ['id'=> ['=',$v['id']]]);
+        }
 		if ($_SERVER['SERVER_NAME'] == "localhost") {
 			$host_name = exec("hostname");
 			$host_ip = gethostbyname($host_name);
@@ -29,7 +36,7 @@ class Room extends Common
 		->alias('a')
         ->join('address b', 'a.address=b.id', 'LEFT')
         ->join('floor c', 'a.floor=c.id', 'LEFT')
-		->field('a.id,room,room_name,a.image,b.country,a.address,a.floor,a.status,a.comment,b.address as address_name,c.floor as floor_name,a.lat,a.lng,width,height,collect')
+		->field('a.id,room,room_name,a.image,b.country,a.address,a.floor,a.status,a.comment,b.address as address_name,c.floor as floor_name,a.lat,a.lng,width,height,alexa,collect')
 		->order('country,address,floor_name+0,room+0')
 		->select();
 		foreach ($data as $k => $v) {

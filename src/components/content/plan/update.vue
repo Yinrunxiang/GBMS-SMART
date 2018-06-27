@@ -58,6 +58,9 @@
                     </el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="Alexa Name" prop="alexa">
+                <el-input type="alexa" v-model.trim="form.alexa" class="h-40 w-200"></el-input>
+            </el-form-item>
             <!-- <el-form-item>
                 <el-button type="primary" @click="commit('form')" :loading="isLoading">Save</el-button>
                 <el-button @click="goback()">Cancel</el-button>

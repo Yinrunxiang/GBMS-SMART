@@ -35,7 +35,9 @@
                 </el-table-column>
                 <!-- <el-table-column label="status" prop="status" width="150">
                 </el-table-column> -->
-                <el-table-column label="Breed" prop="breed">
+                <el-table-column label="Breed" prop="breed"  width="150">
+                </el-table-column>
+                <el-table-column label="Alexa Name" prop="alexa">
                 </el-table-column>
                 <!-- <el-table-column label="Time" prop="start" >
                     <template slot-scope="scope">
@@ -194,7 +196,8 @@ export default {
         on_off: false,
         starttime: "",
         endtime: "",
-        comment: ""
+        comment: "",
+        alexa:"",
       };
     },
     rowDblclick(row) {
