@@ -730,22 +730,111 @@ export default {
     });
     var alexa_socket = socket("http://39.108.129.244:2121");
     alexa_socket.on("alexa", function(alexa) {
-      console.log(alexa)
+      console.log(alexa);
       for (var room of vm.room) {
         if (room.alexa == alexa.token) {
           for (var device of vm.devices) {
             if (device.room == room.id && device.alexa == alexa.device) {
-              var on_off = alexa.intent == "open" ? true : false;
-              switch (device.devicetype) {
-                case "light":
-                  lightApi.switch_change(on_off, device);
-                  break;
-                case "ac":
-                  acApi.switch_change(on_off, device);
-                  break;
-                case "led":
-                  ledApi.switch_change(on_off, device);
-                  break;
+              if (alexa.intent in ["open", "close"]) {
+                var on_off = alexa.intent == "open" ? true : false;
+                switch (device.devicetype) {
+                  case "light":
+                    lightApi.switch_change(on_off, device);
+                    break;
+                  case "ac":
+                    acApi.switch_change(on_off, device);
+                    break;
+                  case "led":
+                    ledApi.switch_change(on_off, device);
+                    break;
+                  case "music":
+                    musicApi.switch_change(on_off, device);
+                    break;
+                }
+              } else {
+                switch (device.devicetype) {
+                  case "light":
+                    var grade = parseInt(alexa.grade);
+                    lightApi.slider_change(grade, device);
+                    break;
+                  case "ac":
+                    switch (alexa.mode) {
+                      case "wind":
+                      case "wind speed":
+                        switch (alexa.grade) {
+                          case "auto":
+                            acApi.wind_change(0, device);
+                            break;
+                          case "high":
+                            acApi.wind_change(1, device);
+                            break;
+                          case "medium":
+                            acApi.wind_change(2, device);
+                            break;
+                          case "low":
+                            acApi.wind_change(3, device);
+                            break;
+                        }
+                        break;
+                      case "mode":
+                        switch (alexa.grade) {
+                          case "auto":
+                            acApi.autobtn(device);
+                            break;
+                          case "fan":
+                            acApi.fanbtn(device);
+                            break;
+                          case "cool":
+                            acApi.coolbtn(device);
+                            break;
+                          case "heat":
+                            acApi.heatbtn(device);
+                            break;
+                        }
+                        break;
+                      case "temperature":
+                        var grade = parseInt(alexa.grade);
+                        switch (device.mode) {
+                          case "auto":
+                            acApi.autoTmp_change(grade, device);
+                            break;
+                          case "fan":
+                          case "cool":
+                            acApi.coolTmp_change(grade, device);
+                            break;
+                          case "heat":
+                            acApi.heatTmp_change(grade, device);
+                            break;
+                        }
+                        break;
+                    }
+                    break;
+                  case "led":
+                    switch(alexa.grade){
+                      case 'red':
+                      ledApi.headleChangeColor('#FF0000',device)
+                      break
+                      case 'orange':
+                      ledApi.headleChangeColor('#FF7F00',device)
+                      break
+                      case 'yellow':
+                      ledApi.headleChangeColor('#FFFF00',device)
+                      break
+                      case 'green':
+                      ledApi.headleChangeColor('#00FF00',device)
+                      break
+                      case 'cyan':
+                      ledApi.headleChangeColor('#00FFFF',device)
+                      break
+                      case 'blue':
+                      ledApi.headleChangeColor('#0000FF',device)
+                      break
+                      case 'purple':
+                      ledApi.headleChangeColor('#8B00FF',device)
+                      break
+                    }
+                    break;
+                }
               }
             }
           }

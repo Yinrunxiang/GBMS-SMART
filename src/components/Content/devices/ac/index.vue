@@ -122,7 +122,7 @@ export default {
           return "Hign";
           break;
         case 2:
-          return "Medial";
+          return "Medium";
           break;
         case 3:
           return "Low";
