@@ -20,7 +20,7 @@ class DataBase extends ApiCommon
         }
         mysqli_select_db($con, $database_name);
         mysqli_set_charset($con, "utf8");
-        $version = '1.7.1';
+        $version = '1.7.3';
         $selectVersion = "select version  from base";
         $result = mysqli_query($con, $selectVersion);
         $row = mysqli_fetch_assoc($result);
@@ -59,6 +59,7 @@ class DataBase extends ApiCommon
         $addScheduleComment = "alter table schedule add comment varchar(200); ";
         $addRoomAlexa = "alter table room add alexa varchar(200); ";
         $addDeviceAlexa = "alter table device add alexa varchar(200); ";
+        //v1.7.3  2018-07-03
         mysqli_query($con, $updateVersion);
         mysqli_query($con, $createMacro);
         mysqli_query($con, $createMacroComment);
