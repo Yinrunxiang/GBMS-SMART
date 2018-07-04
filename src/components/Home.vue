@@ -732,15 +732,15 @@ export default {
     alexa_socket.on("alexa", function(alexa) {
       console.log(alexa);
       var alexa_device = alexa.device.toLowerCase(),
-        alexa_mode = alexa.mode.toLowerCase(),
+        alexa_mode = alexa.intent.toLowerCase(),
         alexa_grade = alexa.grade.toLowerCase();
       for (var room of vm.room) {
         if (room.alexa == alexa.token) {
           for (var device of vm.devices) {
-            var device_alexa =device.alexa?device.alexa.toLowerCase():"";
+            var device_alexa = device.alexa ? device.alexa.toLowerCase() : "";
             if (device.room == room.id && device_alexa == alexa_device) {
-              if (alexa.intent =="open" || alexa.intent =="close") {
-                var on_off = alexa.intent == "open" ? true : false;
+              if (alexa_mode == "open" || alexa_mode == "close") {
+                var on_off = alexa_mode == "open" ? true : false;
                 switch (device.devicetype) {
                   case "light":
                     lightApi.switch_change(on_off, device);
@@ -764,7 +764,6 @@ export default {
                   case "ac":
                     switch (alexa_mode) {
                       case "wind":
-                      case "wind speed":
                         switch (alexa_grade) {
                           case "auto":
                             acApi.wind_change(0, device);
@@ -836,6 +835,20 @@ export default {
                       case "purple":
                         ledApi.headleChangeColor("#8B00FF", device);
                         break;
+                    }
+                    break;
+                  case "music":
+                    switch(alexa_mode){
+                      case "musicnext":
+                        musicApi.next(device);
+                      break
+                      case "musicprevious":
+                      musicApi.pre(device);
+                      break
+                      case "musicvolume":
+                        var grade = parseInt(alexa_grade);
+                        musicApi.vol_change(grade, device);
+                      break
                     }
                     break;
                 }

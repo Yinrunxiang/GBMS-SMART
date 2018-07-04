@@ -53,7 +53,7 @@ const musicApi = {
   },
   get_vol_change(val, device) {
     device.loading = true;
-    val = 79 - val;
+    val = parseInt(((100 - val)/100)*79);
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["05", "01", "03", _g.toHex(val)]

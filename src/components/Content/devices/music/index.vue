@@ -46,7 +46,7 @@
                     <el-col :span="15" class="fl" >
                         <template>
                             <div>
-                                <el-slider v-model="device.deviceProperty.vol" :min='0' :max='79' :step="1" @change="vol_change">
+                                <el-slider v-model="device.deviceProperty.vol" :min='0' :max='100' :step="1" @change="vol_change">
                                 </el-slider>
                             </div>
                         </template>
