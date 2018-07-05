@@ -39,22 +39,21 @@ const ledApi = {
   },
   //当颜色值发生改变时
   get_headleChangeColor(val, device) {
-    // var color = val.hex
+    console.log(val)
+    var color = val
     // color = color.substring(1)
     // color = _g.strToarr(color)
-    var color = device.deviceProperty.color;
+    // var color = device.deviceProperty.color;
     $(".led-light").css("color", color);
     var red = _g.toHex(Math.round(parseInt("0x" + color.substr(1, 2)) / 255 * 100));
     var green = _g.toHex(
       Math.round(parseInt("0x" + color.substr(3, 2)) / 255 * 100)
     );
     var blue = _g.toHex(Math.round(parseInt("0x" + color.substr(5, 2)) / 255 * 100));
-    if (device.deviceProperty.on_off) {
-      var operatorCodefst = "F0",
-        operatorCodesec = "80",
-        additionalContentData = [red, green, blue, "00", "00", "00"]
-      return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-    }
+    var operatorCodefst = "F0",
+      operatorCodesec = "80",
+      additionalContentData = [red, green, blue, "00", "00", "00"]
+    return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
   },
   switch_change(val, device) {
     const data = this.get_switch_change(val, device)

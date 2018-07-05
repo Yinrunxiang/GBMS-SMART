@@ -785,9 +785,11 @@ export default {
                             acApi.autobtn(device);
                             break;
                           case "fan":
+                          case "wind":
                             acApi.fanbtn(device);
                             break;
                           case "cool":
+                          case "cold":
                             acApi.coolbtn(device);
                             break;
                           case "heat":
@@ -797,7 +799,7 @@ export default {
                         break;
                       case "temperature":
                         var grade = parseInt(alexa_grade);
-                        switch (device.mode) {
+                        switch (device.deviceProperty.mode) {
                           case "auto":
                             acApi.autoTmp_change(grade, device);
                             break;

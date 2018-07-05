@@ -70,7 +70,7 @@ export default {
     headleChangeColor(val) {
       this.device.deviceProperty.color = val.hex;
       this.setColor();
-      ledApi.headleChangeColor(val, this.device);
+      ledApi.headleChangeColor(val.hex, this.device);
     }
   },
   created() {},
