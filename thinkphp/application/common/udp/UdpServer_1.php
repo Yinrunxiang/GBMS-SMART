@@ -642,18 +642,21 @@ class UdpServer_1
                         //         usleep(100000);
                         //     }
                     break;
+                case "192f":
+                    $sender_io->emit('music', $msg);
+                    break;
                 case "000f":
                     $length = strlen($msg) - 50 - 4;
                     $remark = substr($msg, 50, $length);
                     $arr = [];
                     $strArr = [];
-                    $this->strToarr($arr,$remark);
-                    foreach($arr as $k =>$v){
+                    $this->strToarr($arr, $remark);
+                    foreach ($arr as $k => $v) {
                         $str = chr(hexdec($v));
-                        $strArr.push($str);
+                        $strArr . push($str);
                     }
-                    $remark = join($strArr,"");
-                    $udp = ['subnetid' => hexdec($subnetid), 'deviceid' => hexdec($deviceid),'deviceTypeId'=>hexdec($deviceTypeId),'operatorCode' => $operatorCode, 'remark' => $remark];
+                    $remark = join($strArr, "");
+                    $udp = ['subnetid' => hexdec($subnetid), 'deviceid' => hexdec($deviceid), 'deviceTypeId' => hexdec($deviceTypeId), 'operatorCode' => $operatorCode, 'remark' => $remark];
                     $sender_io->emit('originalDevices', $udp);
                     break;
 

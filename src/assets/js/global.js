@@ -21,6 +21,7 @@ const commonFn = {
   // 获取操作码
   getoperationcode(msg) {
     msg = msg.substr(42, 4)
+    msg = msg.toLowerCase()
     return msg
   },
   // 获取可变参数
@@ -30,16 +31,25 @@ const commonFn = {
     msg = msg.substr((50 + num * 2), 2 * (len + 1))
     return msg
   },
+  getAdditionalList(str) {
+    var additional = str.substr(50)
+    var len = additional.length / 2;
+    var arr = [];
+    for (var i = 0; i < len; i++) {
+      arr.push(additional.substr(i * 2, 2));
+    }
+    return arr
+  },
   sendUdp(operatorCodefst, operatorCodesec, targetSubnetID, targetDeviceID, additionalContentData, macAddress, dest_address, dest_port) {
     let data = {
-        operatorCodefst: operatorCodefst,
-        operatorCodesec: operatorCodesec,
-        targetSubnetID: targetSubnetID,
-        targetDeviceID: targetDeviceID,
-        additionalContentData: additionalContentData,
-        macAddress: macAddress ? macAddress.split(".") : "",
-        dest_address: dest_address ? dest_address.split(".") : "",
-        dest_port: dest_port ? dest_port.split(".") : ""
+      operatorCodefst: operatorCodefst,
+      operatorCodesec: operatorCodesec,
+      targetSubnetID: targetSubnetID,
+      targetDeviceID: targetDeviceID,
+      additionalContentData: additionalContentData,
+      macAddress: macAddress ? macAddress.split(".") : "",
+      dest_address: dest_address ? dest_address.split(".") : "",
+      dest_port: dest_port ? dest_port.split(".") : ""
     };
     api.apiPost("admin/udp/sendUdp", data).then(res => {
       // console.log("res = ", _g.j2s(res));
@@ -125,7 +135,7 @@ const commonFn = {
       + seperator2 + sec;
     return currentdate;
   },
-  getDay(){
+  getDay() {
     var date = new Date();
     var seperator1 = "-";
     var month = date.getMonth() + 1;
@@ -139,7 +149,7 @@ const commonFn = {
     var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
     return currentdate;
   },
-  getMonth(){
+  getMonth() {
     var date = new Date();
     var seperator1 = "-";
     var month = date.getMonth() + 1;

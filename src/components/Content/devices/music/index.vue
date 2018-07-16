@@ -413,6 +413,7 @@ export default {
   },
   created() {
     console.log("music");
+    musicApi.readStatus(this.device);
     this.initMusic(this.device)
   },
   destroyed(){

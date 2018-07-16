@@ -701,6 +701,91 @@ export default {
         // }
         vm.$store.dispatch("setOriginalDevices", originalDevices);
       });
+      socketio.on("music", function(data) {
+        data = data.toLowerCase();
+        var subnetid = data.substr(34, 2);
+        var deviceid = data.substr(36, 2);
+        for (var device of devices) {
+          if (
+            device.subnetid == subnetid &&
+            device.deviceid == deviceid &&
+            device.devicetype == "music"
+          ) {
+            var operationcode = _g.getoperationcode(data);
+
+            if (operationcode == "192f") {
+              var additionalList = _g.getAdditionalList(data);
+              if (
+                additionalList[11] == "2c" &&
+                additionalList[12] == "56" &&
+                additionalList[13] == "4f" &&
+                additionalList[14] == "4c"
+              ) {
+                if (additionalList[17] == "0d") {
+                  device.deviceProperty.vol =
+                    79 -
+                    ((parseInt("0x" + additionalList[15]) - 48) * 10 +
+                      parseInt("0x" + additionalList[16]) -
+                      48);
+                } else {
+                  device.deviceProperty.vol =
+                    79 - (parseInt("0x" + additionalList[15]) - 48);
+                }
+              } else if (
+                additionalList[3] == "44" &&
+                additionalList[8] == "49" &&
+                additionalList[9] == "4e" &&
+                additionalList[10] == "45" &&
+                additionalList[11] == "31"
+              ) {
+                var additionalLength = additionalList.length;
+                var str = "";
+                for (var i = 14; i <= additionalLength - 4; i++) {
+                  str = str + String.fromCharCode("0x" + additionalList[i]);
+                }
+                console.log(str)
+                var audioSource = additionalList[2],
+                  audioLf = additionalList[31],
+                  audioFtp = additionalList[23],
+                  albumNumber = "";
+                if (audioSource == "31") {
+                  albumNumber = additionalList[24];
+                } else {
+                  albumNumber = additionalList[18];
+                }
+                albumNumber = parseInt("0x" + albumNumber);
+                audioSource = parseInt("0x" + audioSource) - 48;
+                console.log("专辑号：" + albumNumber + ",来源：" + audioSource);
+              } else if (
+                additionalList[3] == "44" &&
+                additionalList[8] == "49" &&
+                additionalList[9] == "4e" &&
+                additionalList[10] == "45" &&
+                additionalList[11] == "33"
+              ) {
+                var additionalLength = additionalList.length;
+                var str = "";
+                for (var i = 14; i <= additionalLength - 4; i++) {
+                  str = str + String.fromCharCode("0x" + additionalList[i]);
+                }
+                console.log(str)
+                var audioSource = additionalList[2],
+                  audioLf = additionalList[31],
+                  audioFtp = additionalList[23],
+                  songNumber = "";
+                if (audioSource == "31") {
+                  songNumber = additionalList[26];
+                } else {
+                  songNumber = additionalList[18];
+                }
+                songNumber = parseInt("0x" + songNumber);
+                audioSource = parseInt("0x" + audioSource) - 48;
+                console.log("歌曲号：" + songNumber + ",来源：" + audioSource);
+              }
+            }
+          }
+        }
+      });
     }
   },
   created() {
@@ -840,17 +925,17 @@ export default {
                     }
                     break;
                   case "music":
-                    switch(alexa_mode){
+                    switch (alexa_mode) {
                       case "musicnext":
                         musicApi.next(device);
-                      break
+                        break;
                       case "musicprevious":
-                      musicApi.pre(device);
-                      break
+                        musicApi.pre(device);
+                        break;
                       case "musicvolume":
                         var grade = parseInt(alexa_grade);
                         musicApi.vol_change(grade, device);
-                      break
+                        break;
                     }
                     break;
                 }

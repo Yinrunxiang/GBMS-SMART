@@ -356,7 +356,6 @@ const musicApi = {
           }
 
         }
-
         if (operationcode.toLowerCase() == "02e7") {
           var source = _g.getadditional(msg, 2);
           if (device.deviceProperty.source == source) {
@@ -398,22 +397,13 @@ const musicApi = {
       }
     });
   },
-  // sendUdpArr(arr) {
-  //   if (!arr || arr.length == 0) return
-  //   var arrLenght = arr.length
-  //   var index = 0
-  //   var sendUdpFor = setInterval(function () {
-  //     if (index >= arrLenght) {
-  //       clearInterval(sendUdpFor);
-  //       return;
-  //     }
-  //     api.apiPost("admin/udp/sendUdp", arr[index].data).then(res => {
-  //     });
-  //     console.log(index)
-  //     index++
-  //   }, 500);
-
-  // },
+  readStatus(device) {
+    var operatorCodefst = "19",
+      operatorCodesec = "2e",
+      additionalContentData = ['2a','5a','01','53','54','41','54','55','53','3F','0D']
+    var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+    api.sendUdp(device, data)
+  },
   sendUdpArr(arr) {
     if (!arr || arr.length == 0) return
     var $this = this
