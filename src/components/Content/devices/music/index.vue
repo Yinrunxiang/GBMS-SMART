@@ -25,7 +25,8 @@
                 <i class="el-icon-refresh" @click="refresh"></i>
             </div>
             <div class="music-title">
-            <p>{{device.deviceProperty.music_name}}</p>
+            <p>{{device.deviceProperty.albumNow}}</p>
+            <p>{{device.deviceProperty.songNow}}</p>
             </div>
             <div class="music-content" :span="24">
                 <div class="music-content-top">
@@ -151,7 +152,8 @@
   width: 150px;
   height: 100%;
   border: 1px solid #d1dbe5;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
 }
 
@@ -327,46 +329,9 @@ export default {
     },
     pre() {
       musicApi.pre(this.device);
-      var len = this.device.deviceProperty.songList.length;
-      for (var key in this.device.deviceProperty.songList) {
-        if (this.device.deviceProperty.songList[key].select) {
-          this.device.deviceProperty.songList[key].select = false;
-          if (key == 0) {
-            this.device.deviceProperty.music_name = this.device.deviceProperty.songList[
-              len - 1
-            ].songName;
-            this.device.deviceProperty.songList[len - 1].select = true;
-            return;
-          } else {
-            this.device.deviceProperty.music_name = this.device.deviceProperty.songList[
-              key - 1
-            ].songName;
-            this.device.deviceProperty.songList[key - 1].select = true;
-            return;
-          }
-        }
-      }
     },
     next() {
       musicApi.next(this.device);
-      var len = this.device.deviceProperty.songList.length;
-      for (var key in this.device.deviceProperty.songList) {
-        key = parseInt(key);
-        if (this.device.deviceProperty.songList[key].select) {
-          this.device.deviceProperty.songList[key].select = false;
-          if (key == len - 1) {
-            this.device.deviceProperty.music_name = this.device.deviceProperty.songList[0].songName;
-            this.device.deviceProperty.songList[0].select = true;
-            return;
-          } else {
-            this.device.deviceProperty.music_name = this.device.deviceProperty.songList[
-              key + 1
-            ].songName;
-            this.device.deviceProperty.songList[key + 1].select = true;
-            return;
-          }
-        }
-      }
     },
     play() {
       this.device.deviceProperty.on_off = true;

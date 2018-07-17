@@ -39,7 +39,7 @@ export default {
       var vm = this;
       this.isLoading = !this.isLoading;
       const data = this.form;
-      this.apiPut("admin/light_breed", data).then(res => {
+      this.apiPut("admin/light_breed/", data.id, data).then(res => {
         this.handelResponse(res, data => {
           var light_breed = [];
           light_breed = light_breed.concat(vm.$store.state.light_breed);

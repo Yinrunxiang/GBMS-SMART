@@ -159,6 +159,26 @@ const commonFn = {
     var currentmonth = date.getFullYear() + seperator1 + month;
     return currentmonth;
   },
+  sec_to_time(s) {
+    var t = "";
+    if (s > -1) {
+      var hour = Math.floor(s / 3600);
+      var min = Math.floor(s / 60) % 60;
+      var sec = s % 60;
+      if (hour) {
+        if (hour < 10) {
+          t = '0' + hour + ":";
+        } else {
+          t = hour + ":";
+        }
+      }
+      if (min < 10) { t += "0"; }
+      t += min + ":";
+      if (sec < 10) { t += "0"; }
+      t += sec;
+    }
+    return t;
+  },
   addDeviceProperty(devices) {
     for (var device of devices) {
       switch (device.devicetype) {
@@ -235,6 +255,12 @@ const commonFn = {
         case "music":
           device.deviceProperty = {
             vol: 20,
+            list: "",
+            track: "",
+            albumNow: "",
+            songNow: "",
+            totalTime:"",
+            nowTime:"",
             mode: "random",
             on_off: device.on_off,
             music_name: "Waitting",

@@ -715,22 +715,58 @@ export default {
 
             if (operationcode == "192f") {
               var additionalList = _g.getAdditionalList(data);
+
               if (
                 additionalList[11] == "2c" &&
                 additionalList[12] == "56" &&
                 additionalList[13] == "4f" &&
                 additionalList[14] == "4c"
               ) {
+                //读音量
                 if (additionalList[17] == "0d") {
-                  device.deviceProperty.vol =
-                    79 -
-                    ((parseInt("0x" + additionalList[15]) - 48) * 10 +
-                      parseInt("0x" + additionalList[16]) -
-                      48);
+                  device.deviceProperty.vol = parseInt(
+                    (79 -
+                      ((parseInt("0x" + additionalList[15]) - 48) * 10 +
+                        parseInt("0x" + additionalList[16]) -
+                        48)) /
+                      79 *
+                      100
+                  );
                 } else {
-                  device.deviceProperty.vol =
-                    79 - (parseInt("0x" + additionalList[15]) - 48);
+                  device.deviceProperty.vol = parseInt(
+                    (79 - (parseInt("0x" + additionalList[15]) - 48)) / 79 * 100
+                  );
                 }
+              } else if (
+                additionalList[11] == "2c" &&
+                additionalList[12] == "44" &&
+                additionalList[13] == "55" &&
+                additionalList[14] == "52"
+              ) {
+                //读播放状态
+                var additionalLength = additionalList.length;
+                var str = additionalList[additionalLength - 4];
+                device.deviceProperty.on_off = str == "32" ? true : false;
+                var additionalStr = "";
+                for (var additional of additionalList) {
+                  additionalStr += String.fromCharCode("0x" + additional);
+                }
+                console.log(additionalStr);
+                var totalTime = "",
+                  nowTime = "",
+                  totalTimeIndex = additionalStr.indexOf(",POS"),
+                  nowTimeIndex = additionalStr.indexOf(",STATUS");
+                totalTime = _g.sec_to_time(
+                  parseInt(additionalStr.substring(15, totalTimeIndex)) / 10
+                );
+                nowTime = _g.sec_to_time(
+                  parseInt(
+                    additionalStr.substring(totalTimeIndex + 4, nowTimeIndex)
+                  ) / 10
+                );
+                device.deviceProperty.totalTime = totalTime;
+                device.deviceProperty.nowTime = nowTime;
+                console.log(totalTime + "," + nowTime);
               } else if (
                 additionalList[3] == "44" &&
                 additionalList[8] == "49" &&
@@ -738,24 +774,37 @@ export default {
                 additionalList[10] == "45" &&
                 additionalList[11] == "31"
               ) {
+                //读播放专辑号
                 var additionalLength = additionalList.length;
                 var str = "";
-                for (var i = 14; i <= additionalLength - 4; i++) {
-                  str = str + String.fromCharCode("0x" + additionalList[i]);
+                for (var i = 14; i <= additionalLength - 6; i += 2) {
+                  str =
+                    str +
+                    String.fromCharCode(
+                      "0x" + additionalList[i] + additionalList[i + 1]
+                    );
                 }
-                console.log(str)
-                var audioSource = additionalList[2],
-                  audioLf = additionalList[31],
-                  audioFtp = additionalList[23],
-                  albumNumber = "";
-                if (audioSource == "31") {
-                  albumNumber = additionalList[24];
-                } else {
-                  albumNumber = additionalList[18];
+                device.deviceProperty.list = str;
+                console.log(str);
+              } else if (
+                additionalList[3] == "44" &&
+                additionalList[8] == "49" &&
+                additionalList[9] == "4e" &&
+                additionalList[10] == "45" &&
+                additionalList[11] == "32"
+              ) {
+                //读播放专辑名
+                var additionalLength = additionalList.length;
+                var str = "";
+                for (var i = 14; i <= additionalLength - 6; i += 2) {
+                  str =
+                    str +
+                    String.fromCharCode(
+                      "0x" + additionalList[i] + additionalList[i + 1]
+                    );
                 }
-                albumNumber = parseInt("0x" + albumNumber);
-                audioSource = parseInt("0x" + audioSource) - 48;
-                console.log("专辑号：" + albumNumber + ",来源：" + audioSource);
+                device.deviceProperty.albumNow = str;
+                console.log(str);
               } else if (
                 additionalList[3] == "44" &&
                 additionalList[8] == "49" &&
@@ -763,24 +812,37 @@ export default {
                 additionalList[10] == "45" &&
                 additionalList[11] == "33"
               ) {
+                //读播放歌曲号
                 var additionalLength = additionalList.length;
                 var str = "";
-                for (var i = 14; i <= additionalLength - 4; i++) {
-                  str = str + String.fromCharCode("0x" + additionalList[i]);
+                for (var i = 14; i <= additionalLength - 6; i += 2) {
+                  str =
+                    str +
+                    String.fromCharCode(
+                      "0x" + additionalList[i] + additionalList[i + 1]
+                    );
                 }
-                console.log(str)
-                var audioSource = additionalList[2],
-                  audioLf = additionalList[31],
-                  audioFtp = additionalList[23],
-                  songNumber = "";
-                if (audioSource == "31") {
-                  songNumber = additionalList[26];
-                } else {
-                  songNumber = additionalList[18];
+                device.deviceProperty.track = str;
+                console.log(str);
+              } else if (
+                additionalList[3] == "44" &&
+                additionalList[8] == "49" &&
+                additionalList[9] == "4e" &&
+                additionalList[10] == "45" &&
+                additionalList[11] == "34"
+              ) {
+                //读播放歌曲名
+                var additionalLength = additionalList.length;
+                var str = "";
+                for (var i = 14; i <= additionalLength - 6; i += 2) {
+                  str =
+                    str +
+                    String.fromCharCode(
+                      "0x" + additionalList[i] + additionalList[i + 1]
+                    );
                 }
-                songNumber = parseInt("0x" + songNumber);
-                audioSource = parseInt("0x" + audioSource) - 48;
-                console.log("歌曲号：" + songNumber + ",来源：" + audioSource);
+                device.deviceProperty.songNow = str;
+                console.log(str);
               }
             }
           }
