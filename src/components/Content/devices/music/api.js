@@ -39,7 +39,7 @@ const musicApi = {
     //     // _g.closeGlobalLoading()
     // })
   },
-  get_source_change(val,device) {
+  get_source_change(val, device) {
     var source = val == '02' ? '03' : val
     var operatorCodefst = "02",
       operatorCodesec = "18",
@@ -47,13 +47,13 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
-  source_change(val,device) {
-    var data = this.get_source_change(val,device)
+  source_change(val, device) {
+    var data = this.get_source_change(val, device)
     api.sendUdp(device, data)
   },
   get_vol_change(val, device) {
     device.loading = true;
-    val = parseInt(((100 - val)/100)*79);
+    val = parseInt(((100 - val) / 100) * 79);
     var operatorCodefst = "02",
       operatorCodesec = "18",
       additionalContentData = ["05", "01", "03", _g.toHex(val)]
@@ -121,24 +121,46 @@ const musicApi = {
     var data = this.get_pause(device)
     api.sendUdp(device, data)
   },
+  modeChange(device) {
+    var operatorCodefst,
+      operatorCodesec,
+      additionalContentData,
+      data
+    if (device.deviceProperty.mode == '4') {
+      operatorCodefst = "19"
+      operatorCodesec = "2e"
+      additionalContentData = ["2a", "53", "31", "4d", "4f", "44", "45", "2d", "0d"]
+      data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+      api.sendUdp(device, data)
+      api.sendUdp(device, data)
+      api.sendUdp(device, data)
+    } else {
+      operatorCodefst = "19"
+      operatorCodesec = "2e"
+      additionalContentData = ["2a", "53", "31", "4d", "4f", "44", "45", "2b", "0d"]
+      data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
+      api.sendUdp(device, data)
+    }
+  },
   random(device) {
+    console.log('random')
     var operatorCodefst = "02",
       operatorCodesec = "18",
-      additionalContentData = ["02", "01"]
+      additionalContentData = ["02", "01", "00", "00"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
   single(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
-      additionalContentData = ["02", "02"]
+      additionalContentData = ["02", "02", "00", "00"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
   allmusic(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
-      additionalContentData = ["02", "04"]
+      additionalContentData = ["02", "04", "00", "00"]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
@@ -149,8 +171,8 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
-  selectSong(device,  song) {
-    var data = this.get_selectSong(device,  song)
+  selectSong(device, song) {
+    var data = this.get_selectSong(device, song)
     api.sendUdp(device, data)
   },
   closeSocket() {
@@ -163,246 +185,429 @@ const musicApi = {
   },
   readSong(device) {
     console.log('music_api')
-    var $this = this
-    var albumnum = 0;
-    var albumNote = 0;
-    var albumNoList = {}
-    var songNoList = {}
-    var songList = []
-    var udpArrSong = []
     var operatorCodefst = "02",
       operatorCodesec = "E0",
       additionalContentData = [device.deviceProperty.source]
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
-    let userInfo = Lockr.get("userInfo");
-    let port = userInfo.port;
-    this.socketio = socket("http://" + document.domain + ":" + port);
-    this.socketio.on("music", function (msg) {
-      var msglen = msg.length;
-      var stop = msglen - 4;
-      var subnetid = msg.substr(34, 2);
-      var deviceid = msg.substr(36, 2);
-
-      // var channel = msg.substr(52, 2);
-      if (
-        subnetid.toLowerCase() == device.subnetid.toLowerCase() &&
-        deviceid.toLowerCase() == device.deviceid.toLowerCase()
-      ) {
-        //操作码
-        var operationcode = _g.getoperationcode(msg);
-
-        if (operationcode.toLowerCase() == "02e1") {
-          var source = _g.getadditional(msg, 0);
-          if (device.deviceProperty.source == source) {
-            var albumpack = msg.substring(52, stop);
-            var additionalContentData = strToarr(albumpack);
-            additionalContentData.unshift(source);
-            var operatorCodefst = "02",
-              operatorCodesec = "E2"
-            var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-            api.sendUdp(device, data)
-          }
-
-        }
-        if (operationcode.toLowerCase() == "02e3") {
-          var source = _g.getadditional(msg, 2);
-          if (device.deviceProperty.source == source) {
-            var firstAlbumNo = _g.getadditional(msg, 5);
-            var albumCount = 0
-            // device.albumno = '06'
-            albumnum = _g.getadditional(msg, 4);
-            var albumlist = msg.substring(60);
-            device.deviceProperty.albumlist = [];
-            device.deviceProperty.songList = [];
-            device.deviceProperty.songListAll = [];
-            var albumList = []
-            songList = []
-            for (var i = 0; i < albumnum; i++) {
-              var albumNo = albumlist.substr(albumCount, 2);
-              var albumLength = albumlist.substr(albumCount + 2, 2);
-              albumLength = parseInt('0x' + albumLength) * 2
-              var albumNameList = albumlist.substr(albumCount + 4, albumLength)
-              albumNameList = strToarr4(albumNameList)
-              var albumName = []
-              for (var item of albumNameList) {
-                albumName.push(String.fromCharCode("0x" + item));
-              }
-              albumName = albumName.join("");
-              albumNo = albumlist.substr(albumCount, 2);
-              var albumObj = {
-                albumName: albumName,
-                albumNo: albumNo
-              }
-              albumList.push(albumObj)
-              albumNoList[albumNo] = false
-              albumCount = albumCount + albumLength + 4
-            }
-            var udpArrAlbum = []
-            // var udpArrSong = []
-            for (var key in albumNoList) {
-              var operatorCodefst = "02",
-                operatorCodesec = "E4",
-                additionalContentData = [source, key]
-              var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-              var udpObj = {
-                device: device,
-                data: data,
-                key: "album"
-              }
-              udpArrAlbum.push(udpObj)
-            }
-            $this.sendUdpArr(udpArrAlbum)
-            $this.albumInterval = setInterval(function () {
-              var check = true
-              var udpArrAlbum = []
-              // console.log(albumNoList)
-              for (var key in albumNoList) {
-                if (!albumNoList[key]) {
-                  check = false
-                  var operatorCodefst = "02",
-                    operatorCodesec = "E4",
-                    additionalContentData = [source, key]
-                  var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-                  var udpObj = {
-                    device: device,
-                    data: data,
-                    key: "album"
-                  }
-                  udpArrAlbum.push(udpObj)
-                }
-              }
-              $this.sendUdpArr(udpArrAlbum)
-              if (check) {
-                clearInterval($this.albumInterval)
-                albumList.sort(function (a, b) {
-                  // return a.songNo - b.songNo
-                  return parseInt(a.albumNo) - parseInt(b.albumNo)
-                });
-                device.deviceProperty.albumlist = albumList
-                $this.sendUdpArr(udpArrSong)
-                $this.songInterval = setInterval(function () {
-                  var check = true
-                  var udpArrSong = []
-                  // console.log(songNoList)
-                  for (var key in songNoList) {
-                    if (!songNoList[key]) {
-                      check = false
-                      var operatorCodefst = "02",
-                        operatorCodesec = "E6",
-                        additionalContentData = [source, key.substr(0, 2), key.substr(2, 2)]
-                      var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-                      // api.sendUdp(device, data)
-                      var udpObj = {
-                        device: device,
-                        data: data,
-                        key: "song"
-                      }
-                      udpArrSong.push(udpObj)
-                    }
-                  }
-
-                  $this.sendUdpArr(udpArrSong)
-                  if (check) {
-                    clearInterval($this.songInterval)
-                    // var hash = {};
-                    // songList = songList.reduce(function (item, next) {
-                    //   hash[next.songNo] ? '' : hash[next.songNo] = true && item.push(next);
-                    //   return item
-                    // }, [])
-                    // songList.sort(function (a, b) {
-                    //   // return a.songNo - b.songNo
-                    //   return parseInt(a.albumNo + a.No) - parseInt(b.albumNo + b.No)
-                    // });
-                    device.deviceProperty.songList = songList
-                    device.deviceProperty.songListAll = songList
-                    device.deviceProperty.musicLoading = false
-                    Lockr.set('music_' + device.id + '_' + device.deviceProperty.source, device.deviceProperty)
-                    $this.socketio.removeAllListeners()
-                  }
-                }, 10000)
-              }
-            }, 5000)
-          }
-
-        }
-        if (operationcode.toLowerCase() == "02e5") {
-          var source = _g.getadditional(msg, 0);
-          if (device.deviceProperty.source == source) {
-            var albumno = _g.getadditional(msg, 1);
-            var songpack = msg.substring(54, 56);
-            if (!albumNoList[albumno]) {
-              albumNoList[albumno] = true
-
-              songpack = parseInt("0x" + songpack);
-
-              for (var i = 1; i <= songpack; i++) {
-                songNoList[albumno + _g.toHex(i)] = false
-                var operatorCodefst = "02",
-                  operatorCodesec = "E6",
-                  additionalContentData = [source, albumno, _g.toHex(i)]
-                var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
-                // api.sendUdp(device, data)
-                var udpObj = {
-                  device: device,
-                  data: data,
-                  key: "song"
-                }
-                udpArrSong.push(udpObj)
-              }
-
-
-            }
-          }
-
-        }
-        if (operationcode.toLowerCase() == "02e7") {
-          var source = _g.getadditional(msg, 2);
-          if (device.deviceProperty.source == source) {
-            var songNum = _g.getadditional(msg, 5)
-            songNum = parseInt("0x" + songNum)
-            var songCount = 0
-            var songForNum = 0
-            var currentSonglist = msg.substring(62)
-            var albumno = _g.getadditional(msg, 3)
-            var packNo = _g.getadditional(msg, 4)
-            if (!songNoList[albumno + packNo]) {
-              songNoList[albumno + packNo] = true
-              for (var i = 0; i < songNum; i++) {
-                var songLength = currentSonglist.substr(songCount + 4, 2);
-                songLength = parseInt('0x' + songLength) * 2
-                var songName = currentSonglist.substr(songCount + 6, songLength)
-                songName = strToarr4(songName)
-                var songNameList = []
-                for (var item of songName) {
-                  songNameList.push(String.fromCharCode("0x" + item));
-                }
-                songName = songNameList.join("");
-                var songObj = {}
-                songObj.albumNo = albumno
-                songObj.No = parseInt('0x' + currentSonglist.substr(songCount, 4))
-                songObj.songNo = songObj.albumNo + currentSonglist.substr(songCount, 4)
-                songObj.songNoHigh = currentSonglist.substr(songCount, 2);
-                songObj.songNoLow = currentSonglist.substr(songCount + 2, 2);
-                songObj.songName = songName
-                songObj.select = false
-                songList.push(songObj);
-                songCount = songCount + songLength + 6
-              }
-              albumNote = albumNote + 1;
-            }
-          }
-
-        }
-      }
-    });
   },
   readStatus(device) {
     var operatorCodefst = "19",
       operatorCodesec = "2e",
-      additionalContentData = ['2a','5a','01','53','54','41','54','55','53','3F','0D']
+      additionalContentData = ['2a', '5a', '01', '53', '54', '41', '54', '55', '53', '3F', '0D']
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
+
+    var modeOperatorCodefst = "19",
+      modeOperatorCodesec = "2e",
+      modeAdditionalContentData = ['2a', '53', '01', '50', '4c', '41', '59', '4d', '4f', '44', '45', '3f', '0d']
+    var modeData = api.getUdp(device, modeOperatorCodefst, modeOperatorCodesec, modeAdditionalContentData)
+    api.sendUdp(device, modeData)
+  },
+  receiveSong(device, data) {
+    var $this = this,
+      albumNum,
+      albumCheckList = {},
+      songCheckList = {},
+      songList = [],
+      udpArrSong = [],
+      operationcode = _g.getoperationcode(data);
+    switch (operationcode) {
+      case "02e1":
+        var source = _g.getadditional(data, 0);
+        if (device.deviceProperty.source != source) {
+          return;
+        }
+        var albumpack = data.substring(52, stop);
+        var additionalData = strToarr(albumpack);
+        additionalData.unshift(source);
+        var operatorCodefst = "02",
+          operatorCodesec = "E2";
+        var data = api.getUdp(
+          device,
+          operatorCodefst,
+          operatorCodesec,
+          additionalData
+        );
+        api.sendUdp(device, data);
+        console.log(data)
+        break;
+      case "02e3":
+        var source = _g.getadditional(data, 2);
+        if (device.deviceProperty.source == source) {
+          var albumCount = 0;
+          albumNum = _g.getadditional(data, 4);
+          var albumListStr = data.substring(60);
+          device.deviceProperty.albumList = [];
+          device.deviceProperty.songList = [];
+          device.deviceProperty.songListAll = [];
+          var albumList = [];
+          songList = [];
+          for (var i = 0; i < albumNum; i++) {
+            var albumNo = albumListStr.substr(albumCount, 2);
+            var albumLength = albumListStr.substr(albumCount + 2, 2);
+            albumLength = parseInt("0x" + albumLength) * 2;
+            var albumNameList = albumListStr.substr(
+              albumCount + 4,
+              albumLength
+            );
+            albumNameList = strToarr4(albumNameList);
+            var albumName = [];
+            for (var item of albumNameList) {
+              albumName.push(String.fromCharCode("0x" + item));
+            }
+            albumName = albumName.join("");
+            var albumObj = {
+              albumName: albumName,
+              albumNo: albumNo
+            };
+            albumList.push(albumObj);
+            albumCheckList[albumNo] = false;
+            albumCount = albumCount + albumLength + 4;
+          }
+          var udpArrAlbum = [];
+          // var udpArrSong = []
+          for (var key in albumCheckList) {
+            var operatorCodefst = "02",
+              operatorCodesec = "E4",
+              additionalContentData = [source, key];
+            var data = api.getUdp(
+              device,
+              operatorCodefst,
+              operatorCodesec,
+              additionalContentData
+            );
+            var udpObj = {
+              device: device,
+              data: data,
+              key: "album"
+            };
+            udpArrAlbum.push(udpObj);
+          }
+          $this.sendUdpArr(udpArrAlbum);
+          $this.albumInterval = setInterval(function () {
+            var check = true;
+            var udpArrAlbum = [];
+            // console.log(albumCheckList)
+            for (var key in albumCheckList) {
+              if (!albumCheckList[key]) {
+                check = false;
+                var operatorCodefst = "02",
+                  operatorCodesec = "E4",
+                  additionalContentData = [source, key];
+                var data = api.getUdp(
+                  device,
+                  operatorCodefst,
+                  operatorCodesec,
+                  additionalContentData
+                );
+                var udpObj = {
+                  device: device,
+                  data: data,
+                  key: "album"
+                };
+                udpArrAlbum.push(udpObj);
+              }
+            }
+            $this.sendUdpArr(udpArrAlbum);
+            if (check) {
+              clearInterval($this.albumInterval);
+              albumList.sort(function (a, b) {
+                // return a.songNo - b.songNo
+                return parseInt(a.albumNo) - parseInt(b.albumNo);
+              });
+              device.deviceProperty.albumList = albumList;
+              $this.sendUdpArr(udpArrSong);
+              $this.songInterval = setInterval(function () {
+                var check = true;
+                var udpArrSong = [];
+                // console.log(songCheckList)
+                for (var key in songCheckList) {
+                  if (!songCheckList[key]) {
+                    check = false;
+                    var operatorCodefst = "02",
+                      operatorCodesec = "E6",
+                      additionalContentData = [
+                        source,
+                        key.substr(0, 2),
+                        key.substr(2, 2)
+                      ];
+                    var data = api.getUdp(
+                      device,
+                      operatorCodefst,
+                      operatorCodesec,
+                      additionalContentData
+                    );
+                    // api.sendUdp(device, data)
+                    var udpObj = {
+                      device: device,
+                      data: data,
+                      key: "song"
+                    };
+                    udpArrSong.push(udpObj);
+                  }
+                }
+
+                $this.sendUdpArr(udpArrSong);
+                if (check) {
+                  clearInterval($this.songInterval);
+                  // var hash = {};
+                  // songList = songList.reduce(function (item, next) {
+                  //   hash[next.songNo] ? '' : hash[next.songNo] = true && item.push(next);
+                  //   return item
+                  // }, [])
+                  // songList.sort(function (a, b) {
+                  //   // return a.songNo - b.songNo
+                  //   return parseInt(a.albumNo + a.No) - parseInt(b.albumNo + b.No)
+                  // });
+                  device.deviceProperty.songList = songList;
+                  device.deviceProperty.songListAll = songList;
+                  device.deviceProperty.musicLoading = false;
+                  Lockr.set(
+                    "music_" +
+                    device.id +
+                    "_" +
+                    device.deviceProperty.source,
+                    device.deviceProperty
+                  );
+                }
+              }, 10000);
+            }
+          }, 5000);
+        }
+        break;
+      case "02e5":
+        var source = _g.getadditional(data, 0);
+        if (device.deviceProperty.source == source) {
+          var albumno = _g.getadditional(data, 1);
+          var songpack = data.substring(54, 56);
+          if (!albumCheckList[albumno]) {
+            albumCheckList[albumno] = true;
+
+            songpack = parseInt("0x" + songpack);
+
+            for (var i = 1; i <= songpack; i++) {
+              songCheckList[albumno + _g.toHex(i)] = false;
+              var operatorCodefst = "02",
+                operatorCodesec = "E6",
+                additionalContentData = [
+                  source,
+                  albumno,
+                  _g.toHex(i)
+                ];
+              var data = api.getUdp(
+                device,
+                operatorCodefst,
+                operatorCodesec,
+                additionalContentData
+              );
+              // api.sendUdp(device, data)
+              var udpObj = {
+                device: device,
+                data: data,
+                key: "song"
+              };
+              udpArrSong.push(udpObj);
+            }
+          }
+        }
+        break;
+      case "02e7":
+        var source = _g.getadditional(data, 2);
+        if (device.deviceProperty.source == source) {
+          var songNum = _g.getadditional(data, 5);
+          songNum = parseInt("0x" + songNum);
+          var songCount = 0;
+          var songForNum = 0;
+          var currentSonglist = data.substring(62);
+          var albumno = _g.getadditional(data, 3);
+          var packNo = _g.getadditional(data, 4);
+          if (!songCheckList[albumno + packNo]) {
+            songCheckList[albumno + packNo] = true;
+            for (var i = 0; i < songNum; i++) {
+              var songLength = currentSonglist.substr(
+                songCount + 4,
+                2
+              );
+              songLength = parseInt("0x" + songLength) * 2;
+              var songName = currentSonglist.substr(
+                songCount + 6,
+                songLength
+              );
+              songName = strToarr4(songName);
+              var songNameList = [];
+              for (var item of songName) {
+                songNameList.push(String.fromCharCode("0x" + item));
+              }
+              songName = songNameList.join("");
+              var songObj = {};
+              songObj.albumNo = albumno;
+              songObj.No = parseInt(
+                "0x" + currentSonglist.substr(songCount, 4)
+              );
+              songObj.songNo =
+                songObj.albumNo +
+                currentSonglist.substr(songCount, 4);
+              songObj.songNoHigh = currentSonglist.substr(
+                songCount,
+                2
+              );
+              songObj.songNoLow = currentSonglist.substr(
+                songCount + 2,
+                2
+              );
+              songObj.songName = songName;
+              songObj.select = false;
+              songList.push(songObj);
+              songCount = songCount + songLength + 6;
+            }
+          }
+        }
+        break;
+    }
+  },
+  receiveStatus(device, data) {
+    var additionalList = _g.getAdditionalList(data);
+    if (
+      additionalList[11] == "2c" &&
+      additionalList[12] == "56" &&
+      additionalList[13] == "4f" &&
+      additionalList[14] == "4c"
+    ) {
+      //读音量
+      if (additionalList[17] == "0d") {
+        device.deviceProperty.vol = parseInt(
+          (79 -
+            ((parseInt("0x" + additionalList[15]) - 48) * 10 +
+              parseInt("0x" + additionalList[16]) -
+              48)) /
+          79 *
+          100
+        );
+      } else {
+        device.deviceProperty.vol = parseInt(
+          (79 - (parseInt("0x" + additionalList[15]) - 48)) / 79 * 100
+        );
+      }
+      var source = String.fromCharCode("0x" + additionalList[10]);
+      device.deviceProperty.source = source;
+    } else if (
+      additionalList[7] == "4d" &&
+      additionalList[8] == "4f" &&
+      additionalList[9] == "44" &&
+      additionalList[10] == "45"
+    ) {
+      //读模式
+      var mode = String.fromCharCode("0x" + additionalList[18]);
+      console.log(mode);
+      device.deviceProperty.mode = mode;
+    } else if (
+      additionalList[11] == "2c" &&
+      additionalList[12] == "44" &&
+      additionalList[13] == "55" &&
+      additionalList[14] == "52"
+    ) {
+      //读播放状态
+      var additionalLength = additionalList.length;
+      var str = additionalList[additionalLength - 4];
+      device.deviceProperty.on_off = str == "32" ? true : false;
+      var additionalStr = "";
+      for (var additional of additionalList) {
+        additionalStr += String.fromCharCode("0x" + additional);
+      }
+      console.log(additionalStr);
+      var totalTime = "",
+        nowTime = "",
+        totalTimeIndex = additionalStr.indexOf(",POS"),
+        nowTimeIndex = additionalStr.indexOf(",STATUS");
+      totalTime = _g.sec_to_time(
+        parseInt(additionalStr.substring(15, totalTimeIndex)) / 10
+      );
+      nowTime = _g.sec_to_time(
+        parseInt(
+          additionalStr.substring(totalTimeIndex + 4, nowTimeIndex)
+        ) / 10
+      );
+      device.deviceProperty.totalTime = totalTime;
+      device.deviceProperty.nowTime = nowTime;
+      console.log(totalTime + "," + nowTime);
+    } else if (
+      additionalList[3] == "44" &&
+      additionalList[8] == "49" &&
+      additionalList[9] == "4e" &&
+      additionalList[10] == "45" &&
+      additionalList[11] == "31"
+    ) {
+      //读播放专辑号
+      var additionalLength = additionalList.length;
+      var str = "";
+      for (var i = 14; i <= additionalLength - 6; i += 2) {
+        str =
+          str +
+          String.fromCharCode(
+            "0x" + additionalList[i] + additionalList[i + 1]
+          );
+      }
+      device.deviceProperty.list = str;
+      console.log(str);
+    } else if (
+      additionalList[3] == "44" &&
+      additionalList[8] == "49" &&
+      additionalList[9] == "4e" &&
+      additionalList[10] == "45" &&
+      additionalList[11] == "32"
+    ) {
+      //读播放专辑名
+      var additionalLength = additionalList.length;
+      var str = "";
+      for (var i = 14; i <= additionalLength - 6; i += 2) {
+        str =
+          str +
+          String.fromCharCode(
+            "0x" + additionalList[i] + additionalList[i + 1]
+          );
+      }
+      device.deviceProperty.albumNow = str;
+      console.log(str);
+    } else if (
+      additionalList[3] == "44" &&
+      additionalList[8] == "49" &&
+      additionalList[9] == "4e" &&
+      additionalList[10] == "45" &&
+      additionalList[11] == "33"
+    ) {
+      //读播放歌曲号
+      var additionalLength = additionalList.length;
+      var str = "";
+      for (var i = 14; i <= additionalLength - 6; i += 2) {
+        str =
+          str +
+          String.fromCharCode(
+            "0x" + additionalList[i] + additionalList[i + 1]
+          );
+      }
+      device.deviceProperty.track = str;
+      console.log(str);
+    } else if (
+      additionalList[3] == "44" &&
+      additionalList[8] == "49" &&
+      additionalList[9] == "4e" &&
+      additionalList[10] == "45" &&
+      additionalList[11] == "34"
+    ) {
+      //读播放歌曲名
+      var additionalLength = additionalList.length;
+      var str = "";
+      for (var i = 14; i <= additionalLength - 6; i += 2) {
+        str =
+          str +
+          String.fromCharCode(
+            "0x" + additionalList[i] + additionalList[i + 1]
+          );
+      }
+      device.deviceProperty.songNow = str;
+      console.log(str);
+    }
   },
   sendUdpArr(arr) {
     if (!arr || arr.length == 0) return
@@ -425,28 +630,28 @@ const musicApi = {
           }
           operatorCode = zero + operatorCode
         }
-        window.socketio.on("new_msg", function (msg) {
-          var subnetid = msg.substr(34, 2);
-          var deviceid = msg.substr(36, 2);
-          if (
-            subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
-            deviceid.toLowerCase() != device.deviceid.toLowerCase()
-          ) return
-          var operatorCodeCurrent = msg.substr(42, 4)
-          if (operatorCodeCurrent != operatorCode) return
-          if (operatorCodeCurrent.toLowerCase() == "02e5") {
-            var source = _g.getadditional(msg, 0)
-            var albumNo = _g.getadditional(msg, 1)
-            if (data.additionalContentData[0] != source || data.additionalContentData[1] != albumNo) return
-          } else if (operatorCodeCurrent.toLowerCase() == "02e7") {
-            var source = _g.getadditional(msg, 2)
-            var albumNo = _g.getadditional(msg, 3)
-            var songNo = _g.getadditional(msg, 4)
-            if (data.additionalContentData[0] != source || data.additionalContentData[1] != albumNo || data.additionalContentData[2] != songNo) return
-          }
+        // window.socketio.on("music", function (data) {
+        //   var subnetid = data.substr(34, 2);
+        //   var deviceid = data.substr(36, 2);
+        //   if (
+        //     subnetid.toLowerCase() != device.subnetid.toLowerCase() ||
+        //     deviceid.toLowerCase() != device.deviceid.toLowerCase()
+        //   ) return
+        //   var operatorCodeCurrent = data.substr(42, 4)
+        //   if (operatorCodeCurrent != operatorCode) return
+        //   if (operatorCodeCurrent.toLowerCase() == "02e5") {
+        //     var source = _g.getadditional(data, 0)
+        //     var albumNo = _g.getadditional(data, 1)
+        //     if (data.additionalContentData[0] != source || data.additionalContentData[1] != albumNo) return
+        //   } else if (operatorCodeCurrent.toLowerCase() == "02e7") {
+        //     var source = _g.getadditional(data, 2)
+        //     var albumNo = _g.getadditional(data, 3)
+        //     var songNo = _g.getadditional(data, 4)
+        //     if (data.additionalContentData[0] != source || data.additionalContentData[1] != albumNo || data.additionalContentData[2] != songNo) return
+        //   }
 
-          pass = true
-        })
+        //   pass = true
+        // })
 
         var sendUdpFor = setInterval(function () {
           if (pass || index > 3) {

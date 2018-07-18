@@ -6,7 +6,7 @@
                 <el-menu class="album-list">
                     <el-menu-item-group>
                         <span slot="title">Album</span>
-                        <el-menu-item class="album-list-li" :index="album.albumNo" v-for="(album,key) in device.deviceProperty.albumlist" :key="key" @click="albumClick(album.albumNo)">
+                        <el-menu-item class="album-list-li" :index="album.albumNo" v-for="(album,key) in device.deviceProperty.albumList" :key="key" @click="albumClick(album.albumNo)">
                             {{album.albumName}}</el-menu-item>
                     </el-menu-item-group>
                 </el-menu>
@@ -40,9 +40,10 @@
                     <div class="fa fa-step-forward btn-hand content-icon right" @click="next()"></div>
                 </div>
                 <div class="music-content-bottom">
-                    <div v-show="device.deviceProperty.mode == 'random'" class="fa fa-random btn-hand content-icon fl" style="margin-left:16px" @click="random()"></div>
-                    <div v-show="device.deviceProperty.mode == 'single'" class="fa fa-exchange  btn-hand content-icon fl" style="margin-left:16px" @click="single()"></div>
-                    <div v-show="device.deviceProperty.mode == 'allmusic'" class="fa fa-navicon  btn-hand content-icon fl" style="margin-left:16px" @click="allmusic()"></div>
+                    <div v-show="device.deviceProperty.mode == '1'" class="fa fa-random btn-hand content-icon fl" style="margin-left:16px" @click="modeChange()"></div>
+                    <div v-show="device.deviceProperty.mode == '2'" class="fa fa-exchange  btn-hand content-icon fl" style="margin-left:16px" @click="modeChange()"></div>
+                     <div v-show="device.deviceProperty.mode == '3'" class="fa fa-exchange  btn-hand content-icon fl" style="margin-left:16px" @click="modeChange()"></div>
+                    <div v-show="device.deviceProperty.mode == '4'" class="fa fa-navicon  btn-hand content-icon fl" style="margin-left:16px" @click="modeChange()"></div>
 
                     <el-col :span="15" class="fl" >
                         <template>
@@ -280,7 +281,7 @@ export default {
   methods: {
     refresh() {
       Lockr.rm("music_" + this.device.id + "_" + this.device.deviceProperty.source);
-      this.device.deviceProperty.albumlist = [];
+      this.device.deviceProperty.albumList = [];
       this.device.deviceProperty.songList = [];
       this.device.deviceProperty.songListAll = [];
       this.device.deviceProperty.musicLoading = true;
@@ -290,7 +291,7 @@ export default {
     sourceChange(command) {
       this.device.deviceProperty.source = command;
       musicApi.source_change(command,this.device);
-      this.device.deviceProperty.albumlist = [];
+      this.device.deviceProperty.albumList = [];
       this.device.deviceProperty.songList = [];
       this.device.deviceProperty.songListAll = [];
       this.device.deviceProperty.musicLoading = true;
@@ -298,7 +299,7 @@ export default {
         "music_" + this.device.id + "_" + this.device.deviceProperty.source
       );
       if (music) {
-        this.device.deviceProperty.albumlist = music.albumlist;
+        this.device.deviceProperty.albumList = music.albumList;
         this.device.deviceProperty.songList = music.songList;
         this.device.deviceProperty.songListAll = music.songList;
         this.device.deviceProperty.musicLoading = false;
@@ -341,16 +342,19 @@ export default {
       this.device.deviceProperty.on_off = false;
       musicApi.pause(this.device);
     },
+    modeChange() {
+      musicApi.modeChange(this.device);
+    },
     random() {
-      this.device.deviceProperty.mode = "single";
+      this.device.deviceProperty.mode = "2";
       musicApi.random(this.device);
     },
     single() {
-      this.device.deviceProperty.mode = "allmusic";
+      this.device.deviceProperty.mode = "4";
       musicApi.single(this.device);
     },
     allmusic() {
-      this.device.deviceProperty.mode = "random";
+      this.device.deviceProperty.mode = "1";
       musicApi.allmusic(this.device);
     },
     selectSong(song) {
@@ -367,7 +371,7 @@ export default {
         "music_" + device.id + "_" + this.device.deviceProperty.source
       );
       if (music) {
-        this.device.deviceProperty.albumlist = music.albumlist;
+        this.device.deviceProperty.albumList = music.albumList;
         this.device.deviceProperty.songList = music.songList;
         this.device.deviceProperty.songListAll = music.songList;
         this.device.deviceProperty.musicLoading = false;
