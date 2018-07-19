@@ -185,7 +185,7 @@
   position: absolute;
   top: 30px;
   left: 128px;
-  font-size:18px;
+  font-size: 18px;
   border: 2px solid #999;
   border-radius: 38px;
 }
@@ -280,23 +280,35 @@ export default {
   },
   methods: {
     refresh() {
-      Lockr.rm("music_" + this.device.id + "_" + this.device.deviceProperty.source);
+      Lockr.rm(
+        "music_" +
+          this.device.subnetid +
+          this.device.deviceid +
+          "_" +
+          this.device.deviceProperty.source
+      );
       this.device.deviceProperty.albumList = [];
       this.device.deviceProperty.songList = [];
       this.device.deviceProperty.songListAll = [];
+      this.device.deviceProperty.albumCheckList = {};
+      this.device.deviceProperty.songCheckList = {};
       this.device.deviceProperty.musicLoading = true;
       console.log("music_test");
       musicApi.readSong(this.device);
     },
     sourceChange(command) {
       this.device.deviceProperty.source = command;
-      musicApi.source_change(command,this.device);
+      musicApi.source_change(command, this.device);
       this.device.deviceProperty.albumList = [];
       this.device.deviceProperty.songList = [];
       this.device.deviceProperty.songListAll = [];
       this.device.deviceProperty.musicLoading = true;
       var music = Lockr.get(
-        "music_" + this.device.id + "_" + this.device.deviceProperty.source
+        "music_" +
+          this.device.subnetid +
+          this.device.deviceid +
+          "_" +
+          this.device.deviceProperty.source
       );
       if (music) {
         this.device.deviceProperty.albumList = music.albumList;
@@ -368,7 +380,11 @@ export default {
     },
     initMusic(device) {
       var music = Lockr.get(
-        "music_" + device.id + "_" + this.device.deviceProperty.source
+        "music_" +
+          this.device.subnetid +
+          this.device.deviceid +
+          "_" +
+          this.device.deviceProperty.source
       );
       if (music) {
         this.device.deviceProperty.albumList = music.albumList;
@@ -382,10 +398,9 @@ export default {
   },
   created() {
     console.log("music");
-    musicApi.readStatus(this.device);
-    this.initMusic(this.device)
+    this.initMusic(this.device);
   },
-  destroyed(){
+  destroyed() {
     musicApi.closeSocket();
   },
   computed: {},

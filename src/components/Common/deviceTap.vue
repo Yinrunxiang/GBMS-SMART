@@ -142,7 +142,7 @@ export default {
           break;
         case "music":
           // this.device.on_off = false
-          // musicApi.readOpen(this.device)
+          musicApi.readStatus(this.device);
           break;
       }
       // console.log("OK");

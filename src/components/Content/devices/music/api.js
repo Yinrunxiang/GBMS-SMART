@@ -205,17 +205,15 @@ const musicApi = {
     api.sendUdp(device, modeData)
   },
   receiveSong(device, data) {
+
     var $this = this,
-      albumNum,
-      albumCheckList = {},
-      songCheckList = {},
-      songList = [],
-      udpArrSong = [],
-      operationcode = _g.getoperationcode(data);
+      operationcode = _g.getoperationcode(data),
+      dataLength = data.length,
+      stop = dataLength - 4;
     switch (operationcode) {
       case "02e1":
         var source = _g.getadditional(data, 0);
-        if (device.deviceProperty.source != source) {
+        if (parseInt(device.deviceProperty.source) != parseInt(source)) {
           return;
         }
         var albumpack = data.substring(52, stop);
@@ -234,15 +232,15 @@ const musicApi = {
         break;
       case "02e3":
         var source = _g.getadditional(data, 2);
-        if (device.deviceProperty.source == source) {
+        if (parseInt(device.deviceProperty.source) == parseInt(source)) {
           var albumCount = 0;
-          albumNum = _g.getadditional(data, 4);
+          var albumNum = _g.getadditional(data, 4);
           var albumListStr = data.substring(60);
           device.deviceProperty.albumList = [];
           device.deviceProperty.songList = [];
           device.deviceProperty.songListAll = [];
           var albumList = [];
-          songList = [];
+          var songList = [];
           for (var i = 0; i < albumNum; i++) {
             var albumNo = albumListStr.substr(albumCount, 2);
             var albumLength = albumListStr.substr(albumCount + 2, 2);
@@ -262,12 +260,12 @@ const musicApi = {
               albumNo: albumNo
             };
             albumList.push(albumObj);
-            albumCheckList[albumNo] = false;
+            device.deviceProperty.albumCheckList[albumNo] = false;
             albumCount = albumCount + albumLength + 4;
           }
           var udpArrAlbum = [];
-          // var udpArrSong = []
-          for (var key in albumCheckList) {
+          var udpArrSong = []
+          for (var key in device.deviceProperty.albumCheckList) {
             var operatorCodefst = "02",
               operatorCodesec = "E4",
               additionalContentData = [source, key];
@@ -288,9 +286,9 @@ const musicApi = {
           $this.albumInterval = setInterval(function () {
             var check = true;
             var udpArrAlbum = [];
-            // console.log(albumCheckList)
-            for (var key in albumCheckList) {
-              if (!albumCheckList[key]) {
+            // console.log(device.deviceProperty.albumCheckList)
+            for (var key in device.deviceProperty.albumCheckList) {
+              if (!device.deviceProperty.albumCheckList[key]) {
                 check = false;
                 var operatorCodefst = "02",
                   operatorCodesec = "E4",
@@ -321,9 +319,9 @@ const musicApi = {
               $this.songInterval = setInterval(function () {
                 var check = true;
                 var udpArrSong = [];
-                // console.log(songCheckList)
-                for (var key in songCheckList) {
-                  if (!songCheckList[key]) {
+                // console.log(device.deviceProperty.songCheckList)
+                for (var key in device.deviceProperty.songCheckList) {
+                  if (!device.deviceProperty.songCheckList[key]) {
                     check = false;
                     var operatorCodefst = "02",
                       operatorCodesec = "E6",
@@ -360,34 +358,34 @@ const musicApi = {
                   //   // return a.songNo - b.songNo
                   //   return parseInt(a.albumNo + a.No) - parseInt(b.albumNo + b.No)
                   // });
-                  device.deviceProperty.songList = songList;
-                  device.deviceProperty.songListAll = songList;
+                  // device.deviceProperty.songList = songList;
+                  // device.deviceProperty.songListAll = songList;
                   device.deviceProperty.musicLoading = false;
                   Lockr.set(
                     "music_" +
-                    device.id +
+                    device.subnetid + device.deviceid +
                     "_" +
                     device.deviceProperty.source,
                     device.deviceProperty
                   );
                 }
-              }, 10000);
+              }, 2000);
             }
-          }, 5000);
+          }, 1000);
         }
         break;
       case "02e5":
         var source = _g.getadditional(data, 0);
-        if (device.deviceProperty.source == source) {
+        if (parseInt(device.deviceProperty.source) ==parseInt( source)) {
           var albumno = _g.getadditional(data, 1);
           var songpack = data.substring(54, 56);
-          if (!albumCheckList[albumno]) {
-            albumCheckList[albumno] = true;
+          if (!device.deviceProperty.albumCheckList[albumno]) {
+            device.deviceProperty.albumCheckList[albumno] = true;
 
             songpack = parseInt("0x" + songpack);
-
+            var udpArrSong = []
             for (var i = 1; i <= songpack; i++) {
-              songCheckList[albumno + _g.toHex(i)] = false;
+              device.deviceProperty.songCheckList[albumno + _g.toHex(i)] = false;
               var operatorCodefst = "02",
                 operatorCodesec = "E6",
                 additionalContentData = [
@@ -414,7 +412,7 @@ const musicApi = {
         break;
       case "02e7":
         var source = _g.getadditional(data, 2);
-        if (device.deviceProperty.source == source) {
+        if (parseInt(device.deviceProperty.source) ==parseInt( source)) {
           var songNum = _g.getadditional(data, 5);
           songNum = parseInt("0x" + songNum);
           var songCount = 0;
@@ -422,8 +420,8 @@ const musicApi = {
           var currentSonglist = data.substring(62);
           var albumno = _g.getadditional(data, 3);
           var packNo = _g.getadditional(data, 4);
-          if (!songCheckList[albumno + packNo]) {
-            songCheckList[albumno + packNo] = true;
+          if (!device.deviceProperty.songCheckList[albumno + packNo]) {
+            device.deviceProperty.songCheckList[albumno + packNo] = true;
             for (var i = 0; i < songNum; i++) {
               var songLength = currentSonglist.substr(
                 songCount + 4,
@@ -458,7 +456,8 @@ const musicApi = {
               );
               songObj.songName = songName;
               songObj.select = false;
-              songList.push(songObj);
+              device.deviceProperty.songList.push(songObj);
+              device.deviceProperty.songListAll.push(songObj);
               songCount = songCount + songLength + 6;
             }
           }
@@ -490,7 +489,7 @@ const musicApi = {
         );
       }
       var source = String.fromCharCode("0x" + additionalList[10]);
-      device.deviceProperty.source = source;
+      device.deviceProperty.source = '0'+source;
     } else if (
       additionalList[7] == "4d" &&
       additionalList[8] == "4f" &&
@@ -609,15 +608,34 @@ const musicApi = {
       console.log(str);
     }
   },
-  sendUdpArr(arr) {
+  sendUdpArr(arr, type) {
     if (!arr || arr.length == 0) return
     var $this = this
     var arrIndex = 0
-    var arrIndex = 0
-    var sendUdp = function (device, data, type, key) {
+    var sendUdp = function (device, data) {
       if (!type || type == "") {
         api.apiPost("admin/udp/sendUdp", data).then(res => {
         });
+        var sendUdpFor = setInterval(function () {
+          clearInterval(sendUdpFor);
+          console.log(index)
+          console.log(arrIndex)
+          arrIndex++
+          if (arr[arrIndex]) {
+            if (arr[arrIndex].device.time && parseInt(arr[arrIndex].device.time) > 0) {
+              var time = parseInt(arr[arrIndex].device.time) * 1000
+              var timeCode = function () {
+                sendUdp(arr[arrIndex].device, arr[arrIndex].data)
+              }
+              setTimeout(timeCode, time)
+            } else {
+              sendUdp(arr[arrIndex].device, arr[arrIndex].data)
+            }
+          }
+          return;
+          api.apiPost("admin/udp/sendUdp", data).then(res => {
+          });
+        }, 100);
       } else {
         var pass = false
         var index = 1
@@ -656,17 +674,18 @@ const musicApi = {
         var sendUdpFor = setInterval(function () {
           if (pass || index > 3) {
             clearInterval(sendUdpFor);
-            // console.log(arrIndex)
+            console.log(index)
+            console.log(arrIndex)
             arrIndex++
             if (arr[arrIndex]) {
               if (arr[arrIndex].device.time && parseInt(arr[arrIndex].device.time) > 0) {
                 var time = parseInt(arr[arrIndex].device.time) * 1000
                 var timeCode = function () {
-                  sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
+                  sendUdp(arr[arrIndex].device, arr[arrIndex].data)
                 }
                 setTimeout(timeCode, time)
               } else {
-                sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
+                sendUdp(arr[arrIndex].device, arr[arrIndex].data)
               }
             }
             return;
@@ -677,15 +696,16 @@ const musicApi = {
         }, 100);
       }
 
+
     }
     if (arr[arrIndex].device.time && parseInt(arr[arrIndex].device.time) > 0) {
       var time = parseInt(arr[arrIndex].device.time) * 1000
       var timeCode = function () {
-        sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
+        sendUdp(arr[arrIndex].device, arr[arrIndex].data)
       }
       setTimeout(timeCode, time)
     } else {
-      sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
+      sendUdp(arr[arrIndex].device, arr[arrIndex].data)
     }
 
   },

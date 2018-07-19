@@ -263,10 +263,6 @@ const commonFn = {
             nowTime:"",
             mode: "random",
             on_off: device.on_off,
-            music_name: "Waitting",
-            music_autor: "Waitting",
-            time_now: 0,
-            time_over: 0,
             albumno: 0,
             albumlist: [],
             songno: 0,
@@ -279,6 +275,8 @@ const commonFn = {
             ],
             songListAll: [],
             musicLoading: true,
+            albumCheckList:{},
+            songCheckList:{},
             source: "01"
           };
           break;

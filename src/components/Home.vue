@@ -714,7 +714,7 @@ export default {
             var operationcode = _g.getoperationcode(data);
 
             if (operationcode == "192f") {
-              musicApi.readStatus(device,data)
+              musicApi.receiveStatus(device,data)
             } else {
               musicApi.receiveSong(device,data)
             }
