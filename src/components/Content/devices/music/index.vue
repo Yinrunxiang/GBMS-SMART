@@ -1,6 +1,6 @@
 <template>
     <el-col :span="24">
-        <div v-loading="device.deviceProperty.musicLoading"  class="music" style="width:300px;height:550px;text-align: center;">
+        <div   class="music" style="width:300px;height:550px;text-align: center;">
           <div v-show="albumShow" class="album">
                 <div class="fa fa-reply album-btn-back btn-hand" @click="albumBtnClickBack"></div>
                 <el-menu class="album-list">
@@ -59,7 +59,7 @@
             <div class="model-item">
                 <div></div>
             </div>
-            <div class="music-list">
+            <div v-loading="device.deviceProperty.musicLoading" class="music-list">
                 <ul style="margin:0;padding:0;">
                     <li @dblclick="selectSong(song)" :class="song.select?'select':''" v-for="(song,key) in device.deviceProperty.songList" :key="key">
                         <div class="song">
@@ -370,11 +370,11 @@ export default {
       musicApi.allmusic(this.device);
     },
     selectSong(song) {
-      this.device.deviceProperty.music_name = song.songName;
-      for (var obj of this.device.deviceProperty.songList) {
-        obj.select = false;
-      }
-      song.select = true;
+      // this.device.deviceProperty.music_name = song.songName;
+      // for (var obj of this.device.deviceProperty.songList) {
+      //   obj.select = false;
+      // }
+      // song.select = true;
       this.device.deviceProperty.on_off = true;
       musicApi.selectSong(this.device, song);
     },
