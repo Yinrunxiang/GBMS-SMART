@@ -1,6 +1,6 @@
 <template>
-<div class="w-100p">
-    <div class="m-l-50 m-t-30 w-500 plan-update fl">
+<el-row class="w-100p">
+    <el-col :xs= "22" :md = "{span:6}" class=" plan-update  m-a-10">
         <el-form ref="form" :model="form" label-width="110px">
             <el-form-item label="Device Name" prop="device" :rules="[
                                   { required: true, message: 'The Device Name must not be null'}
@@ -66,12 +66,12 @@
                 <el-button @click="goback()">Cancel</el-button>
             </el-form-item> -->
         </el-form>
-    </div>
-    <div class="m-l-50 m-t-30 fl " style="width:360px;">
+    </el-col>
+    <el-col :xs= "22" :md = "{span:10,offset:4}" class=" m-a-10" >
       
       <p  style="margin:0,color:#606266;">Comment</p>
         <el-input
-          style="width:360px;"
+          style="width:100%;"
           type="textarea"
           :rows="6"
           placeholder="Please enter the comment"
@@ -87,8 +87,9 @@
                 <el-button @click="goback()">Cancel</el-button>
             </div>
         </div>
-    </div>
-    <el-dialog title="Device Type Table" :visible.sync="dialogTableVisible" width="600">
+    </el-col>
+   
+ <el-dialog title="Device Type Table" :visible.sync="dialogTableVisible" width="80%">
       <el-table :data="originalDevices" height="400" @row-dblclick="rowDblclick">
         <el-table-column prop="subnetid" label="Subnet ID" width="100" align = "center"></el-table-column>
         <el-table-column prop="deviceid" label="Device ID" width="100" align = "center"></el-table-column>
@@ -96,8 +97,7 @@
         <el-table-column prop="remark" label="Remark"></el-table-column>
       </el-table>
     </el-dialog>
-
-    </div>
+    </el-row>
 </template>
 <style>
 .plan-update .el-form-item__error {

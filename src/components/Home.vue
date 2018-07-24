@@ -1,6 +1,7 @@
 <template>
-	<div class="panel m-w-1280" @click="hideRightPage()">
-    <span class="version">ver {{version}}</span>
+	<div class="panel" @click="hideRightPage()">
+    <span class="version hidden-sm-and-down">ver {{version}}</span>
+    <span class = "phone-nav fa fa-align-justify hidden-sm-and-up pointer" @click="phoneNavShow"></span>
 		<el-col :span="24" class="panel-top">
 			<el-col class="w-180">
 				<template v-if="logo_type == '1'">
@@ -28,19 +29,26 @@
 			</el-col> -->
 		</el-col>
 		<el-col :span="24" class="panel-center">
-			<!--<el-col :span="4">-->
-			<aside class="w-180" style="overflow-x:hidden;overflow-y:auto;" ref="leftMenu">
+      <el-row style="height:100%">
+      <aside class="phone-nav-list nav-list-color" style=" overflow-x:hidden;overflow-y:auto;" ref="leftMenu" v-show="phoneNav">
 				<leftMenu :menuData="menuData" ref="leftMenu"></leftMenu>
 			</aside>
-			<section class="panel-c-c" :class="{'hide-leftMenu': hasChildMenu}">
-				<div class="grid-content bg-purple-light">
-					<el-col :span="24">
+			<el-col  :md="3" :lg="3" :xl="2" class="hidden-sm-and-down nav-list-color" >
+			<aside style="overflow-x:hidden;overflow-y:auto;" ref="leftMenu">
+				<leftMenu :menuData="menuData" ref="leftMenu"></leftMenu>
+			</aside>
+      </el-col>
+      
+      <el-col :xs="24" :sm="24" :md="21" :lg="21" :xl="22" class="h-100p">
+			<section class="panel-c-c h-100p" :class="{'hide-leftMenu': hasChildMenu}">
+					<el-col :span="24" class= "panel">
 						<transition name="fade" mode="out-in" appear>
 							<router-view :dataReady="dataReady"></router-view>
 						</transition>
 					</el-col>
-				</div>
 			</section>
+      </el-col>
+      </el-row>
 		</el-col>
 		<changePwd ref="changePwd" :showChange = 'showChange' @change = 'showChangePage'></changePwd>
 	</div>
@@ -57,11 +65,12 @@
 }
 
 .panel {
-  position: absolute;
+  position: relative;
   top: 0px;
   bottom: 0px;
   padding: 0;
   width: 100%;
+  height: 100%;
 }
 
 .panel-top {
@@ -72,7 +81,7 @@
 }
 
 .panel-center {
-  background: #324057;
+  background: #eee;
   position: absolute;
   top: 60px;
   bottom: 0px;
@@ -80,12 +89,6 @@
 }
 
 .panel-c-c {
-  background: #f1f2f7;
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
-  left: 180px;
   overflow-y: auto;
   padding: 0px;
 }
@@ -113,6 +116,24 @@
   right: 5px;
   font-size: 10px;
   color: #fff;
+}
+.phone-nav {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 26px;
+  color: #fff;
+}
+.phone-nav-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 180px;
+  height: 100%;
+}
+.nav-list-color {
+  background-color: #324057;
 }
 
 .user-ground {
@@ -177,6 +198,7 @@ export default {
           name: "report"
         }
       ],
+      phoneNav: false,
       hasChildMenu: false,
       menu: null,
       module: null,
@@ -192,6 +214,10 @@ export default {
     hideRightPage() {
       // console.log("123");
       this.$store.dispatch("setShowRightPage", false);
+    },
+    phoneNavShow() {
+      this.phoneNav = this.phoneNav == false ? true : false;
+      console.log(this.phoneNav);
     },
     homeClick() {
       let url = "/home/global";
@@ -714,9 +740,9 @@ export default {
             var operationcode = _g.getoperationcode(data);
 
             if (operationcode == "192f") {
-              musicApi.receiveStatus(device,data)
+              musicApi.receiveStatus(device, data);
             } else {
-              musicApi.receiveSong(device,data)
+              musicApi.receiveSong(device, data);
             }
           }
         }

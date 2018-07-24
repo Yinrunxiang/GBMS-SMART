@@ -1,16 +1,23 @@
 <template>
-    <div class="panel m-w-1100" v-loading="globalLoading">
+    <div class="global-panel" v-loading="globalLoading">
         <div ref="worldmap" id="world-map"></div>
         <!-- <div ref="chart" id="chart"></div> -->
     </div>
 </template>
 
 <style>
-/* #world-map,#chart{
-    width:1180px; 
-    height: 100%;
-    margin: 0 auto;
-} */
+.global-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(65, 74, 89)
+  
+}
+#world-map {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
 </style>
 
 
@@ -34,11 +41,14 @@ export default {
   props: ["dataReady"],
   methods: {
     initMapSize() {
-      var width = document.body.clientWidth - 180;
-      var height = document.body.clientHeight - 60;
+      // var width = document.body.clientWidth - 180;
+      // var height = document.body.clientHeight - 60;
       var map = this.$refs.worldmap;
-      map.style.width = width + "px";
-      map.style.height = height + "px";
+      // map.style.width = width + "px";
+      // map.style.height = height + "px";
+      if (document.body.clientWidth < 992) {
+        map.style.height = "60%";
+      }
     },
     addressClick(addressName) {
       for (var country of this.countryArr) {
@@ -107,18 +117,17 @@ export default {
               "Watts: " + parseFloat(address.watts.toFixed(2)) + " W<br/>";
             itCounteyTooltip +=
               "Cost : " + parseFloat(address.usd.toFixed(2)) + " USD<br/>";
-              if(address.comment){
-                let commentList = []
-                let commentLength = address.comment.length
-                itCounteyTooltip += "Comment : " 
-                itCounteyTooltip +=address.comment.substr(0,20)+ "<br/>";
-                for(let i = 20;i< commentLength;i+=30){
-                  // commentList.push()
-                  itCounteyTooltip +=address.comment.substr(i,30)+ "<br/>";
-                }
-                // itCounteyTooltip += "<br/>"
+            if (address.comment) {
+              let commentList = [];
+              let commentLength = address.comment.length;
+              itCounteyTooltip += "Comment : ";
+              itCounteyTooltip += address.comment.substr(0, 20) + "<br/>";
+              for (let i = 20; i < commentLength; i += 30) {
+                // commentList.push()
+                itCounteyTooltip += address.comment.substr(i, 30) + "<br/>";
               }
-            
+              // itCounteyTooltip += "<br/>"
+            }
           }
         }
       }

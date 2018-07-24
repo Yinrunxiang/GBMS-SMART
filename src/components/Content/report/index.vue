@@ -1,42 +1,55 @@
 <template>
-    <el-row class="panel m-w-1100" v-loading="recordLoading">
-        <!-- <el-date-picker class="m-t-10 m-l-20"
-    v-model="month"
-    type="month"
-    placeholder="选择月" @change="monthChange">
-  </el-date-picker> -->
-    <el-date-picker class="m-t-10 m-l-20"
-        v-model="beginDate"
-        type="date"
-        value-format = "yyyy-MM-dd"
-        placeholder="Begin date" 
-        @change="beginChange">
-    </el-date-picker>
-    <el-date-picker class="m-t-10 m-l-15"
-      v-model="endDate"
-      type="date"
-      value-format = "yyyy-MM-dd"
-      placeholder="End date" 
-      @change="endChange">
-    </el-date-picker>
-        <el-cascader class="m-t-10 m-l-15" :options="allAddress" change-on-select @change="addressChange"></el-cascader>
-          <el-select class="m-t-10 m-l-15" v-model="type" placeholder="Select" @change="typeChange">
-          <el-option
-            v-for="item in typeList"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-            >
-          </el-option>
-        </el-select>
-        <el-button class="m-l-15" type="primary" icon="el-icon-search"></el-button>
-        <div>
-            <div ref="lineChart" class="line-chart fl"></div>
-            <div ref="pieChart" class="pie-chart fl"></div>
-        </div>
-    </el-row>
+    <div  v-loading="recordLoading" class="w-100p h-100p">
+      <el-row class="p-20">
+        <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+          <el-date-picker class="w-100p"
+          v-model="beginDate"
+          type="date"
+          value-format = "yyyy-MM-dd"
+          placeholder="Begin date" 
+          @change="beginChange">
+          </el-date-picker>
+        </el-col>
+        <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+            <el-cascader class="w-100p" :options="allAddress" change-on-select @change="addressChange"></el-cascader>
+          </el-col>
+          <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+            <el-select class="w-100p" v-model="type" placeholder="Select" @change="typeChange">
+              <el-option
+                v-for="item in typeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                >
+              </el-option>
+            </el-select>
+          </el-col>
+          <el-col class="m-b-10" :xs = "24" :md = "{span: 2,offset:1}">
+             <el-button class="w-100p" type="primary" icon="el-icon-search"></el-button>
+          </el-col>
+      </el-row>
+      <el-row  class="p-20">
+        <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+             <div ref="lineChart" class="line-chart fl"></div>
+          </el-col>
+          <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+             <div ref="pieChart" class="pie-chart fl"></div>
+          </el-col>
+      </el-row>
+    </div>
 </template>
-
+<style>
+  /* .line-chart {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+  .pie-chart {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+} */
+</style>
 <script>
 import echarts from "echarts/lib/echarts";
 // 引入折线图和饼状图
@@ -178,8 +191,14 @@ export default {
       this.dateList = dateList;
     },
     initMapSize(chart) {
-      var width = (document.body.clientWidth - 180) * 0.5;
-      var height = (document.body.clientHeight - 60) * 0.8;
+      var width,height
+      if (document.body.clientWidth < 992) {
+        width = document.body.clientWidth;
+        height = 300;
+      }else{
+        width = (document.body.clientWidth - 180) * 0.5;
+        height = (document.body.clientHeight - 60) * 0.8;
+      }
       chart.style.width = width + "px";
       chart.style.height = height + "px";
     },

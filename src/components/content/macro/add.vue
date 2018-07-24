@@ -1,25 +1,31 @@
 <template>
     <div  v-loading="isLoading">
         <div class="p-20 macro-add">
-          <el-row class="m-b-10">
-            <el-input  class="fl w-230" placeholder="Please enter the macro" v-model="macro.macro">
+          <el-row  :gutter="20" class="m-b-10">
+            <el-col :xs= "22" :md = "{span:6}" class=" m-b-10">
+              <el-input  class="w-100p" placeholder="Please enter the macro" v-model="macro.macro">
                 <template slot="prepend">Macro</template>
             </el-input>
-            <el-input  class="fl w-300" style="margin-left:23px;" v-model="macro.comment">
+            </el-col>
+             <el-col :xs= "22" :md = "{span:6}" class="  m-b-10">
+               <el-input  class="w-100p" style="" v-model="macro.comment">
                         <template slot="prepend">Comment</template>
                     </el-input>
+            </el-col>
           </el-row>
-            <div class="m-b-10 ovf-hd">
-                <div class="fl" >
-                  <el-cascader :options="allAddress" change-on-select @change="addressChange" style="width:230px;"></el-cascader>
-                </div>
-                <div class="fl w-300" style="margin-left:23px;">
-                    <el-input placeholder="Please enter the model" v-model="keywords">
-                        <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
-                    </el-input>
-                </div>
-            </div>
-             <el-table  ref="deviceTable" :data="tableData"  :height="400" style="width: 20%;display: inline-block">
+            <el-row :gutter="20" class="m-b-10">
+              <el-col :xs= "22" :md = "{span:6}" class="  m-b-10">
+                <el-cascader class="w-100p"  :options="allAddress" change-on-select @change="addressChange" ></el-cascader>
+            </el-col>
+              <el-col :xs= "22" :md = "{span:6}" class="  m-b-10">
+                  <el-input class="w-100p" placeholder="Please enter the model" v-model="keywords">
+                          <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
+                      </el-input>
+              </el-col>
+            </el-row >
+            <el-row :gutter="20">
+              <el-col :xs= "22" :md = "{span:6}" class="  m-b-10">
+                  <el-table  ref="deviceTable" :data="tableData"  :height="400">
                 <el-table-column
                   width="40" >
                   <template slot-scope="scope" >
@@ -31,7 +37,9 @@
                 <el-table-column label="Device" prop="device">
                 </el-table-column>
             </el-table>
-            <el-table :data="commands" :height="400" style="width: 75%;display: inline-block" class=" m-l-20">
+            </el-col>
+             <el-col :xs= "22" :md = "{span:18}" class="  m-b-10">
+                 <el-table :data="commands" :height="400" >
                 <el-table-column
                   width="60">
                   <template slot-scope="scope">
@@ -145,6 +153,10 @@
                 </el-table-column> -->
                 
             </el-table>
+              </el-col>
+            </el-row>
+           
+            
             <div class="pos-rel p-t-20">
                 <div class="fr" style="margin-right:35px;">
                     <el-button type="primary" @click="save()" >Save</el-button>

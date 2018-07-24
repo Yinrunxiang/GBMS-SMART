@@ -1,11 +1,11 @@
 <template>
-    <el-card class="box-card" style="width:150px;padding:0;margin-right:30px;margin-bottom:16px;text-align: center;">
+    <el-card class="box-card">
         <i v-if="device.warn" class="el-icon-warning device-card-warn"></i>
         <i class="el-icon-close device-close" @click="deviceDelete"></i>
         <div class="device-box">
             
             <div @click.stop="deviceContral(device)">
-                <i class="fa" :class="iconstyle(device.devicetype)" style="font-size:80px;color:#ccc"></i>
+                <i class="fa device-box-icon" :class="iconstyle(device.devicetype)"></i>
             </div>
             <div style="margin-top:5px">
                 <el-switch v-model="device.deviceProperty.on_off" @change="switch_change">
@@ -13,28 +13,76 @@
             </div>
 
         </div>
-        <div style="padding:0;margin:0;height:30px;line-height:30px;color:#aaa;border-top:1px solid #515151">
+        <div class="box-card-line">
             <p style="margin:0">{{device.device}}</p>
         </div>
     </el-card>
 </template>
 
 <style>
-.box-card {
-  position: relative;
+@media screen and (max-width: 992px) {
+  .box-card {
+    position: relative;
+    width: 80px;
+    padding: 0;
+    margin-right: 10px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .box-card .device-box .device-box-icon {
+    font-size: 40px;
+    color: #ccc;
+  }
 }
-.device-box {
+@media screen and (min-width: 400px)  and (max-width: 992px) {
+  .box-card {
+    position: relative;
+    width: 100px;
+    padding: 0;
+    margin-right: 10px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .box-card .device-box .device-box-icon {
+    font-size: 40px;
+    color: #ccc;
+  }
+}
+@media screen and (min-width: 992px) {
+  .box-card {
+    position: relative;
+    width: 150px;
+    padding: 0;
+    margin-right: 30px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .box-card .device-box .device-box-icon {
+    font-size: 80px;
+    color: #ccc;
+  }
+}
+
+.box-card .box-card-line {
+  padding: 0;
+  margin: 0;
+  height: 30px;
+  line-height: 30px;
+  color: #aaa;
+  border-top: 1px solid #515151;
+}
+.box-card .device-box {
   padding: 0;
   margin-bottom: 10px;
 }
-.device-card-warn {
+.box-card .device-card-warn {
   position: absolute;
   top: 5px;
   left: 5px;
   font-size: 16px;
   color: #ff4949;
 }
-.device-close {
+.box-card .device-close {
   position: absolute;
   top: 3px;
   right: 3px;
@@ -43,7 +91,7 @@
   font-size: 6px;
   color: rgb(204, 204, 204);
 }
-.device-close:hover {
+.box-card .device-close:hover {
   background-color: #ff4949;
   color: #fff;
 }
@@ -64,7 +112,7 @@ export default {
   props: ["device"],
   methods: {
     deviceDelete() {
-      var vm = this
+      var vm = this;
       this.$confirm("Are you sure to delete the selected data?", "Tips", {
         confirmButtonText: "Yse",
         cancelButtonText: "No",
@@ -72,7 +120,7 @@ export default {
       })
         .then(() => {
           const data = {
-              selections: [this.device]
+            selections: [this.device]
           };
           this.apiPost("admin/device/delete", data).then(res => {
             this.handelResponse(res, data => {
@@ -184,7 +232,7 @@ export default {
     }
   },
   created() {
-    console.log('device')
+    console.log("device");
   },
   props: ["device"],
   components: {},

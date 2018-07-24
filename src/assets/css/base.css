@@ -122,6 +122,9 @@
 	cursor: pointer;
 	user-select: none;
 }
+.panel{
+	position: relative;
+}
 
 /* 设置滚动条的样式 */
 ::-webkit-scrollbar {

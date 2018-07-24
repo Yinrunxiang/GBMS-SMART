@@ -1,8 +1,10 @@
 <template>
-    <el-row class="panel m-w-1100">
+    <el-row class="panel">
         <el-col :span="24" class="contral-panel-center h-100p ">
-            <aside class="w-180 h-100p" style="background: #eef1f6;overflow-x:hidden;overflow-y:scroll">
-                <el-menu default-active="1" class="el-menu-vertical-demo"  @select="selectCountry" >
+          <el-row class="h-100p">
+            <el-col :xs="8" :md="4">
+            <aside class="h-100p" style="background: #eef1f6;overflow-x:hidden;overflow-y:scroll">
+                <el-menu default-active="1" class="w-100p"  @select="selectCountry" >
                     <div v-for="(country,key) in countryArr" :key = "key">
                         <el-submenu :index="country.name">
 
@@ -14,7 +16,7 @@
 
                             <div v-for="(address,key) in country.addressList" :key = "key">
                                 <el-badge :value="address.warn" class="address-badge-div">
-                                    <el-menu-item :index="address.name" @click="menuClick">
+                                    <el-menu-item :index="address.name" @click="menuClick" class="w-100p">
                                         {{address.name}}</el-menu-item>
                                 </el-badge> 
                             </div>
@@ -28,6 +30,8 @@
                                                                                                                     </div> -->
                 </el-menu>
             </aside>
+            </el-col>
+            <el-col  :xs="16" :md="20">
             <section class="panel-c-c" style="overflow-x:hidden;">
                 <div class="grid-content bg-purple-light">
                     <el-col :span="24">
@@ -65,9 +69,12 @@
                     </el-col>
                 </div>
             </section>
+             </el-col>
+            </el-row>
+           
         </el-col>
         <!-- <changePwd ref="changePwd"></changePwd> -->
-        <el-dialog title="Configure Mood" :visible.sync="showMoodSetting" v-if="showMoodSetting">
+        <el-dialog width="80%" title="Configure Mood" :visible.sync="showMoodSetting" v-if="showMoodSetting">
           <mood :room = "room" @close="showMoodSetting=false"></mood>
         </el-dialog>
         <right-page v-if="showRightPage">

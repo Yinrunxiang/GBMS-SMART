@@ -40,10 +40,11 @@
 
 <style>
 .vertical-menu{
-  width: 180px;
+  width: 100%;
 }
 .vertical-menu i{
   color:#eee;
+  z-index: 999
 }
 .badge-div {
   position: relative;

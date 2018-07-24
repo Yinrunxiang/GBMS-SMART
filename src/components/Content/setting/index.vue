@@ -1,5 +1,5 @@
 <template>
-    <el-row class="panel m-w-1100">
+    <el-row class="panel">
         <el-col :span="24" class="contral-panel-center">
             <!--<el-col :span="4">-->
             <div class="nav" :class='"w-"+addresswidth'>

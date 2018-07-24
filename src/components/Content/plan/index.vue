@@ -1,25 +1,31 @@
 <template>
     <div  v-loading="globalLoading">
         <div v-show="!showDeviceUpdate" class="p-20">
-            <div class="m-b-20 ovf-hd">
-                <div class="fl">
-                    <el-button type="primary" class="" @click="addDevice">
-                        <i class="el-icon-plus"></i>&nbsp;&nbsp;Add
-                    </el-button>
-                    <el-button type="warning" class="" @click="deleteBtn">
-                        <i class="el-icon-minus"></i>&nbsp;&nbsp;Delete
-                    </el-button>
-                </div>
-                <div class="fl m-l-30">
-                <el-cascader :options="allAddress" change-on-select @change="addressChange"></el-cascader>
-                </div>
-                <div class="fl w-300  m-l-30">
-                    <el-input placeholder="Please enter the device name" v-model="keywords">
+            <el-row class="ovf-hd">
+                <el-col class="m-b-10" :xs = "24" :md = "{span: 5}">
+                  <el-row>
+                    <el-col :span = "10">
+                        <el-button type="primary" class="w-100p" @click="addDevice">
+                            <i class="el-icon-plus"></i>&nbsp;&nbsp;Add
+                        </el-button>
+                      </el-col>
+                      <el-col :span = "10" :offset = "4">
+                        <el-button type="warning"  class="w-100p" @click="deleteBtn">
+                            <i class="el-icon-minus"></i>&nbsp;&nbsp;Delete
+                        </el-button>
+                      </el-col>
+                    </el-row>
+                </el-col>
+                <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+                <el-cascader class="w-100p" :options="allAddress" change-on-select @change="addressChange"></el-cascader>
+                </el-col>
+                <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+                    <el-input class="w-100p" placeholder="Please enter the device name" v-model="keywords">
                         <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                     </el-input>
-                </div>
+                </el-col>
                 
-            </div>
+            </el-row>
             <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick" :height="400">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
@@ -197,7 +203,7 @@ export default {
         starttime: "",
         endtime: "",
         comment: "",
-        alexa:"",
+        alexa: ""
       };
     },
     rowDblclick(row) {
@@ -269,11 +275,10 @@ export default {
       })
         .then(() => {
           const data = {
-              selections: vm.multipleSelection
+            selections: vm.multipleSelection
           };
           this.apiPost("admin/device/delete", data).then(res => {
             this.handelResponse(res, data => {
-              
               var devices = vm.$store.state.devices;
               for (var i = 0; i < devices.length; i++) {
                 for (var selection of vm.multipleSelection) {

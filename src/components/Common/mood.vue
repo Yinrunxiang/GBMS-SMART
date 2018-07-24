@@ -1,7 +1,7 @@
 <template>
     <div   v-loading="moodLoading">
       <div class="mood-container">
-    <el-card v-for="(mood,key) in moodList" :key = "key" class="box-card m-r-5 m-b-15" :span="24">
+    <el-card v-for="(mood,key) in moodList" :key = "key" class="box-card m-r-5 m-b-15 w-100p">
             <div v-show="!mood.add" style="line-height:40px" >
               <span>{{mood.mood}}</span>
               <a  class="fa fa-close fr m-l-10 m-t-10" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>
@@ -9,29 +9,35 @@
                   <!-- <el-switch class="fr" v-model="mood.on_off" @change="switch_change(mood.on_off,mood.deviceList)">
                   </el-switch> -->
             </div>
-           <div v-show="mood.add" >
-            <el-input  v-model="mood.mood" style="width:100px;" placeholder="Mood name"></el-input>
-            <el-select  v-model="devicetypes" style="width:200px;" multiple placeholder="Please choose">
-            <el-option
-              v-for="item in deviceTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <el-select  v-if="devicetypes.indexOf('curtain') != -1" style="width:200px;" v-model="curtains" multiple placeholder="Please choose">
-            <el-option
-              v-for="curtain in allCurtains"
-              :key="curtain.id"
-              :label="curtain.device"
-              :value="curtain.id">
-              <span class="fl">{{ curtain.device }}</span>
-               <el-switch  class="fr mood-curtain-switch" v-model="curtain.on_off">
-                  </el-switch>
-            </el-option>
-          </el-select>
-            <el-button class="fr" type="primary" round  @click="saveMood(mood)">save</el-button>
-           </div>
+           <el-row :gutter="20" v-show="mood.add" >
+             <el-col :xs="24" :md="4" class="m-b-10">
+                <el-input  v-model="mood.mood" placeholder="Mood name"></el-input>
+                </el-col>
+                <el-col :xs="24" :md="4"  class="m-b-10">
+                <el-select  v-model="devicetypes" multiple placeholder="Please choose">
+                <el-option
+                  v-for="item in deviceTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+                </el-col>
+                <el-col :xs="24" :md="4"  class="m-b-10">
+              <el-select  v-if="devicetypes.indexOf('curtain') != -1" style="width:200px;" v-model="curtains" multiple placeholder="Please choose">
+                <el-option
+                  v-for="curtain in allCurtains"
+                  :key="curtain.id"
+                  :label="curtain.device"
+                  :value="curtain.id">
+                  <span class="fl">{{ curtain.device }}</span>
+                  <el-switch  class="fr mood-curtain-switch" v-model="curtain.on_off">
+                      </el-switch>
+                </el-option>
+              </el-select>
+                </el-col>
+                <el-button class="fr" type="primary" round  @click="saveMood(mood)">save</el-button>
+           </el-row>
            
             
       </el-card>

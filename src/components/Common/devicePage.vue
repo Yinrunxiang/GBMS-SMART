@@ -1,5 +1,5 @@
 <template>
-    <div class="panel m-w-1100" style="background-color:#fff">
+    <div class="panel" style="background-color:#fff">
         <div class="icon-list">
             <div @click="goBack">
                 <i class="fa fa-reply"></i>

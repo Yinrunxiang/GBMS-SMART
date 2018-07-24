@@ -1,12 +1,14 @@
 <template>
     <div  v-loading="isLoading">
         <div class="p-20 schedule-add">
-          <el-row class="m-b-10">
-                   <el-input  class="fl w-230" placeholder="Please enter the schedule" v-model="schedule.schedule">
+            <el-row  :gutter="20">
+            <el-col :xs= "22" :md = "{span:6}" class="  m-b-10">
+             <el-input  class="w-100p" placeholder="Please enter the schedule" v-model="schedule.schedule">
                         <template slot="prepend">Schedule</template>
-                    </el-input>
-                <div class="fl " style="margin-left:23px;">
-                   <el-select class=" w-230" v-model="schedule.type" placeholder="">
+              </el-input>
+            </el-col>
+             <el-col :xs= "22" :md = "{span:6}" class="  m-b-10">
+               <el-select class="w-100p" v-model="schedule.type" placeholder="">
                         <el-option
                           v-for="(item,key) in timeTypeArr"
                           :key="key"
@@ -14,9 +16,9 @@
                           :value="item.value">
                         </el-option>
                       </el-select>
-                </div>
-                <div v-if="schedule.type == 'week'" class="fl week-select-div" style="margin-left:23px;">
-                        <el-select class="week-select "
+            </el-col>
+               <el-col v-if="schedule.type == 'week'" :xs= "22" :md = "{span:6}" class=" week-select-div  m-b-10">
+             <el-select class="w-100p week-select "
                           v-model="schedule.week"
                           multiple
                           placeholder="Please choose">
@@ -27,17 +29,17 @@
                             :value="item.value">
                           </el-option>
                         </el-select>
-                </div>
-                <div  v-if="schedule.type == 'once'" class="fl" style="margin-left:23px;">
-                   <el-date-picker class=" w-230"
+            </el-col>
+              <el-col v-if="schedule.type == 'once'" :xs= "22" :md = "{span:6}" class=" m-b-10">
+             <el-date-picker class="w-100p"
                     v-model="schedule.time_1"
                     type="datetime"
                     @change = "dateChange()"
                     placeholder="Please choose">
                   </el-date-picker>
-                </div>
-                <div  v-if="schedule.type == 'day' || schedule.type == 'week'" class="fl" style="margin-left:23px;">
-                  <el-time-picker
+            </el-col>
+             <el-col v-if="schedule.type == 'day'" :xs= "22" :md = "{span:6}" class=" m-b-10">
+            <el-time-picker class="w-100p"
                     v-model="schedule.time_2"
                     value-format="HH:mm"
                     :picker-options="{
@@ -46,53 +48,51 @@
                     
                     placeholder="Please choose">
                   </el-time-picker>
-                   <!-- <el-time-select
-                    v-model="schedule.time_2"
-                    :picker-options="{
-                      start: '00:00',
-                      step: '00:01',
-                      end: '23:59'
-                    }"
-                    placeholder="Please choose">
-                  </el-time-select> -->
-                </div>
-                <el-input  class="fl w-300" style="margin-left:23px;" v-model="schedule.comment">
-                        <template slot="prepend">Comment</template>
-                    </el-input>
-            </el-row>
-            <div class="m-b-10 ovf-hd">
-              <div class="fl w-230" >
-                  <el-select v-model="dataType" placeholder="请选择">
-                  <el-option
-                    v-for="(item,key) in dataTypeList"
-                    :key="key"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-                </div>
-                <div v-show="dataType == '1'" class="fl w-230"  style="margin-left:23px;">
-                  <el-cascader :options="allAddress" change-on-select @change="addressChange" ></el-cascader>
-                </div>
-                <div v-show="dataType == '1'" class="fl w-230" style="margin-left:23px;">
-                    <el-input placeholder="Please enter the model" v-model="keywords">
+            </el-col>
+            <el-col :xs= "22" :md = "{span:6}" class=" m-b-10">
+              <el-input  class="w-100p" v-model="schedule.comment">
+                <template slot="prepend">Comment</template>
+              </el-input>
+            </el-col>
+          </el-row>
+            
+            <el-row :gutter="20" class="ovf-hd">
+              <el-col :xs= "22" :md = "{span:6}" class=" m-b-10">
+                <el-select class="w-100p" v-model="dataType" placeholder="Please choose">
+                    <el-option
+                      v-for="(item,key) in dataTypeList"
+                      :key="key"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+              </el-col>
+              <el-col v-show="dataType == '1'" :xs= "22" :md = "{span:6}" class=" m-b-10">
+                  <el-cascader class="w-100p" :options="allAddress" change-on-select @change="addressChange" ></el-cascader>
+              </el-col>
+              <el-col v-show="dataType == '1'" :xs= "22" :md = "{span:6}" class=" m-b-10">
+                   <el-input  class="w-100p" placeholder="Please enter the model" v-model="keywords">
                         <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                     </el-input>
-                </div>
-            </div>
-            <el-table v-show="dataType == '1'" ref="deviceTable" :data="tableData"  :height="400" style="width: 20%;display: inline-block">
-                <el-table-column
-                  width="40" >
-                  <template slot-scope="scope" >
-                    <div class="tx-c" @click="selectDevice(scope.row)" style="cursor: pointer;">
-                    <a  class = "el-icon-circle-plus-outline" style="margin-top:3px;font-size:20px;color:#409EFF;" ></a>
-                    </div>
-                  </template>
-                </el-table-column>
-                <el-table-column label="Device" prop="device">
-                </el-table-column>
-            </el-table>
-            <el-table v-show="dataType == '2'" :data="marcoData"  :height="400" style="width: 20%;display: inline-block">
+              </el-col>
+            </el-row>
+            <el-row :gutter="20">
+              <el-col v-show="dataType == '1'" :xs= "22" :md = "{span:6}" class="  m-b-10">
+                <el-table  ref="deviceTable" :data="tableData"  :height="400" >
+                    <el-table-column
+                      width="40" >
+                      <template slot-scope="scope" >
+                        <div class="tx-c" @click="selectDevice(scope.row)" style="cursor: pointer;">
+                        <a  class = "el-icon-circle-plus-outline" style="margin-top:3px;font-size:20px;color:#409EFF;" ></a>
+                        </div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Device" prop="device">
+                    </el-table-column>
+                </el-table>
+              </el-col>
+              <el-col v-show="dataType == '2'" :xs= "22" :md = "{span:6}" class="  m-b-10">
+                <el-table  :data="marcoData"  :height="400" >
                 <el-table-column
                   width="40" >
                   <template slot-scope="scope" >
@@ -103,8 +103,10 @@
                 </el-table-column>
                 <el-table-column label="Macro" prop="macro">
                 </el-table-column>
-            </el-table>
-            <el-table :data="commands" :height="400" style="width: 75%;display: inline-block" class=" m-l-20">
+                </el-table>
+              </el-col>
+              <el-col  :xs= "22" :md = "{span:18}" class="  m-b-10">
+                    <el-table :data="commands" :height="400">
                 <el-table-column
                   width="60">
                   <template slot-scope="scope">
@@ -215,7 +217,12 @@
                 <el-table-column label="status_5" prop="operation_5" width="150" align="center">
                 </el-table-column> -->
                 
-            </el-table>
+                </el-table>
+              </el-col>
+            </el-row>
+            
+            
+            
             <div class="pos-rel p-t-20">
                 <div class="fr" style="margin-right:35px;">
                     <el-button type="primary" @click="save()" >Save</el-button>
@@ -233,16 +240,6 @@
 <style>
 .schedule-add .vc-container {
   z-index: 9999;
-}
-.schedule-add .week-select-div {
-  position: relative;
-  width: 230px;
-  height: 40px;
-}
-.schedule-add .week-select-div .week-select {
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 </style>
 
