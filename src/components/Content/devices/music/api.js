@@ -396,7 +396,7 @@ const musicApi = {
               }
               $this.sendUdpArr(udpArrAlbum);
             }
-          }, 1000);
+          }, 2000);
         }
         break;
       case "02e5":

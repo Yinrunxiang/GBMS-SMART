@@ -16,7 +16,13 @@ var ctx = canvas.getContext("2d");
 
 var counter = 0;
 var particles = [];
-var w = 400, h = 200;
+var w,h
+if (document.body.clientWidth < 992) {
+  w = "80%";
+}else{
+  w=400
+}
+ h = 200;
 canvas.width = w;
 canvas.height = h;
 

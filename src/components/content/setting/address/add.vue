@@ -1,7 +1,7 @@
 <template>
-  <div class="w-100p">
-      <div class="m-l-50 m-t-30 w-500 fl">
-          <el-form ref="form" :model="form" label-width="150px">
+  <el-row class="w-100p">
+      <el-col :xs= "22" :md = "{span:6}" class="m-a-10">
+        <el-form ref="form" :model="form" label-width="100px">
               <el-form-item label="Country">
                   <el-select v-model="form.country" filterable placeholder="Select Address" class="h-40 w-200">
                       <el-option v-for="item in addressOptions" :key="item.value" :label="item.label" :value="item.value">
@@ -37,34 +37,34 @@
               </el-form-item>
               
           </el-form>
-      </div>
-      <div class="m-l-50 m-t-30 fl" style="width:360px;">
-          <el-upload
-          class="avatar-uploader"
-          :action="action"
-          :show-file-list="false"
-          :auto-upload="true"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="showImage" :src="showImage" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-             
-        </el-upload>
-        <el-button v-if="showImage" size="small" type="primary" round style="margin-left:59px" @click="recoveryImage">Recovery</el-button>
-        <p  style="margin:0,color:#606266;">Comment</p>
-        <el-input
-          style="width:360px;"
-          type="textarea"
-          :rows="6"
-          placeholder="Please enter the comment"
-          v-model="form.comment">
-        </el-input>
-        <div class= "m-t-30 fr">
-          <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
-          <el-button @click="goback()">Cancel</el-button>
-        </div>
-      </div>
-    </div>
+      </el-col>
+      <el-col :xs= "22" :md = "{span:6,offset:3}" class=" plan-update  m-a-10">
+            <el-upload
+            class="avatar-uploader w-100p"
+            :action="action"
+            :show-file-list="false"
+            :auto-upload="true"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="showImage" :src="showImage" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              
+          </el-upload>
+          <el-button v-if="showImage" size="small" type="primary" round @click="recoveryImage">Recovery</el-button>
+          <p  style="margin:0,color:#606266;">Comment</p>
+          <el-input
+            class="w-100p"
+            type="textarea"
+            :rows="6"
+            placeholder="Please enter the comment"
+            v-model="form.comment">
+          </el-input>
+          <div class= "m-t-30 fr">
+            <el-button type="primary" @click="addAddress('form')" :loading="isLoading">Save</el-button>
+            <el-button @click="goback()">Cancel</el-button>
+          </div>
+      </el-col>
+    </el-row>
 </template>
 
 <style>

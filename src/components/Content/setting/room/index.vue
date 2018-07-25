@@ -1,16 +1,16 @@
 <template>
     <div>
         <div v-show="!setting" class="p-20">
-            <div class="m-b-20 ovf-hd">
-                <div class="fl">
+            <el-row :gutter="20" class="ovf-hd">
+               <el-col class="m-b-10" :xs = "24" :md = "{span: 5}">
                 <el-cascader :options="allAddress" change-on-select @change="addressChange"></el-cascader>
-                </div>
-                <div class="fl w-300 m-l-30">
+                </el-col>
+               <el-col class="m-b-10" :xs = "24" :md = "{span: 5}">
                     <el-input placeholder="Please enter the model" v-model="keywords">
                         <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
                     </el-input>
-                </div>
-            </div>
+                </el-col>
+            </el-row>
             <el-table :data="tableData" style="width: 100%" @selection-change="selectItem" @row-dblclick="rowDblclick"  :height="400">
                 <el-table-column type="selection" width="50">
                 </el-table-column>
@@ -259,10 +259,7 @@ export default {
               children: []
             };
             for (var room of this.$store.state.room) {
-              if (
-                room.floor == floor.id &&
-                room.address == address.id
-              ) {
+              if (room.floor == floor.id && room.address == address.id) {
                 var roomObj = {
                   value: room.id,
                   label: room.room_name

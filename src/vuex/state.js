@@ -32,6 +32,7 @@ const state = {
   },
   originalDevices:[],
   alexaToken:"",
+  phoneNav:false,
 }
 
 export default state

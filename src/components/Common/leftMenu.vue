@@ -1,37 +1,37 @@
 <template>
-  <div>
+  <div @click.stop="phoneNavStop()">
     <el-menu default-active="1" class="vertical-menu el-menu-vertical-demo" @open="handleOpen" @close="handleClose" background-color="#324057" text-color="#eee"  @select="routerChange">
-      <el-menu-item index="global">
+      <el-menu-item index="global" @click="phoneNavHidden">
         <i class="el-icon-menu"></i>Global</el-menu-item>
-      <el-menu-item index="contral">
+      <el-menu-item index="contral" @click="phoneNavHidden">
         <el-badge :value="deviceWarn" class="badge-div">
           <i class="el-icon-menu"></i>Center
         </el-badge>
       </el-menu-item>
-      <el-menu-item index="plan">
+      <el-menu-item index="plan" @click="phoneNavHidden">
         <i class="el-icon-menu"></i>Plan</el-menu-item>
-        <el-menu-item index="runing">
+        <el-menu-item index="runing" @click="phoneNavHidden">
         <i class="el-icon-menu"></i>Runing</el-menu-item>
-        <el-menu-item index="macro">
+        <el-menu-item index="macro" @click="phoneNavHidden">
         <i class="el-icon-menu"></i>Macro</el-menu-item>
-        <el-menu-item index="schedule">
+        <el-menu-item index="schedule" @click="phoneNavHidden">
         <i class="el-icon-menu"></i>Schedule</el-menu-item>
-      <el-menu-item index="report">
+      <el-menu-item index="report" @click="phoneNavHidden">
         <i class="el-icon-menu"></i>Report</el-menu-item>
-      <el-submenu index="111">
+      <el-submenu index="111" >
          <template slot="title">
           <i class="el-icon-setting"></i>Setting</template>
         <el-submenu index="AddressType">
         <template slot="title">Address Type</template>
-        <el-menu-item index="address">Address</el-menu-item>
-        <el-menu-item index="floor">Floor</el-menu-item>
-        <el-menu-item index="room">Room</el-menu-item>
+        <el-menu-item index="address" @click="phoneNavHidden">Address</el-menu-item>
+        <el-menu-item index="floor" @click="phoneNavHidden">Floor</el-menu-item>
+        <el-menu-item index="room" @click="phoneNavHidden">Room</el-menu-item>
         </el-submenu>
         <el-submenu index="DeviceType">
           <template slot="title">Device Type</template>
-          <el-menu-item index="settingTypeAc">AC</el-menu-item>
-          <el-menu-item index="settingTypeLight">Light</el-menu-item>
-          <el-menu-item index="settingTypeLed">LED</el-menu-item>
+          <el-menu-item index="settingTypeAc" @click="phoneNavHidden">AC</el-menu-item>
+          <el-menu-item index="settingTypeLight" @click="phoneNavHidden">Light</el-menu-item>
+          <el-menu-item index="settingTypeLed" @click="phoneNavHidden">LED</el-menu-item>
         </el-submenu>
       </el-submenu>
     </el-menu>
@@ -138,6 +138,12 @@ export default {
   methods: {
     handleOpen(key, keyPath) {
       // console.log(key, keyPath);
+    },
+    phoneNavStop(){
+      this.$store.dispatch("setShowRightPage", false);
+    },
+    phoneNavHidden() {
+      this.$store.dispatch("setPhoneNav", false);
     },
     handleClose(key, keyPath) {
       // console.log(key, keyPath);

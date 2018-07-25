@@ -1,6 +1,7 @@
 <template>
-  <div @keyup.enter="handleSubmit2(form)">
-    <el-form :model="form" :rules="rules2" ref="form" label-position="left" label-width="0px" class="demo-ruleForm card-box loginform">
+  <el-row   type="flex" justify="center" align="middle" class="h-100p" @keyup.enter="handleSubmit2(form)">
+    <el-col :xs="20" :sm="16" :md="10"  :lg="8" :xl="6" >
+    <el-form :model="form" :rules="rules2" ref="form" label-position="left" label-width="0px" class=" demo-ruleForm card-box loginform">
       <h3 class="title">{{systemName}}</h3>
       <el-form-item prop="username" class="m-b-20">
         <el-input type="text" v-model="form.username" auto-complete="off" placeholder="Account"></el-input>
@@ -13,7 +14,8 @@
         <el-button type="primary" style="width:100%;" v-loading="loading" @click="handleSubmit2('form')">Sign in</el-button>
       </el-form-item>
     </el-form>
-  </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -54,8 +56,8 @@ export default {
         if (valid) {
           this.loading = !this.loading;
           let data = {};
-            data.username = this.form.username;
-            data.password = this.form.password;
+          data.username = this.form.username;
+          data.password = this.form.password;
           if (this.checked) {
             data.isRemember = 1;
           } else {
@@ -106,34 +108,41 @@ export default {
 </script>
 
 <style>
-.verify-pos {
+/* .verify-pos {
   position: absolute;
   right: 100px;
   top: 0px;
+} */
+@media screen and (max-width: 992px) {
+  .card-box {
+    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    background-clip: padding-box;
+    background-color: #f9fafc;
+    padding: 30px 30px 10px 30px;
+    width: 90%;
+    border: 2px solid #8492a6;
+  }
 }
-
-.card-box {
-  padding: 20px;
-  /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  background-clip: padding-box;
-  margin-bottom: 20px;
-  background-color: #f9fafc;
-  margin: 120px auto;
-  width: 400px;
-  border: 2px solid #8492a6;
+@media screen and (min-width: 992px) {
+  .card-box {
+    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    background-clip: padding-box;
+    background-color: #f9fafc;
+    padding: 30px 30px 10px 30px;
+    width: 100%;
+    border: 2px solid #8492a6;
+  }
 }
 
 .title {
   margin: 0px auto 40px auto;
   text-align: center;
   color: #505458;
-}
-
-.loginform {
-  width: 350px;
-  padding: 35px 35px 15px 35px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="w-100p">
-    <div class="m-l-50 m-t-30 w-500 fl">
+  <el-row class="w-100p">
+    <el-col :xs= "22" :md = "{span:6}" class="m-a-10">
         <el-form ref="form" :model="form" label-width="150px">
             <el-form-item label="Room">
                 <el-input  :disabled="!this.add" v-model.trim="form.room" class="h-40 w-200"></el-input>
@@ -27,8 +27,8 @@
                 </el-select>
             </el-form-item> -->
         </el-form>
-    </div>
-    <div class="m-l-50 m-t-30 fl" style="position:relative;width:360px;">
+    </el-col>
+    <el-col :xs= "22" :md = "{span:6}" class="m-a-10">
           <el-upload
           class="avatar-uploader"
           :action="action"
@@ -54,7 +54,7 @@
           <el-button type="primary" @click="addAddress()" :loading="isLoading">Save</el-button>
           <el-button @click="goback()">Cancel</el-button>
         </div>
-    </div>
+    </el-col>
     <el-dialog title="" v-if="showFloorImage" :visible.sync="showFloorImage" :width="floorImageWidth+40+'px'">
       <vueCorpper
         :style="{height:floorImageHeight+'px',width:floorImageWidth+'px'}"
@@ -72,7 +72,7 @@
         </div>
     </el-dialog>
     
-  </div>
+  </el-row>
 </template>
 <style>
 .avatar-uploader .el-upload {

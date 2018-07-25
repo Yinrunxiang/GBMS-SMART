@@ -22,8 +22,8 @@
 </template>
 <style>
 .contarl-right-page {
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 60;
   right: 0;
   width: 350px;
   height: 99%;
@@ -31,7 +31,7 @@
   /* z-index:20; */
 }
 .contarl-right-content {
-  position: relative;
+  position: fixed;
 }
 .contarl-right-page .left-collect {
   position: absolute;

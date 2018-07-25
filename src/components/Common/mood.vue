@@ -2,13 +2,15 @@
     <div   v-loading="moodLoading">
       <div class="mood-container">
     <el-card v-for="(mood,key) in moodList" :key = "key" class="box-card m-r-5 m-b-15 w-100p">
-            <div v-show="!mood.add" style="line-height:40px" >
-              <span>{{mood.mood}}</span>
-              <a  class="fa fa-close fr m-l-10 m-t-10" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>
-              <el-button type="primary" @click="run(mood.deviceList)" class="fr">Run</el-button>
-                  <!-- <el-switch class="fr" v-model="mood.on_off" @change="switch_change(mood.on_off,mood.deviceList)">
-                  </el-switch> -->
-            </div>
+            <el-row v-show="!mood.add" :gutter="20" >
+              <el-col :xs="6" :md="4" class="m-b-10">
+              <span  style="line-height:40px" >{{mood.mood}}</span>
+              </el-col>
+            <a  class="fa fa-close fr m-l-10 m-t-10" style="font-size:20px;color:#ff4949;" @click="deleteMood(mood)"></a>
+            <el-button type="primary" @click="run(mood.deviceList)" class="fr">Run</el-button>
+                <!-- <el-switch class="fr" v-model="mood.on_off" @change="switch_change(mood.on_off,mood.deviceList)">
+                </el-switch> -->
+            </el-row>
            <el-row :gutter="20" v-show="mood.add" >
              <el-col :xs="24" :md="4" class="m-b-10">
                 <el-input  v-model="mood.mood" placeholder="Mood name"></el-input>
@@ -112,7 +114,7 @@ export default {
         params: {
           address: this.room.address,
           floor: this.room.floor,
-          room: this.room.room
+          room: this.room.id
         }
       };
       this.apiGet("admin/mood", data).then(res => {
@@ -165,11 +167,11 @@ export default {
         mood: mood.mood,
         address: this.room.address,
         floor: this.room.floor,
-        room: this.room.room,
+        room: this.room.id,
         devicetypes: this.devicetypes,
         curtains: curtains
       };
-      // console.log(data);
+      console.log(data);
       this.apiPost("admin/mood", data).then(res => {
         this.handelResponse(res, data => {
           _g.toastMsg("success", data);
@@ -196,7 +198,7 @@ export default {
           mood: mood.mood,
           address: this.room.address,
           floor: this.room.floor,
-          room: this.room.room
+          room: this.room.id
         };
         this.apiPost("admin/mood/delete", data).then(res => {
           this.handelResponse(res, data => {

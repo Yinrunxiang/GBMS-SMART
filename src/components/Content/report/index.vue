@@ -28,11 +28,11 @@
              <el-button class="w-100p" type="primary" icon="el-icon-search"></el-button>
           </el-col>
       </el-row>
-      <el-row  class="p-20">
-        <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+      <el-row >
+        <el-col class="m-b-10" :xs = "24" :md = "{span: 10,offset:1}" :lg = "{span: 8,offset:1}">
              <div ref="lineChart" class="line-chart fl"></div>
           </el-col>
-          <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+          <el-col class="m-b-10" :xs = "24" :md = "{span: 10,offset:1}" :lg = "{span: 8,offset:1}">
              <div ref="pieChart" class="pie-chart fl"></div>
           </el-col>
       </el-row>
@@ -196,7 +196,7 @@ export default {
         width = document.body.clientWidth;
         height = 300;
       }else{
-        width = (document.body.clientWidth - 180) * 0.5;
+        width = (document.body.clientWidth - 180) * 0.4;
         height = (document.body.clientHeight - 60) * 0.8;
       }
       chart.style.width = width + "px";

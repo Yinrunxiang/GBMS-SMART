@@ -7,34 +7,53 @@
   <title>SMART GBMS</title>
   <link rel="shortcut icon" type="image/x-icon" href="static/favicon.ico">
   <style>
-      body {
-        margin: 0;
-        padding: 0;
-        background: #1F2D3D;
+    body {
+      margin: 0;
+      padding: 0;
+      background: #1F2D3D;
+    }
+
+    @media screen and (max-width: 992px) {
+      #loading {
+        position: absolute;
+        top: calc(50% - 50px);
+        top: -webkit-calc(50% - 100px);
+        left: calc(50% - 150px);
+        left: -webkit-calc(50% - 150px);
       }
-  
+
+      #loading .loading-comment {
+        color: #fff;
+        font-size: 12px;
+      }
+    }
+
+    @media screen and (min-width: 992px) {
       #loading {
         position: absolute;
         top: calc(50% - 50px);
         top: -webkit-calc(50% - 100px);
         left: calc(50% - 200px);
         left: -webkit-calc(50% - 200px);
+        margin-left: 20px;
       }
-      #loading .loading-comment{
-        color:#fff;
-        font-size:20px;
+
+      #loading .loading-comment {
+        color: #fff;
+        font-size: 20px;
       }
-    </style>
+    }
+  </style>
 </head>
 
 <body>
   <div id="loading">
-      <div class="loading-comment">Please wait while download and install GBMS</div>
-      <canvas ></canvas>
+    <div class="loading-comment">Please wait while download and install GBMS</div>
+    <canvas></canvas>
   </div>
-  
+
   <div id="app"></div>
-  <script type="application/javascript" src="static/loading.js" ></script>
+  <script type="application/javascript" src="static/loading.js"></script>
   <!-- built files will be auto injected -->
 </body>
 

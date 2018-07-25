@@ -1,6 +1,7 @@
 <template>
-    <div class="m-l-50 m-t-30 w-500">
-        <el-form ref="form" :model="form" label-width="150px">
+    <el-row class="w-100p">
+        <el-col :xs= "22" :md = "{span:6}" class="m-a-10">
+        <el-form ref="form" :model="form" label-width="100px">
             <el-form-item label="Mode Name">
                 <el-input v-model.trim="form.breed" class="h-40 w-200"></el-input>
             </el-form-item>
@@ -15,7 +16,8 @@
                 <el-button @click="goback()">Cancel</el-button>
             </el-form-item>
         </el-form>
-    </div>
+        </el-col>
+    </el-row>
 </template>
 
 <script>

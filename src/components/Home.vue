@@ -1,7 +1,7 @@
 <template>
 	<div class="panel" @click="hideRightPage()">
     <span class="version hidden-sm-and-down">ver {{version}}</span>
-    <span class = "phone-nav fa fa-align-justify hidden-sm-and-up pointer" @click="phoneNavShow"></span>
+    <span @click.stop="phoneNavStop()" class = "phone-nav fa fa-align-justify hidden-sm-and-up pointer" @click="phoneNavShow"></span>
 		<el-col :span="24" class="panel-top">
 			<el-col class="w-180">
 				<template v-if="logo_type == '1'">
@@ -198,7 +198,6 @@ export default {
           name: "report"
         }
       ],
-      phoneNav: false,
       hasChildMenu: false,
       menu: null,
       module: null,
@@ -213,11 +212,13 @@ export default {
   methods: {
     hideRightPage() {
       // console.log("123");
+      this.$store.dispatch("setPhoneNav", false);
       this.$store.dispatch("setShowRightPage", false);
     },
+    phoneNavStop(){},
     phoneNavShow() {
-      this.phoneNav = this.phoneNav == false ? true : false;
-      console.log(this.phoneNav);
+      this.$store.state.phoneNav = this.$store.state.phoneNav == false ? true : false;
+      this.$store.dispatch("setPhoneNav", this.$store.state.phoneNav);
     },
     homeClick() {
       let url = "/home/global";
@@ -967,7 +968,10 @@ export default {
       return this.$store.state.led_breed;
     },
     globalLoading() {
-      return store.state.globalLoading;
+      return this.$store.state.globalLoading;
+    },
+    phoneNav(){
+      return this.$store.state.phoneNav;
     }
   },
   watch: {

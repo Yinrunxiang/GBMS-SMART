@@ -86,6 +86,9 @@ const actions = {
   setalexaToken({ commit }, alexaToken) {
     commit("setalexaToken", alexaToken);
   },
+  setPhoneNav({ commit }, phoneNav) {
+    commit("setPhoneNav", phoneNav);
+  },
 };
 
 export default actions;
