@@ -139,15 +139,18 @@ export default {
     handleOpen(key, keyPath) {
       // console.log(key, keyPath);
     },
+    //终止事件冒泡
     phoneNavStop(){
       this.$store.dispatch("setShowRightPage", false);
     },
+    //隐藏手机导航栏
     phoneNavHidden() {
       this.$store.dispatch("setPhoneNav", false);
     },
     handleClose(key, keyPath) {
       // console.log(key, keyPath);
     },
+    //切换页面路由
     routerChange(key, keyPath) {
       for (var item of this.menuDatas) {
         if (key == item.name) {

@@ -102,12 +102,16 @@ export default {
     //   this.apiGet("device/mood.php?action=run", data).then(res => {
     //   });
     // },
+
+    //执行心情
     run(deviceList) {
       udpArr.sendUdpArr(deviceList);
     },
+    //隐藏心情页面
     closeDialog() {
       this.$emit("close", false);
     },
+    //获取心情数据
     getMood() {
       this.moodLoading = true;
       var data = {
@@ -139,6 +143,7 @@ export default {
         this.moodLoading = false;
       });
     },
+    //保存心情数据
     saveMood(mood) {
       // for(var oldMood in this.oldMoodList){
       //   // var mood = this.oldMoodList[oldMood];
@@ -179,6 +184,7 @@ export default {
         });
       });
     },
+    //新增心情
     addMood() {
       var newMood = {
         mood: "",
@@ -188,6 +194,7 @@ export default {
       };
       this.$set(this.moodList, "new_mood", newMood);
     },
+    //删除心情
     deleteMood(mood) {
       this.$confirm("Are you sure to delete this mood?", "Tips", {
         confirmButtonText: "Yse",

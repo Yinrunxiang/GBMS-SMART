@@ -5,8 +5,6 @@ var webpack = require('webpack')
 var vueLoaderConfig = require('./vue-loader.conf')
 var env = process.env.NODE_ENV
 var DEV_HOST = JSON.stringify('http://localhost:2123/thinkphp/public/')
-// var DEV_HOST = JSON.stringify('http://112.74.177.58/php/')
-// var PUB_HOST = JSON.stringify('http://112.74.177.58/php/')
 var PUB_HOST = JSON.stringify('/thinkphp/public/')
 
 function resolve(dir) {

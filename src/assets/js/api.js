@@ -59,6 +59,7 @@ const api = {
     }
 
   },
+  //发送UDP列表
   sendUdpArr(arr) {
     console.log('sendUdpArr')
     var $this = this
@@ -109,6 +110,7 @@ const api = {
     }
     sendUdp(arr[arrIndex].device, arr[arrIndex].data, 1)
   },
+  //返回要发送的UDP数据
   getUdp(device, operatorCodefst, operatorCodesec, additionalContentData) {
     const data = {
       params: {
@@ -125,6 +127,7 @@ const api = {
     }
     return data
   },
+  //返回要发的UDP数据列表
   getUdpArr(deviceList){
     var udpArr = [];
       for (var device of deviceList) {

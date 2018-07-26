@@ -1,7 +1,7 @@
 <template>
     <div class="container-out" style="height:100%">
         <div v-show="showAll" style="width:100%;height:100%">
-            <div v-show="showWatts" class="roomWattsContainer">
+            <div v-show="showWatts && !isPhone" class="roomWattsContainer">
                 <div ref="roomWatts" class="roomWatts" style=""></div>
             </div>
             
@@ -190,18 +190,19 @@ export default {
       showRoomUpdate: false,
       floor: {},
       room: {
-        id:"",
-        image:"",
-        image_full:"",
-        room:"",
-        room_name:"",
-        floor:"",
-        address:"",
-        typeList:[],
-        collect:0
+        id: "",
+        image: "",
+        image_full: "",
+        room: "",
+        room_name: "",
+        floor: "",
+        address: "",
+        typeList: [],
+        collect: 0
       },
       lock: true,
-      showWatts: true
+      showWatts: true,
+      isPhone: false
     };
   },
   // prop:[address],
@@ -514,6 +515,9 @@ export default {
   created() {
     console.log("report");
     this.$store.dispatch("setShowHotel", true);
+    if (document.body.clientWidth < 992) {
+      this.isPhone = true
+    }
     _g.closeGlobalLoading();
   },
   destroyed() {
@@ -741,9 +745,7 @@ export default {
 
 <style>
 .container-out {
-  position: absolute;
-  left: 0;
-  top: 0;
+  position: relative;
   width: 100%;
   height: 100%;
 }
@@ -751,6 +753,7 @@ export default {
   position: fixed;
   right: 15px;
   bottom: 10px;
+  z-index: 10;
 }
 .roomWatts {
   width: 250px;

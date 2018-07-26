@@ -50,6 +50,7 @@ export default {
     };
   },
   methods: {
+    //登录
     handleSubmit2(form) {
       if (this.loading) return;
       this.$refs.form.validate(valid => {
@@ -80,6 +81,7 @@ export default {
         }
       });
     },
+    //是否记住密码
     checkIsRememberPwd() {
       if (Cookies.get("rememberPwd")) {
         let data = {
@@ -121,8 +123,8 @@ export default {
     -moz-border-radius: 5px;
     background-clip: padding-box;
     background-color: #f9fafc;
-    padding: 30px 30px 10px 30px;
-    width: 90%;
+    padding: 30px 10% 10px 10%;
+    width: 80%;
     border: 2px solid #8492a6;
   }
 }

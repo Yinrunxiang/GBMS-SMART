@@ -1,5 +1,6 @@
 import api from "./api"
 const commonFn = {
+  //json转字符串
   j2s(obj) {
     return JSON.stringify(obj);
   },

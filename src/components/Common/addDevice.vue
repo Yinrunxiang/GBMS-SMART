@@ -74,6 +74,7 @@ export default {
         }
     },
     methods: {
+        //新增设备
         add(form) {
             // console.log(this.form)
             this.isLoading = !this.isLoading
@@ -96,6 +97,7 @@ export default {
 
             })
         },
+        //获取品牌列表
         getBreedList(breeds) {
             var breedArr = []
             for (var item of breeds) {
@@ -115,6 +117,7 @@ export default {
     components: {
     },
     computed: {
+        //品牌列表数据
         breedData() {
             switch (this.form.devicetype) {
                 case "ac":
@@ -133,6 +136,7 @@ export default {
                     break
             }
         },
+        //酒店数据
         address() {
             var address = []
             for (var item of this.$store.state.address) {

@@ -1,5 +1,5 @@
 <template>
-    <el-row class="panel">
+    <el-row class="w-100p h-100p">
         <el-col :span="24" class="contral-panel-center h-100p ">
           <el-row class="h-100p">
             <el-col :xs="8" :md="4">
@@ -128,10 +128,12 @@ export default {
     };
   },
   methods: {
+    //显示心情页面
     clickToShowMoodSetting(room) {
       this.showMoodSetting = true;
       this.room = room;
     },
+    //隐藏房间列表
     roomClose() {
       var vm = this;
       var i = 0;
@@ -147,6 +149,7 @@ export default {
         }
       }, 300);
     },
+    //切换房间
     roomChange(val) {
       var vm = this;
       if (vm.interval) {
@@ -180,6 +183,7 @@ export default {
         }, 300);
       }
     },
+    //设备异常状态
     deviceWarn() {
       var warn = 0;
       for (var device of this.$store.state.devices) {
@@ -194,6 +198,7 @@ export default {
       }
       return warn;
     },
+    //切换国家
     selectCountry(key, keyPath) {
       var typeList = [];
       for (var country of this.countryArr) {
@@ -240,6 +245,7 @@ export default {
   //   clearInterval(this.interval);
   // },
   computed: {
+    //设备数据
     devices() {
       console.log(this.$store.state.devices)
       return this.$store.state.devices;
@@ -247,6 +253,7 @@ export default {
     showRightPage() {
       return this.$store.state.showRightPage;
     },
+    //国家，酒店，楼层，房间数据
     countryArr() {
       // console.log(this.$store.state.countryArr)
       var countryArr = this.$store.state.countryArr;

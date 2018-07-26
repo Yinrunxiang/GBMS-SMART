@@ -82,12 +82,14 @@ export default {
   },
   props: ["device"],
   methods: {
+    //点击图标开启设备操作页
     iconClick() {
       this.$store.dispatch("showContral", true);
       let url = "/home/contral/" + this.device.devicetype;
       this.$store.dispatch("setDevice", this.device);
       router.push(url);
     },
+    //点击图标开启设备操作页
     deviceContral(device) {
       this.$store.dispatch("showContral", true);
       let url = "/home/contral/" + device.devicetype;
@@ -113,6 +115,7 @@ export default {
       //     router.push(url)
       // }
     },
+    //开关设备
     switch_change(val) {
       switch (this.device.devicetype) {
         case "light":
@@ -129,6 +132,7 @@ export default {
           break;
       }
     },
+    //读取设备开启状态
     readOpen() {
       switch (this.device.devicetype) {
         case "light":
@@ -147,6 +151,7 @@ export default {
       }
       // console.log("OK");
     },
+    //根据设备类型选择图标
     iconstyle(type) {
       switch (type) {
         case "light":

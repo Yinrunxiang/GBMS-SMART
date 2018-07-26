@@ -111,6 +111,7 @@ export default {
   },
   props: ["device"],
   methods: {
+    //删除设备
     deviceDelete() {
       var vm = this;
       this.$confirm("Are you sure to delete the selected data?", "Tips", {
@@ -139,6 +140,7 @@ export default {
           // catch error
         });
     },
+    //打开设备详细操作页
     deviceContral(device) {
       // this.$store.dispatch("showContral", true);
       // let url = "/home/contral/" + device.devicetype;
@@ -153,6 +155,7 @@ export default {
       //   _g.shallowRefresh(this.$route.name);
       // }
     },
+    //设备开关
     switch_change(val) {
       switch (this.device.devicetype) {
         case "light":
@@ -178,6 +181,7 @@ export default {
           break;
       }
     },
+    //读取设备开关状态
     readOpen() {
       switch (this.device.devicetype) {
         case "light":
@@ -202,6 +206,7 @@ export default {
       }
       // console.log("OK");
     },
+    //根据设备类型选择图标
     iconstyle(type) {
       switch (type) {
         case "light":

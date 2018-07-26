@@ -1,7 +1,7 @@
 <template>
     <div  v-loading="recordLoading" class="w-100p h-100p">
-      <el-row class="p-20">
-        <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+      <el-row :gutter="20" class="p-20">
+        <el-col class="m-b-10" :xs = "24" :md = "{span: 5}">
           <el-date-picker class="w-100p"
           v-model="beginDate"
           type="date"
@@ -10,10 +10,19 @@
           @change="beginChange">
           </el-date-picker>
         </el-col>
-        <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+        <el-col class="m-b-10" :xs = "24" :md = "{span: 5}">
+          <el-date-picker class="w-100p"
+            v-model="endDate"
+            type="date"
+            value-format = "yyyy-MM-dd"
+            placeholder="End date" 
+            @change="endChange">
+          </el-date-picker>
+        </el-col>
+        <el-col class="m-b-10" :xs = "24" :md = "{span: 5}">
             <el-cascader class="w-100p" :options="allAddress" change-on-select @change="addressChange"></el-cascader>
           </el-col>
-          <el-col class="m-b-10" :xs = "24" :md = "{span: 5,offset:1}">
+          <el-col class="m-b-10" :xs = "24" :md = "{span: 5}">
             <el-select class="w-100p" v-model="type" placeholder="Select" @change="typeChange">
               <el-option
                 v-for="item in typeList"
@@ -24,7 +33,7 @@
               </el-option>
             </el-select>
           </el-col>
-          <el-col class="m-b-10" :xs = "24" :md = "{span: 2,offset:1}">
+          <el-col class="m-b-10" :xs = "24" :md = "{span: 2}">
              <el-button class="w-100p" type="primary" icon="el-icon-search"></el-button>
           </el-col>
       </el-row>

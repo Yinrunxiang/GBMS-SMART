@@ -41,11 +41,11 @@
       
       <el-col :xs="24" :sm="24" :md="21" :lg="21" :xl="22" class="h-100p">
 			<section class="panel-c-c h-100p" :class="{'hide-leftMenu': hasChildMenu}">
-					<el-col :span="24" class= "panel">
+					<div class= "w-100p h-100p">
 						<transition name="fade" mode="out-in" appear>
 							<router-view :dataReady="dataReady"></router-view>
 						</transition>
-					</el-col>
+					</div>
 			</section>
       </el-col>
       </el-row>
@@ -85,7 +85,6 @@
   position: absolute;
   top: 60px;
   bottom: 0px;
-  overflow: hidden;
 }
 
 .panel-c-c {
@@ -121,7 +120,7 @@
   position: absolute;
   top: 15px;
   right: 15px;
-  font-size: 26px;
+  font-size: 26px !important;
   color: #fff;
 }
 .phone-nav-list {

@@ -113,6 +113,7 @@ export default {
   },
   // props: ['device'],
   methods: {
+      //初始化风速状态
     formatTooltip(val) {
       switch (val) {
         case 0:
@@ -129,6 +130,7 @@ export default {
           break;
       }
     },
+    //初始化模式
     modestyle(mode) {
       switch (mode) {
         case "auto":
@@ -145,31 +147,39 @@ export default {
           break;
       }
     },
+    //开关
     switch_change(val) {
       acApi.switch_change(val, this.device);
     },
+    //改变自动温度
     autoTmp_change(val) {
       acApi.autoTmp_change(val, this.device);
     },
+    //改变制冷温度
     coolTmp_change(val) {
       acApi.coolTmp_change(val, this.device);
     },
+    //改变制热温度
     heatTmp_change(val) {
       acApi.heatTmp_change(val, this.device);
     },
+    //改变风速
     wind_change(val) {
       acApi.wind_change(val, this.device);
     },
-
+    //自动模式按钮
     autobtn() {
       acApi.autobtn(this.device);
     },
+    //风扇模式按钮
     fanbtn() {
       acApi.fanbtn(this.device);
     },
+    //制冷模式按钮
     coolbtn() {
       acApi.coolbtn(this.device);
     },
+    //制热模式按钮
     heatbtn() {
       acApi.heatbtn(this.device);
     }
