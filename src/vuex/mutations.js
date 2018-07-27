@@ -85,7 +85,10 @@ const mutations = {
   },
   setPhoneNav(state, phoneNav) {
     state.phoneNav = phoneNav
-  }
+  },
+  // setGlobalLoading(state, globalLoading) {
+  //   state.globalLoading = globalLoading
+  // }
 }
 
 export default mutations

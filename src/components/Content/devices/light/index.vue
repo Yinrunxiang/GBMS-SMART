@@ -39,9 +39,11 @@ export default {
   },
   // props: ['device'],
   methods: {
+    //开关
     switch_change(val) {
       lightApi.switch_change(val, this.device);
     },
+    //亮度调节
     slider_change(val) {
       lightApi.slider_change(val, this.device);
     }

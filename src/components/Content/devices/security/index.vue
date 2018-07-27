@@ -115,10 +115,12 @@ export default {
   },
   // props: ['device'],
   methods: {
+    //选择区域
     areaClick(val) {
       // console.log(val)
       this.area = val;
     },
+    //发送配置好的指令
     sendCommand(type) {
       var val = {};
       val.area = this.area;

@@ -231,9 +231,11 @@ export default {
   },
   // props: ['device'],
   methods: {
+    //切换页面
     changePage(val) {
       this.showPage = val;
     },
+    //按钮名称
     btnName(ir_key, old_name) {
       if (this.operationObj[ir_key]) {
         return this.operationObj[ir_key].ir_name;
@@ -241,6 +243,7 @@ export default {
         return old_name;
       }
     },
+    //点击按钮触发弹窗
     clickToShowDialog(ir_key, dialogType) {
       this.ir_key = ir_key;
       if (this.operationObj[ir_key]) {
@@ -253,6 +256,7 @@ export default {
       this.dialogType = dialogType;
       this.showDialog = true;
     },
+    //触发按钮操作
     clickToSendUdp(ir_key) {
       if (this.operationObj[ir_key]) {
         var ir_value = this.operationObj[ir_key].ir_value;
@@ -263,6 +267,7 @@ export default {
         // this.ir_key = ir_key;
       }
     },
+    //保存按钮配置
     submit() {
       if (this.ir_value < 0 || this.ir_value > 255) {
         _g.toastMsg("error", "The value  between 0 and 255");
@@ -303,6 +308,7 @@ export default {
         });
       }
     },
+    //获取按钮属性
     getIrOperation(id) {
      const data = {
         params: {

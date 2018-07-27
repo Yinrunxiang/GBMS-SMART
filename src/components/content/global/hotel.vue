@@ -207,9 +207,11 @@ export default {
   },
   // prop:[address],
   methods: {
+    //修改房间名
     changeRoomName() {
       this.showChange = true;
     },
+    //房间收藏功能
     clickToCollect(room) {
       let data = room;
       this.apiPost("admin/room/collect", data).then(res => {
@@ -219,6 +221,7 @@ export default {
         });
       });
     },
+    //取消房间收藏
     clickToUnCollect(room) {
       let data = room;
       this.apiPost("admin/room/uncollect", data).then(res => {
@@ -228,6 +231,7 @@ export default {
         });
       });
     },
+    //锁定设备无法移动
     clickToLock() {
       var currentDeviceList = [];
       currentDeviceList = currentDeviceList.concat(this.deviceList);
@@ -238,6 +242,7 @@ export default {
         this.deviceList = currentDeviceList;
       });
     },
+    //接触设备锁定
     clickToUnLock() {
       var currentDeviceList = [];
       currentDeviceList = currentDeviceList.concat(this.deviceList);
@@ -250,19 +255,23 @@ export default {
     showChangePage(val) {
       this.showChange = val;
     },
+    //修改设备信息
     changeUpdate(data) {
       this.showDeviceUpdate = data;
       this.$store.dispatch("setShowRoom", !data);
       this.showAll = !data;
     },
+    //显示设备控制页
     changeContral(data) {
       this.showDevicePage = data;
       this.$store.dispatch("setShowRoom", !data);
       this.showAll = !data;
     },
+    //切换设备控制页显示
     settingStatusClick() {
       this.setting = !this.setting;
     },
+    //添加设备的设备点击列表
     addDeviceListClick(device) {
       this.showAll = false;
       this.$store.dispatch("setShowRoom", false);
@@ -291,9 +300,11 @@ export default {
       this.thisdevice = deviceObj;
       // this.deviceList.push(deviceObj);
     },
+    //增加新设备的按钮
     addNewDevice(device) {
       this.deviceList.push(device);
     },
+    //双击设备，显示设备操作页
     deviceDbclick(showRoom, showDeviceUpdate, device) {
       // this.showAll = showRoom;
       // this.$store.dispatch("setShowRoom", showRoom);
@@ -316,16 +327,19 @@ export default {
           : "";
       }
     },
+    //建筑设置页面
     settingClick() {
       this.showHotelUpdate = true;
       this.$store.dispatch("setShowHotel", false);
       this.showAll = false;
     },
+    //隐藏建筑设置页面
     addressBack(bool) {
       this.showHotelUpdate = bool;
       this.$store.dispatch("setShowHotel", !bool);
       this.showAll = !bool;
     },
+    //返回global页面
     hotelBack() {
       this.$store.dispatch("setShowHotel", false);
       this.$store.dispatch("setShowFloor", false);
@@ -333,6 +347,7 @@ export default {
       let url = "/home/global";
       router.push(url);
     },
+    //点击楼层进入楼层页面
     floorClick(val) {
       // this.showFloor = true;
       this.$store.dispatch("setShowHotel", false);
@@ -369,18 +384,22 @@ export default {
         }
       }
     },
+    //返回建筑页面
     floorBack() {
       this.$store.dispatch("setShowHotel", true);
       this.$store.dispatch("setShowFloor", false);
     },
+    //楼层设置页面
     floorSetting() {
       this.showFloorUpdate = true;
       this.showWatts = false;
     },
+    //隐藏楼层设置页面
     floorUpdateback(val) {
       this.showFloorUpdate = val;
       this.showWatts = true;
     },
+    //点击房间进入房间页面
     roomClick(val) {
       // window.socketio.removeAllListeners("new_msg");
       this.$store.dispatch("setShowFloor", false);
@@ -431,6 +450,7 @@ export default {
           duration: 3000
         });
       }
+      //读取房间内设备状态
       clearInterval(interval);
       // window.socketio.removeAllListeners();
       // console.log(val)
@@ -459,14 +479,17 @@ export default {
         }
       }
     },
+    //房间设置页面
     roomSetting() {
       this.showRoomUpdate = true;
       this.showWatts = false;
     },
+    //隐藏房间设置页面
     roomUpdateback(val) {
       this.showRoomUpdate = val;
       this.showWatts = true;
     },
+    //退出房间，关闭状态读取
     roomClose() {
       var deviceList = this.$refs.device;
       var i = 0;
@@ -482,6 +505,7 @@ export default {
         }
       }, 100);
     },
+    //返回楼层页面
     roomBack() {
       this.$store.dispatch("setShowFloor", true);
       this.$store.dispatch("setShowRoom", false);

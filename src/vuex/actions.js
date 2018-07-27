@@ -2,6 +2,9 @@ const actions = {
   showLeftMenu({ commit }, status) {
     commit("showLeftMenu", status);
   },
+  // showGlobalLoading({ commit }, globalLoading) {
+  //   commit("showGlobalLoading", globalLoading);
+  // },
   showLoading({ commit }, status) {
     commit("showLoading", status);
   },

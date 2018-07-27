@@ -97,6 +97,8 @@ export default {
   },
   created() {
     this.checkIsRememberPwd();
+    //隐藏加载条
+    document.getElementById("loading").style.display="none";
   },
   mounted() {
     window.addEventListener("keyup", e => {

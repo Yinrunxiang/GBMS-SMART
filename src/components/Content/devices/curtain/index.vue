@@ -50,10 +50,12 @@ export default {
   },
   // props: ['device'],
   methods: {
+    //执行开关
     switch_change(val) {
       this.status = val;
       curtainApi.switch_change(val, this.device);
     },
+    //停止
     stop() {
       curtainApi.stop(this.status, this.device);
     }
@@ -62,6 +64,7 @@ export default {
   },
   mounted() {
     console.log("curtain vue");
+    //读取状态
     curtainApi.readStatus(this.device);
   },
   destroyed() {

@@ -1,5 +1,6 @@
 
 const api = {
+    //HTTP post方法
     apiPost(url, data) {
         // console.log(data)
         return new Promise((resolve, reject) => {
@@ -15,8 +16,8 @@ const api = {
             })
         })
     },
-    //UDP重发机制
-
+    
+    //处理信息，转化为要发送的UDP状态
     getUdp(device, operatorCodefst, operatorCodesec, additionalContentData) {
         const data = {
             operatorCodefst: operatorCodefst,
@@ -31,6 +32,10 @@ const api = {
         }
         return data
     },
+    //发送UDP
+    //device为设备对象
+    //data为UDP对象
+    //type为时候重发
     sendUdp(device, data, type) {
         if (!type || type == "") {
             api.apiPost("admin/udp/sendUdp", data).then(res => {
@@ -69,7 +74,7 @@ const api = {
                     clearInterval(sendUdp);
                     return;
                 }
-                console.log(data)
+                // console.log(data)
                 api.apiPost("admin/udp/sendUdp", data).then(res => {
                 });
                 index++
@@ -113,6 +118,7 @@ const api = {
 
                 var sendUdpFor = setInterval(function () {
                     var udpDevice = window.store.state.udpDevice
+                    // console.log(udpDevice)
                     if (udpDevice.subnetid == device.subnetid.toLowerCase() && udpDevice.deviceid == device.deviceid.toLowerCase() && udpDevice.operatorCode == operatorCode) {
                         if (device.channel) {
                             if (udpDevice.channel == device.channel.toLowerCase()) {
@@ -137,11 +143,12 @@ const api = {
                         }
                         return;
                     }
-                    console.log(data)
+                    // console.log(data)
                     api.apiPost("admin/udp/sendUdp", data).then(res => {
                     });
                     index++
-                }, 700);
+                    // console.log(index)
+                }, 300);
             }
 
         }

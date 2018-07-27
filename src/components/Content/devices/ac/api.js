@@ -1,4 +1,5 @@
 import api from "../api";
+//转换温度数值
 function toTmp(tmp) {
     tmp = parseInt('0x' + tmp)
     tmp = tmp >= 128 ? -256 + tmp : tmp
@@ -6,6 +7,7 @@ function toTmp(tmp) {
 }
 const acApi = {
     socketio:{},
+    //获取快关操作数据
     get_switch_change(val, device) {
         if (val) {
             var operatorCodefst = "E3",
@@ -19,24 +21,28 @@ const acApi = {
             return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
         }
     },
+    //获取自动温度改变操作数据
     get_autoTmp_change(val, device) {
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
             additionalContentData = ["08", _g.toHex(val < 0 ? val + 256 : val)]
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
+    //获取制冷温度改变操作数据
     get_coolTmp_change(val, device) {
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
             additionalContentData = ["04", _g.toHex(val < 0 ? val + 256 : val)]
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
+    //获取制热温度改变操作数据
     get_heatTmp_change(val, device) {
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
             additionalContentData = ["07", _g.toHex(val < 0 ? val + 256 : val)]
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
+    //获取风速改变操作数据
     get_wind_change(val, device) {
         var operatorCodefst = "E3",
             operatorCodesec = "D8",
@@ -73,46 +79,56 @@ const acApi = {
             additionalContentData = []
         return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     },
+    //执行开关操作
     switch_change(val, device) {
         const data = this.get_switch_change(val, device)
         api.sendUdp(device, data)
     },
+    //执行自动温度操作
     autoTmp_change(val, device) {
 
         const data = this.get_autoTmp_change(val, device)
         api.sendUdp(device, data)
     },
+    //执行制冷温度操作
     coolTmp_change(val, device) {
 
         const data = this.get_coolTmp_change(val, device)
         api.sendUdp(device, data)
     },
+    //执行制热温度操作
     heatTmp_change(val, device) {
 
         const data = this.get_heatTmp_change(val, device)
         api.sendUdp(device, data)
     },
+    //执行风速操作
     wind_change(val, device) {
 
         const data = this.get_wind_change(val, device)
         api.sendUdp(device, data)
     },
+    //执行自动模式操作
     autobtn(device) {
         const data = this.get_autobtn(device)
         api.sendUdp(device, data)
     },
+    //执行吹风模式操作
     fanbtn(device) {
         const data = this.get_fanbtn(device)
         api.sendUdp(device, data)
     },
+    //执行制冷模式操作
     coolbtn(device) {
         const data = this.get_coolbtn(device)
         api.sendUdp(device, data)
     },
+    //执行制热模式操作
     heatbtn(device) {
         const data = this.get_heatbtn(device)
         api.sendUdp(device, data)
     },
+    //执行读取温度
     readTmpRange(device) {
         const data = this.get_readTmpRange(device)
         api.sendUdp(device, data)
@@ -120,6 +136,7 @@ const acApi = {
     closeSocket(){
         // this.socketio.removeAllListeners()
       },
+    //读取状态
     readStatus(device) {
         var operatorCodefst = "E0",
             operatorCodesec = "EC",
@@ -288,6 +305,7 @@ const acApi = {
         //     }
         // });
     },
+    //读取开关状态
     readOpen(device) {
         var operatorCodefst = "E0",
             operatorCodesec = "EC",

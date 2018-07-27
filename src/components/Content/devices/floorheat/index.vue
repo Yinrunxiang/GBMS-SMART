@@ -163,6 +163,7 @@ export default {
   },
   // props: ['device'],
   methods: {
+    //初始化状态
     formatTooltip(val) {
       switch (val) {
         case 0:
@@ -179,6 +180,7 @@ export default {
           break;
       }
     },
+    //初始化模式图标
     modestyle(mode) {
       switch (mode) {
         case "auto":
@@ -195,34 +197,44 @@ export default {
           break;
       }
     },
+    //开关
     switch_change(val) {
       acApi.switch_change(val, this.device);
     },
+    //增加温度
     addTemperatureButtonClick() {
       acApi.addTemperatureButtonClick(this.device);
     },
+    //减少温度
     reduceTemperatureButtonClick() {
       acApi.reduceTemperatureButtonClick(this.device);
     },
+    //手动模式按钮
     manualButtonClick() {
       acApi.manualButtonClick(this.device);
     },
+    //日间模式按钮
     dayButtonClick() {
       acApi.dayButtonClick(this.device);
     },
+    //晚间模式按钮
     nightButtonClick() {
       acApi.nightButtonClick(this.device);
     },
+    //离开模式按钮
     awayButtonClick() {
       acApi.awayButtonClick(this.device);
     },
+    //定时模式按钮
     alarmButtonClick() {
       acApi.alarmButtonClick(this.device);
     },
+    //修改日间判断时间
     dayTimeChange(val) {
       // this.device.deviceProperty.dayTime  = val.substr(0,5)
       acApi.timeChange(this.device);
     },
+    //修改晚间判断时间
     nightTimeChange(val) {
       // this.device.deviceProperty.nightTime  = val.substr(0,5)
       acApi.timeChange(this.device);

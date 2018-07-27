@@ -1,5 +1,5 @@
 import api from "../api";
-
+//字符串转数组
 function strToarr(str) {
   var len = str.length / 2;
   var arr = [];
@@ -8,6 +8,7 @@ function strToarr(str) {
   }
   return arr;
 }
+//字符串转4个字符的数组
 function strToarr4(str) {
   var len = str.length / 4;
   var arr = [];
@@ -47,6 +48,7 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
+  //切换音乐
   source_change(val, device) {
     var data = this.get_source_change(val, device)
     api.sendUdp(device, data)
@@ -60,10 +62,12 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
+  //改变音量
   vol_change(val, device) {
     var data = this.get_vol_change(val, device)
     api.sendUdp(device, data)
   },
+  //上一首
   pre(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
@@ -71,6 +75,7 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
+  //下一首
   next(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
@@ -78,6 +83,7 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
+  //开关
   switch_change(val, device) {
     device.on_off = val;
     var data = {}
@@ -105,6 +111,7 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
+  //播放
   play(device) {
     var data = this.get_play(device)
     api.sendUdp(device, data)
@@ -117,10 +124,12 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
+  //暂停
   pause(device) {
     var data = this.get_pause(device)
     api.sendUdp(device, data)
   },
+  //模式切换
   modeChange(device) {
     var operatorCodefst,
       operatorCodesec,
@@ -142,6 +151,7 @@ const musicApi = {
       api.sendUdp(device, data)
     }
   },
+  //随机模式
   random(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
@@ -149,6 +159,7 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
+  //单曲模式
   single(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
@@ -156,6 +167,7 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
+  //列表循环模式
   allmusic(device) {
     var operatorCodefst = "02",
       operatorCodesec = "18",
@@ -170,16 +182,19 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     return data
   },
+  //选中音乐
   selectSong(device, song) {
     var data = this.get_selectSong(device, song)
     api.sendUdp(device, data)
   },
+  //停止循环
   closeSocket() {
     if (this.albumInterval)
       clearInterval(this.albumInterval)
     if (this.songInterval)
       clearInterval(this.songInterval)
   },
+  //读取歌曲信息
   readSong(device) {
     console.log('music_api')
     var operatorCodefst = "02",
@@ -188,6 +203,7 @@ const musicApi = {
     var data = api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
     api.sendUdp(device, data)
   },
+  //读取音乐状态
   readStatus(device) {
     var operatorCodefst = "19",
       operatorCodesec = "2e",
@@ -201,6 +217,7 @@ const musicApi = {
     var modeData = api.getUdp(device, modeOperatorCodefst, modeOperatorCodesec, modeAdditionalContentData)
     api.sendUdp(device, modeData)
   },
+  //解析歌曲
   receiveSong(device, data) {
 
     var $this = this,
@@ -208,6 +225,7 @@ const musicApi = {
       dataLength = data.length,
       stop = dataLength - 4;
     switch (operationcode) {
+      //解析专辑包
       case "02e1":
         var source = _g.getadditional(data, 0);
         if (parseInt(device.deviceProperty.source) != parseInt(source)) {
@@ -216,6 +234,7 @@ const musicApi = {
         var albumpack = data.substring(52, stop);
         var additionalData = strToarr(albumpack);
         additionalData.unshift(source);
+        //获取专辑包信息
         var operatorCodefst = "02",
           operatorCodesec = "E2";
         var data = api.getUdp(
@@ -226,6 +245,7 @@ const musicApi = {
         );
         api.sendUdp(device, data);
         break;
+      //解析专辑列表
       case "02e3":
         var source = _g.getadditional(data, 2);
         if (parseInt(device.deviceProperty.source) == parseInt(source)) {
@@ -237,6 +257,7 @@ const musicApi = {
           device.deviceProperty.songListAll = [];
           var albumList = [];
           var songList = [];
+          //循环专辑列表，获取专辑信息
           for (var i = 0; i < albumNum; i++) {
             var albumNo = albumListStr.substr(albumCount, 2);
             var albumLength = albumListStr.substr(albumCount + 2, 2);
@@ -255,6 +276,7 @@ const musicApi = {
               albumName: albumName,
               albumNo: albumNo
             };
+            //生成列表记录要发送的专辑
             albumList.push(albumObj);
             device.deviceProperty.albumCheckList[albumNo] = false;
             albumCount = albumCount + albumLength + 4;
@@ -263,6 +285,7 @@ const musicApi = {
             udpArrSong = [],
             albumUdpNum = 1,
             songUdpNum = 1
+          //循环发送读取专辑信息
           for (var key in device.deviceProperty.albumCheckList) {
             var operatorCodefst = "02",
               operatorCodesec = "E4",
@@ -282,6 +305,7 @@ const musicApi = {
           }
           $this.sendUdpArr(udpArrAlbum);
           $this.albumInterval = setInterval(function () {
+            //判断专辑列表是否都已经返回数据，没返回则继续发送
             console.log(albumUdpNum)
             var check = true,
               udpArrAlbum = []
@@ -317,7 +341,7 @@ const musicApi = {
                     check = false;
                   }
                 }
-
+                //判断歌曲列表，是否全部返回数据，没返回则继续发送
                 if (check || songUdpNum >= 5) {
                   clearInterval($this.songInterval);
                   if (check == false && songUdpNum >= 5) {
@@ -335,6 +359,8 @@ const musicApi = {
                   // });
                   // device.deviceProperty.songList = songList;
                   // device.deviceProperty.songListAll = songList;
+
+                  //关闭模态框，保存进缓存
                   device.deviceProperty.musicLoading = false;
                   Lockr.set(
                     "music_" +
@@ -399,6 +425,7 @@ const musicApi = {
           }, 2000);
         }
         break;
+        //解析专辑包信息，并确认该专辑包已经返回
       case "02e5":
         var source = _g.getadditional(data, 0);
         if (parseInt(device.deviceProperty.source) == parseInt(source)) {
@@ -435,6 +462,7 @@ const musicApi = {
           }
         }
         break;
+        //解析歌曲包信息，并确认该歌曲包已经返回
       case "02e7":
         var source = _g.getadditional(data, 2);
         if (parseInt(device.deviceProperty.source) == parseInt(source)) {
@@ -490,6 +518,7 @@ const musicApi = {
         break;
     }
   },
+  //解析状态
   receiveStatus(device, data) {
     var additionalList = _g.getAdditionalList(data);
     if (

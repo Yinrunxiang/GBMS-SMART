@@ -42,6 +42,7 @@ export default {
     return {};
   },
   methods: {
+    //保存颜色
     setColor() {
       var vm = this;
       const data = {
@@ -77,6 +78,7 @@ export default {
   mounted() {
     console.log("led");
     ledApi.readStatus(this.device);
+    //隐藏调色板并修改图标颜色
     $(".vc-target").hide();
     $(".led-light").click(function() {
       $(".vc-target").trigger("click");

@@ -5,6 +5,7 @@ import led from "./led/api";
 import curtain from "./curtain/api";
 import music from "./music/api";
 const udpArr = {
+  //根据设备操作列表，直接解析，并发送UDP
   sendUdpArr(deviceList) {
     var udpArr = [];
     for (var device of deviceList) {

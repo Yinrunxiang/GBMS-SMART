@@ -39,10 +39,12 @@ const cutainApi = {
       additionalContentData = [device.channel, _g.toHex(val), "00", "00"]
     return api.getUdp(device, operatorCodefst, operatorCodesec, additionalContentData)
   },
+  //开关
   switch_change(val, device) {
     const data = this.get_switch_change(val, device)
     api.sendUdp(device, data)
   },
+  //停止
   stop(val, device) {
     const data = this.get_stop(val, device)
     api.sendUdp(device, data)

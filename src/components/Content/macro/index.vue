@@ -79,6 +79,7 @@ export default {
     };
   },
   methods: {
+    //执行宏指令
     run(macro) {
       const data = macro;
       this.apiPost("admin/macro/run", data).then(res => {
@@ -87,10 +88,12 @@ export default {
         });
       });
     },
+    //返回宏命令页面
     goback(bool) {
       this.init();
       this.setting = bool;
     },
+    //新增或修改宏指令
     addressSetting() {
       this.add = true;
       this.setting = true;
@@ -99,6 +102,7 @@ export default {
       };
       this.selectData = data;
     },
+    //双击列表行，修改宏指令
     rowDblclick(row) {
       this.add = false;
       this.setting = true;

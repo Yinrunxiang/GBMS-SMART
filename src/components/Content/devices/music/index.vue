@@ -279,6 +279,7 @@ export default {
     };
   },
   methods: {
+    //刷新按钮，清空歌曲缓存
     refresh() {
       Lockr.rm(
         "music_" +
@@ -296,6 +297,7 @@ export default {
       console.log("music_test");
       musicApi.readSong(this.device);
     },
+    //切换音源
     sourceChange(command) {
       this.device.deviceProperty.source = command;
       musicApi.source_change(command, this.device);
@@ -319,9 +321,11 @@ export default {
         musicApi.readSong(this.device);
       }
     },
+    //显示专辑按钮
     albumBtnClick() {
       this.albumShow = true;
     },
+    //选中专辑
     albumClick(albumNo) {
       this.albumShow = false;
       this.device.deviceProperty.songList = [];
@@ -331,44 +335,55 @@ export default {
         }
       }
     },
+    //隐藏专辑按钮
     albumBtnClickBack() {
       this.albumShow = false;
     },
     time_change(val) {
       musicApi.time_change(val, this.device);
     },
+    //改变音量
     vol_change(val) {
       musicApi.vol_change(val, this.device);
     },
+    //上一首
     pre() {
       musicApi.pre(this.device);
     },
+    //下一首
     next() {
       musicApi.next(this.device);
     },
+    //播放
     play() {
       this.device.deviceProperty.on_off = true;
       musicApi.play(this.device);
     },
+    //暂停
     pause() {
       this.device.deviceProperty.on_off = false;
       musicApi.pause(this.device);
     },
+    //切换模式
     modeChange() {
       musicApi.modeChange(this.device);
     },
+    //随机模式
     random() {
       this.device.deviceProperty.mode = "2";
       musicApi.random(this.device);
     },
+    //单曲模式
     single() {
       this.device.deviceProperty.mode = "4";
       musicApi.single(this.device);
     },
+    //列表循环模式
     allmusic() {
       this.device.deviceProperty.mode = "1";
       musicApi.allmusic(this.device);
     },
+    //选中歌曲
     selectSong(song) {
       // this.device.deviceProperty.music_name = song.songName;
       // for (var obj of this.device.deviceProperty.songList) {
@@ -378,6 +393,7 @@ export default {
       this.device.deviceProperty.on_off = true;
       musicApi.selectSong(this.device, song);
     },
+    //初始化歌曲，先判断缓存里是否有歌曲，没有缓存再读取歌曲
     initMusic(device) {
       var music = Lockr.get(
         "music_" +
@@ -392,6 +408,7 @@ export default {
         this.device.deviceProperty.songListAll = music.songList;
         this.device.deviceProperty.musicLoading = false;
       } else {
+        //读取歌曲
         musicApi.readSong(device);
       }
     }

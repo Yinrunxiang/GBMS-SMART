@@ -209,16 +209,19 @@ export default {
     };
   },
   methods: {
+    //隐藏手机导航栏，和右侧设备操作栏
     hideRightPage() {
       // console.log("123");
       this.$store.dispatch("setPhoneNav", false);
       this.$store.dispatch("setShowRightPage", false);
     },
     phoneNavStop(){},
+    //切换手机导航栏
     phoneNavShow() {
       this.$store.state.phoneNav = this.$store.state.phoneNav == false ? true : false;
       this.$store.dispatch("setPhoneNav", this.$store.state.phoneNav);
     },
+    //主页图标点击，返回主页
     homeClick() {
       let url = "/home/global";
       router.push(url);
@@ -226,6 +229,7 @@ export default {
     showChangePage(val) {
       this.showChange = val;
     },
+    //登出
     logout() {
       this.$confirm("Are you sure to exit?", "Warning", {
         confirmButtonText: "Yes",
@@ -239,6 +243,7 @@ export default {
         }, 1500);
       });
     },
+    //修改密码
     changePwd() {
       this.showChange = true;
     },
@@ -252,6 +257,7 @@ export default {
           break;
       }
     },
+    //获取空调品牌信息
     getAcBreed() {
       this.apiGet("admin/ac_breed", {}).then(res => {
         this.handelResponse(res, data => {
@@ -259,6 +265,7 @@ export default {
         });
       });
     },
+    //获取灯光品牌信息
     getLightBreed() {
       this.apiGet("admin/light_breed", {}).then(res => {
         this.handelResponse(res, data => {
@@ -266,6 +273,7 @@ export default {
         });
       });
     },
+    //获取LED品牌信息
     getLedBreed() {
       this.apiGet("admin/led_breed", {}).then(res => {
         this.handelResponse(res, data => {
@@ -273,6 +281,7 @@ export default {
         });
       });
     },
+    //获取建筑信息
     getAddress() {
       this.apiGet("admin/address", {}).then(res => {
         this.handelResponse(res, data => {
@@ -280,6 +289,7 @@ export default {
         });
       });
     },
+    //获取楼层信息
     getFloor() {
       this.apiGet("admin/floor", {}).then(res => {
         this.handelResponse(res, data => {
@@ -287,6 +297,7 @@ export default {
         });
       });
     },
+    //获取房间信息
     getRoom() {
       this.apiGet("admin/room", {}).then(res => {
         this.handelResponse(res, data => {
@@ -294,6 +305,7 @@ export default {
         });
       });
     },
+    //更新数据库
     updateDatabase() {
       this.apiPost("admin/dataBase/updateDatabase", {}).then(res => {
         this.handelResponse(res, data => {
@@ -301,6 +313,7 @@ export default {
         });
       });
     },
+    //处理数据
     countryArr() {
       var countryArr = [];
       var countryList = [];
@@ -621,6 +634,7 @@ export default {
       this.dataReady = true;
       // return countryArr
     },
+    //创建webSocket监听
     createSocket(devices) {
       var vm = this;
       if (window.socketio && window.socketio.io) {
@@ -630,6 +644,7 @@ export default {
       let port = userInfo.port;
       var socketio = socket("http://" + document.domain + ":" + port);
       window.socketio = socketio;
+      //监听UDP对象信息
       socketio.on("udp", function(udp) {
         for (var device of devices) {
           if (
@@ -642,6 +657,7 @@ export default {
               channel: udp.channel ? udp.channel : "",
               operatorCode: udp.operatorCode
             };
+            // console.log(udpDevice)
             vm.$store.dispatch("setUdpDevice", udpDevice);
             switch (device.devicetype) {
               case "ac":
@@ -717,6 +733,7 @@ export default {
           }
         }
       });
+      //监听原始UDP
       socketio.on("originalDevices", function(data) {
         var device = data.subnetid + data.deviceid;
         var originalDevices = vm.$store.state.originalDevices;
@@ -727,6 +744,7 @@ export default {
         // }
         vm.$store.dispatch("setOriginalDevices", originalDevices);
       });
+      //监听音乐
       socketio.on("music", function(data) {
         data = data.toLowerCase();
         var subnetid = data.substr(34, 2);
@@ -774,6 +792,7 @@ export default {
         this.countryArr();
       });
     });
+    //监听ALEXA数据，然后执行操作
     var alexa_socket = socket("http://39.108.129.244:2121");
     alexa_socket.on("alexa", function(alexa) {
       console.log(alexa);

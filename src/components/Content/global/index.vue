@@ -40,6 +40,7 @@ export default {
   },
   props: ["dataReady"],
   methods: {
+    //初始化地图
     initMapSize() {
       // var width = document.body.clientWidth - 180;
       // var height = document.body.clientHeight - 60;
@@ -50,6 +51,7 @@ export default {
         map.style.height = "60%";
       }
     },
+    //建筑点击按钮
     addressClick(addressName) {
       for (var country of this.countryArr) {
         for (var address of country.addressList) {
@@ -134,6 +136,7 @@ export default {
 
       return itCounteyTooltip;
     },
+    //初始化地图数据
     initData() {
       var mapData = [];
       for (var address of this.allAddress) {
@@ -251,15 +254,19 @@ export default {
   },
   components: {},
   computed: {
+    //所有设备数据
     devices() {
       return this.$store.state.devices;
     },
+    //所有建筑数据
     allAddress() {
       return this.$store.state.address;
     },
+    //所有楼层数据
     allFloor() {
       return this.$store.state.floor;
     },
+    //所有房间数据
     allRoom() {
       return this.$store.state.room;
     },
@@ -268,7 +275,7 @@ export default {
       return this.$store.state.countryArr;
     },
     globalLoading() {
-      return store.state.globalLoading;
+      return this.$store.state.globalLoading;
     }
   },
   watch: {
