@@ -20,7 +20,7 @@ class DataBase extends ApiCommon
         }
         mysqli_select_db($con, $database_name);
         mysqli_set_charset($con, "utf8");
-        $version = '1.7.6';
+        $version = '1.7.8';
         $selectVersion = "select version  from base";
         $result = mysqli_query($con, $selectVersion);
         $row = mysqli_fetch_assoc($result);
