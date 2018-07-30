@@ -43,14 +43,11 @@ export default {
       const data = this.form;
       this.apiPut("admin/light_breed/", data.id, data).then(res => {
         this.handelResponse(res, data => {
-          var light_breed = [];
-          light_breed = light_breed.concat(vm.$store.state.light_breed);
-          for (var i = 0; i < light_breed.length; i++) {
-            if (light_breed[i].breed == vm.form.breed) {
-              light_breed[i] = vm.form;
-            }
-          }
-          vm.$store.dispatch("setLightBreed", light_breed);
+          vm.apiGet("admin/light_breed", {}).then(res => {
+            vm.handelResponse(res, data => {
+              vm.$store.dispatch("setLightBreed", data);
+            });
+          });
           _g.toastMsg("success", data);
           setTimeout(() => {
             vm.goback();

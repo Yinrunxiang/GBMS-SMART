@@ -38,23 +38,21 @@ export default {
   },
   methods: {
     add(form) {
-      var vm = this
+      var vm = this;
       this.isLoading = !this.isLoading;
-      const data =this.form
+      const data = this.form;
       this.apiPost("admin/led_breed", data).then(res => {
-        // _g.clearVuex('setRules')
-        if (res[0]) {
-          var led_breed = [];
-          led_breed = led_breed.concat(vm.$store.state.led_breed);
-          led_breed.push(vm.form);
-          vm.$store.dispatch('setLedBreed', led_breed)
-          _g.toastMsg("success", res[1]);
+        this.handelResponse(res, data => {
+          vm.apiGet("admin/led_breed", {}).then(res => {
+            vm.handelResponse(res, data => {
+              vm.$store.dispatch("setLedBreed", data);
+            });
+          });
+          _g.toastMsg("success", data);
           setTimeout(() => {
             vm.goback();
           }, 500);
-        } else {
-          _g.toastMsg("error", res[1]);
-        }
+        });
         vm.isLoading = false;
       });
     }

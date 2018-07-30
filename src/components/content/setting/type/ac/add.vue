@@ -71,14 +71,15 @@ export default {
       const data = this.form;
       this.apiPost("admin/ac_breed", data).then(res => {
         this.handelResponse(res, data => {
-            var ac_breed = [];
-            ac_breed = ac_breed.concat(vm.$store.state.ac_breed);
-            ac_breed.push(vm.form);
-            vm.$store.dispatch("setAcBreed", ac_breed);
-            _g.toastMsg("success", data);
-            setTimeout(() => {
-              vm.goback();
-            }, 500);
+          vm.apiGet("admin/ac_breed", {}).then(res => {
+            vm.handelResponse(res, data => {
+              vm.$store.dispatch("setAcBreed", data);
+            });
+          });
+          _g.toastMsg("success", data);
+          setTimeout(() => {
+            vm.goback();
+          }, 500);
         });
 
         vm.isLoading = false;

@@ -23,12 +23,12 @@
 <style>
 .contarl-right-page {
   position: fixed;
-  top: 60;
+  top: 60px;
   right: 0;
   width: 350px;
   height: 99%;
   background-color: #fff;
-  /* z-index:20; */
+  z-index:20;
 }
 .contarl-right-content {
   position: fixed;

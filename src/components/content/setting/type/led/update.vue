@@ -44,14 +44,11 @@ export default {
 
       this.apiPut("admin/led_breed/", data.id, data).then(res => {
         this.handelResponse(res, data => {
-          var led_breed = [];
-          led_breed = led_breed.concat(vm.$store.state.led_breed);
-          for (var i = 0; i < led_breed.length; i++) {
-            if (led_breed[i].breed == vm.form.breed) {
-              led_breed[i] = vm.form;
-            }
-          }
-          vm.$store.dispatch("setLedBreed", led_breed);
+          vm.apiGet("admin/led_breed", {}).then(res => {
+            vm.handelResponse(res, data => {
+              vm.$store.dispatch("setLedBreed", data);
+            });
+          });
           _g.toastMsg("success", data);
           setTimeout(() => {
             vm.goback();

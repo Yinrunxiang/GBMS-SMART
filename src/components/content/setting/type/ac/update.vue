@@ -69,21 +69,16 @@ export default {
       this.isLoading = !this.isLoading;
       const data = this.form;
       this.apiPut("admin/ac_breed/", data.id, data).then(res => {
-        this.handelResponse(res, data => { 
-            var ac_breed = [];
-            ac_breed = ac_breed.concat(vm.$store.state.ac_breed);
-            var ac_breed = vm.$store.state.ac_breed;
-
-            for (var i = 0; i < ac_breed.length; i++) {
-              if (ac_breed[i].breed == vm.form.breed) {
-                ac_breed[i] = vm.form;
-              }
-            }
-            vm.$store.dispatch("setAcBreed", ac_breed);
-            _g.toastMsg("success",data);
-            setTimeout(() => {
-              vm.goback();
-            }, 500);
+        this.handelResponse(res, data => {
+          vm.apiGet("admin/ac_breed", {}).then(res => {
+            vm.handelResponse(res, data => {
+              vm.$store.dispatch("setAcBreed", data);
+            });
+          });
+          _g.toastMsg("success", data);
+          setTimeout(() => {
+            vm.goback();
+          }, 500);
         });
 
         vm.isLoading = false;

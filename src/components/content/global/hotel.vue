@@ -357,7 +357,7 @@ export default {
       this.floorName = val;
       var deviceList = [];
       for (let floor of this.floorProperty) {
-        if (floor.floor == val && floor.address == this.address.name) {
+        if (floor.floor == val && floor.address == this.address.id) {
           this.floor = floor;
           this.room_num = floor.room_num ? parseInt(floor.room_num) : 0;
         }
@@ -609,7 +609,9 @@ export default {
     showRoom() {
       return this.$store.state.showRoom;
     },
-
+    devices(){
+      return this.$store.state.devices;
+    },
     //获取酒店信息
     addressProperty() {
       var initAddress = {
@@ -760,6 +762,18 @@ export default {
         this.roomWatts.setOption(roomWattsOption, true);
       },
       deep: true
+    },
+    devices:{
+      handler: function(val, oldVal) {
+        var deviceList = []
+        for(var device of val){
+          if(device.address == this.address.id && device.floor == this.floor.id && device.room == this.room.id){
+            deviceList.push(device)
+          }
+        }
+        this.deviceList = deviceList
+      },
+      deep:true
     }
   },
   mixins: [http]
