@@ -38,7 +38,7 @@
                     placeholder="Please choose">
                   </el-date-picker>
             </el-col>
-             <el-col v-if="schedule.type == 'day'" :xs= "22" :md = "{span:6}" class=" m-b-10">
+             <el-col v-if="schedule.type == 'day' || schedule.type == 'week'" :xs= "22" :md = "{span:6}" class=" m-b-10">
             <el-time-picker class="w-100p"
                     v-model="schedule.time_2"
                     value-format="HH:mm"
